@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="878" systemVersion="11C74" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Album" representedClassName="Album">
+        <attribute name="byCondition" optional="YES" attributeType="String"/>
+        <attribute name="maxAsset" optional="YES" attributeType="Integer 32" defaultValueString="0"/>
+        <attribute name="music" optional="YES" attributeType="String"/>
+        <attribute name="name" attributeType="String" indexed="YES"/>
+        <attribute name="sortOrder" attributeType="Boolean" defaultValueString="YES"/>
+        <attribute name="transitType" optional="YES" attributeType="String"/>
+        <relationship name="conAssetRule" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="AssetRule" inverseName="conAllbum" inverseEntity="AssetRule" indexed="YES"/>
+        <relationship name="conDateRule" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="DateRule" inverseName="conAlbum" inverseEntity="DateRule" indexed="YES"/>
+        <relationship name="conEventRule" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="EventRule" inverseName="conAlbum" inverseEntity="EventRule" indexed="YES"/>
+        <relationship name="conPeopleRule" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="PeopleRule" inverseName="conAlbum" inverseEntity="PeopleRule" indexed="YES"/>
+    </entity>
+    <entity name="Asset" representedClassName="Asset">
+        <attribute name="date" optional="YES" attributeType="Date"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0"/>
+        <attribute name="numOfLike" optional="YES" attributeType="Integer 32" defaultValueString="0"/>
+        <attribute name="numPeopleTag" optional="YES" attributeType="Integer 32" defaultValueString="0"/>
+        <attribute name="url" optional="YES" attributeType="String"/>
+        <relationship name="conAssetRule" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="AssetRule" inverseName="conAsset" inverseEntity="AssetRule" indexed="YES"/>
+        <relationship name="conEvent" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="Event" inverseName="conAsset" inverseEntity="Event" indexed="YES"/>
+        <relationship name="conPeopleTag" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="PeopleTag" inverseName="conAsset" inverseEntity="PeopleTag" indexed="YES"/>
+    </entity>
+    <entity name="AssetRule" representedClassName="AssetRule">
+        <attribute name="opCode" attributeType="String"/>
+        <attribute name="url" attributeType="String"/>
+        <relationship name="conAllbum" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="Album" inverseName="conAssetRule" inverseEntity="Album" indexed="YES"/>
+        <relationship name="conAsset" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="Asset" inverseName="conAssetRule" inverseEntity="Asset" indexed="YES"/>
+    </entity>
+    <entity name="DateRule" representedClassName="DateRule">
+        <attribute name="opCode" optional="YES" attributeType="String"/>
+        <attribute name="startDate" optional="YES" attributeType="Date"/>
+        <attribute name="stopDate" optional="YES" attributeType="Date"/>
+        <relationship name="conAlbum" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="Album" inverseName="conDateRule" inverseEntity="Album" indexed="YES"/>
+    </entity>
+    <entity name="Event" representedClassName="Event">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="conAsset" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="Asset" inverseName="conEvent" inverseEntity="Asset" indexed="YES"/>
+        <relationship name="conEventRule" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="EventRule" inverseName="conEvent" inverseEntity="EventRule" indexed="YES"/>
+    </entity>
+    <entity name="EventRule" representedClassName="EventRule">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="opCode" optional="YES" attributeType="String"/>
+        <relationship name="conAlbum" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="Album" inverseName="conEventRule" inverseEntity="Album" indexed="YES"/>
+        <relationship name="conEvent" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="Event" inverseName="conEventRule" inverseEntity="Event" indexed="YES"/>
+    </entity>
+    <entity name="People" representedClassName="People">
+        <attribute name="addressBookId" optional="YES" attributeType="Integer 32" defaultValueString="0"/>
+        <attribute name="colorCode" optional="YES" attributeType="Integer 32" defaultValueString="0"/>
+        <attribute name="favorite" optional="YES" attributeType="Boolean"/>
+        <attribute name="firstName" optional="YES" attributeType="String"/>
+        <attribute name="inAddressBook" optional="YES" attributeType="Boolean"/>
+        <attribute name="lastName" optional="YES" attributeType="String"/>
+        <attribute name="listSeq" optional="YES" attributeType="Integer 32" defaultValueString="0"/>
+        <relationship name="conPeopleRuleDetail" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="PeopleRuleDetail" inverseName="conPeople" inverseEntity="PeopleRuleDetail" indexed="YES"/>
+        <relationship name="conPeopleTag" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="PeopleTag" inverseName="conPeople" inverseEntity="PeopleTag" indexed="YES"/>
+    </entity>
+    <entity name="PeopleRule" representedClassName="PeopleRule">
+        <attribute name="allOrAny" optional="YES" attributeType="Boolean"/>
+        <relationship name="conAlbum" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="Album" inverseName="conPeopleRule" inverseEntity="Album" indexed="YES"/>
+        <relationship name="conPeopleRuleDetail" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="PeopleRuleDetail" inverseName="conPeopleRule" inverseEntity="PeopleRuleDetail" indexed="YES"/>
+    </entity>
+    <entity name="PeopleRuleDetail" representedClassName="PeopleRuleDetail">
+        <attribute name="firstName" optional="YES" attributeType="String"/>
+        <attribute name="lastName" optional="YES" attributeType="String"/>
+        <attribute name="opcode" attributeType="String"/>
+        <relationship name="conPeople" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="People" inverseName="conPeopleRuleDetail" inverseEntity="People" indexed="YES"/>
+        <relationship name="conPeopleRule" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="PeopleRule" inverseName="conPeopleRuleDetail" inverseEntity="PeopleRule" indexed="YES"/>
+    </entity>
+    <entity name="PeopleTag" representedClassName="PeopleTag">
+        <relationship name="conAsset" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="Asset" inverseName="conPeopleTag" inverseEntity="Asset" indexed="YES"/>
+        <relationship name="conPeople" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="People" inverseName="conPeopleTag" inverseEntity="People" indexed="YES"/>
+    </entity>
+    <elements>
+        <element name="Album" positionX="63" positionY="36" width="128" height="195"/>
+        <element name="Asset" positionX="-252" positionY="-9" width="128" height="180"/>
+        <element name="AssetRule" positionX="-99" positionY="468" width="128" height="105"/>
+        <element name="DateRule" positionX="351" positionY="444" width="128" height="105"/>
+        <element name="Event" positionX="-333" positionY="360" width="128" height="90"/>
+        <element name="EventRule" positionX="322" positionY="153" width="128" height="105"/>
+        <element name="People" positionX="-558" positionY="153" width="128" height="180"/>
+        <element name="PeopleRule" positionX="18" positionY="-180" width="128" height="90"/>
+        <element name="PeopleRuleDetail" positionX="331" positionY="-72" width="128" height="120"/>
+        <element name="PeopleTag" positionX="-531" positionY="-180" width="128" height="75"/>
+    </elements>
+</model>
