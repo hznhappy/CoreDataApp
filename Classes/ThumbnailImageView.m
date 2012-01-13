@@ -29,7 +29,6 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [self setSelectedView];
     [self addSubview:highlightView];
-    NSLog(@"nothing");
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {

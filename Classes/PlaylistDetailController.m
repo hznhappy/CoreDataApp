@@ -9,6 +9,11 @@
 #import "PlaylistDetailController.h"
 #import "DBOperation.h"
 #import "AnimaSelectController.h"
+#import "PhotoAppDelegate.h"
+#import "AmptsAlbum.h"
+#import "People.h"
+#import "PeopleRule.h"
+#import "PeopleRuleDetail.h"
 
 @implementation PlaylistDetailController
 @synthesize listTable;
@@ -20,7 +25,8 @@
 @synthesize userNames;
 @synthesize selectedIndexPaths,Transtion;
 @synthesize mySwc,a,playrules_idList,playIdList,orderList;
-
+@synthesize bum,appDelegate,coreData; 
+@synthesize list;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -52,7 +58,22 @@
 
 #pragma mark - View lifecycle
 - (void)viewDidLoad
-{ if(Transtion!=nil)
+{ 
+    appDelegate =[[UIApplication sharedApplication] delegate];
+    
+   // appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObjectContext=[appDelegate.dataSource.coreData managedObjectContext];
+    NSFetchRequest *request=[[NSFetchRequest alloc]init];
+    NSEntityDescription *entity=[NSEntityDescription entityForName:@"People" inManagedObjectContext:managedObjectContext];
+    [request setEntity:entity];
+    NSError *error;
+    NSMutableArray *parray1=[[NSMutableArray alloc]init];
+    self.list=parray1;
+    [parray1 release];
+    list=[[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];  
+    
+    
+    if(Transtion!=nil)
   {
       self.tranLabel.text=Transtion;
   }
@@ -120,7 +141,7 @@
             }
             break;
         case 1:
-            return [userNames count];
+            return [list count];
             break;
         default:
             break;
@@ -177,8 +198,10 @@
             UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(45, 11, 126, 20)];
             name.tag = indexPath.row;
             
+            People *am = (People *)[list objectAtIndex:indexPath.row];
             
-            name.text = [userNames objectAtIndex:indexPath.row];
+            name.text = [NSString stringWithFormat:@"%@ %@",am.firstName,am.lastName];
+           // name.text = [userNames objectAtIndex:indexPath.row];
             
             [cell.contentView addSubview:name];
             [name release];
@@ -271,14 +294,30 @@
         }
         else
         {
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        UIButton *button = [self getStateButton];
-        if (cell.accessoryView==nil) {
-            cell.accessoryView = button;
-        }else{
-            cell.accessoryView = nil;
-        }
-          NSInteger Row=indexPath.row;
+            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+            UIButton *button1 = [self getStateButton];
+            if (cell.accessoryView==nil) {
+                cell.accessoryView = button1;
+            }else{
+                cell.accessoryView = nil;
+            }
+            for (UIButton *button in cell.contentView.subviews) {
+                if ([button isKindOfClass:[UIButton class]]) {
+                    if ([button.currentImage isEqual:unselectImg]) {
+                        [button setImage:selectImg forState:UIControlStateNormal]; 
+                        NSString *rule=@"INCLUDE";
+                        [self insert:indexPath.row rule:rule];
+                    }
+                    else
+                    {
+                        [button setImage:unselectImg forState:UIControlStateNormal];
+                    }
+                }
+            }
+
+       
+            
+           /* NSInteger Row=indexPath.row;
         int playID=0;
             playID=[[playIdList objectAtIndex:[playIdList count]-1]intValue]+1;
             for (UIButton *button in cell.contentView.subviews) {
@@ -309,7 +348,7 @@
                     [selectedIndexPaths removeObject:indexPath];
                 }
             }
-        }
+        }*/
     }
     }
   }
@@ -320,7 +359,7 @@
     if (mediaItemCollection) {
         MPMusicPlayerController *musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
         [musicPlayer setQueueWithItemCollection: mediaItemCollection];
-        [musicPlayer play];
+        [musicPlayer play]; 
         self.musicLabel.text = [musicPlayer.nowPlayingItem valueForProperty:MPMediaItemPropertyTitle];
     }
     [self dismissModalViewControllerAnimated: YES];
@@ -348,13 +387,13 @@
 }
 
 
--(void)insert:(NSInteger)Row playId:(int)playId
+/*-(void)insert:(NSInteger)Row playId:(int)playId
 {
     NSString *insertRules= [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@(playList_id,playList_rules,user_id,user_name) VALUES('%d','%d','%@','%@')",Rules,playId,1,[orderList objectAtIndex:Row],[userNames objectAtIndex:Row]];
     NSLog(@"%@",insertRules);
     [dataBase insertToTable:insertRules];  
 }
-
+*/
 
 -(void)deletes:(NSInteger)Row playId:(int)playId
 {
@@ -364,16 +403,31 @@
 }
 
 
--(void)update:(NSInteger)Row rule:(int)rule playId:(int)playId
+-(void)insert:(NSInteger)Row rule:(NSString *)rule
 {
-    NSString *updateRules= [NSString stringWithFormat:@"UPDATE %@ SET playList_rules=%d WHERE playlist_id=%d and user_id='%@'",Rules,rule,playId,[orderList objectAtIndex:Row]];
-	NSLog(@"%@",updateRules);
-	[dataBase updateTable:updateRules];
+    NSLog(@"RULE:%@",rule);
+    NSLog(@"ROW:%d",Row);
+    People *p1 = (People *)[list objectAtIndex:Row];
+    NSLog(@"name:%@",p1.firstName);
+    NSEntityDescription *entity6 = [NSEntityDescription entityForName:@"PeopleRuleDetail" inManagedObjectContext:[ appDelegate.dataSource.coreData managedObjectContext]]; 
+    PeopleRuleDetail*prd1=[[PeopleRuleDetail alloc]initWithEntity:entity6 insertIntoManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
+    prd1.opcode=rule;
+    prd1.firstName=p1.firstName;
+    prd1.lastName=p1.lastName;
+    prd1.conPeopleRule=pr1;
+    [pr1 addConPeopleRuleDetailObject:prd1];
+    prd1.conPeople=p1;
+    [p1 addConPeopleRuleDetailObject:prd1];
+   
+    NSLog(@"insert:%@",pr1);
+    [appDelegate.dataSource.coreData saveContext];
+ //   name.text = [NSString stringWithFormat:@"%@ %@",am.firstName,am.lastName];
+    
 }
 #pragma mark -
 #pragma mark Coustom method
 -(UIButton *)getStateButton{
-   stateButton = [UIButton buttonWithType:UIButtonTypeCustom];
+  stateButton = [UIButton buttonWithType:UIButtonTypeCustom];
     stateButton.frame = CGRectMake(0, 0, 75, 28);
     [stateButton addTarget:self action:@selector(changeState:) forControlEvents:UIControlEventTouchUpInside];
     [stateButton setTitle:MUST forState:UIControlStateNormal];
@@ -382,28 +436,33 @@
     return stateButton;
 }
 -(void)changeState:(id)sender{
+    NSLog(@"no file");
     UIButton *button = (UIButton *)sender;
     UITableViewCell *cell = (UITableViewCell *)[button superview];
-    NSIndexPath *index = [listTable indexPathForCell:cell];
+   NSIndexPath *index = [listTable indexPathForCell:cell];
     NSInteger Row=index.row;
-    int playID=0;
-        playID=[[playIdList objectAtIndex:[playIdList count]-1]intValue]+1;
+   // int playID=0;
+     ///   playID=[[playIdList objectAtIndex:[playIdList count]-1]intValue]+1;
        [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     if ([button.titleLabel.text isEqualToString:MUST]) {
         button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
         [button setTitle:EXCLUDE forState:UIControlStateNormal];
-        if(a==nil)
+        NSString *rule=@"EXCLUDE";
+        [self insert:Row rule:rule];
+        
+
+       /* if(a==nil)
         {
         [self update:Row rule:0 playId:playID];
         }
         else
         {
             [self update:Row rule:0 playId:[a intValue]];
-        }
+        }*/
     }else if([button.titleLabel.text isEqualToString:EXCLUDE]){
         button.backgroundColor = [UIColor colorWithRed:81/255.0 green:142/255.0 blue:72/255.0 alpha:1.0];
         [button setTitle:OPTIONAL forState:UIControlStateNormal];
-        if(a==nil)
+       /* if(a==nil)
         {
         [self update:Row rule:2 playId:playID];
         }
@@ -411,11 +470,15 @@
         {
             [self update:Row rule:2 playId:[a intValue]];
             
-        }
+        }*/
     }else{
         button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
         [button setTitle:MUST forState:UIControlStateNormal];
-        if(a==nil)
+        
+        
+        NSString *rule=@"INCLUDE";
+        [self insert:Row rule:rule];
+       /* if(a==nil)
         {
             [self update:Row rule:1 playId:playID];
         }
@@ -423,45 +486,44 @@
         {
             [self update:Row rule:1 playId:[a intValue]];
             
-        }
+        }*/
     }
 }
 -(void)setSelectState:(id)sender{
-    UIButton *button = (UIButton *)sender;
-    UITableViewCell *cell = (UITableViewCell *)[[button superview] superview];
-    NSIndexPath *index = [listTable indexPathForCell:cell];
-     NSInteger Row=index.row;
-    int playID=0;
-         playID=[[playIdList objectAtIndex:[playIdList count]-1]intValue]+1;
-     if ([button.currentImage isEqual:selectImg]) {
-        if(a==nil)
-        {
-            [self deletes:Row playId:playID];
-        }
-        else{
-        
-            [self deletes:Row playId:[a intValue]];
-        }
-        [button setImage:unselectImg forState:UIControlStateNormal];
-        NSIndexPath *index = [listTable indexPathForCell:cell];
-        [selectedIndexPaths removeObject:index];
-        cell.accessoryView = nil;
-    }else{
-        if(a==nil)
-        {
-            [self insert:Row playId:playID];
-            
-        }
-        else
-        {
-        [self insert:Row playId:[a intValue]];
-        }
-        [button setImage:selectImg forState:UIControlStateNormal];
-        NSIndexPath *index = [listTable indexPathForCell:cell];
-        [selectedIndexPaths addObject:index];
-        cell.accessoryView = [self getStateButton];
-    }
-    
+//    UIButton *button = (UIButton *)sender;
+//    UITableViewCell *cell = (UITableViewCell *)[[button superview] superview];
+//    NSIndexPath *index = [listTable indexPathForCell:cell];
+//     NSInteger Row=index.row;
+//    int playID=0;
+//         playID=[[playIdList objectAtIndex:[playIdList count]-1]intValue]+1;
+//     if ([button.currentImage isEqual:selectImg]) {
+//        if(a==nil)
+//        {
+//            [self deletes:Row playId:playID];
+//        }
+//        else{
+//        
+//            [self deletes:Row playId:[a intValue]];
+//        }
+//        [button setImage:unselectImg forState:UIControlStateNormal];
+//        NSIndexPath *index = [listTable indexPathForCell:cell];
+//        [selectedIndexPaths removeObject:index];
+//        cell.accessoryView = nil;
+//    }else{
+//        if(a==nil)
+//        {
+//            [self insert:Row playId:playID];
+//            
+//        }
+//        else
+//        {
+//        [self insert:Row playId:[a intValue]];
+//        }
+//        [button setImage:selectImg forState:UIControlStateNormal];
+//        NSIndexPath *index = [listTable indexPathForCell:cell];
+//        [selectedIndexPaths addObject:index];
+//        cell.accessoryView = [self getStateButton];
+//    }
 }
 #pragma mark -
 #pragma mark IBAction method
@@ -491,12 +553,16 @@
         }
         else
         {
-            NSString *deletePlayTable = [NSString stringWithFormat:@"DELETE FROM PlayTable WHERE playList_id=%d",[[playIdList objectAtIndex:[playIdList count]-1]intValue]+1];
+           
+
+            
+            
+            /*NSString *deletePlayTable = [NSString stringWithFormat:@"DELETE FROM PlayTable WHERE playList_id=%d",[[playIdList objectAtIndex:[playIdList count]-1]intValue]+1];
             NSLog(@"%@",deletePlayTable );
             [dataBase deleteDB:deletePlayTable ]; 
             NSString *deleteplayIdOrder= [NSString stringWithFormat:@"DELETE FROM playIdOrder WHERE play_id=%d",[[playIdList objectAtIndex:[playIdList count]-1]intValue]+1];
             NSLog(@"%@",deleteplayIdOrder);
-            [dataBase deleteDB:deleteplayIdOrder]; 
+            [dataBase deleteDB:deleteplayIdOrder]; */
          /*  NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
             [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
                                                                object:self 
@@ -514,7 +580,30 @@
 }
 -(void)addPlay
 {
-    if(a==nil)
+   
+   // NSEntityDescription *entity = [NSEntityDescription entityForName:@"Album" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]]; 
+    //bum=[[Album alloc]initWithEntity:entity insertIntoManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
+    bum = [NSEntityDescription insertNewObjectForEntityForName:@"Album" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
+    bum.name=textField.text;
+    //bum.byCondition=@"numOfLike";
+   // bum.sortOrder=[NSNumber numberWithBool:YES];
+    NSEntityDescription *entity5 = [NSEntityDescription entityForName:@"PeopleRule" inManagedObjectContext:[ appDelegate.dataSource.coreData managedObjectContext]]; 
+    pr1=[[PeopleRule alloc]initWithEntity:entity5 insertIntoManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
+    pr1.allOrAny=[NSNumber numberWithBool:YES];
+    bum.conPeopleRule=pr1;
+    pr1.conAlbum=bum;
+
+    [appDelegate.dataSource.coreData saveContext];
+    NSLog(@"BUM:%@",bum);
+   
+    
+    AmptsAlbum * album1=[[AmptsAlbum alloc]init];
+    album1.name=bum.name;
+    album1.alblumId=bum.objectID;
+    [appDelegate.dataSource.assetsBook addObject:album1];
+    
+    
+    /* if(a==nil)
     {
         NSString *insertPlayTable= [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@(playList_name,playList_id) VALUES('%@',%d)",PlayTable,textField.text,[[playIdList objectAtIndex:[playIdList count]-1]intValue]+1];
         NSLog(@"%@",insertPlayTable);
@@ -528,7 +617,7 @@
         NSString *updateRules= [NSString stringWithFormat:@"UPDATE %@ SET playlist_name='%@' WHERE playlist_id=%d",PlayTable,textField.text,[a intValue]];
         NSLog(@"%@",updateRules);
         [dataBase updateTable:updateRules];
-    }
+    }*/
     /*NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
                                                        object:self 

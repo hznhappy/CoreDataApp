@@ -6,7 +6,6 @@
 //
 
 #import "ThumbnailCell.h"
-#import "Thumbnail.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
 @implementation ThumbnailCell

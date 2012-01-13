@@ -9,19 +9,14 @@
 #import "AlbumController.h"
 #import "AssetTablePicker.h"
 #import "PlaylistDetailController.h"
-#import "AlbumClass.h"
-#import "AssetProducer.h"
-#import "PlaylistProducer.h"
-#import "DBOperation.h"
-#import "AssetRef.h"
 #import <AVFoundation/AVFoundation.h>
-
+#import "PhotoAppDelegate.h"
+#import "AmptsAlbum.h"
+#import "Album.h"
 @implementation AlbumController
 
 @synthesize tableView;
-@synthesize playList;
-@synthesize selectedAlbum;
-@synthesize I;
+
 
 #pragma mark -
 #pragma mark UIViewController method
@@ -38,13 +33,8 @@
 
 -(void)viewDidLoad
 {  
-    database=[DBOperation getInstance];
-    ALAssetsLibrary *lib = [[ALAssetsLibrary alloc] init];
-    p = [[AssetProducer alloc]initWithAssetsLibrary:lib];
-    [lib release];
-    PlaylistProducer *tempList = [[PlaylistProducer alloc]initWithAssetProcuder:p];
-    self.playList = tempList;
-    [tempList release];
+   
+    [self tabled];
     [self setWantsFullScreenLayout:YES];
 	[self.navigationItem setTitle:@"PlayList"];
     
@@ -63,66 +53,23 @@
     
     [addButon release];
     [editButton release];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addnumber) name:@"addplay" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addcount) name:@"addcount" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addfavorate) name:@"addfavorate" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabled) name:@"addplay" object:nil];
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addcount) name:@"addcount" object:nil];
     
 }
--(void)addfavorate
+-(void)tabled
 {
-    NSMutableArray *al=[[NSMutableArray alloc]init];
-    NSLog(@"SD");
-    for(int i=0;i<[self.playList.playlists count];i++)
-    {
-   AlbumClass *album = [self.playList.playlists objectAtIndex:i];
-        [al addObject:album.albumId];
-    }
-    NSLog(@"al.id:%@",al);
-    if(![al containsObject:@"-3"])
-    {
-        AlbumClass *sw=[[AlbumClass alloc]init];
-        sw.albumId=@"-3";
-        sw.albumName=@"I LIKE";
-        [self.playList.playlists addObject:sw];
-        NSLog(@"DS");
-        [sw release];
-    }
-    [al release];
-     [self.playList selectID];
-    [self.playList count];
-    [self.tableView reloadData];
+    PhotoAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    dataSource = appDelegate.dataSource;
+    assets = dataSource.assetsBook; 
+    [tableView reloadData];
 }
 -(void)addcount
 { 
     [self.tableView reloadData];
 }
--(void)addnumber
-{    AlbumClass *al = [self.playList.playlists objectAtIndex:[self.playList.playlists count]-1];
-    [self.playList selectID];
-    if([al.albumId isEqualToString:[self.playList.list objectAtIndex:[self.playList.list count]-1]])
-    {
-        [database getUserFromPlayTable:[self.playList.list objectAtIndex:[self.playList.list count]-1]];
-        if(![al.albumName isEqualToString:database.name])
-        {
-            [self.playList.playlists removeObjectAtIndex:[self.playList.playlists count]-1];
-            al.albumId=[self.playList.list objectAtIndex:[self.playList.list count]-1];
-            al.albumName=database.name;
-            [self.playList.playlists addObject:al];
-            
-        }
-    }
-    else
-    {AlbumClass *album = [[AlbumClass alloc]init];
-        [database getUserFromPlayTable:[self.playList.list objectAtIndex:[self.playList.list count]-1]];
-        album.albumId=[self.playList.list objectAtIndex:[self.playList.list count]-1];
-        album.albumName=database.name;
-        [self.playList.playlists addObject:album];
-        [album release];
-    }
-    [self.playList count];
-    [self.tableView reloadData];
-    
-}
+
+
 -(IBAction)toggleEdit:(id)sender
 {
     NSString *c=NSLocalizedString(@"Done", @"button");
@@ -152,7 +99,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 { 
     
-    return [self.playList.playlists count];
+    return [assets count];
     
     
 }
@@ -170,66 +117,18 @@
 	if (cell == nil) {
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
 	}
+    AmptsAlbum *am = (AmptsAlbum *)[assets objectAtIndex:indexPath.row];
     
-    AlbumClass *al = [self.playList.playlists objectAtIndex:indexPath.row];
-    
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ (%d)",al.albumName,al.photoCount];
-    
+    cell.textLabel.text = [NSString stringWithFormat:@"%@ (%d)",am.name, am.num];
     cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;    
     return cell;
 }
 -(void)tableView:(UITableView *)table didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSMutableArray *assets = [[[NSMutableArray alloc]init]autorelease];
-    if([[self.playList.list objectAtIndex:indexPath.row]intValue]==-1)
-    {
-        for (NSString *url in p.assetsUrlOrdering) {
-            [assets addObject:[p.assets valueForKey:url]];
-        }
-    }
-    else if([[self.playList.list objectAtIndex:indexPath.row]intValue]==-2)
-    {
-        for(NSString *url in p.assetsUrlOrdering)
-        {
-            if(![self.playList.TagUrl containsObject:url])
-            {
-                [assets addObject:[p.assets valueForKey:url]];
-            }
-        }
-        NSLog(@"assetsCount:%d",[assets count]);
-    }
-    else
-    {[self.playList playlistUrl:[[self.playList.list objectAtIndex:indexPath.row]intValue]];
-        for(NSString *url in self.playList.SUM)
-        {
-            [assets addObject:[p.assets valueForKey:url]];
-        }
-        NSLog(@"assetsCount:%d",[assets count]);
-    }
-    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:assets,@"assets",[self.playList.list objectAtIndex:indexPath.row],@"ID",nil];
+    NSMutableArray *WE=[(AmptsAlbum *)[assets objectAtIndex:indexPath.row]assetsList];
+    NSDictionary *dic = [[NSDictionary dictionaryWithObject:WE forKey:@"assets"]retain];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"pushThumbnailView" object:nil userInfo:dic];
-//    AssetRef *asset = [assets objectAtIndex:2081];
-//    ALAsset *realasset = asset.asset;
-//    ALAssetRepresentation *ref = [realasset defaultRepresentation];
-//    NSURL *url = [ref url];
-//    NSLog(@"%@ is the url ",url);
-//    MPMoviePlayerController* theMovie=[[MPMoviePlayerController alloc] initWithContentURL:url]; 
-//    theMovie.scalingMode=MPMovieScalingModeAspectFill; 
-//    [[theMovie view]setFrame:self.view.bounds];
-//    [theMovie setControlStyle:MPMovieControlStyleEmbedded];
-//    [self.view addSubview:[theMovie view]];
-//     [theMovie prepareToPlay];
-//    // Register for the playback finished notification. 
-//    
-//    [[NSNotificationCenter defaultCenter] addObserver:self 
-//                                             selector:@selector(myMovieFinishedCallback:) 
-//                                                 name:MPMoviePlayerPlaybackDidFinishNotification 
-//                                               object:theMovie]; 
     
-    // Movie playback is asynchronous, so this method returns immediately. 
-   // [theMovie play];  
-[table deselectRowAtIndexPath:indexPath animated:YES];
-self.selectedAlbum = [self.playList.playlists objectAtIndex: indexPath.row];
-//[[UIApplication sharedApplication]sendAction:@selector(albumSelected:) to:nil from:self forEvent:nil];
+    [table deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 // When the movie is done,release the controller. 
@@ -239,82 +138,47 @@ self.selectedAlbum = [self.playList.playlists objectAtIndex: indexPath.row];
     [[NSNotificationCenter defaultCenter] removeObserver:self 
                                                     name:MPMoviePlayerPlaybackDidFinishNotification 
                                                   object:theMovie]; 
-    NSLog(@"PO");
-    // Release the movie instance created in playMovieAtURL
-    //[theMovie release]; 
 }
-    - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
-    [self.playList selectID];
-    if([[self.playList.list objectAtIndex:indexPath.row]intValue]<0)
-    {
-        NSString *a=NSLocalizedString(@"hello", @"title");
-        NSString *b=NSLocalizedString(@"Inherent members, can not be edited", @"title");
-        NSString *c=NSLocalizedString(@"ok", @"title");
-        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:a message:b delegate:self cancelButtonTitle:c otherButtonTitles:nil];
-        [alert show];
-        [alert release];
-        
-        
-    }
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
     
-    else{
-        [database getUserFromPlayTable:[self.playList.list objectAtIndex:indexPath.row]];
-        
-        PlaylistDetailController *detailController = [[PlaylistDetailController alloc]initWithNibName:@"PlaylistDetailController" bundle:[NSBundle mainBundle]];
-        detailController.listName =[NSString stringWithFormat:@"%@",database.name];
-        detailController.Transtion=[NSString stringWithFormat:@"%@",database.Transtion];
-        detailController.a=[NSString stringWithFormat:@"%@",[self.playList.list objectAtIndex:indexPath.row]];
-        detailController.hidesBottomBarWhenPushed = YES;
-        
-        [self.navigationController pushViewController:detailController animated:YES];
-        [detailController release];
-        
-    }
+    
     
 }
 #pragma mark -
 #pragma mark Table View Data Source Methods
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{     [self.playList selectID];
-    if([[self.playList.list objectAtIndex:indexPath.row]intValue]<0)
+{      //NSEntityDescription *entity = [NSEntityDescription entityForName:@"Album" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
+    
+    AmptsAlbum *fa=[assets objectAtIndex:indexPath.row];
+    
+    if(editingStyle==UITableViewCellEditingStyleDelete)
     {
-        NSString *a=NSLocalizedString(@"hello", @"title");
-        NSString *b=NSLocalizedString(@"Inherent members, can not be deleted", @"title");
-        NSString *c=NSLocalizedString(@"ok", @"title");
-        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:a message:b delegate:self cancelButtonTitle:c otherButtonTitles:nil];
-        [alert show];
-        [alert release];
-        
-    }
-    else{
-        [self.playList.playlists removeObjectAtIndex:indexPath.row];
-        NSInteger INDEX=indexPath.row;
-        [self.playList selectID];
-        [self.playList deleteTable:INDEX];
-        [self.tableView reloadData];
-    }
+        NSArray *album = [dataSource simpleQuery:@"Album" predicate:nil sortField:nil sortOrder:NO];
+        for (Album *al in album) {
+            if ([[al objectID] isEqual:fa.alblumId] ) {
+                [dataSource.coreData.managedObjectContext deleteObject:al];
+                
+                [assets removeObject:fa];
+
+            }
+        }
+            }
+    [dataSource.coreData saveContext];
+    [self tabled];
+
+    
 }
 -(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{   NSUInteger fromRow=[fromIndexPath row];
-	NSUInteger toRow=[toIndexPath row];
-	id object=[[self.playList.playlists objectAtIndex:fromRow]retain];
-	[self.playList.playlists removeObjectAtIndex:fromRow];
-	[self.playList.playlists insertObject:object atIndex:toRow];
-	[object release];
-    [self.playList tableorder];
-    [self.tableView reloadData];
+{  
+    
 } 
-
-
-- (void) albumSelected: (id) sender {
-}
 
 #pragma mark -
 #pragma mark memory method
 
 - (void)dealloc {
-    [p release];
-    [playList release];
+    [dataSource release];
     [tableView release];
     [super dealloc];
 }

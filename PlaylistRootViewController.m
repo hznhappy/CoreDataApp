@@ -9,9 +9,12 @@
 #import "PlaylistRootViewController.h"
 #import "AlbumController.h"
 #import "AssetTablePicker.h"
-#import "AssetRef.h"
 #import "PhotoViewController.h"
 #import "PhotoSource.h"
+#import "Asset.h"
+#import "AlbumDataSource.h"
+#import "tagManagementController.h"
+#import "PhotoAppDelegate.h"
 @implementation PlaylistRootViewController
  static NSString* const kFileName=@"output.mov";
 
@@ -20,12 +23,14 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+    
     }
     return self;
 }
 
 - (void)dealloc
 {
+    [activityView release];
     [super dealloc];
 }
 
@@ -43,49 +48,38 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    AlbumController *al = [[AlbumController alloc]init];
-    [self pushViewController:al animated:NO];
-    [al release];
-    
+    self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+   self.navigationItem.title= @"Loading....";
+    activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    CGRect rect = [UIScreen mainScreen].bounds;
+    activityView.frame = CGRectMake(( CGRectGetMaxX(rect)/ 2) - 15.0f, (CGRectGetMaxY(rect)/2) - 15.0f , 30.0f, 30.0f);
+    activityView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
+    [self.view addSubview:activityView];
+    [activityView startAnimating];
+    self.view.backgroundColor = [UIColor blackColor];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(playlistAlbum) name:@"album" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(pushAssetsTablePicker:) name:@"pushThumbnailView" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(pushPhotosBrowser:) name:@"viewPhotos" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(playPhotoWithAnimation:) name:@"PlayPhoto" object:nil];
 }
 
+-(void)playlistAlbum{
+    AlbumController *al = [[AlbumController alloc]initWithNibName:@"AlbumController" bundle:[NSBundle mainBundle]];
+    [self pushViewController:al animated:YES];
+    [al release];
+    [activityView stopAnimating];
+}
 -(void)pushAssetsTablePicker:(NSNotification *)note{
     NSDictionary *dic = [note userInfo];
-    NSArray *assetRefs = [dic valueForKey:@"assets"];
     NSMutableArray *assets = [[NSMutableArray alloc]init];
-    for (AssetRef *aref in assetRefs) {
-        [assets addObject:aref.asset];
-    }
+    assets = [dic valueForKey:@"assets"];
     
-    
-    
-   /* ALAssetRepresentation *rep = [[assets objectAtIndex:0] defaultRepresentation];
-     NSLog(@"ALAssetRepresentation:%@",rep);
-    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);//在Caches目录下创建文件,此目录下文件不会在应用退出删除
-    NSString *videoPath = [[[paths objectAtIndex:0] stringByAppendingPathComponent:kFileName] retain];
-   // NSString *videoPath = [NSString dataFilePath:[NSString stringWithFormat:@"%@.MOV", kFileName]];
-    NSOutputStream *outPutStream = [NSOutputStream outputStreamToFileAtPath:videoPath append:NO];
-    [outPutStream open];
-    
-    NSUInteger bufferSize = 1024*100;
-    unsigned char buf[bufferSize];
-    NSUInteger writeSize = 0;
-    NSUInteger videoSize = [rep size];
-    NSError *err = nil;
-    while(videoSize != 0)
-    {
-        NSUInteger readSize = (bufferSize < videoSize)?bufferSize:videoSize;
-        [rep getBytes:buf fromOffset: writeSize
-               length:readSize error:&err];
-        [outPutStream write:buf maxLength:readSize];
-        
-        videoSize -= readSize;
-        writeSize += readSize;
-    }
-    [outPutStream close];*/
+//    NSMutableArray *alassets = [[NSMutableArray alloc]init];
+//    PhotoAppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+//    AlbumDataSource *dataSourec =   delegate.dataSource;
+//    for (Asset *asset in assets) {
+//        [alassets addObject:[dataSourec getAsset:asset.url]];
+//    }
     
     AssetTablePicker *ap = [[AssetTablePicker alloc]initWithNibName:@"AssetTablePicker" bundle:[NSBundle mainBundle]];
     ap.hidesBottomBarWhenPushed = YES;
@@ -93,9 +87,9 @@
     NSLog(@"APassets:%d",[ap.crwAssets count]);
     ap.PLAYID=[dic valueForKey:@"ID"];
     [assets release];
-
+    //[alassets release];
     
-       [self pushViewController:ap animated:YES];
+    [self pushViewController:ap animated:YES];
     [ap release];    
 }
 
@@ -104,8 +98,10 @@
     NSString *key = [[dicOfPhotoViewer allKeys] objectAtIndex:0];
     NSMutableArray *assets = [dicOfPhotoViewer valueForKey:key];
     NSMutableArray *photoSource  = [[NSMutableArray alloc]init];
-    for (id as in assets) {
-        [photoSource addObject:[PhotoSource PhotoWithAsset:as]];
+    PhotoAppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+    AlbumDataSource *dataSourec =   delegate.dataSource;
+    for (Asset *as in assets) {
+        [photoSource addObject:[PhotoSource PhotoWithAsset:[dataSourec getAsset:as.url]]];
     }
     PhotoViewController *pc = [[PhotoViewController alloc]initWithPhotoSource:photoSource currentPage:[key integerValue]];
     //PhotosBrowser *pc = [[PhotosBrowser alloc]initWithPhotoSource:assets currentPage:[key integerValue]];

@@ -7,14 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "AlbumDataSource.h"
 @interface PhotoAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
     UITabBarController *rootViewController;
+    AlbumDataSource *dataSource;
 }
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet UITabBarController *rootViewController;
-
+@property (nonatomic, retain) AlbumDataSource *dataSource;
 @end
 @interface UITabBarController (MyApp)
 @end

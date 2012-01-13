@@ -13,8 +13,19 @@
 #define EXCLUDE  @"Exclude"
 #define OPTIONAL @"Optional"
 #define Rules    @"Rules"
+#import "AmptsPhotoCoreData.h"
+#import "Album.h"
+#import "PeopleRule.h"
+@class PhotoAppDelegate;
 @class DBOperation;
 @interface PlaylistDetailController : UIViewController<UITableViewDelegate,UITableViewDataSource,MPMediaPickerControllerDelegate,UITextFieldDelegate> {
+    PhotoAppDelegate * appDelegate;
+    //NSMutableArray *people;
+    AmptsPhotoCoreData * coreData;
+    Album *bum;
+    NSMutableArray *list;
+    PeopleRule *pr1;
+    
     UITableView *listTable;
     UITableViewCell *textFieldCell;
     UITableViewCell *switchCell;
@@ -43,6 +54,13 @@
     NSMutableArray *photos;
     int key;
 }
+
+@property(nonatomic,retain)Album *bum;
+@property(nonatomic,retain)PhotoAppDelegate *appDelegate;
+@property(nonatomic,retain)AmptsPhotoCoreData *coreData;
+@property(nonatomic,retain)NSMutableArray *list;
+
+
 @property(nonatomic,retain)IBOutlet UITableView *listTable;
 @property(nonatomic,retain)IBOutlet UITableViewCell *textFieldCell;
 @property(nonatomic,retain)IBOutlet UITableViewCell *switchCell;
@@ -71,6 +89,6 @@
 -(void)insert:(NSInteger)Row playId:(int)playId;
 -(void)deletes:(NSInteger)Row playId:(int)playId;
 -(void)creatTable;
--(void)update:(NSInteger)Row rule:(int)rule playId:(int)playId;
+-(void)insert:(NSInteger)Row rule:(NSString *)rule;
 -(void)addPlay;
 @end

@@ -42,8 +42,7 @@
     // Do any additional setup after loading the view from its nib.
     tagManagementController *tm = [[tagManagementController alloc]init];
     [self pushViewController:tm animated:NO];
-    [tm release];
-    
+    [tm release];    
 }
 
 - (void)viewDidUnload

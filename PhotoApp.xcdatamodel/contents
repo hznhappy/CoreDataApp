@@ -75,14 +75,14 @@
     </entity>
     <elements>
         <element name="Album" positionX="63" positionY="36" width="128" height="195"/>
-        <element name="Asset" positionX="-252" positionY="-9" width="128" height="180"/>
-        <element name="AssetRule" positionX="-99" positionY="468" width="128" height="105"/>
+        <element name="Asset" positionX="-243" positionY="-45" width="128" height="180"/>
+        <element name="AssetRule" positionX="-99" positionY="315" width="128" height="105"/>
         <element name="DateRule" positionX="351" positionY="444" width="128" height="105"/>
         <element name="Event" positionX="-333" positionY="360" width="128" height="90"/>
         <element name="EventRule" positionX="322" positionY="153" width="128" height="105"/>
-        <element name="People" positionX="-558" positionY="153" width="128" height="180"/>
+        <element name="People" positionX="-614" positionY="171" width="128" height="180"/>
         <element name="PeopleRule" positionX="18" positionY="-180" width="128" height="90"/>
         <element name="PeopleRuleDetail" positionX="331" positionY="-72" width="128" height="120"/>
-        <element name="PeopleTag" positionX="-531" positionY="-180" width="128" height="75"/>
+        <element name="PeopleTag" positionX="-461" positionY="-174" width="128" height="75"/>
     </elements>
 </model>

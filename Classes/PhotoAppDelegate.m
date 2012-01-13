@@ -13,6 +13,7 @@
 
 @synthesize window;
 @synthesize rootViewController;
+@synthesize dataSource;
 #pragma mark -
 #pragma mark Application lifecycle
 
@@ -24,8 +25,9 @@
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
     
-    
-    
+    AlbumDataSource *_dataSource = [[AlbumDataSource alloc] initWithAppName:@"PhotoApp"];
+    self.dataSource = _dataSource;
+    [_dataSource release];
     [window addSubview:rootViewController.view];
     [window makeKeyAndVisible];
     return YES;
@@ -83,6 +85,7 @@
 
 
 - (void)dealloc {
+    [dataSource release];
     [rootViewController release];
     [window release];
     [super dealloc];

@@ -11,7 +11,6 @@
 #import "tagManagementController.h"
 #import "PhotoImageView.h"
 #import "CropView.h"
-#import "AssetRef.h"
 #import "PhotoSource.h"
 
 

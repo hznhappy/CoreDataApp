@@ -9,18 +9,21 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <AddressBook/AddressBook.h>
 #import <AddressBookUI/AddressBookUI.h>
-#import "Thumbnail.h"
-#import "sqlite3.h"
-#import "DBOperation.h"
 #import "ThumbnailCell.h"
+#import "AmptsPhotoCoreData.h"
+#import "PeopleTag.h"
 
-
-#define TAG @"TAG"
-#define PassTable @"PassTable"
-
+@class People;
+@class PhotoAppDelegate;
 
 @interface AssetTablePicker : UIViewController<ThumbnailCellSelectionDelegate,UIScrollViewDelegate,UINavigationControllerDelegate,ABPeoplePickerNavigationControllerDelegate,UITableViewDelegate,UITableViewDataSource,UINavigationBarDelegate>
 {
+    PhotoAppDelegate * appDelegate;
+    AmptsPhotoCoreData * coreData;
+    
+    People *mypeople;
+    
+    
     UITableView *table;
     UIToolbar *viewBar;
     UIToolbar *tagBar;
@@ -35,7 +38,6 @@
     NSMutableArray *images;
     
     
-    DBOperation *dataBase;
     BOOL mode;
     BOOL load;
     BOOL done;
@@ -93,11 +95,9 @@
 -(IBAction)selectFromAllNames;
 -(void)setPhotoTag;
 -(void)AddUser:(NSNotification *)note;
--(void)creatTable;
 -(void)viewPhotos:(id)sender;
 -(UIImageView *)CGRectMake;
 -(UIView *)CGRectMake1;
 -(UIView *)CGRectMake2;
--(void)getAssets:(ALAsset *)asset;
 -(void)EditPhotoTag;
 @end

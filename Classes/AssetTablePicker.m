@@ -10,7 +10,9 @@
 #import "PhotoViewController.h"
 #import "tagManagementController.h"
 #import <AVFoundation/AVFoundation.h>
-
+#import "PhotoAppDelegate.h"
+#import "Asset.h"
+#import "People.h"
 
 @implementation AssetTablePicker
 @synthesize crwAssets,urlsArray,dateArry;
@@ -27,11 +29,9 @@
 #pragma mark UIViewController Methods
 
 -(void)viewDidLoad {
-    
+    appDelegate = [[UIApplication sharedApplication] delegate];
     done = YES;
     action=YES;
-    dataBase =[DBOperation getInstance];
-    [self creatTable];
     NSMutableArray *array=[[NSMutableArray alloc]init];
     NSMutableArray *array1=[[NSMutableArray alloc]init];
     self.tagRow=array;
@@ -80,54 +80,13 @@
     [self setPhotoTag];
 }
 
--(void)getAssets:(ALAsset *)asset{
-    [self.crwAssets addObject:asset];
-}
+
 -(void)EditPhotoTag
 {
     [self setPhotoTag];
     [self.table reloadData];
 }
--(void)loadPhotos:(NSArray *)array{
-    NSAutoreleasePool *pools = [[NSAutoreleasePool alloc]init];
-    NSDate *star = [NSDate date];
-    NSInteger beginIndex = [[array objectAtIndex:0]integerValue];
-    NSInteger endIndex = [[array objectAtIndex:1]integerValue];
-    for (NSInteger i = beginIndex; i<=endIndex; i++) {
-        ALAssetsLibraryAssetForURLResultBlock assetRseult = ^(ALAsset *result) 
-        {
-            if (result == nil) 
-            {
-                return;
-            }
-            //Thumbnail *thumbNail = [[Thumbnail alloc]initWithAsset:result];
-            
-            UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-            [button setImage:[UIImage imageWithCGImage:[result thumbnail]] forState:UIControlStateNormal];
-            [self.crwAssets replaceObjectAtIndex:i withObject:button];        
-        };
-        
-        
-        ALAssetsLibraryAccessFailureBlock failureBlock = ^(NSError *error)
-        {
-            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Error" 
-                                                             message:[NSString stringWithFormat:@"Error: %@", [error description]] 
-                                                            delegate:nil 
-                                                   cancelButtonTitle:@"Ok" 
-                                                   otherButtonTitles:nil];
-            [alert show];
-            [alert release];
-            NSLog(@"A problem occured %@", [error description]);                                     
-        };    
-        [self.library assetForURL:[self.urlsArray objectAtIndex:i] resultBlock:assetRseult failureBlock:failureBlock];
-    }
-    [self.table performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
-    // [self performSelectorOnMainThread:@selector(setPhotoTag) withObject:nil waitUntilDone:NO];
-    NSDate *finish = [NSDate date];
-    NSTimeInterval excuteTime = [finish timeIntervalSinceDate:star];
-    NSLog(@"finish time is %f",excuteTime);
-    [pools release];
-}
+
 -(void)huyou
 {
     NSString *a=NSLocalizedString(@"Lock", @"title");
@@ -164,9 +123,10 @@
                     PASS=NO;
                 }
                 else if([passWord.text isEqualToString:pass])
-                { NSString *deletePassTable= [NSString stringWithFormat:@"DELETE FROM PassTable"];	
+                { 
+                    NSString *deletePassTable= [NSString stringWithFormat:@"DELETE FROM PassTable"];	
                     NSLog(@"%@",deletePassTable);
-                    [dataBase deleteDB:deletePassTable];
+                    //[dataBase deleteDB:deletePassTable];
                     
                     NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults]; 
                     [defaults setObject:pass forKey:@"name_preference"];
@@ -190,25 +150,10 @@
     }
 }
 
--(void)creatTable
-{
-    NSString *createTag= [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(ID INT,URL TEXT,NAME,PRIMARY KEY(ID,URL))",TAG];
-    [dataBase createTable:createTag]; 
-    NSString *createPassTable= [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(LOCK,PASSWORD,PLAYID)",PassTable];
-    [dataBase createTable:createPassTable];
-    NSString *createUserTable= [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(ID INT PRIMARY KEY,NAME)",UserTable];
-    [dataBase createTable:createUserTable];
-    NSString *createIdOrder= [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(ID INT PRIMARY KEY)",idOrder];//OrderID INTEGER PRIMARY KEY,
-    [dataBase createTable:createIdOrder];
-    NSString *createPlayTable= [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(playList_id INTEGER PRIMARY KEY,playList_name,Transtion)",PlayTable];
-    [dataBase createTable:createPlayTable];
-    
-}
 -(void)AddUser:(NSNotification *)note
 {
     NSDictionary *dic = [note userInfo];
-    self.UserId=[dic objectForKey:@"UserId"];
-    self.UserName=[dic objectForKey:@"UserName"];
+    mypeople=[dic objectForKey:@"people"];
     
 }
 
@@ -231,8 +176,7 @@
     }
 }
 -(void)setPhotoTag{
-    NSString *selectSql = @"SELECT DISTINCT URL FROM TAG;";
-    self.photos = [dataBase selectPhotos:selectSql];
+   
 }
 
 #pragma mark -
@@ -288,12 +232,12 @@
             [alert2 release];
         }
         else{
-            NSString *deletePassTable= [NSString stringWithFormat:@"DELETE FROM PassTable"];
-            [dataBase deleteDB:deletePassTable];
+            //NSString *deletePassTable= [NSString stringWithFormat:@"DELETE FROM PassTable"];
+            //[dataBase deleteDB:deletePassTable];
             //for(int i=0;i<[self.urlsArray count];i++)
             // {
-            NSString *insertPassTable= [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@(LOCK,PASSWORD,PLAYID) VALUES('%@','%@','%@')",PassTable,@"UnLock",val,self.PLAYID];
-            [dataBase insertToTable:insertPassTable];
+           // NSString *insertPassTable= [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@(LOCK,PASSWORD,PLAYID) VALUES('%@','%@','%@')",PassTable,@"UnLock",val,self.PLAYID];
+           // [dataBase insertToTable:insertPassTable];
             
             [lock setTitle:b];
         }
@@ -305,7 +249,7 @@
 }
 
 -(IBAction)saveTags{
-    if(UserId==nil)
+    if(mypeople==nil)
     {
         ME=YES;
         NSString *message=[[NSString alloc] initWithFormat:
@@ -327,19 +271,35 @@
     else
     {
         for(int i=0;i<[self.UrlList count];i++)
+        {   
+         
+            Asset *asset = [self.UrlList objectAtIndex:i];
+            PeopleTag  *peopleTag= [NSEntityDescription insertNewObjectForEntityForName:@"PeopleTag" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
+            peopleTag.conAsset = asset;
+            [asset addConPeopleTagObject:peopleTag];
+            peopleTag.conPeople = mypeople;
+            [mypeople addConPeopleTagObject:peopleTag];
+            [appDelegate.dataSource.coreData saveContext];
+            
+        }
+       
+
+       
+        
+        /*for(int i=0;i<[self.UrlList count];i++)
         {    
             NSString *insertTag= [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@(ID,URL,NAME) VALUES('%@','%@','%@')",TAG,UserId,[self.UrlList objectAtIndex:i],self.UserName];
             NSLog(@"JJJJ%@",insertTag);
             [dataBase insertToTable:insertTag];
         }
-        [self cancelTag];
+       
         [self setPhotoTag];
         NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
                                                            object:self 
-                                                         userInfo:dic1];
+                                                         userInfo:dic1];*/
         
-        
+         [self cancelTag];
     }
 }
 -(IBAction)resetTags{
@@ -363,9 +323,9 @@
     [picker release]; 
 }
 -(IBAction)playPhotos{
-    [dataBase getUserFromPlayTable:PLAYID];
-    NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,[NSString stringWithFormat:@"%d",0],dataBase.Transtion,@"animation",nil];
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"PlayPhoto" object:nil userInfo:dic]; 
+    //[dataBase getUserFromPlayTable:PLAYID];
+    //NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,[NSString stringWithFormat:@"%d",0],dataBase.Transtion,@"animation",nil];
+   // [[NSNotificationCenter defaultCenter]postNotificationName:@"PlayPhoto" object:nil userInfo:dic]; 
 }
 
 #pragma mark - 
@@ -382,23 +342,29 @@
 -(BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person{
     
     
-    NSString *readName=[(NSString *)ABRecordCopyCompositeName(person) autorelease];
+    NSString *firstName = (NSString*)ABRecordCopyValue(person, kABPersonFirstNameProperty);
+    NSString *lastName = (NSString*)ABRecordCopyValue(person, kABPersonLastNameProperty);
+    
     ABRecordID recId = ABRecordGetRecordID(person);
     
-    self.UserId=[NSString stringWithFormat:@"%d",recId];
-    self.UserName=readName;
-    NSString *insertUserTable= [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@(ID,NAME) VALUES('%@','%@')",UserTable,self.UserId,readName];
-    NSLog(@"%@",insertUserTable);
-    [dataBase insertToTable:insertUserTable];
+    NSManagedObjectContext *managedObjectsContext = [appDelegate.dataSource.coreData managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"People" inManagedObjectContext:managedObjectsContext];
+    NSFetchRequest *request = [[NSFetchRequest alloc]init];
+    [request setEntity:entity];
     
+    NSPredicate *pre = [NSPredicate predicateWithFormat:@"addressBookId == %@",[NSNumber numberWithInteger:recId]];
+    [request setPredicate:pre];
     
-    NSString *insertIdOrder= [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@(ID) VALUES('%@')",idOrder,self.UserId];
-    NSLog(@"%@",insertIdOrder);
-    [dataBase insertToTable:insertIdOrder];   
-    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:self.UserId,@"UserId",readName,@"UserName",nil];
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"AddContact" 
-                                                       object:self 
-                                                     userInfo:dic];
+    NSError *error = nil;
+    NSArray *array = [managedObjectsContext executeFetchRequest:request error:&error];
+    if (array != nil && [array count] && error == nil) {
+        mypeople = [array objectAtIndex:0];
+    }else{
+        mypeople = [NSEntityDescription insertNewObjectForEntityForName:@"People" inManagedObjectContext:managedObjectsContext];
+        mypeople.firstName = firstName;
+        mypeople.lastName = lastName;
+        mypeople.addressBookId = [NSNumber numberWithInteger:recId];
+    }
     [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
     [self dismissModalViewControllerAnimated:YES];
     return NO;
@@ -450,11 +416,10 @@
         NSInteger row = (indexPath.row*loopCount)+i;
         if (row<[self.crwAssets count]) {
             
-            ALAsset *asset = [self.crwAssets objectAtIndex:row];
-            //[assetsInRow addObject:asset];
-            NSURL *url=[[asset defaultRepresentation]url];
-           
-            
+            Asset *dbAsset = [self.crwAssets objectAtIndex:row];
+            NSString *dbUrl = dbAsset.url;
+            NSURL *url = [NSURL URLWithString:dbUrl];
+            ALAsset *asset = [appDelegate.dataSource getAsset:dbAsset.url];
             ThumbnailImageView *thumImageView = [[ThumbnailImageView alloc]initWithAsset:asset index:row];
             thumImageView.frame = frame;
             thumImageView.delegate = cell;
@@ -484,27 +449,22 @@
                 [thumImageView addSubview:[self CGRectMake]]; 
                 
             }
-            if([photos containsObject:[url description]])
+            if([dbAsset.numPeopleTag intValue] != 0)
             {   
                 [thumImageView addSubview:[self CGRectMake1]];
-                NSString *selectTag= [NSString stringWithFormat:@"select count(*) from tag where URL='%@'",url];
-                NSInteger count1 = [[[dataBase selectFromTAG:selectTag]objectAtIndex:0]intValue];              
-                count.text =[NSString stringWithFormat:@"%d",count1];
+                count.text =[NSString stringWithFormat:@"%@",dbAsset.numPeopleTag];
                 [count release];
                 
                 
             }
-            
         }
     }
-   // [cell displayThumbnails:assetsInRow count:loopCount];
     return cell;
 }
 
 -(void)selectedThumbnailCell:(ThumbnailCell *)cell selectedAtIndex:(NSUInteger)index{
     NSString *row=[NSString stringWithFormat:@"%d",index];
-    ALAsset *asset = [self.crwAssets objectAtIndex:index];
-    NSString *url = [[[asset defaultRepresentation]url] description];
+    Asset *asset = [self.crwAssets objectAtIndex:index];
     if(action==YES)
     {
         selectedRow = cell.rowNumber;
@@ -515,11 +475,11 @@
     {
         if([self.tagRow containsObject:row])
         {
-            [self.UrlList removeObject:url];
+            [self.UrlList removeObject:asset];
             [self.tagRow removeObject:row];
         }
         else
-        {   [self.UrlList addObject:url];
+        {   [self.UrlList addObject:asset];
             [self.tagRow addObject:row];
         }
     }

@@ -10,7 +10,7 @@
 
 
 @interface PlaylistRootViewController : UINavigationController {
-    
+    UIActivityIndicatorView *activityView;
 }
 
 @end
