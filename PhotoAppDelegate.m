@@ -9,6 +9,7 @@
 #import "PhotoAppDelegate.h"
 #import "AlbumController.h"
 #import "AssetTablePicker.h"
+#import "AlbumDataSource.h"
 @implementation PhotoAppDelegate
 
 @synthesize window;
@@ -24,8 +25,8 @@
     // Add the view controller's view to the window and display.
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
-    
-    AlbumDataSource *_dataSource = [[AlbumDataSource alloc] initWithAppName:@"PhotoApp"];
+    NSArray *viewControllers = rootViewController.viewControllers;
+    AlbumDataSource *_dataSource = [[AlbumDataSource alloc] initWithAppName:@"PhotoApp" navigationController:(UINavigationController *)[viewControllers objectAtIndex:0]];
     self.dataSource = _dataSource;
     [_dataSource release];
     [window addSubview:rootViewController.view];

@@ -10,12 +10,13 @@
 #import "AlbumController.h"
 #import "AssetTablePicker.h"
 #import "PhotoViewController.h"
-#import "PhotoSource.h"
 #import "Asset.h"
 #import "AlbumDataSource.h"
 #import "tagManagementController.h"
 #import "PhotoAppDelegate.h"
+#import "Playlist.h"
 @implementation PlaylistRootViewController
+@synthesize activityView;
  static NSString* const kFileName=@"output.mov";
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -50,25 +51,20 @@
     // Do any additional setup after loading the view from its nib.
     self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
    self.navigationItem.title= @"Loading....";
-    activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    UIActivityIndicatorView *_activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    self.activityView = _activityView;
     CGRect rect = [UIScreen mainScreen].bounds;
     activityView.frame = CGRectMake(( CGRectGetMaxX(rect)/ 2) - 15.0f, (CGRectGetMaxY(rect)/2) - 15.0f , 30.0f, 30.0f);
     activityView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
     [self.view addSubview:activityView];
     [activityView startAnimating];
+    [_activityView release];
     self.view.backgroundColor = [UIColor blackColor];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(playlistAlbum) name:@"album" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(pushAssetsTablePicker:) name:@"pushThumbnailView" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(pushPhotosBrowser:) name:@"viewPhotos" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(playPhotoWithAnimation:) name:@"PlayPhoto" object:nil];
 }
 
--(void)playlistAlbum{
-    AlbumController *al = [[AlbumController alloc]initWithNibName:@"AlbumController" bundle:[NSBundle mainBundle]];
-    [self pushViewController:al animated:YES];
-    [al release];
-    [activityView stopAnimating];
-}
 -(void)pushAssetsTablePicker:(NSNotification *)note{
     NSDictionary *dic = [note userInfo];
     NSMutableArray *assets = [[NSMutableArray alloc]init];
@@ -97,19 +93,18 @@
     NSDictionary *dicOfPhotoViewer = [note userInfo];
     NSString *key = [[dicOfPhotoViewer allKeys] objectAtIndex:0];
     NSMutableArray *assets = [dicOfPhotoViewer valueForKey:key];
-    NSMutableArray *photoSource  = [[NSMutableArray alloc]init];
+    
     PhotoAppDelegate *delegate = [[UIApplication sharedApplication] delegate];
     AlbumDataSource *dataSourec =   delegate.dataSource;
-    for (Asset *as in assets) {
-        [photoSource addObject:[PhotoSource PhotoWithAsset:[dataSourec getAsset:as.url]]];
-    }
-    PhotoViewController *pc = [[PhotoViewController alloc]initWithPhotoSource:photoSource currentPage:[key integerValue]];
-    //PhotosBrowser *pc = [[PhotosBrowser alloc]initWithPhotoSource:assets currentPage:[key integerValue]];
+
+    PhotoViewController *pc = [[PhotoViewController alloc]init];
+    pc.playlist.storeAssets = assets;
+    pc.playlist.assets = dataSourec.deviceAssets.deviceAssetsList;
+    pc.currentPageIndex = [key integerValue];
     [self pushViewController:pc animated:YES];
     [pc release];
-    [photoSource release];
 }
-
+/*
 -(void)playPhotoWithAnimation:(NSNotification *)note{
     NSDictionary *dic = [note userInfo];
     NSMutableArray *assets = [dic valueForKey:@"0"];
@@ -123,7 +118,7 @@
     [playPhotoController fireTimer:transtion];
     [self pushViewController:playPhotoController animated:YES];
     [playPhotoController release];
-}
+}*/
 
 - (void)viewDidUnload
 {

@@ -142,7 +142,28 @@
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
     
+    PlaylistDetailController *detailController = [[PlaylistDetailController alloc]initWithNibName:@"PlaylistDetailController" bundle:[NSBundle mainBundle]];
+    AmptsAlbum *am = (AmptsAlbum *)[assets objectAtIndex:indexPath.row];
+    NSLog(@"albumID:%@",am.alblumId);
+    NSManagedObjectContext *managedObjectContext=[dataSource.coreData managedObjectContext];
+    NSFetchRequest *request=[[NSFetchRequest alloc]init];
     
+    NSEntityDescription *entity1=[NSEntityDescription entityForName:@"Album" inManagedObjectContext:managedObjectContext];
+    [request setEntity:entity1];
+    NSError *error1;
+       NSArray *A=[[managedObjectContext executeFetchRequest:request error:&error1] mutableCopy];
+    //NSArray *A=[managedObjectsContext executeFetchRequest:request error:&error];
+   
+   /* for(int i=0;i<[A count];i++)
+    {
+        
+    }*/
+    detailController.al=[A objectAtIndex:indexPath.row-2];
+    detailController.hidesBottomBarWhenPushed = YES;
+    
+    [self.navigationController pushViewController:detailController animated:YES];
+    [detailController release];
+
     
 }
 #pragma mark -

@@ -8,6 +8,7 @@
 #define ZOOM_VIEW_TAG 0x101
 #import "PhotoImageView.h"
 #import "PhotoScrollView.h"
+#import "Playlist.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface RotateGesture : UIRotationGestureRecognizer {}
@@ -67,7 +68,9 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 @synthesize photo=_photo;
 @synthesize imageView=_imageView;
 @synthesize scrollView=_scrollView;
-
+@synthesize index;
+@synthesize fuzzy,fullScreen;
+@synthesize playlist;
 - (id)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
 		
@@ -113,7 +116,6 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 
 
 
-
 - (void)layoutSubviews{
 	[super layoutSubviews];
 		
@@ -122,6 +124,66 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 	}
 	
 }
+
+- (void)loadIndex: (NSUInteger) _index {
+    //NSLog(@"Asset Loading");
+    // set the tag for async operation result check
+     //[_activityView startAnimating];
+    self.tag = _index;
+    // reset our zoomScale to 1.0 before doing any further calculations
+    self.scrollView.zoomScale = 1.0;
+    self.imageView.image = nil;
+    
+    //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+    //        [self doLoadImage: nil checkIndex: _index];
+    //    });
+    [self performSelectorInBackground:@selector(doLoadIndexStr:) withObject:[NSString stringWithFormat:@"%d", _index]];
+}
+
+- (void)doLoadIndex: (NSUInteger) _index {
+  //  NSLog(@"doLoadIndex: %d", _index);
+    
+    self.fullScreen = nil;
+    self.fuzzy = [self.playlist fuzzyImageAtIndex:_index forFullScreenImage:^(UIImage *img) {
+        //NSLog(@"======== FullScreen Loaded ===========");
+        self.fullScreen = img;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self doLoadImage: nil checkIndex: _index];
+        });
+    }];  
+    [self doLoadImage: nil checkIndex: _index];
+}
+
+- (void)doLoadIndexStr: (NSString*) _index {
+    [self doLoadIndex: [_index integerValue]];
+}
+
+- (void)doLoadImage: (UIImage *) image checkIndex: (NSUInteger) _index {
+    
+    if (self.tag != _index) {
+        NSLog(@"Skipping non-matched image loading process: %d", _index);
+        return;
+    }
+    
+    if (image == nil) {
+        self.imageView.image = fullScreen != nil ? fullScreen : fuzzy;
+    } else {
+        self.imageView.image = image;
+    }
+     //[_activityView stopAnimating];
+    [self layoutScrollViewAnimated:NO];
+    //    self.contentSize = [self.imageView.image size];
+    //    
+    ////    NSLog(@"Content Size: %fx%f", self.contentSize.width, self.contentSize.height);
+    //    if (self.contentSize.width > 0 && self.contentSize.height > 0) {
+    //        [self setMaxMinZoomScalesForCurrentBounds];
+    //        self.zoomScale = self.minimumZoomScale;
+    ////        NSLog(@"Minimum Zoom Scale: %f", self.minimumZoomScale);
+    //    }
+    //
+        [self setNeedsLayout];
+}
+
 
 - (void)setPhoto:(UIImage *)aPhoto{
 //    [_activityView startAnimating];
@@ -179,21 +241,15 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 
 -(void)rotatePhoto{
 
-    UIImage *image = [self.photo imageRotatedByDegrees:90];
-    self.photo = image;
-    [self setClearPhoto];
+    UIImage *image = [self.fullScreen imageRotatedByDegrees:90];
+    self.fullScreen = image;
+    self.imageView.image = self.fullScreen;
 
 }
 
 -(void)savePhoto{
-    UIImageWriteToSavedPhotosAlbum(self.photo, nil, nil, nil);
+    UIImageWriteToSavedPhotosAlbum(self.fullScreen, nil, nil, nil);
 
-}
-- (void)prepareForReusue{
-	
-	//  reset view
-	self.tag = -1;
-	
 }
 
 #pragma mark -
@@ -405,6 +461,9 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 	
 }
 
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSLog(@"view");
+}
 
 #pragma mark -
 #pragma mark Dealloc
@@ -413,7 +472,9 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 	
 		
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	
+	[fullScreen release];
+    [playlist release];
+    [fuzzy release];
 	[_activityView release], _activityView=nil;
 	[_imageView release]; _imageView=nil;
 	[_scrollView release]; _scrollView=nil;

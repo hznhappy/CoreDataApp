@@ -274,6 +274,10 @@
         {   
          
             Asset *asset = [self.UrlList objectAtIndex:i];
+            
+            asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]+1];
+            NSLog(@"URL:%@",asset.url);
+            NSLog(@"numPeopleTag:%@",asset.numPeopleTag);
             PeopleTag  *peopleTag= [NSEntityDescription insertNewObjectForEntityForName:@"PeopleTag" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
             peopleTag.conAsset = asset;
             [asset addConPeopleTagObject:peopleTag];

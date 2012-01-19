@@ -151,6 +151,8 @@ int j=1,count=0;
     }
     
     [self dismissModalViewControllerAnimated:YES];
+    [personName release];
+    [lastname release];
     return NO;
     
 	
@@ -214,6 +216,7 @@ int j=1,count=0;
         [self.IdList addObject:a.addressBookId];
     }  
     NSLog(@"idlist:%@",IdList);
+    [request release];
     [self.tableView reloadData];
 }
 - (void)viewDidUnload

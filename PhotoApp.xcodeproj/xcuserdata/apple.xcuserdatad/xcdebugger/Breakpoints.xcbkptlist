@@ -51,12 +51,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/PhotoViewController.m"
-         timestampString = "347867696.126204"
+         timestampString = "348649918.463136"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "1050"
          endingLineNumber = "1050"
-         landmarkName = "-loadScrollViewWithPage:"
+         landmarkName = "-actionButtonHit:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -65,13 +65,13 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/PhotoViewController.m"
-         timestampString = "347867696.126204"
+         timestampString = "348649918.463136"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "1263"
          endingLineNumber = "1263"
-         landmarkName = "-actionSheet:clickedButtonAtIndex:"
-         landmarkType = "5">
+         landmarkName = "@implementation PhotoViewController"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"

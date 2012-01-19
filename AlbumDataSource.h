@@ -21,14 +21,15 @@
     OnDeviceAssets * deviceAssets;
      NSMutableArray* assetsBook;
     NSOperationQueue *opQueue;
-
+    UINavigationController *nav;
     
 }
 @property (nonatomic,retain) AmptsPhotoCoreData * coreData;
 @property (nonatomic,retain) OnDeviceAssets * deviceAssets;
 @property (nonatomic,retain) NSMutableArray * assetsBook;
 @property (nonatomic,retain) NSOperationQueue * opQueue;
--(id) initWithAppName: (NSString*) app;
+@property (nonatomic,retain)UINavigationController *nav;
+-(id) initWithAppName: (NSString*) app navigationController:(UINavigationController *)navigationController;
 -(NSMutableArray* ) getAlbumList;
 -(AmptsAlbum*) getAlbum:(NSUInteger) index;
 -(NSInteger ) getAlbumCount;

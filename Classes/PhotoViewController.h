@@ -7,24 +7,26 @@
 //
 
 #import <MessageUI/MessageUI.h>
+#import <AddressBook/AddressBook.h>
+#import <AddressBookUI/AddressBookUI.h>
 #import <AssetsLibrary/AssetsLibrary.h>
-#import "DBOperation.h"
 #import "PopupPanelView.h"
-#import "PhotoSource.h"
 #import <MediaPlayer/MediaPlayer.h>
-#define Rules    @"Rules"
-#define PV_IMAGE_GAP 30
+#define PADDING 20
+
 @class CropView;
 @class PhotoImageView;
-@interface PhotoViewController : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate, PhotoSourceDelegate,
+@class Playlist;;
+@interface PhotoViewController : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate,
                                                     MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate> {
 @private
-	NSArray *photoSource;
 	NSMutableArray *_photoViews;
-    NSMutableArray *fullScreenPhotos;
+    NSMutableSet *recycledPages;
+    NSMutableSet *visiblePages;
 	UIScrollView *_scrollView;	
-	
-	NSInteger _pageIndex;
+    Playlist *playlist;
+	NSUInteger currentPageIndex;
+                                                        
 	BOOL _rotating;
 	BOOL _barsHidden;
 	
@@ -39,43 +41,60 @@
     BOOL tagShow;
     BOOL croping;
 
-	DBOperation *db;
     PopupPanelView *ppv;
+    NSTimer *controlVisibilityTimer;
     NSTimer *timer;	
     UIButton *playButton;
     NSMutableArray *video;
     BOOL VI;
-    //BOOL favo;
+
     MPMoviePlayerController* theMovie;
     UIView *favorite;
-    ALAsset *realasset;
     
     UIImageView *bubbleImageView;
 }
+@property (nonatomic, retain) Playlist *playlist;
 @property(nonatomic,retain)PopupPanelView *ppv;
 @property(nonatomic,retain)NSMutableArray *video;
 @property(nonatomic,retain) NSArray *photoSource;
 @property(nonatomic,retain) NSMutableArray *photoViews;
-@property(nonatomic,retain) NSMutableArray *fullScreenPhotos;
 
 @property(nonatomic,retain)CropView *cropView;
 @property(nonatomic,retain) UIScrollView *scrollView;
-@property(nonatomic,assign) NSInteger _pageIndex;
+@property(nonatomic,assign) NSUInteger currentPageIndex;
 
--(void)startToLoadImageAtIndex:(NSUInteger)index;
-- (id)initWithPhotoSource:(NSArray *)aSource currentPage:(NSInteger)page;
-//-(void)readPhotoFromALAssets:(NSString *)pageIndex;
-- (NSInteger)currentPhotoIndex;
-- (void)moveToPhotoAtIndex:(NSInteger)index animated:(BOOL)animated;
+//init
+- (id)init;
+
+//paging
+-(void)updatePages;
+- (void)configurePage:(PhotoImageView *)page forIndex:(NSUInteger)index;
+- (BOOL)isDisplayingPageForIndex:(NSUInteger)index;
+- (PhotoImageView *)dequeueRecycledPage;
+- (PhotoImageView *)pageDisplayedAtIndex:(NSUInteger)index;
+
+//frames
+- (CGRect)frameForPagingScrollView;
+- (CGRect)frameForPageAtIndex:(NSUInteger)index;
+- (CGSize)contentSizeForPagingScrollView;
+- (CGPoint)contentOffsetForPageAtIndex:(NSUInteger)index;
+
+//control
+- (void)jumpToPageAtIndex:(NSUInteger)index;
+- (void)hideControlsAfterDelay;
+- (void)cancelControlHiding;
+
+//PlayVideo and play photos
 -(void)fireTimer:(NSString *)animateStyle;
 -(void)playVideo;
 -(void)play:(CGRect)framek;
+
+//LikeTag
 -(void)favorite:(NSString *)inter;
 -(void)CFG;
--(void)button1Pressed;
+-(void)likeButtonPressed;
 -(void)button2Pressed;
-- (UIImage *)imageAtIndex:(NSUInteger)index;
-//- (UIImage *) croppedPhoto;
+
 @end
 
 @interface UIImage (Crop)
