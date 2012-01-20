@@ -7,7 +7,7 @@
 //
 
 #import "PersonRootViewController.h"
-#import "tagManagementController.h"
+#import "TagManagementController.h"
 
 
 @implementation PersonRootViewController
@@ -40,7 +40,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    tagManagementController *tm = [[tagManagementController alloc]init];
+    TagManagementController *tm = [[TagManagementController alloc]init];
     [self pushViewController:tm animated:NO];
     [tm release];    
 }

@@ -8,36 +8,44 @@
 #import "AssetTablePicker.h"
 #import "AlbumController.h"
 #import "PhotoViewController.h"
-#import "tagManagementController.h"
+#import "TagManagementController.h"
 #import <AVFoundation/AVFoundation.h>
 #import "PhotoAppDelegate.h"
 #import "Asset.h"
 #import "People.h"
+#import "TagSelector.h"
 
 @implementation AssetTablePicker
-@synthesize crwAssets,urlsArray,dateArry;
+@synthesize crwAssets;
 @synthesize table,val;
 @synthesize viewBar,tagBar;
-@synthesize save,reset,UserId,UrlList,UserName;
-@synthesize images,PLAYID,lock;
-@synthesize library;
+@synthesize save,reset,UrlList;
+@synthesize lock;
 @synthesize operations;
 @synthesize tagRow;
-@synthesize destinctUrl;
-@synthesize photos;
 #pragma mark -
 #pragma mark UIViewController Methods
 
 -(void)viewDidLoad {
-    appDelegate = [[UIApplication sharedApplication] delegate];
+    
+    
     done = YES;
     action=YES;
+    mode = NO;
+    tagBar.hidden = YES;
+    save.enabled = NO;
+    reset.enabled = NO;
+    ME=NO;
+    PASS=NO;
+    tagSelector = [[TagSelector alloc]initWithViewController:self];
     NSMutableArray *array=[[NSMutableArray alloc]init];
-    NSMutableArray *array1=[[NSMutableArray alloc]init];
+     NSMutableArray *tempArray = [[NSMutableArray alloc] init];
+    
     self.tagRow=array;
-    self.photos=array1;
+    self.UrlList=tempArray;
+    [tempArray release];
     [array release];
-    [array1 release];
+    
     NSString *b=NSLocalizedString(@"Back", @"title");
     UIButton* backButton = [UIButton buttonWithType:101]; // left-pointing shape!
     [backButton addTarget:self action:@selector(huyou) forControlEvents:UIControlEventTouchUpInside];
@@ -46,25 +54,19 @@
     self.navigationItem.leftBarButtonItem =backItem;
     [backItem release];
     
-    NSMutableArray *tempArray = [[NSMutableArray alloc] init];
-    self.UrlList=tempArray;
-    [tempArray release];
+   
+   
     self.table.delegate = self;
     self.table.maximumZoomScale = 2;
     self.table.minimumZoomScale = 1;
     self.table.contentSize = CGSizeMake(self.table.frame.size.width, self.table.frame.size.height);
-    mode = NO;
-    tagBar.hidden = YES;
-    save.enabled = NO;
-    reset.enabled = NO;
+    
     [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
     [self.navigationController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
     [self.table setSeparatorColor:[UIColor clearColor]];
 	[self.table setAllowsSelection:NO];
     [self setWantsFullScreenLayout:YES];
-    NSMutableArray *temp = [[NSMutableArray alloc]init];
-    self.images = temp;
-    [temp release];
+    
     NSString *a=NSLocalizedString(@"Cancel", @"title");
     cancel = [[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleDone target:self action:@selector(cancelTag)];
     alert1 = [[UIAlertView alloc]initWithTitle:@"请输入密码"  message:@"\n" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: @"取消",nil];  
@@ -72,18 +74,15 @@
     passWord.backgroundColor = [UIColor whiteColor];  
     passWord.secureTextEntry = YES;
     [alert1 addSubview:passWord];  
-    ME=NO;
-    PASS=NO;
+   
     [self.table performSelector:@selector(reloadData) withObject:nil afterDelay:.3];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(AddUser:) name:@"AddUser" object:nil];
+    
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EditPhotoTag)name:@"EditPhotoTag" object:nil];
-    [self setPhotoTag];
 }
 
 
 -(void)EditPhotoTag
 {
-    [self setPhotoTag];
     [self.table reloadData];
 }
 
@@ -150,13 +149,6 @@
     }
 }
 
--(void)AddUser:(NSNotification *)note
-{
-    NSDictionary *dic = [note userInfo];
-    mypeople=[dic objectForKey:@"people"];
-    
-}
-
 -(void)viewDidAppear:(BOOL)animated{
     self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
     
@@ -175,9 +167,7 @@
         selectedRow = NSNotFound;
     }
 }
--(void)setPhotoTag{
-   
-}
+
 
 #pragma mark -
 #pragma mark ButtonAction Methods
@@ -232,12 +222,6 @@
             [alert2 release];
         }
         else{
-            //NSString *deletePassTable= [NSString stringWithFormat:@"DELETE FROM PassTable"];
-            //[dataBase deleteDB:deletePassTable];
-            //for(int i=0;i<[self.urlsArray count];i++)
-            // {
-           // NSString *insertPassTable= [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@(LOCK,PASSWORD,PLAYID) VALUES('%@','%@','%@')",PassTable,@"UnLock",val,self.PLAYID];
-           // [dataBase insertToTable:insertPassTable];
             
             [lock setTitle:b];
         }
@@ -249,7 +233,7 @@
 }
 
 -(IBAction)saveTags{
-    if(mypeople==nil)
+    if([tagSelector tagPeople]==nil)
     {
         ME=YES;
         NSString *message=[[NSString alloc] initWithFormat:
@@ -272,37 +256,10 @@
     {
         for(int i=0;i<[self.UrlList count];i++)
         {   
-         
             Asset *asset = [self.UrlList objectAtIndex:i];
-            
-            asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]+1];
-            NSLog(@"URL:%@",asset.url);
-            NSLog(@"numPeopleTag:%@",asset.numPeopleTag);
-            PeopleTag  *peopleTag= [NSEntityDescription insertNewObjectForEntityForName:@"PeopleTag" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
-            peopleTag.conAsset = asset;
-            [asset addConPeopleTagObject:peopleTag];
-            peopleTag.conPeople = mypeople;
-            [mypeople addConPeopleTagObject:peopleTag];
-            [appDelegate.dataSource.coreData saveContext];
-            
+            [tagSelector saveTagAsset:asset];
         }
        
-
-       
-        
-        /*for(int i=0;i<[self.UrlList count];i++)
-        {    
-            NSString *insertTag= [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@(ID,URL,NAME) VALUES('%@','%@','%@')",TAG,UserId,[self.UrlList objectAtIndex:i],self.UserName];
-            NSLog(@"JJJJ%@",insertTag);
-            [dataBase insertToTable:insertTag];
-        }
-       
-        [self setPhotoTag];
-        NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
-                                                           object:self 
-                                                         userInfo:dic1];*/
-        
          [self cancelTag];
     }
 }
@@ -312,19 +269,10 @@
     [self.table reloadData];
 }
 -(IBAction)selectFromFavoriteNames{
-    tagManagementController *nameController = [[tagManagementController alloc]init];
-    nameController.bo=[NSString stringWithFormat:@"yes"];
-	UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:nameController];
-	[self presentModalViewController:navController animated:YES];
-    [navController release];
-    [nameController release];
+    [tagSelector selectTagNameFromFavorites];
 }
 -(IBAction)selectFromAllNames{
-    ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc]init];
-    picker.peoplePickerDelegate = self;
-    [self presentModalViewController:picker animated:YES];
-    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
-    [picker release]; 
+    [tagSelector selectTagNameFromContacts];
 }
 -(IBAction)playPhotos{
     //[dataBase getUserFromPlayTable:PLAYID];
@@ -332,57 +280,8 @@
    // [[NSNotificationCenter defaultCenter]postNotificationName:@"PlayPhoto" object:nil userInfo:dic]; 
 }
 
-#pragma mark - 
-#pragma mark notification method
 
--(void)setEditOverlay:(NSNotification *)notification{
-    
-    [self setPhotoTag];
-    
-}
 
-#pragma mark -
-#pragma mark People picker delegate
--(BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person{
-    
-    
-    NSString *firstName = (NSString*)ABRecordCopyValue(person, kABPersonFirstNameProperty);
-    NSString *lastName = (NSString*)ABRecordCopyValue(person, kABPersonLastNameProperty);
-    
-    ABRecordID recId = ABRecordGetRecordID(person);
-    
-    NSManagedObjectContext *managedObjectsContext = [appDelegate.dataSource.coreData managedObjectContext];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"People" inManagedObjectContext:managedObjectsContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc]init];
-    [request setEntity:entity];
-    
-    NSPredicate *pre = [NSPredicate predicateWithFormat:@"addressBookId == %@",[NSNumber numberWithInteger:recId]];
-    [request setPredicate:pre];
-    
-    NSError *error = nil;
-    NSArray *array = [managedObjectsContext executeFetchRequest:request error:&error];
-    if (array != nil && [array count] && error == nil) {
-        mypeople = [array objectAtIndex:0];
-    }else{
-        mypeople = [NSEntityDescription insertNewObjectForEntityForName:@"People" inManagedObjectContext:managedObjectsContext];
-        mypeople.firstName = firstName;
-        mypeople.lastName = lastName;
-        mypeople.addressBookId = [NSNumber numberWithInteger:recId];
-    }
-    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
-    [self dismissModalViewControllerAnimated:YES];
-    return NO;
-}
-
--(void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker{
-    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
-    [self dismissModalViewControllerAnimated:YES];
-}
-
-- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier
-{
-    return NO;
-}
 #pragma mark -
 #pragma mark UITableViewDataSource and Delegate Methods
 
@@ -414,55 +313,34 @@
         loopCount = 6;
     }else
         loopCount = 4;
-   // NSMutableArray *assetsInRow = [[NSMutableArray alloc]init];
-    CGRect frame = CGRectMake(4, 2, 75, 75);
+    NSMutableArray *assetsInRow = [[NSMutableArray alloc]init];
+    
     for (NSInteger i = 0; i<loopCount; i++) {
         NSInteger row = (indexPath.row*loopCount)+i;
         if (row<[self.crwAssets count]) {
             
             Asset *dbAsset = [self.crwAssets objectAtIndex:row];
-            NSString *dbUrl = dbAsset.url;
-            NSURL *url = [NSURL URLWithString:dbUrl];
-            ALAsset *asset = [appDelegate.dataSource getAsset:dbAsset.url];
-            ThumbnailImageView *thumImageView = [[ThumbnailImageView alloc]initWithAsset:asset index:row];
-            thumImageView.frame = frame;
-            thumImageView.delegate = cell;
-            [cell addSubview:thumImageView];
-            [thumImageView release];
-            frame.origin.x = frame.origin.x + frame.size.width + 4;
-            NSString *ROW=[NSString stringWithFormat:@"%d",row];
-            if ([[asset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo]) 
-            {
-                NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
-                                                                 forKey:AVURLAssetPreferPreciseDurationAndTimingKey];           
-                AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:url options:opts]; 
+            [assetsInRow addObject:dbAsset];
+        }
+    }
+    [cell displayThumbnails:assetsInRow count:loopCount];
+    
+    if (!action) {
+        for (NSInteger i = 0; i<loopCount; i++) {
+            NSInteger row = (indexPath.row*loopCount)+i;
+            if (row<[self.crwAssets count]) {
                 
-                minute = 0, second = 0; 
-                second = urlAsset.duration.value / urlAsset.duration.timescale;
-                if (second >= 60) {
-                    int index = second / 60;
-                    minute = index;
-                    second = second - index*60;                        
-                }    
-                [thumImageView addSubview:[self CGRectMake2]];
-                
-            }
-            
-            if([self.tagRow containsObject:ROW])
-            { 
-                [thumImageView addSubview:[self CGRectMake]]; 
-                
-            }
-            if([dbAsset.numPeopleTag intValue] != 0)
-            {   
-                [thumImageView addSubview:[self CGRectMake1]];
-                count.text =[NSString stringWithFormat:@"%@",dbAsset.numPeopleTag];
-                [count release];
-                
+                NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
+                if([self.tagRow containsObject:selectedIndex])
+                { 
+                    [cell checkTagSelection:selectedIndex];
+                    
+                }
                 
             }
         }
     }
+    
     return cell;
 }
 
@@ -490,70 +368,11 @@
     [self.table reloadData];
     
 }
--(UIImageView *)CGRectMake
-{
-    CGRect viewFrames = CGRectMake(0, 0, 75, 75);
-    UIImageView *overlayView = [[[UIImageView alloc]initWithFrame:viewFrames]autorelease];
-    [overlayView setImage:[UIImage imageNamed:@"selectOverlay.png"]];
-    return overlayView;
-}
--(UIView *)CGRectMake1
-{
-    UIView *tagBg =[[[UIView alloc]initWithFrame:CGRectMake(3, 3, 25, 25)]autorelease];
-    CGPoint tagBgCenter = tagBg.center;
-    tagBg.layer.cornerRadius = 25 / 2.0;
-    tagBg.center = tagBgCenter;
-    
-    UIView *tagCount = [[UIView alloc]initWithFrame:CGRectMake(2.6, 2.2, 20, 20)];
-    tagCount.backgroundColor = [UIColor colorWithRed:182/255.0 green:0 blue:0 alpha:1];
-    CGPoint saveCenter = tagCount.center;
-    tagCount.layer.cornerRadius = 20 / 2.0;
-    tagCount.center = saveCenter;
-    count= [[UILabel alloc]initWithFrame:CGRectMake(3, 4, 13, 12)];
-    count.backgroundColor = [UIColor colorWithRed:182/255.0 green:0 blue:0 alpha:1];
-    count.textColor = [UIColor whiteColor];
-    count.textAlignment = UITextAlignmentCenter;
-    count.font = [UIFont boldSystemFontOfSize:11];
-    [tagCount addSubview:count];
-    [tagBg addSubview:tagCount];
-    [tagCount release];
-    return tagBg;
-    
-}
--(UIView *)CGRectMake2
-{
-    UIView *video =[[[UIView alloc]initWithFrame:CGRectMake(0, 54, 74, 16)]autorelease];
-    UILabel *length=[[UILabel alloc]initWithFrame:CGRectMake(40, 3, 44, 10)];
-    UIImageView *tu=[[UIImageView alloc]initWithFrame:CGRectMake(6, 4,15, 8)];
-    //  tu= [UIButton buttonWithType:UIButtonTypeCustom]; 
-    UIImage *picture = [UIImage imageNamed:@"VED.png"];
-    // set the image for the button
-    [tu setImage:picture];
-    [video addSubview:tu];
-    
-    
-    [length setBackgroundColor:[UIColor clearColor]];
-    length.alpha=0.8;
-    NSString *a=[NSString stringWithFormat:@"%d",minute];
-    NSString *b=[NSString stringWithFormat:@"%d",second];
-    length.text=a;
-    length.text=[length.text stringByAppendingString:@":"];
-    length.text=[length.text stringByAppendingString:b];
-    length.textColor = [UIColor whiteColor];
-    length.textAlignment = UITextAlignmentLeft;
-    length.font = [UIFont boldSystemFontOfSize:12.0];
-    [video addSubview:length];
 
-    [video setBackgroundColor:[UIColor grayColor]];
-    video.alpha=0.9;
-    length.alpha = 1.0;
-    tu.alpha = 1.0;
-    [length release];
-    [tu release];
-    return video;
+
     
     
-}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
 	return 79;
@@ -612,13 +431,10 @@
 -(void)viewDidUnload{
     self.table = nil;
     self.crwAssets = nil;
-    self.urlsArray = nil;
     self.viewBar = nil;
     self.tagBar = nil;
     self.save = nil;
     self.reset = nil;
-    self.dateArry = nil;
-    self.images = nil;
     [super viewDidUnload];
 }
 
@@ -633,17 +449,11 @@
     [reset release];
     [table release];
     [crwAssets release];
-    [urlsArray release];
-    [dateArry release];
-    [UserId release];
-    [UserName release];
-    [images release];
     [UrlList release];
-    [PLAYID release];
     [alert1 release];
     [val release];
     [tagRow release];
-    [photos release];
+    [tagSelector release];
     [super dealloc];    
 }
 

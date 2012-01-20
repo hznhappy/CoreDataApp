@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "ThumbnailImageView.h"
 
@@ -20,6 +21,8 @@
 @interface ThumbnailCell : UITableViewCell<ThumbnailSelectionDelegate>
 {
     NSUInteger rowNumber;
+    int minute;
+    int second;
     id<ThumbnailCellSelectionDelegate>selectionDelegate;
 }
 
@@ -28,5 +31,9 @@
 
 
 -(void)displayThumbnails:(NSArray *)array count:(NSUInteger)count;
+-(UIView *)addTagnumberOverlay:(NSString *)numbe;
+-(UIImageView *)addTagOverlayWhenSelected;
+-(UIView *)addVideoOverlay;
+-(void)checkTagSelection:(NSString *)selectedRow;
 -(void)clearSelection;
 @end

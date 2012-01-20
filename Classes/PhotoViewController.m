@@ -8,12 +8,12 @@
 
 #import "PhotoViewController.h"
 #import "PopupPanelView.h"
-#import "tagManagementController.h"
+#import "TagManagementController.h"
 #import "PhotoImageView.h"
 #import "CropView.h"
 #import "Playlist.h"
 #import "Asset.h"
-
+#import "TagSelector.h"
 
 
 @interface PhotoViewController (Private)
@@ -77,6 +77,35 @@
     return self;
 }
 
+
+- (void)performLayout {
+	
+	// Flag
+	performingLayout = YES;
+	
+	// Remember index
+	NSUInteger indexPriorToLayout = currentPageIndex;
+	
+	// Get paging scroll view frame to determine if anything needs changing
+	CGRect pagingScrollViewFrame = [self frameForPagingScrollView];
+    
+	// Frame needs changing
+	self.scrollView.frame = pagingScrollViewFrame;
+	
+	// Recalculate contentSize based on current orientation
+	self.scrollView.contentSize = [self contentSizeForPagingScrollView];
+	
+	
+	// Adjust contentOffset to preserve page location based on values collected prior to location
+	self.scrollView.contentOffset = [self contentOffsetForPageAtIndex:indexPriorToLayout];
+	
+	// Reset
+	currentPageIndex = indexPriorToLayout;
+	performingLayout = NO;
+    
+}
+
+
 #pragma mark -
 #pragma mark View Controller Methods
 
@@ -105,7 +134,7 @@
     self.hidesBottomBarWhenPushed = YES;
     self.wantsFullScreenLayout = YES;
 	self.view.backgroundColor = [UIColor blackColor];
-    
+    tagSelector = [[TagSelector alloc]initWithViewController:self];
 	if (!_scrollView) {
 		
 		_scrollView = [[UIScrollView alloc] initWithFrame:[self frameForPagingScrollView]];
@@ -153,6 +182,7 @@
 
 -(void)updatePages{
     // Calculate which pages are visible
+    NSLog(@"scrollView bounds is %@",NSStringFromCGRect(self.scrollView.bounds));
     CGRect visibleBounds = self.scrollView.bounds;
     int iFirstIndex = (int)floorf((CGRectGetMinX(visibleBounds)+PADDING*2) / CGRectGetWidth(visibleBounds));
 	int iLastIndex  = (int)floorf((CGRectGetMaxX(visibleBounds)-PADDING*2-1) / CGRectGetWidth(visibleBounds));
@@ -207,11 +237,13 @@
         frame1.size.width=60;
         [self play:frame1];
     }
-
+    NSLog(@"configure page is %d",index);
     page.index = index;
     page.imageView.image = nil;
     page.frame = rect;
     [page loadIndex:index];
+    [self showPhotoInfo];
+
 }
 
 - (BOOL)isDisplayingPageForIndex:(NSUInteger)index{
@@ -249,6 +281,7 @@
 #pragma mark -
 #pragma mark Frame Methods
 - (CGRect)frameForPagingScrollView{
+    NSLog(@"view bounds is %@",self.view.bounds);
     CGRect frame = self.view.bounds;// [[UIScreen mainScreen] bounds];
     frame.origin.x -= PADDING;
     frame.size.width += (2 * PADDING);
@@ -267,6 +300,7 @@
 - (CGSize)contentSizeForPagingScrollView {
     // We have to use the paging scroll view's bounds to calculate the contentSize, for the same reason outlined above.
     CGRect bounds = self.scrollView.bounds;
+    NSLog(@"%@ is scrollView BOUNDS",NSStringFromCGSize(bounds.size));
     return CGSizeMake(bounds.size.width * self.playlist.storeAssets.count, bounds.size.height);
 }
 
@@ -277,7 +311,8 @@
 	return CGPointMake(newOffset, 0);
 }
 
-
+#pragma mark -
+#pragma mark Control Methods
 - (void)jumpToPageAtIndex:(NSUInteger)index {
 	
 	// Change page
@@ -311,6 +346,45 @@
 
 - (void)hideControls { [self setBarsHidden:!_barsHidden animated:YES]; }
 
+-(void)showPhotoInfo{
+    if (photoInfoTimer) {
+        [photoInfoTimer invalidate];
+        [photoInfoTimer release];
+        photoInfoTimer = nil;
+    }
+    if (assetInfoView && assetInfoView.superview != nil) {
+        [assetInfoView removeFromSuperview];
+        [assetInfoView release];
+        assetInfoView = nil;
+    }
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addPhotoInfoView) object:nil];
+    [self performSelector:@selector(addPhotoInfoView) withObject:nil afterDelay:2];
+}
+
+-(void)addPhotoInfoView{
+    Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
+    
+    assetInfoView = [[UIView alloc]initWithFrame:CGRectMake(0, self.navigationController.toolbar.frame.origin.y -180, 150, 120)];
+    UILabel *date = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 75, 30)];
+    UILabel *likeCount = [[UILabel alloc]initWithFrame:CGRectMake(20, 40, 75, 30)];
+    UILabel *tagCount = [[UILabel alloc]initWithFrame:CGRectMake(20, 80, 75, 30)];
+    date.backgroundColor = [UIColor clearColor];
+    likeCount.backgroundColor = [UIColor clearColor];
+    tagCount.backgroundColor = [UIColor clearColor];
+    date.text = [asset.date description];
+    likeCount.text = [asset.numOfLike description];
+    tagCount.text = [asset.numPeopleTag description];
+    [assetInfoView setBackgroundColor:[UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0]];
+    assetInfoView.alpha = 0.4;
+    [assetInfoView addSubview:date];
+    [assetInfoView addSubview:likeCount];
+    [assetInfoView addSubview:tagCount];
+    [self.view addSubview:assetInfoView];
+    [date release];
+    [likeCount release];
+    [tagCount release];
+}
+
 #pragma mark -
 #pragma mark PlayVideo Methods
 
@@ -335,11 +409,7 @@
     favorite=[[UIView alloc]initWithFrame:CGRectMake(1,160,80,150)];
     [favorite setBackgroundColor:[UIColor grayColor]];
     favorite.alpha=0.6;
-    UIImage *bubble = [UIImage imageNamed:@"bubble.png"];
-	bubbleImageView = [[UIImageView alloc] initWithImage:[bubble stretchableImageWithLeftCapWidth:21 topCapHeight:14]];
     
-    bubbleImageView.frame = CGRectMake(0,0,80,150);
-    //[favorite addSubview:bubbleImageView];
     
     UILabel *note=[[UILabel alloc]initWithFrame:CGRectMake(15, 10, 80, 30)];
     [note setBackgroundColor:[UIColor clearColor]];
@@ -436,8 +506,9 @@
     theMovie=[[MPMoviePlayerController alloc] initWithContentURL:url]; 
     //  NSTimeInterval duration = theMovie.duration;
     //  NSLog(@"LENGTH:%f",theMovie.duration);
-    
-    [[theMovie view] setFrame:[self.view bounds]]; // Frame must match parent view
+    PhotoImageView *_imageView = [self pageDisplayedAtIndex:currentPageIndex];
+    CGRect videoFrame = [_imageView convertRect:_imageView.imageView.frame toView:self.view];
+    [[theMovie view] setFrame:videoFrame]; // Frame must match parent view
     [self.view addSubview:[theMovie view]];
     //theMovie.scalingMode =  MPMovieControlModeDefault;
     // theMovie.scalingMode=MPMovieScalingModeAspectFill; 
@@ -489,41 +560,39 @@
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     _rotating = YES;
-    for (PhotoImageView *view in visiblePages){
-        if ([view isKindOfClass:[PhotoImageView class]]) {
-            if (view.index != currentPageIndex) {
-                [view setHidden:YES];
-            }
-        }
-    }
-    
+
+//    for (PhotoImageView *view in visiblePages){
+//        if ([view isKindOfClass:[PhotoImageView class]]) {
+//            if (view.index != currentPageIndex) {
+//                [view setHidden:YES];
+//            }
+//        }
+//    }
+
+    NSLog(@"will rotate%d",currentPageIndex);
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
-    for (PhotoImageView *view in visiblePages){
-        if ([view isKindOfClass:[PhotoImageView class]]) {
-            [view rotateToOrientation:toInterfaceOrientation];
-        }
-    }
+   // currentPageIndex = pageIndexBeforeRotation;
+	//[self performLayout];
+	// Adjust frames and configuration of each visible page
+	for (PhotoImageView *page in visiblePages) {
+        [page rotateToOrientation:toInterfaceOrientation];
+	}
     
+	[self hideControlsAfterDelay];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
     
+    self.scrollView.frame = [self frameForPagingScrollView];
     [self contentSizeForPagingScrollView];
-    [self.scrollView scrollRectToVisible:((PhotoImageView*)[self pageDisplayedAtIndex:currentPageIndex]).frame animated:YES];
-    
-    //  unhide side views
-    for (PhotoImageView *view in visiblePages){
-        if ([view isKindOfClass:[PhotoImageView class]]) {
-            if (view.index != currentPageIndex) {
-                [view setHidden:NO];
-            }
-        }
-    }
+    [self contentOffsetForPageAtIndex:currentPageIndex];
+    [self updatePages];
+    NSLog(@"current page is %d",currentPageIndex);
+   // [self.scrollView scrollRectToVisible:((PhotoImageView*)[self pageDisplayedAtIndex:currentPageIndex]).frame animated:YES];
     _rotating = NO;
-    
 }
 
 #pragma mark -
@@ -714,11 +783,11 @@
 }
 
 -(void)callContactsView{
-    
+    [tagSelector selectTagNameFromContacts];
 }
 
 -(void)callFavouriteView{
-    
+    [tagSelector selectTagNameFromFavorites];
 }
 
 -(void)callEventsView{
@@ -752,8 +821,8 @@
     }else{
         self.scrollView.scrollEnabled = NO;
     }
-    PhotoImageView *photoView = [self.photoViews objectAtIndex:currentPageIndex];
-    if (photoView != nil && (NSNull *)photoView != [NSNull null]) {
+    PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
+    if (photoView != nil) {
         
         
         if (cropView.superview!=nil) {
@@ -793,10 +862,10 @@
     if (!saveItem.enabled) {
         saveItem.enabled = YES;
     }
-    PhotoImageView *photoView = [self.photoViews objectAtIndex:currentPageIndex];
-    if (photoView != nil && (NSNull *)photoView != [NSNull null]) {
+    PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
+    if (photoView != nil ) {
         photoView.alpha =1.0;
-        [photoView setPhoto:self.cropView.cropImage];
+        //[photoView setPhoto:self.cropView.cropImage];
     }
     [cropView removeFromSuperview];
 }
@@ -806,8 +875,8 @@
         self.scrollView.scrollEnabled = YES;
     }
     saveItem.enabled = NO;
-    PhotoImageView *photoView = [self.photoViews objectAtIndex:currentPageIndex];
-    if (photoView == nil || (NSNull *)photoView == [NSNull null]) {
+    PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
+    if (photoView == nil) {
         return;
     }else{
         [photoView savePhoto];
@@ -937,13 +1006,15 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self updatePages];
-    NSInteger index = [self centerPhotoIndex];
+    // Calculate current page
+	CGRect visibleBounds = self.scrollView.bounds;
+	int index = (int)(floorf(CGRectGetMidX(visibleBounds) / CGRectGetWidth(visibleBounds)));
     if (index < 0) index = 0;
 	if (index > self.playlist.storeAssets.count - 1) index = self.playlist.storeAssets.count - 1;
-    if (currentPageIndex != index && !_rotating) {
-        currentPageIndex = index;
-    }
-   /* [UIView animateWithDuration:0
+	//NSUInteger previousCurrentPage = currentPageIndex;
+	currentPageIndex = index;
+
+    /* [UIView animateWithDuration:0
                      animations:^{
                          //myPickerView.frame = CGRectMake(0, 210, 310, 180);
                          favorite.alpha = 0;
@@ -978,6 +1049,7 @@
 	// Hide controls when dragging begins
 	[self setBarsHidden:YES animated:YES];
 }
+
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     
     [self updateNavigation];
@@ -1173,6 +1245,11 @@
 - (void)dealloc {
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+    [photoInfoTimer release];
+    [assetInfoView release];
+    if (timer) {
+        [timer release];
+    }
     [playlist release];
     [saveItem release];
 	[_photoViews release];

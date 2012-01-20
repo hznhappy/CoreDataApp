@@ -46,18 +46,18 @@
 -(void)updateTable:(NSString *)sql;
 -(void)closeDB;
 -(void)deleteDB:(NSString *)sql; 
-// apply to tagManagementController , PopupPanelView for retreiving user_id  order by idOrder or playIdOrder
+// apply to TagManagementController , PopupPanelView for retreiving user_id  order by idOrder or playIdOrder
 -(NSMutableArray *)selectOrderId:(NSString *)sql;
 //apply to AlbumController for retreiving user_id user_name from Rules
 -(NSMutableArray *)selectFromRules:(NSString *)sql;
-// apply to PhotoViewController PopupPanelView , tagManagementController ,AlbumController for retreiving tag_id,tag_url from tag table
+// apply to PhotoViewController PopupPanelView , TagManagementController ,AlbumController for retreiving tag_id,tag_url from tag table
 -(NSMutableArray *)selectFromTAG:(NSString *)sql;
 -(NSMutableSet *)selectFromTAG1:(NSString *)sql;
 //-(void)selectFromUserTable;
 //apply to AlbumController for retreiving playlist_id,playlist_name from palytable
 -(NSMutableArray *)selectFromPlayTable:(NSString *)sql;
 -(NSMutableArray *)selectFromPassTable:(NSString *)sql;
-//apply to tagManagementController , PopupPanelView,for retreiving user_id,user_name,user_color from UserTable;
+//apply to TagManagementController , PopupPanelView,for retreiving user_id,user_name,user_color from UserTable;
 - (NSString *)getUserFromUserTable:(int)id;
 //apply to AlbumController for retreiving playlist_id,playlist_name from playTable
 - (void)getUserFromPlayTable:(NSString *)_id;

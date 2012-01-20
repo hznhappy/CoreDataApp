@@ -12,7 +12,7 @@
 #import "PhotoViewController.h"
 #import "Asset.h"
 #import "AlbumDataSource.h"
-#import "tagManagementController.h"
+#import "TagManagementController.h"
 #import "PhotoAppDelegate.h"
 #import "Playlist.h"
 @implementation PlaylistRootViewController
@@ -70,20 +70,10 @@
     NSMutableArray *assets = [[NSMutableArray alloc]init];
     assets = [dic valueForKey:@"assets"];
     
-//    NSMutableArray *alassets = [[NSMutableArray alloc]init];
-//    PhotoAppDelegate *delegate = [[UIApplication sharedApplication] delegate];
-//    AlbumDataSource *dataSourec =   delegate.dataSource;
-//    for (Asset *asset in assets) {
-//        [alassets addObject:[dataSourec getAsset:asset.url]];
-//    }
-    
     AssetTablePicker *ap = [[AssetTablePicker alloc]initWithNibName:@"AssetTablePicker" bundle:[NSBundle mainBundle]];
     ap.hidesBottomBarWhenPushed = YES;
     ap.crwAssets=assets;
-    NSLog(@"APassets:%d",[ap.crwAssets count]);
-    ap.PLAYID=[dic valueForKey:@"ID"];
     [assets release];
-    //[alassets release];
     
     [self pushViewController:ap animated:YES];
     [ap release];    

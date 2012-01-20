@@ -41,11 +41,11 @@
 - (void)doLoadIndex: (NSUInteger) _index;
 - (void)doLoadIndexStr: (NSString*) _index;
 - (void)doLoadImage: (UIImage *) image checkIndex: (NSUInteger) _index;
-- (void)setPhoto:(UIImage *)aPhoto;
 -(void)setClearPhoto;
 - (void)displayImageFailure;
 - (void)rotatePhoto;
 -(void)savePhoto;
+- (void)setMaxMinZoomScalesForCurrentBounds;
 - (void)killScrollViewZoom;
 - (void)layoutScrollViewAnimated:(BOOL)animated;
 - (void)rotateToOrientation:(UIInterfaceOrientation)orientation;

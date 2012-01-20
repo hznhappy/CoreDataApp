@@ -14,7 +14,7 @@
 
 - (id)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
-		
+		self.userInteractionEnabled = YES;
 		self.scrollEnabled = YES;
 		self.pagingEnabled = NO;
 		self.clipsToBounds = NO;
@@ -97,13 +97,11 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
 	[super touchesEnded:touches withEvent:event];
 	UITouch *touch = [touches anyObject];
-   // CGPoint touchPoint = [touch locationInView:self.superview];
 	if (touch.tapCount == 1) {
 		[self performSelector:@selector(toggleBars) withObject:nil afterDelay:.3];
 	} else if (touch.tapCount == 2) {
 		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(toggleBars) object:nil];
 		[self zoomRectWithCenter:[[touches anyObject] locationInView:self.superview]];
-        //[self zoomToRect:CGRectMake(touchPoint.x, touchPoint.y, 1, 1) animated:YES];
 	}
 }
 

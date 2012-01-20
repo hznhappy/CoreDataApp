@@ -7,7 +7,7 @@
 @class PhotoAppDelegate;
 //select t.id,orserid from usertable t,idtable where t.id=idtable.id order by orserid asc;
 
-@interface tagManagementController :UIViewController <UITableViewDelegate,UITableViewDataSource,ABPeoplePickerNavigationControllerDelegate>
+@interface TagManagementController :UIViewController <UITableViewDelegate,UITableViewDataSource,ABPeoplePickerNavigationControllerDelegate>
 
 {
     

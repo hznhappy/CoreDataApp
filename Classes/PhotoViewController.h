@@ -17,8 +17,8 @@
 @class CropView;
 @class PhotoImageView;
 @class Playlist;;
-@interface PhotoViewController : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate,
-                                                    MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate> {
+@class TagSelector;
+@interface PhotoViewController : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate> {
 @private
 	NSMutableArray *_photoViews;
     NSMutableSet *recycledPages;
@@ -26,10 +26,12 @@
 	UIScrollView *_scrollView;	
     Playlist *playlist;
 	NSUInteger currentPageIndex;
+    NSUInteger pageIndexBeforeRotation;
                                                         
 	BOOL _rotating;
 	BOOL _barsHidden;
-	
+	BOOL performingLayout;
+                                                        
 	UIBarButtonItem *_leftButton;
 	UIBarButtonItem *_rightButton;
 	UIBarButtonItem *_actionButton;
@@ -42,7 +44,10 @@
     BOOL croping;
 
     PopupPanelView *ppv;
+    TagSelector *tagSelector;
+                                                        
     NSTimer *controlVisibilityTimer;
+    NSTimer *photoInfoTimer;
     NSTimer *timer;	
     UIButton *playButton;
     NSMutableArray *video;
@@ -50,8 +55,8 @@
 
     MPMoviePlayerController* theMovie;
     UIView *favorite;
+    UIView *assetInfoView;
     
-    UIImageView *bubbleImageView;
 }
 @property (nonatomic, retain) Playlist *playlist;
 @property(nonatomic,retain)PopupPanelView *ppv;
@@ -65,6 +70,7 @@
 
 //init
 - (id)init;
+- (void)performLayout;
 
 //paging
 -(void)updatePages;
@@ -89,12 +95,17 @@
 -(void)playVideo;
 -(void)play:(CGRect)framek;
 
+//PhotoInfo method
+-(void)showPhotoInfo;
+-(void)addPhotoInfoView;
+
 //LikeTag
 -(void)favorite:(NSString *)inter;
 -(void)CFG;
 -(void)likeButtonPressed;
 -(void)button2Pressed;
 
+-(void)setTagToolBar;
 @end
 
 @interface UIImage (Crop)

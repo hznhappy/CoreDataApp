@@ -6,24 +6,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <AssetsLibrary/AssetsLibrary.h>
-#import <AddressBook/AddressBook.h>
-#import <AddressBookUI/AddressBookUI.h>
 #import "ThumbnailCell.h"
-#import "AmptsPhotoCoreData.h"
-#import "PeopleTag.h"
 
-@class People;
-@class PhotoAppDelegate;
+@class TagSelector;
 
-@interface AssetTablePicker : UIViewController<ThumbnailCellSelectionDelegate,UIScrollViewDelegate,UINavigationControllerDelegate,ABPeoplePickerNavigationControllerDelegate,UITableViewDelegate,UITableViewDataSource,UINavigationBarDelegate>
+
+
+@interface AssetTablePicker : UIViewController<ThumbnailCellSelectionDelegate,UITableViewDelegate,UITableViewDataSource>
 {
-    PhotoAppDelegate * appDelegate;
-    AmptsPhotoCoreData * coreData;
-    
-    People *mypeople;
-    
-    
+
     UITableView *table;
     UIToolbar *viewBar;
     UIToolbar *tagBar;
@@ -31,38 +22,30 @@
     UIBarButtonItem *reset;
     UIBarButtonItem *cancel;
     UIBarButtonItem *lock;
-	
+	UIAlertView *alert1;
+    UITextField *passWord;
+
 	NSMutableArray *crwAssets;
-	NSArray *urlsArray;
-    NSMutableArray *dateArray;
-    NSMutableArray *images;
-    
-    
+    NSMutableArray *tagRow;
+    NSMutableArray *UrlList;
+        
+    BOOL ME;
+    BOOL PASS;
     BOOL mode;
     BOOL load;
     BOOL done;
     BOOL action;
-    NSString *UserId;
-    NSString *UserName;
-    NSMutableArray *UrlList;
-    NSString *PLAYID;
-    UIAlertView *alert1;
-    UITextField *passWord;
-    BOOL ME;
-    BOOL PASS;
+    
     NSNumber *val;
     UITextField *passWord2;
-   // UIView *tagBg;
-    UILabel *count;
-   // UIImageView *overlayView;
-    NSMutableArray *tagRow;
-    NSMutableArray *destinctUrl;
-    NSMutableArray *photos;
+  
+   
+
     UIInterfaceOrientation oritation;
     UIInterfaceOrientation previousOrigaton;
-    int minute;
-    int second;
+
     NSUInteger selectedRow;
+    TagSelector *tagSelector;
 }
 @property (nonatomic,retain)IBOutlet UITableView *table;
 @property (nonatomic,retain)IBOutlet UIToolbar *viewBar;
@@ -70,22 +53,12 @@
 @property (nonatomic,retain)IBOutlet UIBarButtonItem *save;
 @property (nonatomic,retain)IBOutlet UIBarButtonItem *reset;
 @property (nonatomic,retain)IBOutlet UIBarButtonItem *lock;
-@property (nonatomic,retain)ALAssetsLibrary *library;
 
 @property (nonatomic,retain)NSMutableArray *tagRow;
-@property (nonatomic,retain)NSString *UserId;
-@property (nonatomic,retain)NSString *UserName;
-//@property(nonatomic,retain)UIView *tagBg;
-@property(nonatomic,retain)NSMutableArray *destinctUrl;
-@property (nonatomic,retain)NSString *PLAYID;
 @property (nonatomic,retain)NSMutableArray *operations;
-@property (nonatomic,retain) NSMutableArray *images;
 @property (nonatomic,retain) NSMutableArray *crwAssets;
-@property (nonatomic,retain) NSArray *urlsArray;
-@property (nonatomic,retain) NSMutableArray *dateArry;
 @property (nonatomic,retain) NSMutableArray *UrlList;
 @property (nonatomic,retain)NSNumber *val;
-@property (nonatomic,retain)NSMutableArray *photos;
 -(IBAction)actionButtonPressed;
 -(IBAction)playPhotos;
 -(IBAction)lockButtonPressed;
@@ -93,11 +66,6 @@
 -(IBAction)resetTags;
 -(IBAction)selectFromFavoriteNames;
 -(IBAction)selectFromAllNames;
--(void)setPhotoTag;
--(void)AddUser:(NSNotification *)note;
 -(void)viewPhotos:(id)sender;
--(UIImageView *)CGRectMake;
--(UIView *)CGRectMake1;
--(UIView *)CGRectMake2;
 -(void)EditPhotoTag;
 @end

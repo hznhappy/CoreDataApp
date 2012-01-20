@@ -375,7 +375,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
     }
-  
+    return  nil;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -851,7 +851,6 @@
     musicCell = nil;
     musicLabel = nil;
     a = nil;
-    //dataBase = nil;
     listTable =nil;
     listName = nil;
     userNames = nil;

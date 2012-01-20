@@ -1,10 +1,9 @@
-#import "tagManagementController.h"
+#import "TagManagementController.h"
 #import "AddressBook/AddressBook.h"
 #import "AddressBookUI/AddressBookUI.h"
-#import "DBOperation.h"
 #import "AssetTablePicker.h"
 #import "PhotoAppDelegate.h"
-@implementation tagManagementController
+@implementation TagManagementController
 @synthesize list;
 @synthesize button;
 @synthesize tableView,tools,bo;
@@ -242,6 +241,7 @@ int j=1,count=0;
 {
     
 	return[result count];
+    
 }
 - (UITableViewCell *)tableView:(UITableView *)table cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -318,7 +318,7 @@ int j=1,count=0;
     People *selectedPeople = [self.result objectAtIndex:indexPath.row];
    
     NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:selectedPeople,@"people",nil];
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"AddUser" 
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"addTagPeople" 
                                                        object:self 
                                                      userInfo:dic];
     

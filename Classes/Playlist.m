@@ -49,7 +49,7 @@
     if (fuzzy != nil) {
         if (fs != nil) {
             // callback with the fullscreen image first
-            NSLog(@"Fullscreen Cache Hit");
+           // NSLog(@"Fullscreen Cache Hit");
             whenDone(fs);
         } else {
             [self doFetchFullScreenImage:url whenDone:^(UIImage *fsImage) {
@@ -59,13 +59,13 @@
             }];
         }
         // and return the fuzzy image
-        NSLog(@"Fuzzy Cache Hit");
+        //NSLog(@"Fuzzy Cache Hit");
         return fuzzy;
         
     } else {
         if (fs != nil) {
             // callback with the fullscreen image first
-            NSLog(@"Fullscreen Cache Hit");
+           // NSLog(@"Fullscreen Cache Hit");
             whenDone(fs);
             fuzzy = [self doFetchFuzzyImage:url andFullScreenImage:nil];
         } else {

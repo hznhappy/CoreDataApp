@@ -75,7 +75,7 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     if ((self = [super initWithFrame:frame])) {
 		
 		self.backgroundColor = [UIColor blackColor];
-		self.userInteractionEnabled = NO;
+		self.userInteractionEnabled = YES;
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		self.opaque = YES;
 		
@@ -181,44 +181,8 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     ////        NSLog(@"Minimum Zoom Scale: %f", self.minimumZoomScale);
     //    }
     //
-        [self setNeedsLayout];
 }
 
-
-- (void)setPhoto:(UIImage *)aPhoto{
-//    [_activityView startAnimating];
-//	if (!aPhoto) return; 
-//	if ([aPhoto isEqual:self.photo]) return;
-	
-	[_photo release], _photo = nil;
-	_photo = [aPhoto retain];
-    
-    
-   	if (self.photo) {
-//        CGRect imageRect = CGRectMake(0.0f,0.0f,CGImageGetWidth(self.photo.CGImage)*0.3,CGImageGetHeight(self.photo.CGImage)*0.3);
-//        
-//        UIGraphicsBeginImageContext(imageRect.size);		
-//        CGContextRef context = UIGraphicsGetCurrentContext();		
-//        CGContextSaveGState(context);
-//        CGContextTranslateCTM(context, 0, imageRect.size.height);
-//        CGContextScaleCTM(context, 1, -1);
-//        CGContextDrawImage(context, imageRect, self.photo.CGImage);
-//        CGContextRestoreGState(context);		
-//        UIImage *backgroundImage = UIGraphicsGetImageFromCurrentImageContext();	
-//        UIGraphicsEndImageContext();		
-		self.imageView.image = self.photo;//backgroundImage;
-        //NSLog(@"Photo size is %@ %@",NSStringFromCGSize(self.photo.size),self.photo);
-		
-		[_activityView stopAnimating];
-		self.userInteractionEnabled = YES;
-		
-		_loading=NO;
-		//[[NSNotificationCenter defaultCenter] postNotificationName:@"PhotoDidFinishLoading" object:[NSDictionary dictionaryWithObjectsAndKeys:self.photo, @"photo", [NSNumber numberWithBool:NO], @"failed", nil]];
-		[self layoutScrollViewAnimated:NO];
-	}else{
-        [_activityView startAnimating];
-    }
-}
 
 -(void)setClearPhoto{
     CGRect imageRect = CGRectMake(0.0f,0.0f,CGImageGetWidth(self.photo.CGImage),CGImageGetHeight(self.photo.CGImage));
@@ -265,7 +229,48 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 
 #pragma mark -
 #pragma mark Layout
+- (void)setMaxMinZoomScalesForCurrentBounds{
+//    // Reset
+//	self.scrollView.maximumZoomScale = 1;
+//	self.scrollView.minimumZoomScale = 1;
+//	self.scrollView.zoomScale = 1;
+//	
+//	// Bail
+//	if (self.imageView.image == nil) return;
+//	
+//	// Sizes
+//    CGSize boundsSize = self.bounds.size;
+//    CGSize imageSize = self.imageView.frame.size;
+//    
+//    // Calculate Min
+//    CGFloat xScale = boundsSize.width / imageSize.width;    // the scale needed to perfectly fit the image width-wise
+//    CGFloat yScale = boundsSize.height / imageSize.height;  // the scale needed to perfectly fit the image height-wise
+//    CGFloat minScale = MIN(xScale, yScale);                 // use minimum of these to allow the image to become fully visible
+//	
+//	// If image is smaller than the screen then ensure we show it at
+//	// min scale of 1
+//	if (xScale > 1 && yScale > 1) {
+//		minScale = 1.0;
+//	}
+//    
+//	// Calculate Max
+//	CGFloat maxScale = 2.0; // Allow double scale
+//    // on high resolution screens we have double the pixel density, so we will be seeing every pixel if we limit the
+//    // maximum zoom scale to 0.5.
+//	if ([UIScreen instancesRespondToSelector:@selector(scale)]) {
+//		maxScale = maxScale / [[UIScreen mainScreen] scale];
+//	}
+//	
+//	// Set
+//	self.scrollView.maximumZoomScale = maxScale;
+//	self.scrollView.minimumZoomScale = minScale;
+//	self.scrollView.zoomScale = minScale;
+//	
+//	// Reset position
+//	self.imageView.frame = CGRectMake(0, 0, self.imageView.frame.size.width, self.imageView.frame.size.height);
+//	[self setNeedsLayout];
 
+}
 - (void)rotateToOrientation:(UIInterfaceOrientation)orientation{
 
 	if (self.scrollView.zoomScale > 1.0f) {
@@ -461,9 +466,6 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 	
 }
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"view");
-}
 
 #pragma mark -
 #pragma mark Dealloc

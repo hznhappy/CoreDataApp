@@ -7,7 +7,7 @@
 //
 
 #import "PopupPanelView.h"
-#import "tagManagementController.h"
+#import "TagManagementController.h"
 #import "PhotoViewController.h"
 @implementation PopupPanelView
 @synthesize isOpen;
