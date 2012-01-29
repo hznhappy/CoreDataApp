@@ -173,6 +173,7 @@ int j=1,count=0;
 -(void)toggleback
 {
     [self dismissModalViewControllerAnimated:YES];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"resetToolBar" object:nil];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -316,13 +317,11 @@ int j=1,count=0;
 }
 - (void)tableView:(UITableView *)table didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     People *selectedPeople = [self.result objectAtIndex:indexPath.row];
-   
+   [self dismissModalViewControllerAnimated:YES];
     NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:selectedPeople,@"people",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"addTagPeople" 
                                                        object:self 
                                                      userInfo:dic];
-    
-    [self dismissModalViewControllerAnimated:YES];
     [table deselectRowAtIndexPath:indexPath animated:YES];
 }
 

@@ -23,6 +23,7 @@
         dataSource = appDelegate.dataSource;
         viewController = controller;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addTagPeople:) name:@"addTagPeople" object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(resetToolBar) name:@"resetToolBar" object:nil];
     }
     return self;
 }
@@ -30,6 +31,7 @@
 -(void)addTagPeople:(NSNotification *)note{
     NSDictionary *dic = [note userInfo];
     mypeople=[dic objectForKey:@"people"];
+    [self resetToolBar];
 }
 -(People *)tagPeople{
     
@@ -89,9 +91,9 @@
         mypeople.lastName = lastName;
         mypeople.addressBookId = [NSNumber numberWithInteger:recId];
     }
-    [self resetToolBar];
     [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
     [viewController dismissModalViewControllerAnimated:YES];
+    [self resetToolBar];
     return NO;
 }
 
