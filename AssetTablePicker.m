@@ -341,7 +341,7 @@
     if(action==YES)
     {
         selectedRow = cell.rowNumber;
-        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,[NSString stringWithFormat:@"%d",index],
+        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                                     [NSNumber numberWithBool:lockMode],@"lock", nil];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"viewPhotos" object:nil userInfo:dic];   
     }

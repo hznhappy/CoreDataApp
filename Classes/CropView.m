@@ -9,6 +9,7 @@
 #import "CropView.h"
 #import "PhotoImageView.h"
 #import "GridView.h"
+#import "BorderView.h"
 #import <QuartzCore/QuartzCore.h>
 #define kResizeThumbSize 15
 
@@ -31,6 +32,10 @@
         cropImageView = [[UIImageView alloc]initWithFrame:CGRectMake(2, 2, size.width-4, size.height-4)];
         [self setCropView];
         [self addSubview:cropImageView];
+        
+        borderView = [[BorderView alloc]initWithFrame:CGRectMake(1, 1, size.width-2, size.height-2)];
+        borderView.backgroundColor = [UIColor clearColor];
+        [self addSubview:borderView];
         
         gridView = [[GridView alloc]initWithFrame:CGRectMake(1, 1, size.width-2, size.height-2)];
         gridView.backgroundColor = [UIColor clearColor];
@@ -341,7 +346,7 @@
     [self setCropView];
     cropImageView.frame = CGRectMake(2, 2, size.width-4, size.height-4);
     gridView.frame = CGRectMake(1, 1, size.width-2, size.height-2);
-    
+    borderView.frame = CGRectMake(1, 1, size.width-2, size.height-2);
 }
 
 -(CGRect)restrictFrame:(CGRect)rect{

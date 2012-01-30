@@ -73,8 +73,8 @@
 
 -(void)pushPhotosBrowser:(NSNotification *)note{
     NSDictionary *dicOfPhotoViewer = [note userInfo];
-    NSString *key = [[dicOfPhotoViewer allKeys] objectAtIndex:0];
-    NSMutableArray *assets = [dicOfPhotoViewer valueForKey:key];
+    NSString *key = [dicOfPhotoViewer objectForKey:@"selectIndex"];
+    NSMutableArray *assets = [dicOfPhotoViewer valueForKey:@"assets"];
     NSNumber *num = [dicOfPhotoViewer valueForKey:@"lock"];
     BOOL lock = num.boolValue;
     PhotoAppDelegate *delegate = [[UIApplication sharedApplication] delegate];

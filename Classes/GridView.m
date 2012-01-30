@@ -29,9 +29,7 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetStrokeColorWithColor(context, [UIColor whiteColor].CGColor);
     
-    CGFloat minX = CGRectGetMinX(rect);
     CGFloat maxX = CGRectGetMaxX(rect);
-    CGFloat minY = CGRectGetMinY(rect);
     CGFloat maxY = CGRectGetMaxY(rect);
     
     CGFloat colX1 = maxX/3.0;
@@ -40,14 +38,7 @@
     CGFloat rowY2 = 2*rowY1;
     
     CGContextBeginPath(context);
-    //draw the border
-    CGContextSetLineWidth(context, 2.0f);
-    CGContextMoveToPoint(context, minX, minY);
-    CGContextAddLineToPoint(context, maxX, minY);
-    CGContextAddLineToPoint(context, maxX, maxY);
-    CGContextAddLineToPoint(context, minX, maxY);
-    CGContextAddLineToPoint(context, minX, minY);
-    CGContextStrokePath(context);
+
 
     //draw the grid line
     CGContextSetLineWidth(context, 1.2f);

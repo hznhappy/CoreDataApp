@@ -20,7 +20,7 @@
 @class TagSelector;
 @interface PhotoViewController : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate> {
 @private
-	NSMutableArray *_photoViews;
+	NSMutableArray *likeAssets;
     NSMutableSet *recycledPages;
     NSMutableSet *visiblePages;
 	UIScrollView *_scrollView;	
@@ -51,7 +51,6 @@
     NSTimer *timer;	
     UIButton *playButton;
     NSMutableArray *video;
-    BOOL VI;
 
     MPMoviePlayerController* theMovie;
     UIView *favorite;
@@ -62,8 +61,6 @@
 @property (nonatomic, strong) Playlist *playlist;
 @property(nonatomic,strong)PopupPanelView *ppv;
 @property(nonatomic,strong)NSMutableArray *video;
-@property(nonatomic,strong) NSArray *photoSource;
-@property(nonatomic,strong) NSMutableArray *photoViews;
 
 @property(nonatomic,strong)CropView *cropView;
 @property(nonatomic,strong) UIScrollView *scrollView;
@@ -102,9 +99,7 @@
 
 //LikeTag
 -(void)showLikeButton;
--(void)CFG;
 -(void)likeButtonPressed:(id)sender;
--(void)button2Pressed;
 -(void)addTagPeople;
 -(void)setTagToolBar;
 @end

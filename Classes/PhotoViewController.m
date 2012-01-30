@@ -14,12 +14,14 @@
 #import "Playlist.h"
 #import "Asset.h"
 #import "TagSelector.h"
-
+#import "PhotoAppDelegate.h"
 
 @interface PhotoViewController (Private)
 
 - (void)setBarsHidden:(BOOL)hidden animated:(BOOL)animated;
 - (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated;
+-(void)setPhotoInfoHidden:(BOOL)hidden;
+-(void)setLikeButtonHidden:(BOOL)hidden;
 - (NSInteger)centerPhotoIndex;
 - (void)setupToolbar;
 -(void)setCropConstrainToolBar;
@@ -50,8 +52,6 @@
 
 @synthesize ppv;
 @synthesize scrollView=_scrollView;
-@synthesize photoSource; 
-@synthesize photoViews=_photoViews;
 @synthesize currentPageIndex;
 @synthesize video;
 @synthesize cropView;
@@ -130,8 +130,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    VI=NO;
-    [self CFG];
     self.hidesBottomBarWhenPushed = YES;
     self.wantsFullScreenLayout = YES;
 	self.view.backgroundColor = [UIColor blackColor];
@@ -159,8 +157,8 @@
         
 	}
 
-    NSMutableArray *array=[[NSMutableArray alloc]init];
-    self.video=array;
+    likeAssets = [[NSMutableArray alloc]init];
+    self.video=[[NSMutableArray alloc]init];;
     
     tagShow = NO;
     editing=NO;
@@ -345,27 +343,36 @@
 
 - (void)hideControls { [self setBarsHidden:!_barsHidden animated:YES]; }
 
+#pragma mark -
+#pragma mark PhotoInfo and likeButton method
 -(void)showPhotoInfo{
     if (photoInfoTimer) {
         [photoInfoTimer invalidate];
         photoInfoTimer = nil;
     }
-    if (assetInfoView && assetInfoView.superview != nil) {
+    if (assetInfoView || assetInfoView.superview != nil) {
         [assetInfoView removeFromSuperview];
         assetInfoView = nil;
     }
+    if (likeButton || assetInfoView.superview != nil) {
+        [likeButton removeFromSuperview];
+        likeButton = nil;
+    }
+    
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addPhotoInfoView) object:nil];
     [self performSelector:@selector(addPhotoInfoView) withObject:nil afterDelay:2];
+    if (lockMode) {
+        [self performSelector:@selector(showLikeButton) withObject:nil afterDelay:2];
+    }
+    
 }
 
 -(void)addPhotoInfoView{
     Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
-    assetInfoView = [[UIView alloc]initWithFrame:CGRectMake(0, self.navigationController.toolbar.frame.origin.y -130, 130, 120)];
+    assetInfoView = [[UIView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height * 1/2 , 130, 120)];
     [assetInfoView.layer setCornerRadius:10.0];
     [assetInfoView setClipsToBounds:YES]; 
-    if (lockMode) {
-        [self showLikeButton];
-    }else{
+    if (!lockMode) {
         UILabel *likeCount = [[UILabel alloc]initWithFrame:CGRectMake(10, 32, 120, 25)];
         likeCount.backgroundColor = [UIColor clearColor];
         likeCount.text = [NSString stringWithFormat:@"LIKES COUNT:%@",[asset.numOfLike description]];
@@ -395,7 +402,38 @@
     [assetInfoView addSubview:date];
     
     [self.view addSubview:assetInfoView];
+}
+
+-(void)showLikeButton{
+    likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    CGRect mainScreen = self.view.frame;
+    likeButton.frame = CGRectMake(mainScreen.size.width*4/5, mainScreen.size.height*4/5, 50, 50);
     
+    Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
+    if ([likeAssets containsObject:asset]) {
+        likeButton.backgroundColor = [UIColor redColor];
+    }else{
+        likeButton.backgroundColor = [UIColor whiteColor];
+    }
+    
+    [likeButton addTarget:self action:@selector(likeButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:likeButton];
+}
+-(void)likeButtonPressed:(id)sender
+{
+    UIButton *like = (UIButton *)sender;
+     Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
+    if ([likeButton.backgroundColor isEqual:[UIColor whiteColor]]) {
+        like.backgroundColor = [UIColor redColor];
+        [likeAssets addObject:asset];
+        asset.numOfLike = [NSNumber numberWithInt:[asset.numOfLike intValue]+1];
+    }else{
+        like.backgroundColor = [UIColor whiteColor];
+        [likeAssets removeObject:asset];
+        asset.numOfLike = [NSNumber numberWithInt:[asset.numOfLike intValue]-1];
+    }
+    PhotoAppDelegate *delegate = [UIApplication sharedApplication].delegate;
+    [delegate.dataSource.coreData saveContext];
 }
 
 #pragma mark -
@@ -416,85 +454,6 @@
     
     
 }
--(void)CFG
-{
-    favorite=[[UIView alloc]initWithFrame:CGRectMake(1,160,80,150)];
-    [favorite setBackgroundColor:[UIColor grayColor]];
-    favorite.alpha=0.6;
-    
-    
-    UILabel *note=[[UILabel alloc]initWithFrame:CGRectMake(15, 10, 80, 30)];
-    [note setBackgroundColor:[UIColor clearColor]];
-    note.numberOfLines = 10;  
-    note.text = @"Do you like it?";
-    
-    //note.baselineAdjustment = UIBaselineAdjustmentNone; 
-    //note.highlighted = YES;       
-    
-    //note.highlightedTextColor = [UIColor whiteColor];      
-    note.textColor = [UIColor whiteColor];
-    note.font = [UIFont boldSystemFontOfSize:18];
-    //[note setText:@"do you like it?"];
-    CGSize size = CGSizeMake(60, 1000);
-    CGSize labelSize = [note.text sizeWithFont:note.font 
-                             constrainedToSize:size
-                                 lineBreakMode:UILineBreakModeClip];
-    note.frame = CGRectMake(note.frame.origin.x, note.frame.origin.y,
-                            note.frame.size.width,labelSize.height);
-    [favorite addSubview:note];
-    UIButton *button1 = [UIButton buttonWithType:UIButtonTypeCustom]; 
-    button1.frame = CGRectMake(10, 80, 60, 30);
-    [button1 setBackgroundColor:[UIColor clearColor]]; 
-    [button1 setTitle:@"YES" forState:UIControlStateNormal];
-    UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom]; 
-    button2.frame = CGRectMake(10, 115, 60, 30);
-    [button2 setBackgroundColor:[UIColor clearColor]]; 
-    [button2 setTitle:@"NO" forState:UIControlStateNormal];
-    [button1 addTarget:self action:@selector(button1Pressed) forControlEvents:UIControlEventTouchDown];
-    [button2 addTarget:self action:@selector(button2Pressed) forControlEvents:UIControlEventTouchDown];
-    [favorite addSubview:button1];
-    [favorite addSubview:button2];
-    //favorite.hidden=YES;
-    
-    
-}
-
--(void)showLikeButton{
-    if (likeButton) {
-        likeButton = nil;
-    }
-    likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    CGRect mainScreen = self.view.frame;
-    likeButton.frame = CGRectMake(mainScreen.size.width*4/5, mainScreen.size.height*4/5, 50, 50);
-    likeButton.backgroundColor = [UIColor whiteColor];
-    [likeButton addTarget:self action:@selector(likeButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:likeButton];
-}
--(void)likeButtonPressed:(id)sender
-{
-    UIButton *like = (UIButton *)sender;
-    if ([likeButton.backgroundColor isEqual:[UIColor whiteColor]]) {
-        like.backgroundColor = [UIColor redColor];
-    }else{
-        like.backgroundColor = [UIColor whiteColor];
-    }
-    
-    
-    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:nil];
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"addfavorate" 
-                                                       object:self 
-                                                     userInfo:dic];
-}
--(void)button2Pressed
-{
-    
-    [UIView animateWithDuration:0.8 
-                     animations:^{
-                         favorite.alpha = 0;
-                     }];
-    
-}
-
 
 
 -(void)playVideo
@@ -560,7 +519,7 @@
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     currentPageIndex = pageIndexBeforeRotation;
     [UIView animateWithDuration:0.4 animations:^{
-        assetInfoView.frame =CGRectMake(0, self.navigationController.toolbar.frame.origin.y -130, 130, 120);
+        assetInfoView.frame =CGRectMake(0, self.view.frame.size.height *1/2, 130, 120);
     }];
     [self performLayout];
 	[self hideControlsAfterDelay];
@@ -575,6 +534,7 @@
 #pragma mark -
 #pragma mark setUp ToolBar Methods
 - (void)setupToolbar {
+ 
 	UIBarButtonItem *action = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(actionButtonHit:)];
 	UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 	
@@ -595,15 +555,22 @@
                                                                   style:UIBarButtonItemStylePlain 
                                                                  target:self 
                                                                  action:@selector(moveForward:)];
+        if (!lockMode) {
+            [self setToolbarItems:[NSArray arrayWithObjects:fixedLeft, flex, left, fixedCenter, right, flex, action, nil]];
+        }else{
+            [self setToolbarItems:[NSArray arrayWithObjects:fixedLeft, flex, left, fixedCenter, right, flex, nil]];
+        }
 		
-		[self setToolbarItems:[NSArray arrayWithObjects:fixedLeft, flex, left, fixedCenter, right, flex, action, nil]];
 		
 		_rightButton = right;
 		_leftButton = left;
 		
 		
 	} else {
-		[self setToolbarItems:[NSArray arrayWithObjects:flex, action, nil]];
+        if (!lockMode) {
+            [self setToolbarItems:[NSArray arrayWithObjects:flex, action, nil]];
+        }
+		
 	}
 	
 	_actionButton=action;
@@ -687,6 +654,7 @@
     if (ppv.isOpen) {
         [ppv viewClose];
     }
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addPhotoInfoView) object:nil];
     assetInfoView.hidden = YES;
 }
 
@@ -787,8 +755,6 @@
     }
     PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
     if (photoView != nil) {
-        
-        
         if (cropView.superview!=nil) {
             self.navigationItem.rightBarButtonItem = nil;
             [cropView removeFromSuperview];
@@ -821,7 +787,8 @@
     PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
     if (photoView != nil ) {
         photoView.alpha =1.0;
-        //[photoView setPhoto:self.cropView.cropImage];
+        photoView.fullScreen= self.cropView.cropImage;
+        photoView.imageView.image = self.cropView.cropImage;
     }
     [cropView removeFromSuperview];
 }
@@ -857,18 +824,36 @@
     [self setStatusBarHidden:hidden animated:animated];
     [self.navigationController setNavigationBarHidden:hidden animated:animated];
     [self.navigationController setToolbarHidden:hidden animated:animated];
+    [self setPhotoInfoHidden:hidden];
+    [self setLikeButtonHidden:hidden];
+	_barsHidden=hidden;
+	
+}
+
+-(void)setPhotoInfoHidden:(BOOL)hidden{
     if (hidden && assetInfoView.superview != nil && assetInfoView != nil) {
         [UIView animateWithDuration:0.4 animations:^{
-            assetInfoView.alpha = 0;
+            assetInfoView.frame =CGRectMake(0, self.view.frame.size.height *1/2, 0, 120);
         }];
     }else{
         [UIView animateWithDuration:0.4 animations:^{
-            assetInfoView.alpha = 1.0;
+            assetInfoView.frame =CGRectMake(0, self.view.frame.size.height *1/2, 130, 120);
         }];
     }
-    
-	_barsHidden=hidden;
-	
+
+}
+
+-(void)setLikeButtonHidden:(BOOL)hidden{
+    if (hidden && likeButton.superview != nil && likeButton != nil) {
+        [UIView animateWithDuration:0.4 animations:^{
+            likeButton.hidden = YES;
+        }];
+    }else{
+        [UIView animateWithDuration:0.4 animations:^{
+            likeButton.hidden = NO;
+        }];
+    }
+
 }
 
 - (void)toggleBarsNotification:(NSNotification*)notification{
@@ -922,36 +907,6 @@
 	
 }
 
-/*
-- (void)loadScrollViewWithPage:(NSInteger)page{
-    
-       if(VI==YES)
-    {
-        realasset =[[self.photoSource objectAtIndex:page]alasset];
-        if ([[realasset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo]) 
-        {  
-            
-            NSString *p=[NSString stringWithFormat:@"%d",page];
-            [self.video addObject:p];
-            CGRect frame1 =frame1;
-            frame1.origin.x =xOrigin+130;
-            frame1.origin.y = 210;
-            frame1.size.height=60;
-            frame1.size.width=60;
-            [self play:frame1];
-        }
-    }
-    NSString *p=[NSString stringWithFormat:@"%d",page];
-    if(VI==YES)
-    {
-        [self performSelector:@selector(favorite:) withObject:p afterDelay:3];    
-    }
-    //[self favorite];   
-    
-}
-
-*/
-
 #pragma mark -
 #pragma mark UIScrollView Delegate Methods
 
@@ -965,43 +920,10 @@
     CGRect visibleBounds = scrollView.bounds;
 	int index = (int)(floorf(CGRectGetMidX(visibleBounds) / CGRectGetWidth(visibleBounds)));    if (index < 0) index = 0;
 	if (index > self.playlist.storeAssets.count - 1) index = self.playlist.storeAssets.count - 1;
-	//NSUInteger previousCurrentPage = currentPageIndex;
-
     if (index != currentPageIndex) {
         currentPageIndex = index;
     }
 	
-
-    /* [UIView animateWithDuration:0
-                     animations:^{
-                         //myPickerView.frame = CGRectMake(0, 210, 310, 180);
-                         favorite.alpha = 0;
-                     }];
-    
-	NSInteger _index = [self centerPhotoIndex];
-     [self updatePages];
-	if (_index >= [self.playlist.urls count] || _index < 0 ){//|| (NSNull *)[self.fullScreenPhotos objectAtIndex:_index] == [NSNull null]) {
-		return;
-	}
-	
-	if (_pageIndex != _index && !_rotating) {
-        ALAsset *asset = [[self.photoSource objectAtIndex:_index]alasset];
-        NSString *currentPageUrl=[[[asset defaultRepresentation]url]description];
-        ppv.url = currentPageUrl;
-        [ppv Buttons];
-		[self setBarsHidden:YES animated:YES];
-		_pageIndex = _index;
-        //[self moveToPhotoAtIndex:_index animated:YES];
-        if (!editing) {
-            [self setViewState];
-        }
-		
-		if (![scrollView isTracking]) {
-			[self layoutScrollViewSubviews];
-		}
-		
-	}*/
-   
 }
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
 	// Hide controls when dragging begins
@@ -1149,7 +1071,7 @@
 -(void)playPhoto{
     currentPageIndex+=1;
     NSInteger _index = self.currentPageIndex;
-    if (_index >= [self.photoSource count] || _index < 0) {
+    if (_index >= [self.playlist.storeAssets count] || _index < 0) {
         currentPageIndex = 0;
     }
     [self setBarsHidden:YES animated:YES];
@@ -1179,9 +1101,6 @@
    
 }
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"PhotoView");
-}
 #pragma mark -
 #pragma mark Memory
 
@@ -1191,8 +1110,6 @@
 
 - (void)viewDidUnload{
 	timer = nil;
-	_photoViews=nil;
-	photoSource=nil;
 	_scrollView=nil;
 	
 }

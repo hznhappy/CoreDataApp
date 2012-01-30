@@ -50,6 +50,7 @@
 		18C78B9414D6736500B57B4F /* TestiPhoneCalViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18C78B8E14D6736500B57B4F /* TestiPhoneCalViewController.xib */; };
 		18C78B9514D6736500B57B4F /* TdCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C78B9014D6736500B57B4F /* TdCalendarView.m */; };
 		18C78B9614D6736500B57B4F /* PlaylistDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C78B9214D6736500B57B4F /* PlaylistDetailController.m */; };
+		18C78B9914D67A4B00B57B4F /* BorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C78B9814D67A4B00B57B4F /* BorderView.m */; };
 		18D402821474E50000389097 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18D402841474E50000389097 /* Localizable.strings */; };
 		18D402901474E55900389097 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18D402921474E55900389097 /* InfoPlist.strings */; };
 		18D4031C1474FC9A00389097 /* AssetTablePicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18D4031E1474FC9A00389097 /* AssetTablePicker.xib */; };
@@ -164,6 +165,8 @@
 		18C78B9014D6736500B57B4F /* TdCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TdCalendarView.m; sourceTree = "<group>"; };
 		18C78B9114D6736500B57B4F /* PlaylistDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistDetailController.h; sourceTree = "<group>"; };
 		18C78B9214D6736500B57B4F /* PlaylistDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistDetailController.m; sourceTree = "<group>"; };
+		18C78B9714D67A4B00B57B4F /* BorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BorderView.h; sourceTree = "<group>"; };
+		18C78B9814D67A4B00B57B4F /* BorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BorderView.m; sourceTree = "<group>"; };
 		18D402831474E50000389097 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		18D402851474E50800389097 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		18D402911474E55900389097 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -437,6 +440,8 @@
 				183DE30C14C7F66A00BDC724 /* CropView.m */,
 				183DE30D14C7F66A00BDC724 /* GridView.h */,
 				183DE30E14C7F66A00BDC724 /* GridView.m */,
+				18C78B9714D67A4B00B57B4F /* BorderView.h */,
+				18C78B9814D67A4B00B57B4F /* BorderView.m */,
 			);
 			name = PhotoViewController;
 			sourceTree = "<group>";
@@ -596,6 +601,7 @@
 				18C78B9314D6736500B57B4F /* TestiPhoneCalViewController.m in Sources */,
 				18C78B9514D6736500B57B4F /* TdCalendarView.m in Sources */,
 				18C78B9614D6736500B57B4F /* PlaylistDetailController.m in Sources */,
+				18C78B9914D67A4B00B57B4F /* BorderView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
