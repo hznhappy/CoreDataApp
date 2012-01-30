@@ -29,16 +29,16 @@
     NSString *name;
     NSString *Transtion;
 }
-@property(nonatomic,retain)NSMutableArray *orderIdList;
-@property(nonatomic,retain)NSMutableArray *tagList;
-@property(nonatomic,retain)NSMutableArray *playTableList;
-@property(nonatomic,retain)NSMutableArray *RulesList;
-@property(nonatomic,retain)NSMutableSet *tag1List;
-@property(nonatomic,retain)NSMutableArray *tagName;
-@property(nonatomic,retain)NSMutableArray *photos;
-@property (nonatomic,retain)NSString *name;
-@property (nonatomic,retain)NSString *Transtion;
-@property (nonatomic,retain)NSMutableArray *PassTable;
+@property(nonatomic,strong)NSMutableArray *orderIdList;
+@property(nonatomic,strong)NSMutableArray *tagList;
+@property(nonatomic,strong)NSMutableArray *playTableList;
+@property(nonatomic,strong)NSMutableArray *RulesList;
+@property(nonatomic,strong)NSMutableSet *tag1List;
+@property(nonatomic,strong)NSMutableArray *tagName;
+@property(nonatomic,strong)NSMutableArray *photos;
+@property (nonatomic,strong)NSString *name;
+@property (nonatomic,strong)NSString *Transtion;
+@property (nonatomic,strong)NSMutableArray *PassTable;
 +(DBOperation*)getInstance;
 -(void)openDB;
 -(void)createTable:(NSString *)sql;

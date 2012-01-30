@@ -14,16 +14,6 @@
 @synthesize animaArray;
 @synthesize tranStyle,Trans_list,play_id,Text;
 
-- (void)dealloc
-{
-    [tranStyle release];
-    [animaArray release];
-    //[database release];
-    [Trans_list release];
-    [play_id release];
-    [Text release];
-    [super dealloc];
-}
 
 - (void)didReceiveMemoryWarning
 {
@@ -52,8 +42,6 @@
     NSMutableArray *tempArray1=[[NSMutableArray alloc]initWithObjects:@"fade",@"cube",@"reveal",@"push",@"moveIn",@"suckEffect",@"oglFlip",@"rippleEffect",@"pageCurl",@"pageUnCurl",nil];
     self.Trans_list=tempArray1;
     self.animaArray = tempArray;
-    [tempArray release];
-    [tempArray1 release];
     [self creatTable];
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
@@ -74,7 +62,7 @@
     static NSString *cellIdentifier = @"cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier]autorelease];
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
     NSString *animateString = [animaArray objectAtIndex:indexPath.row];
     cell.textLabel.text = animateString;

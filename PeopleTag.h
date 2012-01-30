@@ -13,7 +13,7 @@
 
 @interface PeopleTag : NSManagedObject
 
-@property (nonatomic, retain) Asset *conAsset;
-@property (nonatomic, retain) People *conPeople;
+@property (nonatomic, strong) Asset *conAsset;
+@property (nonatomic, strong) People *conPeople;
 
 @end

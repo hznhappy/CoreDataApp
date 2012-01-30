@@ -22,13 +22,13 @@
     
 }
 
-@property (nonatomic, retain) NSMutableArray *storeAssets;
-@property (nonatomic, retain) NSMutableDictionary /*url(String)->asset mapping*/ *assets;
+@property (nonatomic, strong) NSMutableArray *storeAssets;
+@property (nonatomic, strong) NSMutableDictionary /*url(String)->asset mapping*/ *assets;
 
 @property (nonatomic) NSInteger showing;
-@property (nonatomic, retain) NSCache *icache;
-@property (nonatomic, retain) NSCache *fcache;
-@property (nonatomic, retain) NSOperationQueue *queue;
+@property (nonatomic, strong) NSCache *icache;
+@property (nonatomic, strong) NSCache *fcache;
+@property (nonatomic, strong) NSOperationQueue *queue;
 
 -(ALAsset *) assetAtIndex: (NSUInteger)index;
 

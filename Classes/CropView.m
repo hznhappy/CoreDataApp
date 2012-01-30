@@ -199,7 +199,7 @@
 -(void)drawRect:(CGRect)rect{
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetStrokeColorWithColor(context, [UIColor whiteColor].CGColor);
-    CGContextSetLineWidth(context, 8.0f);
+    CGContextSetLineWidth(context, 4.0f);
     CGFloat minX = CGRectGetMinX(rect);
     CGFloat maxX = CGRectGetMaxX(rect);
     CGFloat minY = CGRectGetMinY(rect);
@@ -240,7 +240,7 @@
 
 - (UIImage *)croppedPhoto
 {
-        UIImage *orignImage = self.photoImageView.photo;
+        UIImage *orignImage = self.photoImageView.fullScreen;
         UIScrollView *pScrollView = (UIScrollView *)photoImageView.scrollView;
         CGFloat zoomScale = pScrollView.zoomScale;
         
@@ -384,12 +384,6 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];
-    [cropImage release];
-    [photoImageView release];
-    [gridView release];
-    [photoBrowserView release];
-    [cropImageView release];
-    [super dealloc];
 }
 
 @end

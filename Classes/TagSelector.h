@@ -28,4 +28,5 @@
 -(People *)tagPeople;
 -(void)saveTagAsset:(Asset *)asset;
 -(void)resetToolBar;
+-(void)addTagName;
 @end

@@ -28,7 +28,6 @@
     NSArray *viewControllers = rootViewController.viewControllers;
     AlbumDataSource *_dataSource = [[AlbumDataSource alloc] initWithAppName:@"PhotoApp" navigationController:(UINavigationController *)[viewControllers objectAtIndex:0]];
     self.dataSource = _dataSource;
-    [_dataSource release];
     [window addSubview:rootViewController.view];
     [window makeKeyAndVisible];
     return YES;
@@ -85,12 +84,6 @@
 }
 
 
-- (void)dealloc {
-    [dataSource release];
-    [rootViewController release];
-    [window release];
-    [super dealloc];
-}
 
 
 

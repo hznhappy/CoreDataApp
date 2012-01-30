@@ -33,17 +33,17 @@
     UIBarButtonItem *editButton;
     NSString *bo;
 }
-@property(nonatomic,retain)IBOutlet UITableView *tableView; 
-@property(nonatomic,retain)UIButton *button;
-@property(nonatomic,retain)NSMutableArray *IdList;
+@property(nonatomic,strong)IBOutlet UITableView *tableView; 
+@property(nonatomic,strong)UIButton *button;
+@property(nonatomic,strong)NSMutableArray *IdList;
 
-@property(nonatomic,retain)NSMutableArray *list;
-@property(nonatomic,retain)NSMutableArray *people;
-@property(nonatomic,retain)NSMutableArray *result;
-@property(nonatomic,retain)UIToolbar *tools;
-@property(nonatomic,retain)NSString *bo;
-@property(nonatomic,retain)People *favorate;
-@property(nonatomic,retain)AmptsPhotoCoreData * coreData;
+@property(nonatomic,strong)NSMutableArray *list;
+@property(nonatomic,strong)NSMutableArray *people;
+@property(nonatomic,strong)NSMutableArray *result;
+@property(nonatomic,strong)UIToolbar *tools;
+@property(nonatomic,strong)NSString *bo;
+@property(nonatomic,strong)People *favorate;
+@property(nonatomic,strong)AmptsPhotoCoreData * coreData;
 -(IBAction)toggleEdit:(id)sender;
 -(IBAction)toggleAdd:(id)sender;
 -(void)creatButton;

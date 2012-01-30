@@ -28,7 +28,7 @@
 
 -(void)viewDidLoad {
     
-    
+    lockMode = NO;
     done = YES;
     action=YES;
     mode = NO;
@@ -38,21 +38,16 @@
     ME=NO;
     PASS=NO;
     tagSelector = [[TagSelector alloc]initWithViewController:self];
-    NSMutableArray *array=[[NSMutableArray alloc]init];
-     NSMutableArray *tempArray = [[NSMutableArray alloc] init];
     
-    self.tagRow=array;
-    self.UrlList=tempArray;
-    [tempArray release];
-    [array release];
+    self.tagRow=[[NSMutableArray alloc]init];;
+    self.UrlList=[[NSMutableArray alloc] init];;
     
     NSString *b=NSLocalizedString(@"Back", @"title");
     UIButton* backButton = [UIButton buttonWithType:101]; // left-pointing shape!
-    [backButton addTarget:self action:@selector(huyou) forControlEvents:UIControlEventTouchUpInside];
+    [backButton addTarget:self action:@selector(backButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [backButton setTitle:b forState:UIControlStateNormal];
     UIBarButtonItem *backItem=[[UIBarButtonItem alloc]initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem =backItem;
-    [backItem release];
     
    
    
@@ -86,7 +81,7 @@
     [self.table reloadData];
 }
 
--(void)huyou
+-(void)backButtonPressed
 {
     NSString *a=NSLocalizedString(@"Lock", @"title");
     if([self.lock.title isEqualToString:a])
@@ -123,13 +118,11 @@
                 }
                 else if([passWord.text isEqualToString:pass])
                 { 
-                    NSString *deletePassTable= [NSString stringWithFormat:@"DELETE FROM PassTable"];	
-                    NSLog(@"%@",deletePassTable);
-                    //[dataBase deleteDB:deletePassTable];
                     
                     NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults]; 
                     [defaults setObject:pass forKey:@"name_preference"];
-                    self.lock.title=a;               
+                    self.lock.title=a;   
+                    lockMode = NO;
                 }
                 else
                 {
@@ -140,7 +133,6 @@
                                           cancelButtonTitle:nil
                                           otherButtonTitles:c,nil];
                     [alert show];
-                    [alert release];
                     ME=YES;
                     
                 }
@@ -209,20 +201,21 @@
     NSString *a=NSLocalizedString(@"Lock", @"button");
     NSString *b=NSLocalizedString(@"UnLock", @"button");
     if([self.lock.title isEqualToString:a])
-    { NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults]; 
-        val=[[defaults objectForKey:@"name_preference"]retain];
+    { 
+        NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults]; 
+        val=[defaults objectForKey:@"name_preference"];
         if(val==nil)
-        { PASS=YES;
-            UIAlertView *alert2 = [[UIAlertView alloc]initWithTitle:@"密码为空,请设置密码"  message:@"\n" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: @"取消",nil];  
+        { 
+            PASS=YES;
+            UIAlertView *alert2 = [[UIAlertView alloc]initWithTitle:@"密码为空,请设置密码"  message:@"\n" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: @"取消",nil]; 
             passWord2= [[UITextField alloc] initWithFrame:CGRectMake(12, 40, 260, 30)];  
             passWord2.backgroundColor = [UIColor whiteColor];  
             passWord2.secureTextEntry = YES;
             [alert2 addSubview:passWord2];  
             [alert2 show];
-            [alert2 release];
         }
         else{
-            
+            lockMode = YES;
             [lock setTitle:b];
         }
     }
@@ -247,8 +240,6 @@
                               cancelButtonTitle:nil
                               otherButtonTitles:@"OK!",nil];
         [alert show];
-        [alert release];
-        [message release];
         
     }
     
@@ -300,7 +291,7 @@
     
     if (cell == nil) 
     {	
-        cell = [[[ThumbnailCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier]autorelease];
+        cell = [[ThumbnailCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         
     }
     
@@ -350,7 +341,8 @@
     if(action==YES)
     {
         selectedRow = cell.rowNumber;
-        NSDictionary *dic = [NSDictionary dictionaryWithObject:self.crwAssets forKey:[NSString stringWithFormat:@"%d",index]];
+        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,[NSString stringWithFormat:@"%d",index],
+                                    [NSNumber numberWithBool:lockMode],@"lock", nil];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"viewPhotos" object:nil userInfo:dic];   
     }
     else
@@ -442,19 +434,6 @@
 - (void)dealloc
 {   
     [[NSNotificationCenter defaultCenter]removeObserver:self];
-    [viewBar release];
-    [tagBar release];
-    [cancel release];
-    [save release];
-    [reset release];
-    [table release];
-    [crwAssets release];
-    [UrlList release];
-    [alert1 release];
-    [val release];
-    [tagRow release];
-    [tagSelector release];
-    [super dealloc];    
 }
 
 

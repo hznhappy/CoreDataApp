@@ -51,8 +51,6 @@
     self.navigationItem.leftBarButtonItem = editButton;
     self.navigationItem.rightBarButtonItem = addButon;
     
-    [addButon release];
-    [editButton release];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabled) name:@"addplay" object:nil];
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addcount) name:@"addcount" object:nil];
     
@@ -91,7 +89,6 @@
     PlaylistDetailController *detailController = [[PlaylistDetailController alloc]initWithNibName:@"PlaylistDetailController" bundle:[NSBundle mainBundle]];
     detailController.hidesBottomBarWhenPushed = YES;
 	[self.navigationController pushViewController:detailController animated:YES];
-    [detailController release];
 }
 
 #pragma mark -
@@ -115,7 +112,7 @@
     static NSString *CellIdentifier = @"CellIdentifier";
 	UITableViewCell *cell = [table dequeueReusableCellWithIdentifier:CellIdentifier];
 	if (cell == nil) {
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
 	}
     AmptsAlbum *am = (AmptsAlbum *)[assets objectAtIndex:indexPath.row];
     
@@ -125,7 +122,7 @@
 }
 -(void)tableView:(UITableView *)table didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSMutableArray *WE=[(AmptsAlbum *)[assets objectAtIndex:indexPath.row]assetsList];
-    NSDictionary *dic = [[NSDictionary dictionaryWithObject:WE forKey:@"assets"]retain];
+    NSDictionary *dic = [NSDictionary dictionaryWithObject:WE forKey:@"assets"];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"pushThumbnailView" object:nil userInfo:dic];
     
     [table deselectRowAtIndexPath:indexPath animated:YES];
@@ -162,7 +159,6 @@
     detailController.hidesBottomBarWhenPushed = YES;
     
     [self.navigationController pushViewController:detailController animated:YES];
-    [detailController release];
 
     
 }
@@ -198,9 +194,4 @@
 #pragma mark -
 #pragma mark memory method
 
-- (void)dealloc {
-    [dataSource release];
-    [tableView release];
-    [super dealloc];
-}
 @end

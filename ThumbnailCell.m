@@ -27,7 +27,6 @@
             thumImageView.frame = frame;
             thumImageView.delegate = self;
             [self addSubview:thumImageView];
-            [thumImageView release];
             frame.origin.x = frame.origin.x + frame.size.width + 4;
             if ([[asset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo]) 
             {
@@ -59,7 +58,7 @@
 
 -(UIView *)addTagnumberOverlay:(NSString *)number
 {
-    UIView *tagBg =[[[UIView alloc]initWithFrame:CGRectMake(3, 3, 25, 25)]autorelease];
+    UIView *tagBg =[[UIView alloc]initWithFrame:CGRectMake(3, 3, 25, 25)];
     CGPoint tagBgCenter = tagBg.center;
     tagBg.layer.cornerRadius = 25 / 2.0;
     tagBg.center = tagBgCenter;
@@ -77,12 +76,11 @@
     count.text = number;
     [tagCount addSubview:count];
     [tagBg addSubview:tagCount];
-    [tagCount release];
     return tagBg;
     
 }
 -(UIView *)addVideoOverlay{
-    UIView *video =[[[UIView alloc]initWithFrame:CGRectMake(0, 54, 74, 16)]autorelease];
+    UIView *video =[[UIView alloc]initWithFrame:CGRectMake(0, 54, 74, 16)];
     UILabel *length=[[UILabel alloc]initWithFrame:CGRectMake(40, 3, 44, 10)];
     UIImageView *tu=[[UIImageView alloc]initWithFrame:CGRectMake(6, 4,15, 8)];
     //  tu= [UIButton buttonWithType:UIButtonTypeCustom]; 
@@ -108,8 +106,6 @@
     video.alpha=0.9;
     length.alpha = 1.0;
     tu.alpha = 1.0;
-    [length release];
-    [tu release];
     return video;
 
 }
@@ -117,7 +113,7 @@
 -(UIImageView *)addTagOverlayWhenSelected
 {
     CGRect viewFrames = CGRectMake(0, 0, 75, 75);
-    UIImageView *overlayView = [[[UIImageView alloc]initWithFrame:viewFrames]autorelease];
+    UIImageView *overlayView = [[UIImageView alloc]initWithFrame:viewFrames];
     [overlayView setImage:[UIImage imageNamed:@"selectOverlay.png"]];
     return overlayView;
 }
@@ -140,11 +136,6 @@
 #pragma mark delegate methods;
 -(void)thumbnailImageViewSelected:(ThumbnailImageView *)thumbnailImageView{
     [selectionDelegate selectedThumbnailCell:self selectedAtIndex:thumbnailImageView.thumbnailIndex];
-}
--(void)dealloc 
-{
-
-	[super dealloc];
 }
 
 @end

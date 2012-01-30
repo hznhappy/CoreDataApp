@@ -31,7 +31,7 @@
 	BOOL _rotating;
 	BOOL _barsHidden;
 	BOOL performingLayout;
-                                                        
+    BOOL lockMode;
 	UIBarButtonItem *_leftButton;
 	UIBarButtonItem *_rightButton;
 	UIBarButtonItem *_actionButton;
@@ -56,18 +56,19 @@
     MPMoviePlayerController* theMovie;
     UIView *favorite;
     UIView *assetInfoView;
+    UIButton *likeButton;
     
 }
-@property (nonatomic, retain) Playlist *playlist;
-@property(nonatomic,retain)PopupPanelView *ppv;
-@property(nonatomic,retain)NSMutableArray *video;
-@property(nonatomic,retain) NSArray *photoSource;
-@property(nonatomic,retain) NSMutableArray *photoViews;
+@property (nonatomic, strong) Playlist *playlist;
+@property(nonatomic,strong)PopupPanelView *ppv;
+@property(nonatomic,strong)NSMutableArray *video;
+@property(nonatomic,strong) NSArray *photoSource;
+@property(nonatomic,strong) NSMutableArray *photoViews;
 
-@property(nonatomic,retain)CropView *cropView;
-@property(nonatomic,retain) UIScrollView *scrollView;
+@property(nonatomic,strong)CropView *cropView;
+@property(nonatomic,strong) UIScrollView *scrollView;
 @property(nonatomic,assign) NSUInteger currentPageIndex;
-
+@property(nonatomic,assign)BOOL lockMode;
 //init
 - (id)init;
 - (void)performLayout;
@@ -100,15 +101,11 @@
 -(void)addPhotoInfoView;
 
 //LikeTag
--(void)favorite:(NSString *)inter;
+-(void)showLikeButton;
 -(void)CFG;
--(void)likeButtonPressed;
+-(void)likeButtonPressed:(id)sender;
 -(void)button2Pressed;
-
+-(void)addTagPeople;
 -(void)setTagToolBar;
 @end
 
-@interface UIImage (Crop)
-
-- (UIImage *)crop:(CGRect)rect;
-@end

@@ -13,15 +13,15 @@
 
 @interface Asset : NSManagedObject
 
-@property (nonatomic, retain) NSDate * date;
-@property (nonatomic, retain) NSNumber * latitude;
-@property (nonatomic, retain) NSNumber * longitude;
-@property (nonatomic, retain) NSNumber * numOfLike;
-@property (nonatomic, retain) NSNumber * numPeopleTag;
-@property (nonatomic, retain) NSString * url;
-@property (nonatomic, retain) NSSet *conAssetRule;
-@property (nonatomic, retain) Event *conEvent;
-@property (nonatomic, retain) NSSet *conPeopleTag;
+@property (nonatomic, strong) NSDate * date;
+@property (nonatomic, strong) NSNumber * latitude;
+@property (nonatomic, strong) NSNumber * longitude;
+@property (nonatomic, strong) NSNumber * numOfLike;
+@property (nonatomic, strong) NSNumber * numPeopleTag;
+@property (nonatomic, strong) NSString * url;
+@property (nonatomic, strong) NSSet *conAssetRule;
+@property (nonatomic, strong) Event *conEvent;
+@property (nonatomic, strong) NSSet *conPeopleTag;
 @end
 
 @interface Asset (CoreDataGeneratedAccessors)

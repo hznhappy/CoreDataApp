@@ -9,18 +9,19 @@
 #import "PopupPanelView.h"
 #import "TagManagementController.h"
 #import "PhotoViewController.h"
+#import "Asset.h"
+#import "PeopleTag.h"
+#import "PhotoAppDelegate.h"
 @implementation PopupPanelView
 @synthesize isOpen;
 @synthesize rectForOpen;
 @synthesize rectForClose;
 @synthesize list;
-@synthesize toolBar;
 @synthesize myscroll;
-@synthesize url;
-- (id)initWithFrame:(CGRect)frame {
+- (id)initWithFrame:(CGRect)frame andAsset:(Asset *)asset{
     self = [super initWithFrame:frame];
     if (self) {
-        self.url = nil;
+        ass = asset;
 		isOpen = NO;
 		rectForOpen = self.frame;
 		rectForClose = CGRectMake(0 ,440, rectForOpen.size.width, 0);
@@ -32,41 +33,47 @@
 		myscroll=[[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 347)];
         [self addSubview:myscroll]; 
         [myscroll setBackgroundColor:[UIColor clearColor]];
-        da=[DBOperation getInstance];
-        [self selectTable];
+        PhotoAppDelegate *delegate = [UIApplication sharedApplication].delegate;
+        dataSource=delegate.dataSource;
+        [self selectTagPeople];
         [myscroll setContentSize:CGSizeMake(320, 45*[self.list count])];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(Buttons) name:@"edit" object:nil];
     }
    
     return self;
 }
--(void)selectTable
+-(void)selectTagPeople
 {
-    NSString *createTag= [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(ID INT,URL TEXT,NAME,PRIMARY KEY(ID,URL))",TAG];
-    [da createTable:createTag]; 
-    NSString *selectTag= [NSString stringWithFormat:@"select ID from tag where url='%@'",self.url];
-    self.list=[da selectFromTAG:selectTag];
+    NSPredicate *pre = [NSPredicate predicateWithFormat:@"conAsset == %@",ass];
+    self.list = [dataSource simpleQuery:@"PeopleTag" predicate:pre sortField:nil sortOrder:NO];
+    
 }
-CGFloat btx = 20;
-CGFloat bty = 20;
-CGFloat btwidth = 120;
-CGFloat byheight = 30;
+
 -(void)Buttons
 {
     for(UIButton *button in self.myscroll.subviews)
     {
         [button removeFromSuperview];
     }
-       [myscroll setContentSize:CGSizeMake(320, 45*[self.list count])];
+    [self selectTagPeople];
+    [myscroll setContentSize:CGSizeMake(320, 45*[self.list count])];
     NSString *buttonName = nil;
 	UIButton *button = nil;
-    //[self selectTable];
-    NSString *selectTag= [NSString stringWithFormat:@"select NAME from tag where url='%@'",self.url];
-   NSMutableArray *tagUserName=[da selectFromTAG:selectTag];
-    for(int i=0; i<[tagUserName count]; i++){
-         button = [UIButton buttonWithType:UIButtonTypeCustom]; 
+    CGFloat btx = self.frame.size.width - 110;
+    CGFloat bty = 20;
+    CGFloat btwidth = 120;
+    CGFloat byheight = 30;
+    for(int i=0; i<[self.list count]; i++){
+        button = [UIButton buttonWithType:UIButtonTypeCustom]; 
         [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-        buttonName =[tagUserName objectAtIndex:i];
+       PeopleTag *peopleTag =[self.list objectAtIndex:i];
+        NSString *firstName = peopleTag.conPeople.firstName;
+        NSString *lastName = peopleTag.conPeople.lastName;
+        if (lastName.length == 0 || lastName == nil) {
+            buttonName = firstName;
+        }else{
+            buttonName = [firstName stringByAppendingFormat:@"%@",peopleTag.conPeople.lastName];
+        }
 		button.frame = CGRectMake(btx, bty, btwidth, byheight);
 		[button setTitle:buttonName forState:UIControlStateNormal];
 		button.tag = i;
@@ -78,9 +85,12 @@ CGFloat byheight = 30;
  }
 -(void)buttonPressed:(UIButton *)button{
 	int tag = button.tag;
-    [self selectTable];
-    NSString *deleteTag= [NSString stringWithFormat:@"DELETE FROM TAG WHERE ID='%@' and url='%@'",[self.list objectAtIndex:tag],self.url];
-    [da deleteDB:deleteTag];
+    PeopleTag *pt = [self.list objectAtIndex:tag];
+    [pt.conPeople removeConPeopleTagObject:pt];
+    [ass removeConPeopleTagObject:pt];
+    ass.numPeopleTag = [NSNumber numberWithInt:[ass.numPeopleTag intValue]-1];
+    [dataSource.coreData saveContext];
+    [self selectTagPeople];
     [self Buttons];
     NSDictionary *dic= [NSDictionary dictionaryWithObjectsAndKeys:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
@@ -104,16 +114,6 @@ CGFloat byheight = 30;
 	[UIView setAnimationCurve:UIViewAnimationCurveLinear];
 	[self setFrame:rectForClose];
 	[UIView commitAnimations];
-}
-
-- (void)drawRect:(CGRect)rect {
-   }
-
-
-- (void)dealloc {
-   [list release];
-    [url release];
-    [super dealloc];
 }
 
 

@@ -13,9 +13,9 @@
 
 @interface AssetRule : NSManagedObject
 
-@property (nonatomic, retain) NSString * opCode;
-@property (nonatomic, retain) NSString * url;
-@property (nonatomic, retain) Album *conAllbum;
-@property (nonatomic, retain) Asset *conAsset;
+@property (nonatomic, strong) NSString * opCode;
+@property (nonatomic, strong) NSString * url;
+@property (nonatomic, strong) Album *conAllbum;
+@property (nonatomic, strong) Asset *conAsset;
 
 @end

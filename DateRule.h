@@ -13,9 +13,9 @@
 
 @interface DateRule : NSManagedObject
 
-@property (nonatomic, retain) NSString * opCode;
-@property (nonatomic, retain) NSDate * startDate;
-@property (nonatomic, retain) NSDate * stopDate;
-@property (nonatomic, retain) Album *conAlbum;
+@property (nonatomic, strong) NSString * opCode;
+@property (nonatomic, strong) NSDate * startDate;
+@property (nonatomic, strong) NSDate * stopDate;
+@property (nonatomic, strong) Album *conAlbum;
 
 @end

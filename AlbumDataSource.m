@@ -214,7 +214,6 @@
     [root.activityView stopAnimating];
     AlbumController *al = [[AlbumController alloc]initWithNibName:@"AlbumController" bundle:[NSBundle mainBundle]];
     [root pushViewController:al animated:NO];
-    [al release];
 }
 
 -(NSMutableArray*) simpleQuery:(NSString *)table predicate:(NSPredicate *)pre sortField:(NSString *)field sortOrder:(BOOL)asc {

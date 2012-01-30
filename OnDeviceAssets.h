@@ -16,10 +16,10 @@
     ALAssetsLibrary * library;
     
 }
-@property (nonatomic,retain)NSMutableDictionary *  deviceAssetsList;
+@property (nonatomic,strong)NSMutableDictionary *  deviceAssetsList;
 @property (nonatomic,assign)BOOL stopOperation;
 @property(nonatomic,assign) BOOL finishRefresh;
-@property (nonatomic,retain) ALAssetsLibrary * library;
+@property (nonatomic,strong) ALAssetsLibrary * library;
 -(ALAsset *) getAsset:(NSString *) l;
 -(BOOL) getStatus;
 -(void) refreshData;

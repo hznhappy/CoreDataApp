@@ -18,7 +18,7 @@
     NSMutableArray *assets;
 }
 
-@property(nonatomic,retain)IBOutlet UITableView *tableView; 
+@property(nonatomic,strong)IBOutlet UITableView *tableView; 
 
 -(IBAction)toggleEdit:(id)sender;
 -(IBAction)toggleAdd:(id)sender;

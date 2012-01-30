@@ -13,9 +13,9 @@
 
 @interface EventRule : NSManagedObject
 
-@property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSString * opCode;
-@property (nonatomic, retain) Album *conAlbum;
-@property (nonatomic, retain) Event *conEvent;
+@property (nonatomic, strong) NSString * name;
+@property (nonatomic, strong) NSString * opCode;
+@property (nonatomic, strong) Album *conAlbum;
+@property (nonatomic, strong) Event *conEvent;
 
 @end

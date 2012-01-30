@@ -17,10 +17,10 @@
 @interface ThumbnailImageView : UIImageView{
     UIImageView *highlightView;
     NSUInteger thumbnailIndex;
-    id<ThumbnailSelectionDelegate>delegate;
+    id<ThumbnailSelectionDelegate>__unsafe_unretained delegate;
 }
 @property(nonatomic,assign)NSUInteger thumbnailIndex;
-@property(nonatomic,assign)id<ThumbnailSelectionDelegate>delegate;
+@property(nonatomic,unsafe_unretained)id<ThumbnailSelectionDelegate>delegate;
 -(ThumbnailImageView *)initWithAsset:(ALAsset*)asset index:(NSUInteger)index;
 -(void)setSelectedView;
 -(void)clearSelection;

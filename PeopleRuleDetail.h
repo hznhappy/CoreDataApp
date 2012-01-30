@@ -13,10 +13,10 @@
 
 @interface PeopleRuleDetail : NSManagedObject
 
-@property (nonatomic, retain) NSString * firstName;
-@property (nonatomic, retain) NSString * lastName;
-@property (nonatomic, retain) NSString * opcode;
-@property (nonatomic, retain) People *conPeople;
-@property (nonatomic, retain) PeopleRule *conPeopleRule;
+@property (nonatomic, strong) NSString * firstName;
+@property (nonatomic, strong) NSString * lastName;
+@property (nonatomic, strong) NSString * opcode;
+@property (nonatomic, strong) People *conPeople;
+@property (nonatomic, strong) PeopleRule *conPeopleRule;
 
 @end

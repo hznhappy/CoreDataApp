@@ -17,9 +17,9 @@
     BOOL isDirty;
 }
 
-@property (nonatomic,retain) NSManagedObjectID *alblumId;
-@property (nonatomic,retain) NSMutableArray * assetsList;
-@property (nonatomic,retain) NSString * name;
+@property (nonatomic,strong) NSManagedObjectID *alblumId;
+@property (nonatomic,strong) NSMutableArray * assetsList;
+@property (nonatomic,strong) NSString * name;
 @property (nonatomic,assign)  NSInteger num;
 @property (nonatomic,assign) BOOL isDirty;
 @end

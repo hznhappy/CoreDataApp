@@ -31,6 +31,7 @@
 -(void)addTagPeople:(NSNotification *)note{
     NSDictionary *dic = [note userInfo];
     mypeople=[dic objectForKey:@"people"];
+    [self addTagName];
     [self resetToolBar];
 }
 -(People *)tagPeople{
@@ -42,7 +43,6 @@
     picker.peoplePickerDelegate = self;
     [viewController presentModalViewController:picker animated:YES];
     [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
-    [picker release]; 
 }
 
 -(void)selectTagNameFromFavorites{
@@ -50,8 +50,6 @@
     nameController.bo=[NSString stringWithFormat:@"yes"];
     UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:nameController];
     [viewController presentModalViewController:navController animated:YES];
-    [navController release];
-    [nameController release];
 }
 
 -(void)saveTagAsset:(Asset *)asset{
@@ -68,8 +66,8 @@
 -(BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person{
     
     
-    NSString *firstName = (NSString*)ABRecordCopyValue(person, kABPersonFirstNameProperty);
-    NSString *lastName = (NSString*)ABRecordCopyValue(person, kABPersonLastNameProperty);
+    NSString *firstName = (__bridge_transfer NSString*)ABRecordCopyValue(person, kABPersonFirstNameProperty);
+    NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(person, kABPersonLastNameProperty);
     
     ABRecordID recId = ABRecordGetRecordID(person);
     
@@ -93,6 +91,7 @@
     }
     [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
     [viewController dismissModalViewControllerAnimated:YES];
+    [self addTagName];
     [self resetToolBar];
     return NO;
 }
@@ -108,6 +107,13 @@
     return NO;
 }
 
+-(void)addTagName{
+    if ([viewController isKindOfClass:[PhotoViewController class]]) {
+        
+        [(PhotoViewController *)viewController addTagPeople];
+    }
+
+}
 #pragma mark -
 #pragma mark reset ToolBar
 -(void)resetToolBar{
@@ -119,8 +125,5 @@
 
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter]removeObserver:self];
-    [viewController release];
-    [mypeople release];
-    [dataSource release];
 }
 @end

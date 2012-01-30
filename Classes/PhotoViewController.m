@@ -27,23 +27,23 @@
 - (void)updateNavigation;
 @end
 
-@implementation UIImage (Crop)
-
-- (UIImage *)crop:(CGRect)rect {
-    
-    CGFloat scale = [[UIScreen mainScreen] scale];
-    
-    if (scale>1.0) {        
-        rect = CGRectMake(rect.origin.x*scale , rect.origin.y*scale, rect.size.width*scale, rect.size.height*scale);        
-    }
-    
-    CGImageRef imageRef = CGImageCreateWithImageInRect([self CGImage], rect);
-    UIImage *result = [UIImage imageWithCGImage:imageRef]; 
-    CGImageRelease(imageRef);
-    return result;
-}
-
-@end
+//@implementation UIImage (Crop)
+//
+//- (UIImage *)crop:(CGRect)rect {
+//    
+//    CGFloat scale = [[UIScreen mainScreen] scale];
+//    
+//    if (scale>1.0) {        
+//        rect = CGRectMake(rect.origin.x*scale , rect.origin.y*scale, rect.size.width*scale, rect.size.height*scale);        
+//    }
+//    
+//    CGImageRef imageRef = CGImageCreateWithImageInRect([self CGImage], rect);
+//    UIImage *result = [UIImage imageWithCGImage:imageRef]; 
+//    CGImageRelease(imageRef);
+//    return result;
+//}
+//
+//@end
 
 @implementation PhotoViewController
 
@@ -56,7 +56,7 @@
 @synthesize video;
 @synthesize cropView;
 @synthesize playlist;
-
+@synthesize lockMode;
 #pragma mark -
 #pragma mark init method
 
@@ -64,14 +64,13 @@
 	if ((self = [super init])) {
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleBarsNotification:) name:@"PhotoViewToggleBars" object:nil];
-		
+		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addTagPeople) name:@"addTagPeople" object:nil];
 		self.hidesBottomBarWhenPushed = YES;
 		self.wantsFullScreenLayout = YES;		
         recycledPages = [[NSMutableSet alloc] init];
         visiblePages  = [[NSMutableSet alloc] init];
         Playlist *tempPlaylist = [[Playlist alloc]init];
         self.playlist = tempPlaylist;
-        [tempPlaylist release];
     }
     
     return self;
@@ -94,7 +93,9 @@
 	
 	// Recalculate contentSize based on current orientation
 	self.scrollView.contentSize = [self contentSizeForPagingScrollView];
-	
+	for (PhotoImageView *page in visiblePages) {
+        page.frame = [self frameForPageAtIndex:page.index];
+    }
 	
 	// Adjust contentOffset to preserve page location based on values collected prior to location
 	self.scrollView.contentOffset = [self contentOffsetForPageAtIndex:indexPriorToLayout];
@@ -160,18 +161,19 @@
 
     NSMutableArray *array=[[NSMutableArray alloc]init];
     self.video=array;
-    [array release];
     
     tagShow = NO;
     editing=NO;
     croping = NO;
     NSString *u=NSLocalizedString(@"Edit", @"title");
     NSString *save = NSLocalizedString(@"Save", @"title");
-    edit=[[UIBarButtonItem alloc]initWithTitle:u style:UIBarButtonItemStyleBordered target:self action:@selector(edit)];
-    saveItem=[[UIBarButtonItem alloc]initWithTitle:save style:UIBarButtonItemStyleDone target:self action:@selector(savePhoto)];
-
-    self.navigationItem.rightBarButtonItem=edit;
-    
+    if (!lockMode) {
+        edit=[[UIBarButtonItem alloc]initWithTitle:u style:UIBarButtonItemStyleBordered target:self action:@selector(edit)];
+        saveItem=[[UIBarButtonItem alloc]initWithTitle:save style:UIBarButtonItemStyleDone target:self action:@selector(savePhoto)];
+        
+        self.navigationItem.rightBarButtonItem=edit;
+    }
+       
     [self updatePages];
     
 }
@@ -182,7 +184,6 @@
 
 -(void)updatePages{
     // Calculate which pages are visible
-    NSLog(@"scrollView bounds is %@",NSStringFromCGRect(self.scrollView.bounds));
     CGRect visibleBounds = self.scrollView.bounds;
     int iFirstIndex = (int)floorf((CGRectGetMinX(visibleBounds)+PADDING*2) / CGRectGetWidth(visibleBounds));
 	int iLastIndex  = (int)floorf((CGRectGetMaxX(visibleBounds)-PADDING*2-1) / CGRectGetWidth(visibleBounds));
@@ -209,7 +210,7 @@
         if (![self isDisplayingPageForIndex:index]) {
             PhotoImageView *page = [self dequeueRecycledPage];
             if (page == nil) {
-                page = [[[PhotoImageView alloc] init] autorelease];
+                page = [[PhotoImageView alloc] init];
                 page.playlist = self.playlist;
             }
             [self.scrollView addSubview:page];
@@ -231,13 +232,12 @@
         NSString *p=[NSString stringWithFormat:@"%d",page];
         [self.video addObject:p];
         CGRect frame1 =rect;
-        frame1.origin.x =rect.origin.x + 130;
-        frame1.origin.y = 210;
+        frame1.origin.x =rect.origin.x + rect.size.width/2 - 30;
+        frame1.origin.y = rect.origin.y + rect.size.height/2 - 20;
         frame1.size.height=60;
         frame1.size.width=60;
         [self play:frame1];
     }
-    NSLog(@"configure page is %d",index);
     page.index = index;
     page.imageView.image = nil;
     page.frame = rect;
@@ -272,7 +272,6 @@
 - (PhotoImageView *)dequeueRecycledPage{
     PhotoImageView *page = [recycledPages anyObject];
     if (page) {
-        [[page retain] autorelease];
         [recycledPages removeObject:page];
     }
     return page;
@@ -281,7 +280,7 @@
 #pragma mark -
 #pragma mark Frame Methods
 - (CGRect)frameForPagingScrollView{
-    NSLog(@"view bounds is %@",self.view.bounds);
+    NSLog(@"view bounds is %@",NSStringFromCGRect(self.view.bounds));
     CGRect frame = self.view.bounds;// [[UIScreen mainScreen] bounds];
     frame.origin.x -= PADDING;
     frame.size.width += (2 * PADDING);
@@ -308,6 +307,7 @@
 - (CGPoint)contentOffsetForPageAtIndex:(NSUInteger)index {
 	CGFloat pageWidth = self.scrollView.bounds.size.width;
 	CGFloat newOffset = index * pageWidth;
+    NSLog(@"contentOffeset is %f",newOffset);
 	return CGPointMake(newOffset, 0);
 }
 
@@ -331,7 +331,6 @@
 	// If a timer exists then cancel and release
 	if (controlVisibilityTimer) {
 		[controlVisibilityTimer invalidate];
-		[controlVisibilityTimer release];
 		controlVisibilityTimer = nil;
 	}
 }
@@ -340,7 +339,7 @@
 - (void)hideControlsAfterDelay {
 	[self cancelControlHiding];
 	if (![UIApplication sharedApplication].isStatusBarHidden) {
-		controlVisibilityTimer = [[NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(hideControls) userInfo:nil repeats:NO] retain];
+		controlVisibilityTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(hideControls) userInfo:nil repeats:NO];
 	}
 }
 
@@ -349,12 +348,10 @@
 -(void)showPhotoInfo{
     if (photoInfoTimer) {
         [photoInfoTimer invalidate];
-        [photoInfoTimer release];
         photoInfoTimer = nil;
     }
     if (assetInfoView && assetInfoView.superview != nil) {
         [assetInfoView removeFromSuperview];
-        [assetInfoView release];
         assetInfoView = nil;
     }
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addPhotoInfoView) object:nil];
@@ -363,26 +360,42 @@
 
 -(void)addPhotoInfoView{
     Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
+    assetInfoView = [[UIView alloc]initWithFrame:CGRectMake(0, self.navigationController.toolbar.frame.origin.y -130, 130, 120)];
+    [assetInfoView.layer setCornerRadius:10.0];
+    [assetInfoView setClipsToBounds:YES]; 
+    if (lockMode) {
+        [self showLikeButton];
+    }else{
+        UILabel *likeCount = [[UILabel alloc]initWithFrame:CGRectMake(10, 32, 120, 25)];
+        likeCount.backgroundColor = [UIColor clearColor];
+        likeCount.text = [NSString stringWithFormat:@"LIKES COUNT:%@",[asset.numOfLike description]];
+        likeCount.font = [UIFont systemFontOfSize:14];
+        
+        UILabel *tagCount = [[UILabel alloc]initWithFrame:CGRectMake(10, 64, 120, 25)];
+        tagCount.backgroundColor = [UIColor clearColor];
+        tagCount.text = [NSString stringWithFormat:@"TAG COUNT:%@",[asset.numPeopleTag description]];
+        tagCount.font = [UIFont systemFontOfSize:14];
+        [assetInfoView addSubview:likeCount];
+        [assetInfoView addSubview:tagCount];
+    }
+    UILabel *date = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 120, 25)];
     
-    assetInfoView = [[UIView alloc]initWithFrame:CGRectMake(0, self.navigationController.toolbar.frame.origin.y -180, 150, 120)];
-    UILabel *date = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 75, 30)];
-    UILabel *likeCount = [[UILabel alloc]initWithFrame:CGRectMake(20, 40, 75, 30)];
-    UILabel *tagCount = [[UILabel alloc]initWithFrame:CGRectMake(20, 80, 75, 30)];
     date.backgroundColor = [UIColor clearColor];
-    likeCount.backgroundColor = [UIColor clearColor];
-    tagCount.backgroundColor = [UIColor clearColor];
-    date.text = [asset.date description];
-    likeCount.text = [asset.numOfLike description];
-    tagCount.text = [asset.numPeopleTag description];
+    NSString *dateStr = [asset.date description];
+    if (dateStr.length == 0 || dateStr == nil) {
+        date.text = [NSString stringWithFormat:@"DATE: "];
+        date.font = [UIFont systemFontOfSize:14];
+    }else{
+        date.text = [NSString stringWithFormat:@"DATE:%@",dateStr];
+        date.font = [UIFont systemFontOfSize:14];
+    }
+    
     [assetInfoView setBackgroundColor:[UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0]];
-    assetInfoView.alpha = 0.4;
+    //assetInfoView.alpha = 0.4;
     [assetInfoView addSubview:date];
-    [assetInfoView addSubview:likeCount];
-    [assetInfoView addSubview:tagCount];
+    
     [self.view addSubview:assetInfoView];
-    [date release];
-    [likeCount release];
-    [tagCount release];
+    
 }
 
 #pragma mark -
@@ -391,7 +404,6 @@
 -(void)play:(CGRect)framek
 {
     playButton = nil;
-    [playButton release];
     playButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [playButton addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     UIImage *picture = [UIImage imageNamed:@"ji.png"];
@@ -430,7 +442,6 @@
     note.frame = CGRectMake(note.frame.origin.x, note.frame.origin.y,
                             note.frame.size.width,labelSize.height);
     [favorite addSubview:note];
-    [note release];
     UIButton *button1 = [UIButton buttonWithType:UIButtonTypeCustom]; 
     button1.frame = CGRectMake(10, 80, 60, 30);
     [button1 setBackgroundColor:[UIColor clearColor]]; 
@@ -447,36 +458,27 @@
     
     
 }
--(void)favorite:(NSString *)inter
-{  
-    if([inter integerValue]==currentPageIndex)
-    {
-        //favorite.hidden=NO;
-        [self.view addSubview:favorite];
-        // 
-        
-        
-        [UIView animateWithDuration:0.5 
-                         animations:^{
-                             //myPickerView.frame = CGRectMake(0, 210, 310, 180);
-                             favorite.alpha = 0.6;
-                         }];
-        
-        
-        //favorite.hidden=NO;
-        
+
+-(void)showLikeButton{
+    if (likeButton) {
+        likeButton = nil;
     }
-    //  [favorite CommitAnimations];
+    likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    CGRect mainScreen = self.view.frame;
+    likeButton.frame = CGRectMake(mainScreen.size.width*4/5, mainScreen.size.height*4/5, 50, 50);
+    likeButton.backgroundColor = [UIColor whiteColor];
+    [likeButton addTarget:self action:@selector(likeButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:likeButton];
 }
--(void)likeButtonPressed
+-(void)likeButtonPressed:(id)sender
 {
-    NSLog(@"button1");
-    // favorite.hidden=YES;
-    [UIView animateWithDuration:0.8 
-                     animations:^{
-                         //myPickerView.frame = CGRectMake(0, 210, 310, 180);
-                         favorite.alpha = 0;
-                     }];
+    UIButton *like = (UIButton *)sender;
+    if ([likeButton.backgroundColor isEqual:[UIColor whiteColor]]) {
+        like.backgroundColor = [UIColor redColor];
+    }else{
+        like.backgroundColor = [UIColor whiteColor];
+    }
+    
     
     NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"addfavorate" 
@@ -530,14 +532,6 @@
     
     
 }
-//-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-//{
-//   
-//    [self setBarsHidden:!_barsHidden animated:YES];
-//    
-//    
-//    
-//}
 // When the movie is done,release the controller. 
 -(void)myMovieFinishedCallback:(NSNotification*)aNotification 
 {
@@ -560,38 +554,21 @@
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     _rotating = YES;
-
-//    for (PhotoImageView *view in visiblePages){
-//        if ([view isKindOfClass:[PhotoImageView class]]) {
-//            if (view.index != currentPageIndex) {
-//                [view setHidden:YES];
-//            }
-//        }
-//    }
-
-    NSLog(@"will rotate%d",currentPageIndex);
+    pageIndexBeforeRotation = currentPageIndex;
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
-    
-   // currentPageIndex = pageIndexBeforeRotation;
-	//[self performLayout];
-	// Adjust frames and configuration of each visible page
-	for (PhotoImageView *page in visiblePages) {
-        [page rotateToOrientation:toInterfaceOrientation];
-	}
-    
+    currentPageIndex = pageIndexBeforeRotation;
+    [UIView animateWithDuration:0.4 animations:^{
+        assetInfoView.frame =CGRectMake(0, self.navigationController.toolbar.frame.origin.y -130, 130, 120);
+    }];
+    [self performLayout];
 	[self hideControlsAfterDelay];
+    
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
-    
-    self.scrollView.frame = [self frameForPagingScrollView];
-    [self contentSizeForPagingScrollView];
-    [self contentOffsetForPageAtIndex:currentPageIndex];
-    [self updatePages];
-    NSLog(@"current page is %d",currentPageIndex);
-   // [self.scrollView scrollRectToVisible:((PhotoImageView*)[self pageDisplayedAtIndex:currentPageIndex]).frame animated:YES];
+   
     _rotating = NO;
 }
 
@@ -624,10 +601,6 @@
 		_rightButton = right;
 		_leftButton = left;
 		
-		[fixedCenter release];
-		[fixedLeft release];
-		[right release];
-		[left release];
 		
 	} else {
 		[self setToolbarItems:[NSArray arrayWithObjects:flex, action, nil]];
@@ -635,8 +608,6 @@
 	
 	_actionButton=action;
 	self.navigationController.toolbar.barStyle = UIBarStyleBlackTranslucent;
-	[action release];
-	[flex release];
 	
 }
 
@@ -660,10 +631,6 @@
                                                            action:@selector(cropPhoto)];
     [self setToolbarItems:[NSArray arrayWithObjects:rotate,flex,tag,flex,crop, nil]];
     
-    [rotate release];
-    [flex release];
-    [crop release];
-    [tag release];
 }
 
 -(void)setCropConstrainToolBar{
@@ -671,14 +638,11 @@
     UIBarButtonItem *cancell = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(edit)];
     self.navigationItem.leftBarButtonItem = nil;
     self.navigationItem.leftBarButtonItem = cancell;
-    [cancell release];
     
     UIBarButtonItem *constrain = [[UIBarButtonItem alloc]initWithTitle:@"Constrain" style:UIBarButtonItemStyleBordered target:self action:@selector(cropConstrain)];
     UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     constrain.width = 100;
     [self setToolbarItems:[NSArray arrayWithObjects:flex,constrain,flex, nil]];
-    [constrain release];
-    [flex release];
 }
 
 -(void)setTagToolBar{
@@ -686,7 +650,6 @@
     UIBarButtonItem *cancell = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(edit)];
     self.navigationItem.leftBarButtonItem = nil;
     self.navigationItem.leftBarButtonItem = cancell;
-    [cancell release];
     
     UIBarButtonItem *contacts = [[UIBarButtonItem alloc]initWithTitle:@"Contacts" style:UIBarButtonItemStyleBordered target:self action:@selector(callContactsView)];
     UIBarButtonItem *favorites = [[UIBarButtonItem alloc]initWithTitle:@"Favourites" style:UIBarButtonItemStyleBordered target:self action:@selector(callFavouriteView)];
@@ -695,10 +658,6 @@
     
     [self setToolbarItems:[NSArray arrayWithObjects:flex,contacts,flex,favorites,flex,events,flex, nil]];
      
-    [contacts release];
-    [favorites release];
-    [events release];
-    [flex release];
 }
 
 #pragma mark -
@@ -710,7 +669,6 @@
     self.navigationItem.hidesBackButton = YES;
     UIBarButtonItem *cancell = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelEdit)];
     self.navigationItem.leftBarButtonItem = cancell;
-    [cancell release];
     [self setupEditToolbar];
     editing = YES;
     if (!self.scrollView.scrollEnabled) {
@@ -729,6 +687,7 @@
     if (ppv.isOpen) {
         [ppv viewClose];
     }
+    assetInfoView.hidden = YES;
 }
 
 -(void)cancelEdit{
@@ -749,6 +708,9 @@
     if (!self.scrollView.scrollEnabled) {
         self.scrollView.scrollEnabled = YES;
     }
+    if (assetInfoView.hidden) {
+        assetInfoView.hidden = NO;
+    }
 }
 
 
@@ -760,14 +722,12 @@
                                              otherButtonTitles:@"Original",@"Square",@"3 x 2",@"4 x 3",@"4 x 6",@"5 x 7",@"8 x 10",@"16 x 9", nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     [sheet showInView:self.view];
-    [sheet release];
 }
 
 -(void)rotatePhoto{
     if (self.navigationItem.rightBarButtonItem == nil) {
         UIBarButtonItem *cropItem=[[UIBarButtonItem alloc]initWithTitle:@"Save" style:UIBarButtonItemStyleDone target:self action:@selector(saveCropPhoto:)];
         self.navigationItem.rightBarButtonItem = cropItem;
-        [cropItem release];
     }
     
     if (!self.navigationItem.rightBarButtonItem.enabled) {
@@ -798,13 +758,14 @@
     [self setTagToolBar];
     if (ppv) {
         ppv = nil;
-        [ppv release];
     }
-    ppv = [[PopupPanelView alloc] initWithFrame:CGRectMake(0, 62, 320, 375)];
+    Asset *asset=[self.playlist.storeAssets objectAtIndex:currentPageIndex];
+    CGFloat originY = CGRectGetMaxY(self.navigationController.navigationBar.frame);
+    CGFloat ppvHeigh = CGRectGetMinY(self.navigationController.toolbar.frame) - CGRectGetMaxY(self.navigationController.navigationBar.frame);
+    ppv = [[PopupPanelView alloc] initWithFrame:CGRectMake(0, originY, self.view.bounds.size.width, ppvHeigh) andAsset:asset];
     [ppv Buttons];
     [ppv viewClose];
-    NSString *currentPageUrl=((Asset *)[self.playlist.storeAssets objectAtIndex:currentPageIndex]).url;
-    ppv.url = currentPageUrl;
+    
     ppv.alpha = 0.4;
     [self.view addSubview:ppv];
     [ppv viewOpen];
@@ -812,7 +773,10 @@
     
 }
 
-
+-(void)addTagPeople{
+    [tagSelector saveTagAsset:[self.playlist.storeAssets objectAtIndex:currentPageIndex]];
+    [ppv Buttons];
+}
 
 -(void)cropPhoto{
     
@@ -836,19 +800,11 @@
             self.navigationItem.rightBarButtonItem = nil;
             UIBarButtonItem *cropItem=[[UIBarButtonItem alloc]initWithTitle:@"Crop" style:UIBarButtonItemStyleDone target:self action:@selector(setCropPhoto:)];
             self.navigationItem.rightBarButtonItem = cropItem;
-            [cropItem release];
             [self setCropConstrainToolBar];
             photoView.alpha = 0.4;
-            CGRect cropRect = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
-//            cropRect.origin.x +=20;
-//            cropRect.origin.y +=20;
-//            cropRect.size.width -=40;
-//            cropRect.size.height -=40;
-            NSLog(@"crop rect %@",NSStringFromCGRect(cropRect));
             CropView *temCV = [[CropView alloc]initWithFrame:CGRectMake(110, 190, 100, 100) ImageView:photoView superView:self.view];//CGRectMake(110, 190, 100, 100)
             temCV.backgroundColor = [UIColor clearColor];
             self.cropView = temCV;
-            [temCV release];
             
             [self.view addSubview:cropView];
             croping = YES;
@@ -882,7 +838,6 @@
         [photoView savePhoto];
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"The photo have save to PhotoAlbum!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
-        [alert release];
     }
     
     
@@ -902,19 +857,16 @@
     [self setStatusBarHidden:hidden animated:animated];
     [self.navigationController setNavigationBarHidden:hidden animated:animated];
     [self.navigationController setToolbarHidden:hidden animated:animated];
-    if (hidden) {
-        [UIView animateWithDuration:0.4 
-                         animations:^{
-                             ppv.alpha = 0;
-                         }];
-        
+    if (hidden && assetInfoView.superview != nil && assetInfoView != nil) {
+        [UIView animateWithDuration:0.4 animations:^{
+            assetInfoView.alpha = 0;
+        }];
     }else{
-        [UIView animateWithDuration:0.4 
-                         animations:^{
-                             ppv.alpha = 0.5;
-                         }];
-        
+        [UIView animateWithDuration:0.4 animations:^{
+            assetInfoView.alpha = 1.0;
+        }];
     }
+    
 	_barsHidden=hidden;
 	
 }
@@ -1005,14 +957,20 @@
 
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
+    if (performingLayout || _rotating) return;
+    
     [self updatePages];
     // Calculate current page
-	CGRect visibleBounds = self.scrollView.bounds;
-	int index = (int)(floorf(CGRectGetMidX(visibleBounds) / CGRectGetWidth(visibleBounds)));
-    if (index < 0) index = 0;
+    CGRect visibleBounds = scrollView.bounds;
+	int index = (int)(floorf(CGRectGetMidX(visibleBounds) / CGRectGetWidth(visibleBounds)));    if (index < 0) index = 0;
 	if (index > self.playlist.storeAssets.count - 1) index = self.playlist.storeAssets.count - 1;
 	//NSUInteger previousCurrentPage = currentPageIndex;
-	currentPageIndex = index;
+
+    if (index != currentPageIndex) {
+        currentPageIndex = index;
+    }
+	
 
     /* [UIView animateWithDuration:0
                      animations:^{
@@ -1078,7 +1036,6 @@
 	mailViewController.mailComposeDelegate = self;
 	
 	[self presentModalViewController:mailViewController animated:YES];
-	[mailViewController release];
 	
 }
 
@@ -1102,7 +1059,6 @@
 	if (mailError != nil) {
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:mailError delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
-		[alert release];
 	}
 	
 }
@@ -1133,7 +1089,6 @@
 	[actionSheet showInView:self.view];
 	[self setBarsHidden:YES animated:YES];
 	
-	[actionSheet release];
 	
 }
 
@@ -1202,7 +1157,7 @@
     CATransition *animation = [CATransition animation];
     animation.delegate = self;
     animation.duration = 1.5;
-    animation.timingFunction = UIViewAnimationCurveEaseInOut;
+    //animation.timingFunction = UIViewAnimationCurveEaseInOut;
     animation.subtype = kCATransitionFromRight;
     if ([animateStyle isEqualToString:@"Fade"]) {
         animation.type = kCATransitionFade;
@@ -1245,17 +1200,5 @@
 - (void)dealloc {
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-    [photoInfoTimer release];
-    [assetInfoView release];
-    if (timer) {
-        [timer release];
-    }
-    [playlist release];
-    [saveItem release];
-	[_photoViews release];
-	[photoSource release];
-	[_scrollView release];
-    [cropView release];
-    [super dealloc];
 }
 @end

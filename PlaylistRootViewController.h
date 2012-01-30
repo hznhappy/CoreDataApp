@@ -13,5 +13,5 @@
     UIActivityIndicatorView *activityView;
 }
 
-@property (nonatomic,retain)UIActivityIndicatorView *activityView;
+@property (nonatomic,strong)UIActivityIndicatorView *activityView;
 @end

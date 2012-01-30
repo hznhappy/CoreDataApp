@@ -19,8 +19,6 @@ int j=1,count=0;
     self.IdList=parray1;
     favorate=[[People alloc]init];
    self.people=parray;
-    [parray release];
-    [parray1 release];
    [people addObject:favorate];
     NSLog(@"PEOPLE:%@",people);
     [self table];
@@ -56,12 +54,6 @@ int j=1,count=0;
     [tools setItems:buttons animated:NO];
     UIBarButtonItem *myBtn = [[UIBarButtonItem alloc] initWithCustomView:tools];
     self.navigationItem.rightBarButtonItem = myBtn;
-    [myBtn release];
-    [editButton release];
-    [BackButton release];
-    [addButon release];
-    [buttons release];
-    [tools release];
     
 }
 -(void)creatButton1
@@ -73,8 +65,6 @@ int j=1,count=0;
     editButton.style = UIBarButtonItemStyleBordered;
     self.navigationItem.rightBarButtonItem = addButon;
     self.navigationItem.leftBarButtonItem = editButton;
-    [addButon release];
-    [editButton release];
     
 }
 
@@ -104,14 +94,13 @@ int j=1,count=0;
     ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc]init];
     picker.peoplePickerDelegate = self;
     [self presentModalViewController:picker animated:YES];
-    [picker release]; 
 } 
 -(BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person 
 {
     
     
-    NSString *personName = (NSString*)ABRecordCopyValue(person, kABPersonFirstNameProperty);
-    NSString *lastname = (NSString*)ABRecordCopyValue(person, kABPersonLastNameProperty);
+    NSString *personName = (__bridge_transfer NSString*)ABRecordCopyValue(person, kABPersonFirstNameProperty);
+    NSString *lastname = (__bridge_transfer NSString*)ABRecordCopyValue(person, kABPersonLastNameProperty);
     
    // NSString *readName=(NSString *)ABRecordCopyCompositeName(person);
     ABRecordID recId = ABRecordGetRecordID(person);
@@ -135,7 +124,6 @@ int j=1,count=0;
                               cancelButtonTitle:nil
                               otherButtonTitles:c,nil];
         [alert show];
-        [alert release];
    
     }
     else
@@ -150,8 +138,6 @@ int j=1,count=0;
     }
     
     [self dismissModalViewControllerAnimated:YES];
-    [personName release];
-    [lastname release];
     return NO;
     
 	
@@ -201,7 +187,6 @@ int j=1,count=0;
     NSError *error;
     NSMutableArray *parray1=[[NSMutableArray alloc]init];
     self.result=parray1;
-    [parray1 release];
     
     result=[[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
     if(result==nil)
@@ -216,7 +201,6 @@ int j=1,count=0;
         [self.IdList addObject:a.addressBookId];
     }  
     NSLog(@"idlist:%@",IdList);
-    [request release];
     [self.tableView reloadData];
 }
 - (void)viewDidUnload
@@ -228,15 +212,6 @@ int j=1,count=0;
 	
 }
 
--(void)dealloc
-{   
-    [bo release];
-    [button release];
-    [tableView release];
-	[list release];
-	[super dealloc];
-	
-}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -249,7 +224,7 @@ int j=1,count=0;
     static NSString *CellIdentifier = @"CellIdentifier";
 	UITableViewCell *cell = [table dequeueReusableCellWithIdentifier:CellIdentifier];
 	if (cell == nil) {
-		cell=[[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+		cell=[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
 	}
     
     People *am = (People *)[result objectAtIndex:indexPath.row];
@@ -265,7 +240,6 @@ int j=1,count=0;
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {	
     id1=[NSString stringWithFormat:@"%d",indexPath.row]; 
-    [id1 retain];
     People *favorate1=[self.result objectAtIndex:indexPath.row];
     if(editingStyle==UITableViewCellEditingStyleDelete)
     {
@@ -356,10 +330,9 @@ int j=1,count=0;
 -(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
     
-    People *p=[[self.result objectAtIndex:fromIndexPath.row] retain];
+    People *p=[self.result objectAtIndex:fromIndexPath.row];
     [self.result removeObjectAtIndex:fromIndexPath.row];
     [self.result insertObject:p atIndex:toIndexPath.row];
-    [p release];
 
 } 
 

@@ -14,7 +14,6 @@
 
 - (id)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
-		self.userInteractionEnabled = YES;
 		self.scrollEnabled = YES;
 		self.pagingEnabled = NO;
 		self.clipsToBounds = NO;
@@ -109,9 +108,6 @@
 #pragma mark -
 #pragma mark Dealloc
 
-- (void)dealloc {
-    [super dealloc];
-}
 
 
 @end

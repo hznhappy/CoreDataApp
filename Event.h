@@ -13,9 +13,9 @@
 
 @interface Event : NSManagedObject
 
-@property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSSet *conAsset;
-@property (nonatomic, retain) NSSet *conEventRule;
+@property (nonatomic, strong) NSString * name;
+@property (nonatomic, strong) NSSet *conAsset;
+@property (nonatomic, strong) NSSet *conEventRule;
 @end
 
 @interface Event (CoreDataGeneratedAccessors)

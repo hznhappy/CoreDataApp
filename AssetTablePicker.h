@@ -35,7 +35,7 @@
     BOOL load;
     BOOL done;
     BOOL action;
-    
+    BOOL lockMode;
     NSNumber *val;
     UITextField *passWord2;
   
@@ -47,18 +47,18 @@
     NSUInteger selectedRow;
     TagSelector *tagSelector;
 }
-@property (nonatomic,retain)IBOutlet UITableView *table;
-@property (nonatomic,retain)IBOutlet UIToolbar *viewBar;
-@property (nonatomic,retain)IBOutlet UIToolbar *tagBar;
-@property (nonatomic,retain)IBOutlet UIBarButtonItem *save;
-@property (nonatomic,retain)IBOutlet UIBarButtonItem *reset;
-@property (nonatomic,retain)IBOutlet UIBarButtonItem *lock;
+@property (nonatomic,strong)IBOutlet UITableView *table;
+@property (nonatomic,strong)IBOutlet UIToolbar *viewBar;
+@property (nonatomic,strong)IBOutlet UIToolbar *tagBar;
+@property (nonatomic,strong)IBOutlet UIBarButtonItem *save;
+@property (nonatomic,strong)IBOutlet UIBarButtonItem *reset;
+@property (nonatomic,strong)IBOutlet UIBarButtonItem *lock;
 
-@property (nonatomic,retain)NSMutableArray *tagRow;
-@property (nonatomic,retain)NSMutableArray *operations;
-@property (nonatomic,retain) NSMutableArray *crwAssets;
-@property (nonatomic,retain) NSMutableArray *UrlList;
-@property (nonatomic,retain)NSNumber *val;
+@property (nonatomic,strong)NSMutableArray *tagRow;
+@property (nonatomic,strong)NSMutableArray *operations;
+@property (nonatomic,strong) NSMutableArray *crwAssets;
+@property (nonatomic,strong) NSMutableArray *UrlList;
+@property (nonatomic,strong)NSNumber *val;
 -(IBAction)actionButtonPressed;
 -(IBAction)playPhotos;
 -(IBAction)lockButtonPressed;

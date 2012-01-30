@@ -16,7 +16,8 @@
 #import "PeopleRuleDetail.h"
 #import "Album.h"
 #import "Asset.h"
-#import "timeController.h"
+#import "TdCalendarView.h"
+#import "TestiPhoneCalViewController.h"
 
 @implementation PlaylistDetailController
 @synthesize listTable;
@@ -24,10 +25,7 @@
 @synthesize tranLabel,musicLabel,state,stateButton;
 @synthesize textField;
 @synthesize mySwitch;
-@synthesize listName,photos;
-@synthesize userNames;
 @synthesize selectedIndexPaths,Transtion;
-@synthesize mySwc,a,playrules_idList,playIdList,orderList;
 @synthesize bum,appDelegate,coreData; 
 @synthesize list;
 @synthesize nameList;
@@ -42,25 +40,6 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [selectedIndexPaths release];
-    [musicLabel release];
-    [tranLabel release];
-    [mySwitch release];
-    [textField release];
-    [textFieldCell release];
-    [switchCell release];
-    [tranCell release];
-    [musicCell release];
-    [listTable release];
-    [listName release];
-    [userNames release];
-    [state release];
-    [a release];
-    [photos release];
-    [playrules_idList release];
-    [playIdList release];
-    [orderList release];
-    [super dealloc];
 }
 
 - (void)didReceiveMemoryWarning
@@ -88,8 +67,6 @@
      NSMutableArray *parray2=[[NSMutableArray alloc]init];
     self.list=parray1;
     self.nameList=parray2;
-    [parray1 release];
-    [parray2 release];
     list=[[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];  
     
     
@@ -104,26 +81,13 @@
     [backButton setTitle:b forState:UIControlStateNormal];
     UIBarButtonItem *backItem=[[UIBarButtonItem alloc]initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem =backItem;
-    [backItem release];
 
     key=0;
     mySwc = NO;
     selectImg = [UIImage imageNamed:@"Selected.png"];
     unselectImg = [UIImage imageNamed:@"Unselected.png"];
-    dataBase=[DBOperation getInstance];
-    NSMutableArray *tempArray = [[NSMutableArray alloc]init];
-    NSMutableArray *playArray = [[NSMutableArray alloc]init];
-    NSMutableArray *IdOrderArray = [[NSMutableArray alloc]init];
-    NSMutableArray *IdArray = [[NSMutableArray alloc]init];
-    NSMutableArray *temArray = [[NSMutableArray alloc]init];
-    self.selectedIndexPaths = temArray;
-    self.userNames = tempArray;
+
     self.textField.delegate=self;
-    [IdOrderArray release];
-    [IdArray release];
-    [tempArray release];
-    [temArray release];
-    [playArray release];
     
     if(al!=nil)
     {
@@ -142,23 +106,7 @@
             
         }
     }
-  /*  NSString *selectIdOrder=[NSString stringWithFormat:@"select id from idOrder"];
-    self.orderList=[dataBase selectOrderId:selectIdOrder];
-    for (id object in orderList) {
-        
-        [self.userNames addObject:[dataBase getUserFromUserTable:[object intValue]]];
-    }
-   
-   NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
-   [inputFormatter setDateFormat:@"yyyy-MM-dd 'at' HH:mm"];
-   NSDate *formatterDate = [inputFormatter dateFromString:@"1999-07-11 at 10:30:03"];
-   NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-   [outputFormatter setDateFormat:@"HH:mm 'on' EEEE MMMM d"];
-   NSString *newDateString = [outputFormatter stringFromDate:formatterDate];
-   NSLog(@"newDateString %@", newDateString);
-   */
-    
-    NSManagedObjectContext *managedObjectContext1=[appDelegate.dataSource.coreData managedObjectContext];
+  /*    NSManagedObjectContext *managedObjectContext1=[appDelegate.dataSource.coreData managedObjectContext];
     NSFetchRequest *request1=[[NSFetchRequest alloc]init];
     
     NSEntityDescription *entity1=[NSEntityDescription entityForName:@"Asset" inManagedObjectContext:managedObjectContext1];
@@ -175,7 +123,7 @@
         
     }
     
-    
+    */
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeTransitionAccessoryLabel:) name:@"changeTransitionLabel" object:nil];
      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeDate:) name:@"changeDate" object:nil];
     [super viewDidLoad];
@@ -315,7 +263,7 @@
         static NSString *cellIdentifier = @"nameCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         if (cell == nil) {
-            cell = [[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier]autorelease];
+            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
            
             UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(45, 11, 126, 20)];
             name.tag = indexPath.row;
@@ -324,7 +272,6 @@
             
             name.text = [NSString stringWithFormat:@"%@ %@",am.firstName,am.lastName];
             [cell.contentView addSubview:name];
-            [name release];
 
             UIButton *selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
             selectButton.tag = indexPath.row;
@@ -375,7 +322,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
     }
-    return  nil;
+    return nil;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -383,11 +330,10 @@
     if (indexPath.section ==0 && indexPath.row == 1) {
         AnimaSelectController *animateController = [[AnimaSelectController alloc]init];
         animateController.tranStyle = self.tranLabel.text;
-        animateController.play_id=a;
+      //  animateController.play_id=a;
         animateController.Text=textField.text;
         [self.navigationController pushViewController:animateController animated:YES];
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        [animateController release];
     }
     if (indexPath.section ==0 && indexPath.row == 2)
     {
@@ -401,7 +347,6 @@
         mediaPicker.prompt = @"Select songs";
         
         [self.navigationController pushViewController:mediaPicker animated:YES];
-        [mediaPicker release];    
     }
     if (indexPath.section == 5) {
         if(textField.text==nil||textField.text.length==0)
@@ -415,7 +360,6 @@
                                   cancelButtonTitle:nil
                                   otherButtonTitles:b,nil];
             [alert show];
-            [alert release];
             
 
         }
@@ -447,24 +391,26 @@
                         {
                         NSPredicate *pre = [NSPredicate predicateWithFormat:@"conPeople==%@ AND conPeopleRule == %@",p1,bum.conPeopleRule];
                         [request setPredicate:pre];
+                            NSError *error = nil;
+                            NSArray *A=[managedObjectsContext executeFetchRequest:request error:&error];
+                            PeopleRuleDetail *p=[A objectAtIndex:0];
+                            [bum.conPeopleRule removeConPeopleRuleDetailObject:p];
+
                         }
                         else
                         {
                             NSPredicate *pre = [NSPredicate predicateWithFormat:@"conPeople==%@ AND conPeopleRule == %@",p1,al.conPeopleRule];
                             [request setPredicate:pre];
+                            NSError *error = nil;
+                            NSArray *A=[managedObjectsContext executeFetchRequest:request error:&error];
+                            PeopleRuleDetail *p=[A objectAtIndex:0];
+                            [al.conPeopleRule removeConPeopleRuleDetailObject:p];
+
                             
                         }
                         
                         
-                        NSError *error = nil;
-                        NSArray *A=[managedObjectsContext executeFetchRequest:request error:&error];
-                        PeopleRuleDetail *p=[A objectAtIndex:0];
-                        
-    
-                        NSLog(@"peopleRULE:%d",[A count]);
-                        //[p setOpcode:rule];
-                         [appDelegate.dataSource.coreData.managedObjectContext deleteObject:p];
-                        [appDelegate.dataSource.coreData saveContext];
+                          [appDelegate.dataSource.coreData saveContext];
 
                     }
                 }
@@ -477,26 +423,23 @@
 {
    if(al==nil)
    {
-    NSLog(@"people:%d",PeopleSeg.selectedSegmentIndex); 
     if(PeopleSeg.selectedSegmentIndex==0)
     {
         pr1.allOrAny=[NSNumber numberWithBool:YES];
     }
     else
     {
-        NSLog(@"no");
         pr1.allOrAny=[NSNumber numberWithBool:NO];
     }
    }
     else
     {
         if(PeopleSeg.selectedSegmentIndex==0)
-        {NSLog(@"YES");
+        {
             al.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
         }
         else
         {
-            NSLog(@"no");
             al.conPeopleRule.allOrAny=[NSNumber numberWithBool:NO];
         }
 
@@ -508,15 +451,15 @@
 
 -(IBAction)AddButton1
 {
-    NSLog(@"1");
-    timeController *time=[[timeController alloc]init];
-     [self.navigationController pushViewController:time animated:YES];
-    
-
+    bu=YES;
+    TestiPhoneCalViewController *Test=[[TestiPhoneCalViewController alloc]init];
+    [self.navigationController pushViewController:Test animated:YES];
 }
 -(IBAction)AddButton2
 {
-    NSLog(@"2");
+    bu=NO;
+    TestiPhoneCalViewController *Test=[[TestiPhoneCalViewController alloc]init];
+    [self.navigationController pushViewController:Test animated:YES];
 }
 #pragma mark -
 #pragma mark media picker delegate method
@@ -535,40 +478,29 @@
 {
     [self dismissModalViewControllerAnimated: YES];
 }
--(void)deletes:(NSInteger)Row playId:(int)playId
-{
-    NSString *deleteRules= [NSString stringWithFormat:@"DELETE FROM Rules WHERE playlist_id=%d and user_id='%@'",playId,[orderList objectAtIndex:Row]];
-    NSLog(@"%@",deleteRules);
-    [dataBase deleteDB:deleteRules];
-}
-
 
 -(void)insert:(NSInteger)Row rule:(NSString *)rule
 {
     People *p1 = (People *)[list objectAtIndex:Row];
     NSEntityDescription *entity6 = [NSEntityDescription entityForName:@"PeopleRuleDetail" inManagedObjectContext:[ appDelegate.dataSource.coreData managedObjectContext]]; 
     PeopleRuleDetail *prd1=[[PeopleRuleDetail alloc]initWithEntity:entity6 insertIntoManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
-    NSLog(@"2");
     //prd1.firstName=p1.firstName;
     //prd1.lastName=p1.lastName;
     prd1.conPeople=p1;
     [p1 addConPeopleRuleDetailObject:prd1];
     prd1.opcode=rule;   
     if(al==nil)
-    {NSLog(@"3");
+    {
         prd1.conPeopleRule=pr1;
         [pr1 addConPeopleRuleDetailObject:prd1];
-        NSLog(@"4");
+       
     }
     else
     {
         prd1.conPeopleRule=al.conPeopleRule;
         [al.conPeopleRule addConPeopleRuleDetailObject:prd1];
     }
-    NSLog(@"insert:%@",pr1);
-    NSLog(@"5");
     [appDelegate.dataSource.coreData saveContext];
-    NSLog(@"6");
  }
 -(void)update:(NSInteger)Row rule:(NSString *)rule
 {
@@ -691,10 +623,9 @@
                               cancelButtonTitle:nil
                               otherButtonTitles:b,nil];
         [alert show];
-        [alert release];
         if(al!=nil)
         {
-            textField.text=listName;
+           // textField.text=listName;
         }
         else
         {
@@ -720,7 +651,7 @@
    //bum.byCondition=@"numOfLike";
    // bum.sortOrder=[NSNumber numberWithBool:YES];
     
-      if(al==nil)
+     /* if(al==nil)
       {
           NSLog(@"people:%d",PeopleSeg.selectedSegmentIndex); 
           if(PeopleSeg.selectedSegmentIndex==0)
@@ -746,12 +677,10 @@
           }
           
           
-      }
+      }*/
    bum.conPeopleRule=pr1;
    pr1.conAlbum=bum;
-
    [appDelegate.dataSource.coreData saveContext];
-    NSLog(@"BUM:%@",bum);
   }
     else
     {
@@ -769,7 +698,6 @@
     {
         al.name=textField.text;
         [appDelegate.dataSource.coreData saveContext];
-        
     }
     
    
@@ -803,19 +731,7 @@
             }
         }
     }
-    if(a==nil)
-    {
-    NSString *deleteRules=[NSString stringWithFormat:@"delete from Rules where playList_id=%d",[[playIdList objectAtIndex:[playIdList count]-1]intValue]];
-        NSLog(@"%@",deleteRules);
-        [dataBase deleteDB:deleteRules];
-    }
-    else
-    {
-        NSString *deleteRules1=[NSString stringWithFormat:@"delete from Rules where playList_id=%d",[a intValue]];
-        NSLog(@"%@",deleteRules1);
-        [dataBase deleteDB:deleteRules1];
-    }
-    [selectedIndexPaths removeAllObjects];
+           [selectedIndexPaths removeAllObjects];
    /* NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
                                                        object:self 
@@ -832,7 +748,16 @@
 
 -(void)changeDate:(NSNotification *)note{
      NSDictionary *dic = [note userInfo];
-    self.startText.text=[dic objectForKey:@"Date"];
+    NSLog(@"BU:%@",bu?@"YES":@"NO");
+    if(bu==YES)
+    {
+        NSLog(@"ok");
+        self.startText.text=[dic objectForKey:@"Date"];
+    }
+    else
+    {
+    self.stopText.text=[dic objectForKey:@"Date"];
+    }
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -850,9 +775,10 @@
     mySwitch = nil;
     musicCell = nil;
     musicLabel = nil;
-    a = nil;
+   
+    //dataBase = nil;
     listTable =nil;
-    listName = nil;
+  //  listName = nil;
     userNames = nil;
     state = nil;
 }

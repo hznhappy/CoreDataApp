@@ -63,7 +63,6 @@ static DBOperation* singleton;
 -(NSMutableArray *)selectPhotos:(NSString *)sql{
     NSMutableArray *playArray = [[NSMutableArray alloc]init];
     self.photos= playArray;
-    [playArray release];
     sqlite3_stmt *stmt;
 	if (sqlite3_prepare_v2(db, [sql UTF8String], -1, &stmt, nil) == SQLITE_OK) {
 		while (sqlite3_step(stmt)==SQLITE_ROW) {
@@ -78,7 +77,6 @@ static DBOperation* singleton;
 {
     NSMutableArray *playArray = [[NSMutableArray alloc]init];
     self.playTableList= playArray;
-    [playArray release];
 	sqlite3_stmt *statement;
 	if (sqlite3_prepare_v2(db, [sql UTF8String], -1, &statement, nil) == SQLITE_OK) {
 		
@@ -96,7 +94,6 @@ static DBOperation* singleton;
 {
     NSMutableArray *playArray = [[NSMutableArray alloc]init];
     self.tagList= playArray;
-    [playArray release];
     sqlite3_stmt *statement;
 	if (sqlite3_prepare_v2(db, [sql UTF8String], -1, &statement, nil) == SQLITE_OK) {
 		
@@ -113,7 +110,6 @@ static DBOperation* singleton;
 {
     NSMutableSet *playArray = [[NSMutableSet alloc]init];
     self.tag1List= playArray;
-    [playArray release];
     sqlite3_stmt *statement;
 	if (sqlite3_prepare_v2(db, [sql UTF8String], -1, &statement, nil) == SQLITE_OK) {
 		
@@ -131,7 +127,6 @@ static DBOperation* singleton;
 {
     NSMutableArray *playArray = [[NSMutableArray alloc]init];
     self.orderIdList = playArray;
-    [playArray release];
  	sqlite3_stmt *statement;
 	if (sqlite3_prepare_v2(db, [sql UTF8String], -1, &statement, nil) == SQLITE_OK) {
 		while (sqlite3_step(statement)==SQLITE_ROW) {
@@ -146,7 +141,6 @@ static DBOperation* singleton;
 {
     NSMutableArray *playArray = [[NSMutableArray alloc]init];
     self.RulesList= playArray;
-    [playArray release];
    	sqlite3_stmt *statement;
 	if (sqlite3_prepare_v2(db, [sql UTF8String], -1, &statement, nil) == SQLITE_OK) {
 		while (sqlite3_step(statement)==SQLITE_ROW) {
@@ -162,7 +156,6 @@ static DBOperation* singleton;
 {
     NSMutableArray *playArray = [[NSMutableArray alloc]init];
     self.PassTable= playArray;
-    [playArray release];
    	sqlite3_stmt *statement;
 	if (sqlite3_prepare_v2(db, [sql UTF8String], -1, &statement, nil) == SQLITE_OK) {
 		while (sqlite3_step(statement)==SQLITE_ROW) {
@@ -233,19 +226,6 @@ static DBOperation* singleton;
     sqlite3_close(db);
 }
 
--(void)dealloc
-{   [tagName release];
-    [orderIdList release];
-    [photos release];
-    [name release];
-    [Transtion release];
-    [singleton release];
-    [tagList release];
-    [playTableList release];
-    [RulesList release];
-    [tag1List release];
-    [super dealloc];
-}
 
 
 

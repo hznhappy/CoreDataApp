@@ -39,7 +39,6 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     CGAffineTransform t = CGAffineTransformMakeRotation(DegreesToRadians(degrees));
     rotatedViewBox.transform = t;
     CGSize rotatedSize = rotatedViewBox.frame.size;
-    [rotatedViewBox release];
     
     // Create the bitmap context
     UIGraphicsBeginImageContext(rotatedSize);
@@ -75,7 +74,6 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     if ((self = [super initWithFrame:frame])) {
 		
 		self.backgroundColor = [UIColor blackColor];
-		self.userInteractionEnabled = YES;
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		self.opaque = YES;
 		
@@ -84,30 +82,25 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 		scrollView.opaque = YES;
 		scrollView.delegate = self;
 		[self addSubview:scrollView];
-		_scrollView = [scrollView retain];
-		[scrollView release];
+		_scrollView = scrollView;
 
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:self.bounds];
 		imageView.opaque = YES;
 		imageView.contentMode = UIViewContentModeScaleAspectFit;
-		imageView.tag = ZOOM_VIEW_TAG;
         imageView.backgroundColor = nil;
         imageView.clearsContextBeforeDrawing = YES;
 		[_scrollView addSubview:imageView];
-		_imageView = [imageView retain];
-		[imageView release];
+		_imageView = imageView;
 
 		UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
        // [activityView startAnimating];
 		activityView.frame = CGRectMake((CGRectGetWidth(self.frame) / 2) - 15.0f, (CGRectGetHeight(self.frame)/2) - 15.0f , 30.0f, 30.0f);
 		activityView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
 		[self addSubview:activityView];
-		_activityView = [activityView retain];
-		[activityView release];
+		_activityView = activityView;
 		
 		RotateGesture *gesture = [[RotateGesture alloc] initWithTarget:self action:@selector(rotate:)];
 		[self addGestureRecognizer:gesture];
-		[gesture release];
 		
 	}
     return self;
@@ -229,48 +222,6 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 
 #pragma mark -
 #pragma mark Layout
-- (void)setMaxMinZoomScalesForCurrentBounds{
-//    // Reset
-//	self.scrollView.maximumZoomScale = 1;
-//	self.scrollView.minimumZoomScale = 1;
-//	self.scrollView.zoomScale = 1;
-//	
-//	// Bail
-//	if (self.imageView.image == nil) return;
-//	
-//	// Sizes
-//    CGSize boundsSize = self.bounds.size;
-//    CGSize imageSize = self.imageView.frame.size;
-//    
-//    // Calculate Min
-//    CGFloat xScale = boundsSize.width / imageSize.width;    // the scale needed to perfectly fit the image width-wise
-//    CGFloat yScale = boundsSize.height / imageSize.height;  // the scale needed to perfectly fit the image height-wise
-//    CGFloat minScale = MIN(xScale, yScale);                 // use minimum of these to allow the image to become fully visible
-//	
-//	// If image is smaller than the screen then ensure we show it at
-//	// min scale of 1
-//	if (xScale > 1 && yScale > 1) {
-//		minScale = 1.0;
-//	}
-//    
-//	// Calculate Max
-//	CGFloat maxScale = 2.0; // Allow double scale
-//    // on high resolution screens we have double the pixel density, so we will be seeing every pixel if we limit the
-//    // maximum zoom scale to 0.5.
-//	if ([UIScreen instancesRespondToSelector:@selector(scale)]) {
-//		maxScale = maxScale / [[UIScreen mainScreen] scale];
-//	}
-//	
-//	// Set
-//	self.scrollView.maximumZoomScale = maxScale;
-//	self.scrollView.minimumZoomScale = minScale;
-//	self.scrollView.zoomScale = minScale;
-//	
-//	// Reset position
-//	self.imageView.frame = CGRectMake(0, 0, self.imageView.frame.size.width, self.imageView.frame.size.height);
-//	[self setNeedsLayout];
-
-}
 - (void)rotateToOrientation:(UIInterfaceOrientation)orientation{
 
 	if (self.scrollView.zoomScale > 1.0f) {
@@ -361,7 +312,7 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
-	return [self.scrollView viewWithTag:ZOOM_VIEW_TAG];
+	return self.imageView;
 }
 
 -(void)scrollViewDidZoom:(UIScrollView *)scrollView{
@@ -474,15 +425,7 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 	
 		
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[fullScreen release];
-    [playlist release];
-    [fuzzy release];
-	[_activityView release], _activityView=nil;
-	[_imageView release]; _imageView=nil;
-	[_scrollView release]; _scrollView=nil;
-	[_photo release]; _photo=nil;
-    [super dealloc];
-	
+		
 }
 
 

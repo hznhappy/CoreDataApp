@@ -27,9 +27,9 @@
     UIImage *cropImage;
 }
 
-@property (nonatomic,retain)PhotoImageView *photoImageView;
-@property (nonatomic,retain)UIView *photoBrowserView;
-@property (nonatomic,retain)UIImage *cropImage;
+@property (nonatomic,strong)PhotoImageView *photoImageView;
+@property (nonatomic,strong)UIView *photoBrowserView;
+@property (nonatomic,strong)UIImage *cropImage;
 - (id)initWithFrame:(CGRect)frame ImageView:(PhotoImageView *)_photoImageView superView:(UIView *)supView;
 - (UIImage *)croppedPhoto;
 - (void)setCropView;

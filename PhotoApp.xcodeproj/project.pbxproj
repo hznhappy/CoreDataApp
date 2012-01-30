@@ -19,13 +19,10 @@
 		183DE31214C7F66A00BDC724 /* CropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE30C14C7F66A00BDC724 /* CropView.m */; };
 		183DE31314C7F66A00BDC724 /* GridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE30E14C7F66A00BDC724 /* GridView.m */; };
 		183DE31C14C7F6E200BDC724 /* PlaylistDetailController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 183DE31B14C7F6E200BDC724 /* PlaylistDetailController.xib */; };
-		183DE32314C7F70D00BDC724 /* timeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE31E14C7F70D00BDC724 /* timeController.m */; };
-		183DE32414C7F70D00BDC724 /* PlaylistDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE32014C7F70D00BDC724 /* PlaylistDetailController.m */; };
 		183DE32514C7F70D00BDC724 /* AlbumController.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE32214C7F70D00BDC724 /* AlbumController.m */; };
 		183DE32C14C7F72200BDC724 /* AssetTablePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE32714C7F72200BDC724 /* AssetTablePicker.m */; };
 		183DE32D14C7F72200BDC724 /* ThumbnailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE32914C7F72200BDC724 /* ThumbnailCell.m */; };
 		183DE32E14C7F72200BDC724 /* ThumbnailImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE32B14C7F72200BDC724 /* ThumbnailImageView.m */; };
-		183DE33014C7F73B00BDC724 /* timeController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 183DE32F14C7F73B00BDC724 /* timeController.xib */; };
 		183DE33414C7F78800BDC724 /* PeopleRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE33314C7F78800BDC724 /* PeopleRule.m */; };
 		183DE33714C7F78800BDC724 /* Album.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE33614C7F78800BDC724 /* Album.m */; };
 		183DE33A14C7F78900BDC724 /* EventRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE33914C7F78900BDC724 /* EventRule.m */; };
@@ -49,6 +46,10 @@
 		1884ECC314BBE586005B3EBF /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1884ECC214BBE586005B3EBF /* CoreData.framework */; };
 		1884ED2F14BC37B0005B3EBF /* DBOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1884ED2E14BC37AF005B3EBF /* DBOperation.m */; };
 		1885E70B14C8F9D700B2B5B5 /* TagSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1885E70A14C8F9D700B2B5B5 /* TagSelector.m */; };
+		18C78B9314D6736500B57B4F /* TestiPhoneCalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C78B8D14D6736400B57B4F /* TestiPhoneCalViewController.m */; };
+		18C78B9414D6736500B57B4F /* TestiPhoneCalViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18C78B8E14D6736500B57B4F /* TestiPhoneCalViewController.xib */; };
+		18C78B9514D6736500B57B4F /* TdCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C78B9014D6736500B57B4F /* TdCalendarView.m */; };
+		18C78B9614D6736500B57B4F /* PlaylistDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C78B9214D6736500B57B4F /* PlaylistDetailController.m */; };
 		18D402821474E50000389097 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18D402841474E50000389097 /* Localizable.strings */; };
 		18D402901474E55900389097 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18D402921474E55900389097 /* InfoPlist.strings */; };
 		18D4031C1474FC9A00389097 /* AssetTablePicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18D4031E1474FC9A00389097 /* AssetTablePicker.xib */; };
@@ -110,10 +111,6 @@
 		183DE30D14C7F66A00BDC724 /* GridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridView.h; sourceTree = "<group>"; };
 		183DE30E14C7F66A00BDC724 /* GridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridView.m; sourceTree = "<group>"; };
 		183DE31B14C7F6E200BDC724 /* PlaylistDetailController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaylistDetailController.xib; sourceTree = "<group>"; };
-		183DE31D14C7F70D00BDC724 /* timeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = timeController.h; sourceTree = "<group>"; };
-		183DE31E14C7F70D00BDC724 /* timeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = timeController.m; sourceTree = "<group>"; };
-		183DE31F14C7F70D00BDC724 /* PlaylistDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistDetailController.h; sourceTree = "<group>"; };
-		183DE32014C7F70D00BDC724 /* PlaylistDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistDetailController.m; sourceTree = "<group>"; };
 		183DE32114C7F70D00BDC724 /* AlbumController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumController.h; sourceTree = "<group>"; };
 		183DE32214C7F70D00BDC724 /* AlbumController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumController.m; sourceTree = "<group>"; };
 		183DE32614C7F72200BDC724 /* AssetTablePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetTablePicker.h; sourceTree = "<group>"; };
@@ -122,7 +119,6 @@
 		183DE32914C7F72200BDC724 /* ThumbnailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbnailCell.m; sourceTree = "<group>"; };
 		183DE32A14C7F72200BDC724 /* ThumbnailImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThumbnailImageView.h; sourceTree = "<group>"; };
 		183DE32B14C7F72200BDC724 /* ThumbnailImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbnailImageView.m; sourceTree = "<group>"; };
-		183DE32F14C7F73B00BDC724 /* timeController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = timeController.xib; sourceTree = "<group>"; };
 		183DE33214C7F78800BDC724 /* PeopleRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeopleRule.h; sourceTree = "<group>"; };
 		183DE33314C7F78800BDC724 /* PeopleRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeopleRule.m; sourceTree = "<group>"; };
 		183DE33514C7F78800BDC724 /* Album.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Album.h; sourceTree = "<group>"; };
@@ -146,7 +142,7 @@
 		183DE35414C7F92300BDC724 /* AlbumDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumDataSource.h; sourceTree = "<group>"; };
 		183DE35514C7F92300BDC724 /* AlbumDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumDataSource.m; sourceTree = "<group>"; };
 		184F8D86146B9B81004A87DE /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
-		184FCFC81471FD990082B51D /* TagManagementController.h */ = {isa = PBXFileReference; fileEncoding = 4; path = TagManagementController.h; sourceTree = "<group>"; };
+		184FCFC81471FD990082B51D /* TagManagementController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagManagementController.h; sourceTree = "<group>"; };
 		184FCFCB1471FE410082B51D /* TagManagementController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagManagementController.m; sourceTree = "<group>"; };
 		184FCFF3147202A00082B51D /* selectOverlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = selectOverlay.png; sourceTree = "<group>"; };
 		184FCFF5147202A70082B51D /* selectOverlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "selectOverlay@2x.png"; sourceTree = "<group>"; };
@@ -161,6 +157,13 @@
 		1884ED2E14BC37AF005B3EBF /* DBOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBOperation.m; sourceTree = "<group>"; };
 		1885E70914C8F9D700B2B5B5 /* TagSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = TagSelector.h; path = Classes/TagSelector.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1885E70A14C8F9D700B2B5B5 /* TagSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = TagSelector.m; path = Classes/TagSelector.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		18C78B8C14D6736400B57B4F /* TestiPhoneCalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestiPhoneCalViewController.h; sourceTree = "<group>"; };
+		18C78B8D14D6736400B57B4F /* TestiPhoneCalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestiPhoneCalViewController.m; sourceTree = "<group>"; };
+		18C78B8E14D6736500B57B4F /* TestiPhoneCalViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TestiPhoneCalViewController.xib; path = Classes/TestiPhoneCalViewController.xib; sourceTree = "<group>"; };
+		18C78B8F14D6736500B57B4F /* TdCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TdCalendarView.h; sourceTree = "<group>"; };
+		18C78B9014D6736500B57B4F /* TdCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TdCalendarView.m; sourceTree = "<group>"; };
+		18C78B9114D6736500B57B4F /* PlaylistDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistDetailController.h; sourceTree = "<group>"; };
+		18C78B9214D6736500B57B4F /* PlaylistDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistDetailController.m; sourceTree = "<group>"; };
 		18D402831474E50000389097 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		18D402851474E50800389097 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		18D402911474E55900389097 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -313,7 +316,7 @@
 		183DE35814C7FA2F00BDC724 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				183DE32F14C7F73B00BDC724 /* timeController.xib */,
+				18C78B8E14D6736500B57B4F /* TestiPhoneCalViewController.xib */,
 				183DE31B14C7F6E200BDC724 /* PlaylistDetailController.xib */,
 				A1F7E814148C9BBF0088F366 /* MainWindow.xib */,
 				18D403391474FF5900389097 /* tagManagementController.xib */,
@@ -441,10 +444,12 @@
 		A1F1FF9E146007ED005FAB2F /* TabViewController */ = {
 			isa = PBXGroup;
 			children = (
-				183DE31D14C7F70D00BDC724 /* timeController.h */,
-				183DE31E14C7F70D00BDC724 /* timeController.m */,
-				183DE31F14C7F70D00BDC724 /* PlaylistDetailController.h */,
-				183DE32014C7F70D00BDC724 /* PlaylistDetailController.m */,
+				18C78B8C14D6736400B57B4F /* TestiPhoneCalViewController.h */,
+				18C78B8D14D6736400B57B4F /* TestiPhoneCalViewController.m */,
+				18C78B8F14D6736500B57B4F /* TdCalendarView.h */,
+				18C78B9014D6736500B57B4F /* TdCalendarView.m */,
+				18C78B9114D6736500B57B4F /* PlaylistDetailController.h */,
+				18C78B9214D6736500B57B4F /* PlaylistDetailController.m */,
 				183DE32114C7F70D00BDC724 /* AlbumController.h */,
 				183DE32214C7F70D00BDC724 /* AlbumController.m */,
 				184FCFC81471FD990082B51D /* TagManagementController.h */,
@@ -543,7 +548,7 @@
 				18DD696514B6F045000062D1 /* VED.png in Resources */,
 				18DD696714B6F6F1000062D1 /* ji.png in Resources */,
 				183DE31C14C7F6E200BDC724 /* PlaylistDetailController.xib in Resources */,
-				183DE33014C7F73B00BDC724 /* timeController.xib in Resources */,
+				18C78B9414D6736500B57B4F /* TestiPhoneCalViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -572,8 +577,6 @@
 				183DE31114C7F66A00BDC724 /* Playlist.m in Sources */,
 				183DE31214C7F66A00BDC724 /* CropView.m in Sources */,
 				183DE31314C7F66A00BDC724 /* GridView.m in Sources */,
-				183DE32314C7F70D00BDC724 /* timeController.m in Sources */,
-				183DE32414C7F70D00BDC724 /* PlaylistDetailController.m in Sources */,
 				183DE32514C7F70D00BDC724 /* AlbumController.m in Sources */,
 				183DE32C14C7F72200BDC724 /* AssetTablePicker.m in Sources */,
 				183DE32D14C7F72200BDC724 /* ThumbnailCell.m in Sources */,
@@ -590,6 +593,9 @@
 				183DE34F14C7F78A00BDC724 /* People.m in Sources */,
 				183DE35614C7F92300BDC724 /* AlbumDataSource.m in Sources */,
 				1885E70B14C8F9D700B2B5B5 /* TagSelector.m in Sources */,
+				18C78B9314D6736500B57B4F /* TestiPhoneCalViewController.m in Sources */,
+				18C78B9514D6736500B57B4F /* TdCalendarView.m in Sources */,
+				18C78B9614D6736500B57B4F /* PlaylistDetailController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -653,6 +659,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -669,6 +676,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = PhotoApp_Prefix.pch;

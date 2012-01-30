@@ -13,9 +13,9 @@
     UITabBarController *rootViewController;
     AlbumDataSource *dataSource;
 }
-@property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet UITabBarController *rootViewController;
-@property (nonatomic, retain) AlbumDataSource *dataSource;
+@property (nonatomic, strong) IBOutlet UIWindow *window;
+@property (nonatomic, strong) IBOutlet UITabBarController *rootViewController;
+@property (nonatomic, strong) AlbumDataSource *dataSource;
 @end
 @interface UITabBarController (MyApp)
 @end

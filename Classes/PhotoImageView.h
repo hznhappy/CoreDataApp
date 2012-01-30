@@ -13,25 +13,25 @@
 @class Playlist;
 @interface PhotoImageView : UIView <UIScrollViewDelegate>{
 @private
-	PhotoScrollView *_scrollView;
-	UIImage *_photo;
-	UIImageView *_imageView;
+	PhotoScrollView *__unsafe_unretained _scrollView;
+	UIImage *__unsafe_unretained _photo;
+	UIImageView *__unsafe_unretained _imageView;
 	UIActivityIndicatorView *_activityView;
     
     Playlist       *playlist;
     
 	NSUInteger     index;
-    NSOperationQueue *q;
+    //NSOperationQueue *q;
     
     UIImage *fuzzy;
     UIImage *fullScreen;
-	BOOL _loading;
+	//BOOL _loading;
 	CGFloat _beginRadians;
 }
 @property (assign) NSUInteger index;
-@property (nonatomic, retain) Playlist *playlist;
-@property (nonatomic, retain) UIImage *fuzzy;
-@property (nonatomic, retain) UIImage *fullScreen;
+@property (nonatomic, strong) Playlist *playlist;
+@property (nonatomic, strong) UIImage *fuzzy;
+@property (nonatomic, strong) UIImage *fullScreen;
 @property(nonatomic,readonly) UIImage *photo;
 @property(nonatomic,readonly) UIImageView *imageView;
 @property(nonatomic,readonly) PhotoScrollView *scrollView;
@@ -45,7 +45,6 @@
 - (void)displayImageFailure;
 - (void)rotatePhoto;
 -(void)savePhoto;
-- (void)setMaxMinZoomScalesForCurrentBounds;
 - (void)killScrollViewZoom;
 - (void)layoutScrollViewAnimated:(BOOL)animated;
 - (void)rotateToOrientation:(UIInterfaceOrientation)orientation;

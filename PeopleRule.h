@@ -13,9 +13,9 @@
 
 @interface PeopleRule : NSManagedObject
 
-@property (nonatomic, retain) NSNumber * allOrAny;
-@property (nonatomic, retain) Album *conAlbum;
-@property (nonatomic, retain) NSSet *conPeopleRuleDetail;
+@property (nonatomic, strong) NSNumber * allOrAny;
+@property (nonatomic, strong) Album *conAlbum;
+@property (nonatomic, strong) NSSet *conPeopleRuleDetail;
 @end
 
 @interface PeopleRule (CoreDataGeneratedAccessors)

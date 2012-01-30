@@ -23,11 +23,11 @@
     NSUInteger rowNumber;
     int minute;
     int second;
-    id<ThumbnailCellSelectionDelegate>selectionDelegate;
+    id<ThumbnailCellSelectionDelegate>__unsafe_unretained selectionDelegate;
 }
 
 @property (nonatomic, assign) NSUInteger rowNumber;
-@property (nonatomic, assign) id<ThumbnailCellSelectionDelegate> selectionDelegate;
+@property (nonatomic, unsafe_unretained) id<ThumbnailCellSelectionDelegate> selectionDelegate;
 
 
 -(void)displayThumbnails:(NSArray *)array count:(NSUInteger)count;

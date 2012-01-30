@@ -21,15 +21,14 @@
 @class DBOperation;
 @interface PlaylistDetailController : UIViewController<UITableViewDelegate,UITableViewDataSource,MPMediaPickerControllerDelegate,UITextFieldDelegate> {
     PhotoAppDelegate * appDelegate;
-    //NSMutableArray *people;
     AmptsPhotoCoreData * coreData;
     Album *bum;
     Album *al;
     NSMutableArray *list;
     PeopleRule *pr1;
     NSMutableArray *nameList;
-   // PeopleRuleDetail*prd1;
     BOOL keybord;
+    BOOL bu;
     
     UITableView *listTable;
     UITableViewCell *textFieldCell;
@@ -58,59 +57,45 @@
     NSMutableArray *selectedIndexPaths;
     UILabel *state;
     BOOL mySwc;
-    NSString *listName;
     NSString *Transtion;
-    NSString *a;
-    DBOperation *dataBase;
     AlbumController *album;
     NSMutableArray *playrules_idList;
-    NSMutableArray *playIdList;
-    NSMutableArray *orderList;
     UIButton *stateButton;
-    NSMutableArray *photos;
     int key;
 }
 
-@property(nonatomic,retain)Album *bum;
-@property(nonatomic,retain)Album *al;
-@property(nonatomic,retain)PhotoAppDelegate *appDelegate;
-@property(nonatomic,retain)AmptsPhotoCoreData *coreData;
-@property(nonatomic,retain)NSMutableArray *list;
-@property(nonatomic,retain)NSMutableArray *nameList;
+@property(nonatomic,strong)Album *bum;
+@property(nonatomic,strong)Album *al;
+@property(nonatomic,strong)PhotoAppDelegate *appDelegate;
+@property(nonatomic,strong)AmptsPhotoCoreData *coreData;
+@property(nonatomic,strong)NSMutableArray *list;
+@property(nonatomic,strong)NSMutableArray *nameList;
 
-@property(nonatomic,retain)IBOutlet UITableView *listTable;
-@property(nonatomic,retain)IBOutlet UITableViewCell *textFieldCell;
-@property(nonatomic,retain)IBOutlet UITableViewCell *switchCell;
-@property(nonatomic,retain)IBOutlet UITableViewCell *tranCell;
-@property(nonatomic,retain)IBOutlet UITableViewCell *musicCell;
-@property(nonatomic,retain)IBOutlet UITableViewCell *PeopleRuleCell;
-@property(nonatomic,retain)IBOutlet UITableViewCell *SortCell;
-@property(nonatomic,retain)IBOutlet UITableViewCell *OrderCell;
-@property(nonatomic,retain)IBOutlet UITableViewCell *DateRangeCell;
-
-
-
-@property(nonatomic,retain)IBOutlet UILabel *tranLabel;
-@property(nonatomic,retain)IBOutlet UILabel *musicLabel;
-@property(nonatomic,retain)IBOutlet UITextField *textField;
-@property(nonatomic,retain)IBOutlet UISwitch *mySwitch;
-@property(nonatomic,retain)IBOutlet UILabel *state;
-@property(nonatomic,retain)IBOutlet UITextField *startText;
-@property(nonatomic,retain)IBOutlet UITextField *stopText;
+@property(nonatomic,strong)IBOutlet UITableView *listTable;
+@property(nonatomic,strong)IBOutlet UITableViewCell *textFieldCell;
+@property(nonatomic,strong)IBOutlet UITableViewCell *switchCell;
+@property(nonatomic,strong)IBOutlet UITableViewCell *tranCell;
+@property(nonatomic,strong)IBOutlet UITableViewCell *musicCell;
+@property(nonatomic,strong)IBOutlet UITableViewCell *PeopleRuleCell;
+@property(nonatomic,strong)IBOutlet UITableViewCell *SortCell;
+@property(nonatomic,strong)IBOutlet UITableViewCell *OrderCell;
+@property(nonatomic,strong)IBOutlet UITableViewCell *DateRangeCell;
 
 
-@property(nonatomic,retain)IBOutlet UISegmentedControl *PeopleSeg;
-@property(nonatomic,retain)NSMutableArray *photos;
-@property(nonatomic,retain)NSMutableArray *selectedIndexPaths;
-@property(nonatomic,retain)NSMutableArray *userNames;
-@property(nonatomic,assign)BOOL mySwc;
-@property(nonatomic,retain)NSString *listName;
-@property(nonatomic,retain)NSString *Transtion;
-@property(nonatomic,retain)NSString *a;
-@property(nonatomic,retain)NSMutableArray *playrules_idList;
-@property(nonatomic,retain)NSMutableArray *playIdList;
-@property(nonatomic,retain)NSMutableArray *orderList;
-@property(nonatomic,retain)UIButton *stateButton;
+
+@property(nonatomic,strong)IBOutlet UILabel *tranLabel;
+@property(nonatomic,strong)IBOutlet UILabel *musicLabel;
+@property(nonatomic,strong)IBOutlet UITextField *textField;
+@property(nonatomic,strong)IBOutlet UISwitch *mySwitch;
+@property(nonatomic,strong)IBOutlet UILabel *state;
+@property(nonatomic,strong)IBOutlet UITextField *startText;
+@property(nonatomic,strong)IBOutlet UITextField *stopText;
+
+
+@property(nonatomic,strong)IBOutlet UISegmentedControl *PeopleSeg;
+@property(nonatomic,strong)NSMutableArray *selectedIndexPaths;
+@property(nonatomic,strong)NSString *Transtion;
+@property(nonatomic,strong)UIButton *stateButton;
 -(IBAction)hideKeyBoard:(id)sender;
 -(IBAction)updateTable:(id)sender;
 -(IBAction)resetAll;
@@ -119,8 +104,6 @@
 -(IBAction)AddButton2;
 -(IBAction)PeopleRuleButton;
 -(UIButton *)getStateButton;
-//-(void)insert:(NSInteger)Row playId:(int)playId;
--(void)deletes:(NSInteger)Row playId:(int)playId;
 -(void)insert:(NSInteger)Row rule:(NSString *)rule;
 -(void)update:(NSInteger)Row rule:(NSString *)rule;
 -(void)addPlay;

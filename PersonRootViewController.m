@@ -21,10 +21,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [super dealloc];
-}
 
 - (void)didReceiveMemoryWarning
 {
@@ -42,7 +38,6 @@
     // Do any additional setup after loading the view from its nib.
     TagManagementController *tm = [[TagManagementController alloc]init];
     [self pushViewController:tm animated:NO];
-    [tm release];    
 }
 
 - (void)viewDidUnload

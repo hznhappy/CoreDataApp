@@ -13,16 +13,16 @@
 
 @interface Album : NSManagedObject
 
-@property (nonatomic, retain) NSString * byCondition;
-@property (nonatomic, retain) NSNumber * maxAsset;
-@property (nonatomic, retain) NSString * music;
-@property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSNumber * sortOrder;
-@property (nonatomic, retain) NSString * transitType;
-@property (nonatomic, retain) NSSet *conAssetRule;
-@property (nonatomic, retain) DateRule *conDateRule;
-@property (nonatomic, retain) NSSet *conEventRule;
-@property (nonatomic, retain) PeopleRule *conPeopleRule;
+@property (nonatomic, strong) NSString * byCondition;
+@property (nonatomic, strong) NSNumber * maxAsset;
+@property (nonatomic, strong) NSString * music;
+@property (nonatomic, strong) NSString * name;
+@property (nonatomic, strong) NSNumber * sortOrder;
+@property (nonatomic, strong) NSString * transitType;
+@property (nonatomic, strong) NSSet *conAssetRule;
+@property (nonatomic, strong) DateRule *conDateRule;
+@property (nonatomic, strong) NSSet *conEventRule;
+@property (nonatomic, strong) PeopleRule *conPeopleRule;
 @end
 
 @interface Album (CoreDataGeneratedAccessors)
