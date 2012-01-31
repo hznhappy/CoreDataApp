@@ -44,12 +44,12 @@
 		186BF9BF1470AEB500961C67 /* AlbumController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 186BF9C01470AEB500961C67 /* AlbumController.xib */; };
 		1884EC9F14BBE3D1005B3EBF /* PhotoApp.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 1884EC9E14BBE3D1005B3EBF /* PhotoApp.xcdatamodel */; };
 		1884ECC314BBE586005B3EBF /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1884ECC214BBE586005B3EBF /* CoreData.framework */; };
-		1884ED2F14BC37B0005B3EBF /* DBOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1884ED2E14BC37AF005B3EBF /* DBOperation.m */; };
 		1885E70B14C8F9D700B2B5B5 /* TagSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1885E70A14C8F9D700B2B5B5 /* TagSelector.m */; };
 		18C78B9314D6736500B57B4F /* TestiPhoneCalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C78B8D14D6736400B57B4F /* TestiPhoneCalViewController.m */; };
 		18C78B9414D6736500B57B4F /* TestiPhoneCalViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18C78B8E14D6736500B57B4F /* TestiPhoneCalViewController.xib */; };
 		18C78B9514D6736500B57B4F /* TdCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C78B9014D6736500B57B4F /* TdCalendarView.m */; };
 		18C78B9614D6736500B57B4F /* PlaylistDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C78B9214D6736500B57B4F /* PlaylistDetailController.m */; };
+		18C78B9914D67A4B00B57B4F /* BorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C78B9814D67A4B00B57B4F /* BorderView.m */; };
 		18D402821474E50000389097 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18D402841474E50000389097 /* Localizable.strings */; };
 		18D402901474E55900389097 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18D402921474E55900389097 /* InfoPlist.strings */; };
 		18D4031C1474FC9A00389097 /* AssetTablePicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18D4031E1474FC9A00389097 /* AssetTablePicker.xib */; };
@@ -153,8 +153,6 @@
 		186BF9C01470AEB500961C67 /* AlbumController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = AlbumController.xib; path = Classes/AlbumController.xib; sourceTree = "<group>"; };
 		1884EC9E14BBE3D1005B3EBF /* PhotoApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PhotoApp.xcdatamodel; sourceTree = "<group>"; };
 		1884ECC214BBE586005B3EBF /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		1884ED2D14BC37AF005B3EBF /* DBOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBOperation.h; sourceTree = "<group>"; };
-		1884ED2E14BC37AF005B3EBF /* DBOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBOperation.m; sourceTree = "<group>"; };
 		1885E70914C8F9D700B2B5B5 /* TagSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = TagSelector.h; path = Classes/TagSelector.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1885E70A14C8F9D700B2B5B5 /* TagSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = TagSelector.m; path = Classes/TagSelector.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		18C78B8C14D6736400B57B4F /* TestiPhoneCalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestiPhoneCalViewController.h; sourceTree = "<group>"; };
@@ -164,6 +162,8 @@
 		18C78B9014D6736500B57B4F /* TdCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TdCalendarView.m; sourceTree = "<group>"; };
 		18C78B9114D6736500B57B4F /* PlaylistDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistDetailController.h; sourceTree = "<group>"; };
 		18C78B9214D6736500B57B4F /* PlaylistDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistDetailController.m; sourceTree = "<group>"; };
+		18C78B9714D67A4B00B57B4F /* BorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BorderView.h; sourceTree = "<group>"; };
+		18C78B9814D67A4B00B57B4F /* BorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BorderView.m; sourceTree = "<group>"; };
 		18D402831474E50000389097 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		18D402851474E50800389097 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		18D402911474E55900389097 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -370,8 +370,6 @@
 				080E96DDFE201D6D7F000001 /* Classes */,
 				183DE33114C7F76000BDC724 /* Model */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
-				1884ED2D14BC37AF005B3EBF /* DBOperation.h */,
-				1884ED2E14BC37AF005B3EBF /* DBOperation.m */,
 				18696E8A147A217100302EB8 /* Settings.bundle */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
@@ -437,6 +435,8 @@
 				183DE30C14C7F66A00BDC724 /* CropView.m */,
 				183DE30D14C7F66A00BDC724 /* GridView.h */,
 				183DE30E14C7F66A00BDC724 /* GridView.m */,
+				18C78B9714D67A4B00B57B4F /* BorderView.h */,
+				18C78B9814D67A4B00B57B4F /* BorderView.m */,
 			);
 			name = PhotoViewController;
 			sourceTree = "<group>";
@@ -565,7 +565,6 @@
 				184FCFCC1471FE410082B51D /* TagManagementController.m in Sources */,
 				184FD004147208F20082B51D /* AnimaSelectController.m in Sources */,
 				1884EC9F14BBE3D1005B3EBF /* PhotoApp.xcdatamodel in Sources */,
-				1884ED2F14BC37B0005B3EBF /* DBOperation.m in Sources */,
 				183DE2F714C7F58A00BDC724 /* PersonRootViewController.m in Sources */,
 				183DE2F814C7F58A00BDC724 /* PlaylistRootViewController.m in Sources */,
 				183DE2FB14C7F5B800BDC724 /* PhotoAppDelegate.m in Sources */,
@@ -596,6 +595,7 @@
 				18C78B9314D6736500B57B4F /* TestiPhoneCalViewController.m in Sources */,
 				18C78B9514D6736500B57B4F /* TdCalendarView.m in Sources */,
 				18C78B9614D6736500B57B4F /* PlaylistDetailController.m in Sources */,
+				18C78B9914D67A4B00B57B4F /* BorderView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

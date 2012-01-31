@@ -14,8 +14,7 @@
 #import "Asset.h"
 #import "People.h"
 #import "TagSelector.h"
-
-
+#import "Album.h"
 @implementation AssetTablePicker
 @synthesize crwAssets;
 @synthesize table,val;
@@ -24,6 +23,7 @@
 @synthesize lock;
 @synthesize operations;
 @synthesize tagRow;
+@synthesize album;
 #pragma mark -
 #pragma mark UIViewController Methods
 
@@ -272,9 +272,8 @@
     [tagSelector selectTagNameFromContacts];
 }
 -(IBAction)playPhotos{
-    //[dataBase getUserFromPlayTable:PLAYID];
-    //NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,[NSString stringWithFormat:@"%d",0],dataBase.Transtion,@"animation",nil];
-   // [[NSNotificationCenter defaultCenter]postNotificationName:@"PlayPhoto" object:nil userInfo:dic]; 
+    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:self.crwAssets, @"assets", self.album.transitType, @"transition",nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"PlayPhoto" object:nil userInfo:dic]; 
 }
 
 
@@ -353,7 +352,7 @@
     if(action==YES)
     {
         selectedRow = cell.rowNumber;
-        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,[NSString stringWithFormat:@"%d",index],
+        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                                     [NSNumber numberWithBool:lockMode],@"lock", nil];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"viewPhotos" object:nil userInfo:dic];   
     }

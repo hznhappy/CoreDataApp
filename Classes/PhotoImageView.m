@@ -201,6 +201,7 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     UIImage *image = [self.fullScreen imageRotatedByDegrees:90];
     self.fullScreen = image;
     self.imageView.image = self.fullScreen;
+    [self layoutScrollViewAnimated:NO];
 
 }
 

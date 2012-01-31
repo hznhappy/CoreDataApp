@@ -19,7 +19,6 @@
 #import "PeopleRuleDetail.h"
 #import "AlbumDataSource.h"
 @class PhotoAppDelegate;
-@class DBOperation;
 @interface PlaylistDetailController : UIViewController<UITableViewDelegate,UITableViewDataSource,MPMediaPickerControllerDelegate,UITextFieldDelegate> {
     PhotoAppDelegate * appDelegate;
     AmptsPhotoCoreData * coreData;

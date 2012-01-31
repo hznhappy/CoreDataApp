@@ -10,6 +10,7 @@
 
 @class PhotoImageView;
 @class GridView;
+@class BorderView;
 @interface CropView : UIView {
     @private
     CGPoint touchStart;
@@ -23,7 +24,7 @@
     UIView *photoBrowserView;
     UIImageView *cropImageView;
     GridView *gridView;
-    
+    BorderView *borderView;
     UIImage *cropImage;
 }
 
