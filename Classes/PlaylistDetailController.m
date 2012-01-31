@@ -332,11 +332,11 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self.textField resignFirstResponder];
-    if (indexPath.section ==0 && indexPath.row == 1) {
+    if (indexPath.section ==0 && indexPath.row == 1 && self.textField.text != nil && self.textField.text.length != 0) {
         AnimaSelectController *animateController = [[AnimaSelectController alloc]init];
         animateController.tranStyle = self.tranLabel.text;
-      //  animateController.play_id=a;
         animateController.Text=textField.text;
+        animateController.album = bum;
         [self.navigationController pushViewController:animateController animated:YES];
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }

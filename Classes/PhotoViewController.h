@@ -47,20 +47,17 @@
     TagSelector *tagSelector;
                                                         
     NSTimer *controlVisibilityTimer;
-    NSTimer *photoInfoTimer;
     NSTimer *timer;	
     UIButton *playButton;
     NSMutableArray *video;
 
     MPMoviePlayerController* theMovie;
-    UIView *favorite;
     UIView *assetInfoView;
     UIButton *likeButton;
     
 }
 @property (nonatomic, strong) Playlist *playlist;
 @property(nonatomic,strong)PopupPanelView *ppv;
-@property(nonatomic,strong)NSMutableArray *video;
 
 @property(nonatomic,strong)CropView *cropView;
 @property(nonatomic,strong) UIScrollView *scrollView;
