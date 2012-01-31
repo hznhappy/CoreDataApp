@@ -15,6 +15,7 @@
 #import "People.h"
 #import "TagSelector.h"
 #import "Album.h"
+#import "PeopleTag.h"
 @implementation AssetTablePicker
 @synthesize crwAssets;
 @synthesize table,val;
@@ -362,6 +363,8 @@
         {
             [self.UrlList removeObject:asset];
             [self.tagRow removeObject:row];
+            [tagSelector deleteTag:asset];
+                      
         }
         else
         {   [self.UrlList addObject:asset];
@@ -380,34 +383,6 @@
     
 	return 79;
 }
-
--(void)viewPhotos:(id)sender{
-    
-    UIButton *button1= (UIButton *)sender;
-    NSLog(@"button tag:%d",button1.tag);
-    NSString *row=[NSString stringWithFormat:@"%d",button1.tag];
-    ALAsset *asset = [self.crwAssets objectAtIndex:button1.tag];
-    NSString *url = [[[asset defaultRepresentation]url] description];
-    if(action==YES)
-    {
-        NSDictionary *dic = [NSDictionary dictionaryWithObject:self.crwAssets forKey:[NSString stringWithFormat:@"%d",button1.tag]];
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"viewPhotos" object:nil userInfo:dic];    
-    }
-    else
-    {
-        if([self.tagRow containsObject:row])
-        {
-            [self.UrlList removeObject:url];
-            [self.tagRow removeObject:row];
-        }
-        else
-        {   [self.UrlList addObject:url];
-            [self.tagRow addObject:row];
-        }
-    }
-    [self.table reloadData];
-}
-
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation{
     oritation = toInterfaceOrientation;

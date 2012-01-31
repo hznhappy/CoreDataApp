@@ -24,13 +24,13 @@
     AmptsPhotoCoreData * coreData;
     AlbumDataSource *AL;
     Album *bum;
-    Album *al;
     NSMutableArray *list;
     PeopleRule *pr1;
     NSMutableArray *nameList;
     BOOL keybord;
     BOOL bu;
-    
+     
+ 
     UITableView *listTable;
     UITableViewCell *textFieldCell;
     UITableViewCell *switchCell;
@@ -66,7 +66,7 @@
 }
 
 @property(nonatomic,strong)Album *bum;
-@property(nonatomic,strong)Album *al;
+//@property(nonatomic,strong)Album *al;
 @property(nonatomic,strong)PhotoAppDelegate *appDelegate;
 @property(nonatomic,strong)AmptsPhotoCoreData *coreData;
 @property(nonatomic,strong)NSMutableArray *list;
@@ -109,4 +109,5 @@
 -(void)update:(NSInteger)Row rule:(NSString *)rule;
 -(void)addPlay;
 -(void)changeDate:(NSNotification *)note;
+-(void)album;
 @end

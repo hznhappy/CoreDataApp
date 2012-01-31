@@ -16,7 +16,8 @@
 #import "PhotoViewController.h"
 
 @implementation TagSelector
-@dynamic mypeople;
+//@dynamic mypeople;
+@synthesize mypeople;
 -(TagSelector *)initWithViewController:(UIViewController *)controller{
     self = [super init];
     if (self) {
@@ -56,6 +57,25 @@
     }
    
     return NO;
+}
+-(void)deleteTag:(Asset *)asset
+{
+    
+    NSPredicate *pre = [NSPredicate predicateWithFormat:@"conAsset == %@",asset];
+    NSArray *list = [dataSource simpleQuery:@"PeopleTag" predicate:pre sortField:nil sortOrder:NO];
+    for (int i=0; i<[list count]; i++) {
+        PeopleTag *peopleTag =[list objectAtIndex:i];
+        if([peopleTag.conPeople isEqual:mypeople])
+        {
+            [mypeople removeConPeopleTagObject:peopleTag];
+            [asset removeConPeopleTagObject:peopleTag];
+            asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]-1];
+        }
+    }
+    [dataSource.coreData saveContext];
+
+    
+    
 }
 -(People *)tagPeople{
     

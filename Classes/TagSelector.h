@@ -30,4 +30,5 @@
 -(void)resetToolBar;
 -(void)addTagName;
 -(BOOL)tag:(Asset *)asset;
+-(void)deleteTag:(Asset *)asset;
 @end

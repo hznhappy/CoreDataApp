@@ -138,7 +138,7 @@
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
     
     PlaylistDetailController *detailController = [[PlaylistDetailController alloc]initWithNibName:@"PlaylistDetailController" bundle:[NSBundle mainBundle]];
-    detailController.al = [self getAlbumInRow:indexPath.row];
+    detailController.bum = [self getAlbumInRow:indexPath.row];
     detailController.hidesBottomBarWhenPushed = YES;
     
     [self.navigationController pushViewController:detailController animated:YES];
