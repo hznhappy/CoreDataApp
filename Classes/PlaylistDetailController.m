@@ -73,9 +73,9 @@
     list=[[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];  
     
     
-    if(Transtion!=nil)
+    if(bum.transitType!=nil)
   {
-      self.tranLabel.text=Transtion;
+      self.tranLabel.text=bum.transitType;
   }else{
       self.tranLabel.text = nil;
   }

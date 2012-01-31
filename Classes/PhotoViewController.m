@@ -157,8 +157,10 @@
 
 	[super viewWillDisappear:animated];
     [theMovie stop];
-    
-    [timer invalidate];
+    if (timer) {
+        [timer invalidate];
+        timer = nil;
+    }
     [self.navigationController setToolbarHidden:YES animated:YES];		
 }
 
@@ -253,6 +255,10 @@
 
 - (void)configurePage:(PhotoImageView *)page forIndex:(NSUInteger)index{
     CGRect rect = [self frameForPageAtIndex:index];
+    page.index = index;
+    page.imageView.image = nil;
+    page.frame = rect;
+    [page loadIndex:index];
     Asset *asset = [self.playlist.storeAssets objectAtIndex:index];
     NSString *strUrl = asset.url;
     ALAsset *as = [self.playlist.assets objectForKey:strUrl];
@@ -264,11 +270,12 @@
         frame1.size.height=60;
         frame1.size.width=60;
         [self play:frame1];
+        if (playingPhoto) {
+            [self playVideo];
+            [timer invalidate];
+        }
     }
-    page.index = index;
-    page.imageView.image = nil;
-    page.frame = rect;
-    [page loadIndex:index];
+    
     if (!playingPhoto) {
         [self showPhotoInfo];
     }
@@ -538,6 +545,9 @@
                                                   object:theMovie2]; 
     [theMovie.view removeFromSuperview];
     theMovie = nil;
+    if (playingPhoto) {
+        [timer fire];
+    }
 }
 
 #pragma mark - 
@@ -1113,7 +1123,10 @@
     currentPageIndex+=1;
     NSInteger _index = self.currentPageIndex;
     if (_index >= [self.playlist.storeAssets count] || _index < 0) {
-        currentPageIndex = 0;
+        if (timer) {
+            [timer invalidate];
+            timer = nil;
+        }
     }
 
     [self setBarsHidden:YES animated:YES];
