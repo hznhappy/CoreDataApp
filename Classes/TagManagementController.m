@@ -20,7 +20,6 @@ int j=1,count=0;
     favorate=[[People alloc]init];
    self.people=parray;
    [people addObject:favorate];
-    NSLog(@"PEOPLE:%@",people);
     [self table];
     bool1 = NO;
     if(bo!=nil)
@@ -101,15 +100,8 @@ int j=1,count=0;
     
     NSString *personName = (__bridge_transfer NSString*)ABRecordCopyValue(person, kABPersonFirstNameProperty);
     NSString *lastname = (__bridge_transfer NSString*)ABRecordCopyValue(person, kABPersonLastNameProperty);
-    
-   // NSString *readName=(NSString *)ABRecordCopyCompositeName(person);
     ABRecordID recId = ABRecordGetRecordID(person);
     fid=[NSNumber numberWithInt:recId];
-    //fname=[NSString stringWithFormat:@"%@",readName];
-    //NSMutableArray *IdList=[[NSMutableArray alloc]init];
-    
-    NSLog(@"WWWW%@",IdList);  
-    NSLog(@"WWWW%@",IdList);
     if([self.IdList containsObject:fid])
     {
         NSString *b=NSLocalizedString(@"Already exists", @"button");
@@ -193,14 +185,12 @@ int j=1,count=0;
     {
         NSLog(@"读取了空数据！");
     }
-    NSLog(@"result:%@",result);
     [self.IdList removeAllObjects];
     for(int i=0;i<[self.result count];i++)
     {
         People *a = (People *)[result objectAtIndex:i];
         [self.IdList addObject:a.addressBookId];
     }  
-    NSLog(@"idlist:%@",IdList);
     [self.tableView reloadData];
 }
 - (void)viewDidUnload

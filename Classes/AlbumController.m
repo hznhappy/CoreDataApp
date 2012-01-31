@@ -51,13 +51,13 @@
     self.navigationItem.rightBarButtonItem = addButon;
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabled) name:@"addplay" object:nil];
-    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addcount) name:@"addcount" object:nil];
     
 }
 -(void)tabled
 {
     PhotoAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     dataSource = appDelegate.dataSource;
+    [dataSource refresh];
     assets = dataSource.assetsBook; 
     [tableView reloadData];
 }
@@ -138,7 +138,7 @@
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
     
     PlaylistDetailController *detailController = [[PlaylistDetailController alloc]initWithNibName:@"PlaylistDetailController" bundle:[NSBundle mainBundle]];
-    detailController.al = [self getAlbumInRow:indexPath.row];
+    detailController.bum = [self getAlbumInRow:indexPath.row];
     detailController.hidesBottomBarWhenPushed = YES;
     
     [self.navigationController pushViewController:detailController animated:YES];
@@ -162,9 +162,7 @@
 #pragma mark -
 #pragma mark Table View Data Source Methods
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{      //NSEntityDescription *entity = [NSEntityDescription entityForName:@"Album" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
-    
-    AmptsAlbum *fa=[assets objectAtIndex:indexPath.row];
+{     AmptsAlbum *fa=[assets objectAtIndex:indexPath.row];
     
     if(editingStyle==UITableViewCellEditingStyleDelete)
     {

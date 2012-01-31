@@ -17,6 +17,8 @@
 #import "Asset.h"
 #import "TdCalendarView.h"
 #import "TestiPhoneCalViewController.h"
+#import "AlbumDataSource.h"
+
 
 @implementation PlaylistDetailController
 @synthesize listTable;
@@ -28,7 +30,7 @@
 @synthesize bum,appDelegate,coreData; 
 @synthesize list;
 @synthesize nameList;
-@synthesize al;
+//@synthesize al;
 @synthesize PeopleRuleCell;
 @synthesize OrderCell;
 @synthesize SortCell;
@@ -49,14 +51,16 @@
 #pragma mark - View lifecycle
 - (void)viewDidLoad
 { 
+    key=0;
     appDelegate =[[UIApplication sharedApplication] delegate];
+    AL=[[AlbumDataSource alloc]init];
+    AL=appDelegate.dataSource;
     keybord=NO;
-    NSLog(@"AL:%@",al);
-    
-    
     NSEntityDescription *entity5 = [NSEntityDescription entityForName:@"PeopleRule" inManagedObjectContext:[ appDelegate.dataSource.coreData managedObjectContext]]; 
     pr1=[[PeopleRule alloc]initWithEntity:entity5 insertIntoManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
-   // appDelegate = [[UIApplication sharedApplication] delegate];
+    
+       
+    
     NSManagedObjectContext *managedObjectContext=[appDelegate.dataSource.coreData managedObjectContext];
     NSFetchRequest *request=[[NSFetchRequest alloc]init];
     NSEntityDescription *entity=[NSEntityDescription entityForName:@"People" inManagedObjectContext:managedObjectContext];
@@ -82,52 +86,43 @@
     [backButton setTitle:b forState:UIControlStateNormal];
     UIBarButtonItem *backItem=[[UIBarButtonItem alloc]initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem =backItem;
-
-    key=0;
     mySwc = NO;
     selectImg = [UIImage imageNamed:@"Selected.png"];
     unselectImg = [UIImage imageNamed:@"Unselected.png"];
 
     self.textField.delegate=self;
     
-    if(al!=nil)
+    if(bum!=nil)
     {
-        NSLog(@"album:%@",al.conPeopleRule.allOrAny);
-        
-        if([al.conPeopleRule.allOrAny boolValue]==YES)
+       if([bum.conPeopleRule.allOrAny boolValue]==YES)
         {
-            NSLog(@"0wwwwww:%@",al.conPeopleRule.allOrAny);
-            
         }
         else
         {
-            NSLog(@"1");
             PeopleSeg.selectedSegmentIndex=1;
-            
-            
         }
     }
-  /*    NSManagedObjectContext *managedObjectContext1=[appDelegate.dataSource.coreData managedObjectContext];
-    NSFetchRequest *request1=[[NSFetchRequest alloc]init];
-    
-    NSEntityDescription *entity1=[NSEntityDescription entityForName:@"Asset" inManagedObjectContext:managedObjectContext1];
-    [request1 setEntity:entity1];
-    NSError *error1;
-    NSArray *A1=[[managedObjectContext1 executeFetchRequest:request1 error:&error1] mutableCopy];
-    for(int i=0;i<[A1 count];i++)
-    {
-        Asset *ast=(Asset *)[A1 objectAtIndex:i];
-        NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-        [outputFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-        NSString *newDateString = [outputFormatter stringFromDate:ast.date];
-        NSLog(@"DATE:%@",newDateString);
-        
-    }
-    
-    */
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeTransitionAccessoryLabel:) name:@"changeTransitionLabel" object:nil];
+     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeTransitionAccessoryLabel:) name:@"changeTransitionLabel" object:nil];
      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeDate:) name:@"changeDate" object:nil];
     [super viewDidLoad];
+}
+
+-(void)album
+{
+    bum = [NSEntityDescription insertNewObjectForEntityForName:@"Album" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
+    bum.conPeopleRule=pr1;
+    pr1.conAlbum=bum;
+   // bum.name=@"WithoutName";
+    
+    if(PeopleSeg.selectedSegmentIndex==0)
+    {
+        bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
+    }
+    else
+    {
+        bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:NO];
+    }
+ //[appDelegate.dataSource.coreData saveContext];
 }
 -(void)huyou
 {
@@ -186,11 +181,11 @@
                 if (cell == nil) {
                     cell = self.textFieldCell;
                 }
-                if(al!=nil)
+                if(bum!=nil)
                 {
                     if(keybord==NO)
                     {
-                self.textField.text = al.name;
+                self.textField.text = bum.name;
                     }
                 }
                 break;
@@ -282,14 +277,14 @@
             [selectButton addTarget:self action:@selector(setSelectState:) forControlEvents:UIControlEventTouchUpInside];
             selectButton.frame = CGRectMake(10, 11, 30, 30);
             [selectButton setImage:unselectImg forState:UIControlStateNormal];
-            if(al!=nil)
+            if(bum!=nil)
             {                
                 NSManagedObjectContext *managedObjectsContext = [appDelegate.dataSource.coreData managedObjectContext];
                 NSEntityDescription *entity = [NSEntityDescription entityForName:@"PeopleRuleDetail" inManagedObjectContext:managedObjectsContext];
                 NSFetchRequest *request = [[NSFetchRequest alloc]init];
                 [request setEntity:entity];
                 
-                NSPredicate *pre = [NSPredicate predicateWithFormat:@"conPeopleRule == %@",al.conPeopleRule];
+                NSPredicate *pre = [NSPredicate predicateWithFormat:@"conPeopleRule == %@",bum.conPeopleRule];
                 [request setPredicate:pre];
                 People *p1 = (People *)[list objectAtIndex:indexPath.row];
                 NSError *error = nil;
@@ -392,30 +387,13 @@
                         NSEntityDescription *entity = [NSEntityDescription entityForName:@"PeopleRuleDetail" inManagedObjectContext:managedObjectsContext];
                         NSFetchRequest *request = [[NSFetchRequest alloc]init];
                         [request setEntity:entity];
-                        if(al==nil)
-                        {
                         NSPredicate *pre = [NSPredicate predicateWithFormat:@"conPeople==%@ AND conPeopleRule == %@",p1,bum.conPeopleRule];
                         [request setPredicate:pre];
-                            NSError *error = nil;
-                            NSArray *A=[managedObjectsContext executeFetchRequest:request error:&error];
-                            PeopleRuleDetail *p=[A objectAtIndex:0];
-                            [bum.conPeopleRule removeConPeopleRuleDetailObject:p];
-
-                        }
-                        else
-                        {
-                            NSPredicate *pre = [NSPredicate predicateWithFormat:@"conPeople==%@ AND conPeopleRule == %@",p1,al.conPeopleRule];
-                            [request setPredicate:pre];
-                            NSError *error = nil;
-                            NSArray *A=[managedObjectsContext executeFetchRequest:request error:&error];
-                            PeopleRuleDetail *p=[A objectAtIndex:0];
-                            [al.conPeopleRule removeConPeopleRuleDetailObject:p];
-
-                            
-                        }
-                        
-                        
-                          [appDelegate.dataSource.coreData saveContext];
+                        NSError *error = nil;
+                        NSArray *A=[managedObjectsContext executeFetchRequest:request error:&error];
+                        PeopleRuleDetail *p=[A objectAtIndex:0];
+                        [bum.conPeopleRule removeConPeopleRuleDetailObject:p];
+                        [appDelegate.dataSource.coreData saveContext];
 
                     }
                 }
@@ -426,31 +404,15 @@
   }
 -(IBAction)PeopleRuleButton
 {
-   if(al==nil)
-   {
     if(PeopleSeg.selectedSegmentIndex==0)
     {
-        pr1.allOrAny=[NSNumber numberWithBool:YES];
+        bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
     }
     else
     {
-        pr1.allOrAny=[NSNumber numberWithBool:NO];
+        bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:NO];
     }
-   }
-    else
-    {
-        if(PeopleSeg.selectedSegmentIndex==0)
-        {
-            al.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
-        }
-        else
-        {
-            al.conPeopleRule.allOrAny=[NSNumber numberWithBool:NO];
-        }
-
-        
-    }
-    [appDelegate.dataSource.coreData saveContext];
+     [appDelegate.dataSource.coreData saveContext];
 }
 
 
@@ -494,17 +456,8 @@
     prd1.conPeople=p1;
     [p1 addConPeopleRuleDetailObject:prd1];
     prd1.opcode=rule;   
-    if(al==nil)
-    {
-        prd1.conPeopleRule=pr1;
-        [pr1 addConPeopleRuleDetailObject:prd1];
-       
-    }
-    else
-    {
-        prd1.conPeopleRule=al.conPeopleRule;
-        [al.conPeopleRule addConPeopleRuleDetailObject:prd1];
-    }
+    prd1.conPeopleRule=bum.conPeopleRule;
+    [bum.conPeopleRule addConPeopleRuleDetailObject:prd1];
     [appDelegate.dataSource.coreData saveContext];
  }
 -(void)update:(NSInteger)Row rule:(NSString *)rule
@@ -514,24 +467,12 @@
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"PeopleRuleDetail" inManagedObjectContext:managedObjectsContext];
     NSFetchRequest *request = [[NSFetchRequest alloc]init];
     [request setEntity:entity];
-    if(al==nil)
-    {
     NSPredicate *pre = [NSPredicate predicateWithFormat:@"conPeople==%@ AND conPeopleRule == %@",p1,bum.conPeopleRule];
     [request setPredicate:pre];
-    }
-    else
-    {
-        NSPredicate *pre = [NSPredicate predicateWithFormat:@"conPeople==%@ AND conPeopleRule == %@",p1,al.conPeopleRule];
-        [request setPredicate:pre];
-    }
     NSError *error = nil;
     NSArray *A=[managedObjectsContext executeFetchRequest:request error:&error];
     PeopleRuleDetail *p=[A objectAtIndex:0];
-    
     p.opcode=rule;
-    NSLog(@"peopleRULE:%@",p);
-    //[p setOpcode:rule];
-
     [appDelegate.dataSource.coreData saveContext];
     
 }
@@ -550,25 +491,21 @@
     NSLog(@"no file");
     UIButton *button = (UIButton *)sender;
     UITableViewCell *cell = (UITableViewCell *)[button superview];
-   NSIndexPath *index = [listTable indexPathForCell:cell];
+    NSIndexPath *index = [listTable indexPathForCell:cell];
     NSInteger Row=index.row;
-   // int playID=0;
-     ///   playID=[[playIdList objectAtIndex:[playIdList count]-1]intValue]+1;
-       [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
+    [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     if ([button.titleLabel.text isEqualToString:INCLUDE]) {
         button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
         [button setTitle:EXCLUDE forState:UIControlStateNormal];
         NSString *rule=@"EXCLUDE";
         [self update:Row rule:rule];
-        }
+    }
     else{
         button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
         [button setTitle:INCLUDE forState:UIControlStateNormal];
-        
-        
         NSString *rule=@"INCLUDE";
         [self update:Row rule:rule];
-        }
+    }
 }
 -(void)setSelectState:(id)sender{
     UIButton *button = (UIButton *)sender;
@@ -594,7 +531,7 @@
          NSError *error = nil;
          NSArray *A=[managedObjectsContext executeFetchRequest:request error:&error];
          PeopleRuleDetail *p=[A objectAtIndex:0];
-         [appDelegate.dataSource.coreData.managedObjectContext deleteObject:p];
+         [bum.conPeopleRule removeConPeopleRuleDetailObject:p];
          [appDelegate.dataSource.coreData saveContext];
 
     }else{
@@ -611,7 +548,7 @@
 #pragma mark IBAction method
 -(IBAction)hideKeyBoard:(id)sender{
     [sender resignFirstResponder];
-    key=1;
+
    }
 -(void)textFieldDidEndEditing:(UITextField *)textField1
 {
@@ -628,13 +565,14 @@
                               cancelButtonTitle:nil
                               otherButtonTitles:b,nil];
         [alert show];
-        if(al!=nil)
+        if(keybord==YES)
         {
-           // textField.text=listName;
+          textField.text=bum.name;
         }
         else
         {
-                   }
+            
+        }
 
     }
     else
@@ -647,66 +585,37 @@
 -(void)addPlay
 {
     
-  if(al==nil)
-  {
-  if(keybord==NO)
-  {
-    keybord = YES;
-   bum = [NSEntityDescription insertNewObjectForEntityForName:@"Album" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
-   bum.name=textField.text;
-   //bum.byCondition=@"numOfLike";
-   // bum.sortOrder=[NSNumber numberWithBool:YES];
-    
-     /* if(al==nil)
-      {
-          NSLog(@"people:%d",PeopleSeg.selectedSegmentIndex); 
-          if(PeopleSeg.selectedSegmentIndex==0)
-          {
-              pr1.allOrAny=[NSNumber numberWithBool:YES];
-          }
-          else
-          {
-              NSLog(@"no");
-              pr1.allOrAny=[NSNumber numberWithBool:NO];
-          }
-      }
-      else
-      {
-          if(PeopleSeg.selectedSegmentIndex==0)
-          {
-              al.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
-          }
-          else
-          {
-              NSLog(@"no");
-              al.conPeopleRule.allOrAny=[NSNumber numberWithBool:NO];
-          }
-          
-          
-      }*/
-   bum.conPeopleRule=pr1;
-   pr1.conAlbum=bum;
-   [appDelegate.dataSource.coreData saveContext];
-  }
-    else
+  //if(bum==nil)
+ // {
+     // key=1;
+      keybord=YES;
+      
+    //  bum.name=textField.text;
+      //bum.byCondition=@"numOfLike";
+      // bum.sortOrder=[NSNumber numberWithBool:YES];
+            
+      //[appDelegate.dataSource.coreData saveContext];
+   
+  //}
+ // else
+   // {
+       // NSLog(@"KEY:%d",key);
+       // if(key==0)
+       // {
+        //    key=2;
+        //}
+     //   keybord=NO;
+    if(bum==nil)
     {
+        NSLog(@"NIL");
+        [self album];  
+        //keybord=NO;
+    }
+
         bum.name=textField.text;
         [appDelegate.dataSource.coreData saveContext];
-        [appDelegate.dataSource.assetsBook removeObjectAtIndex:[appDelegate.dataSource.assetsBook count]-1];
-        
-    }
-    AmptsAlbum * album1=[[AmptsAlbum alloc]init];
-    album1.name=bum.name;
-    album1.alblumId=bum.objectID;
-    [appDelegate.dataSource.assetsBook addObject:album1];
-  }
-    else
-    {
-        al.name=textField.text;
-        [appDelegate.dataSource.coreData saveContext];
-    }
-    
-   
+   // }
+    [AL  refresh];
 }
 
 -(IBAction)updateTable:(id)sender{
@@ -781,10 +690,7 @@
     mySwitch = nil;
     musicCell = nil;
     musicLabel = nil;
-   
-    //dataBase = nil;
     listTable =nil;
-  //  listName = nil;
     userNames = nil;
     state = nil;
 }

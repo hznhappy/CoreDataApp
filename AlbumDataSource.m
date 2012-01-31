@@ -25,6 +25,7 @@
 @synthesize nav;
 
 -(id) initWithAppName: (NSString *)app navigationController:(UINavigationController *)navigationController{
+    NSLog(@"NIC");
    self= [super init];
     self.nav = navigationController;
     
@@ -33,7 +34,7 @@
      assetsBook initialization
      */
     
-    assetsBook=[[NSMutableArray alloc]init]; 
+    
     
     /*
      
@@ -50,6 +51,7 @@
     return self;
 }
 -(void) syncAssetwithDataSource {
+    
     [opQueue cancelAllOperations];    
 
 
@@ -76,7 +78,7 @@
      */
 
     NSArray *urlList =[[deviceAssets deviceAssetsList]allKeys];
-
+   
 
     /*
      delete the asset object which are no longer on the device itself 
@@ -141,6 +143,12 @@
 }
 
 -(void) refreshDataSource {
+    [self refresh];
+   // NSLog(@"finished prepare data");
+    [self performSelectorOnMainThread:@selector(playlistAlbum) withObject:nil waitUntilDone:YES];
+}
+-(void) refresh
+{    assetsBook=[[NSMutableArray alloc]init]; 
     NSMutableArray* tmp=nil;
     NSPredicate * pre=nil;
     
@@ -155,13 +163,11 @@
     tmpAlbum.alblumId=nil;
     tmpAlbum.assetsList=[self simpleQuery:@"Asset" predicate:nil sortField:nil sortOrder:YES];
     tmpAlbum.num=[tmpAlbum.assetsList count];
-   /* NSLog(@"Asset Fetched: %@", tmpAlbum.assetsList);
-    for (Asset *a in tmpAlbum.assetsList) {
-        NSLog(@"Asset URL: %@", a.url);
-    }*/
+    /* NSLog(@"Asset Fetched: %@", tmpAlbum.assetsList);
+     for (Asset *a in tmpAlbum.assetsList) {
+     NSLog(@"Asset URL: %@", a.url);
+     }*/
     [assetsBook addObject:tmpAlbum];
-
-    
     //Add Untag People Entry
     
     tmpAlbum=[[AmptsAlbum alloc]init];
@@ -171,9 +177,6 @@
     tmpAlbum.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil sortOrder:YES];
     tmpAlbum.num=[tmpAlbum.assetsList count];
     [assetsBook addObject:tmpAlbum];
-
-
-    
     tmp=[self simpleQuery:@"Album" predicate:nil sortField:nil sortOrder:YES];
     //NSLog(@"Number of Album :%d",[tmp count]);
     for(Album* i in tmp ) {
@@ -193,22 +196,19 @@
         if (pre!=nil) {
             NSMutableArray* excludePeople=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:YES];
             if(excludePeople!=nil) {
-               [album.assetsList removeObjectsInArray:excludePeople];
+                [album.assetsList removeObjectsInArray:excludePeople];
                 //NSLog(@"Exclude predicate : %d , %@",[excludePeople count],pre );
             }
         }
         album.num=[album.assetsList count];
-       // NSLog(@"Album %@ : %d",album.name,album.num);
+        // NSLog(@"Album %@ : %d",album.name,album.num);
         for (Asset* tmpAsset in    album.assetsList) {
             //NSLog(@"Photo contains: %@",tmpAsset.url);
         }
         [assetsBook addObject:album];
-
+        
     }
-   // NSLog(@"finished prepare data");
-    [self performSelectorOnMainThread:@selector(playlistAlbum) withObject:nil waitUntilDone:YES];
 }
-
 -(void)playlistAlbum{
     PlaylistRootViewController *root = (PlaylistRootViewController*)self.nav;
     [root.activityView stopAnimating];
@@ -218,9 +218,7 @@
 
 -(NSMutableArray*) simpleQuery:(NSString *)table predicate:(NSPredicate *)pre sortField:(NSString *)field sortOrder:(BOOL)asc {
     // Define our table/entity to use  
-
     NSEntityDescription *entity = [NSEntityDescription entityForName:table inManagedObjectContext:coreData.managedObjectContext];   
-    
     // Setup the fetch request  
     NSFetchRequest *request = [[NSFetchRequest alloc] init];  
     [request setEntity:entity];

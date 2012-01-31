@@ -15,6 +15,7 @@
 #import "People.h"
 #import "TagSelector.h"
 #import "Album.h"
+#import "PeopleTag.h"
 @implementation AssetTablePicker
 @synthesize crwAssets;
 @synthesize table,val;
@@ -40,8 +41,8 @@
     PASS=NO;
     tagSelector = [[TagSelector alloc]initWithViewController:self];
     
-    self.tagRow=[[NSMutableArray alloc]init];;
-    self.UrlList=[[NSMutableArray alloc] init];;
+    self.tagRow=[[NSMutableArray alloc]init];
+    self.UrlList=[[NSMutableArray alloc] init];
     
     NSString *b=NSLocalizedString(@"Back", @"title");
     UIButton* backButton = [UIButton buttonWithType:101]; // left-pointing shape!
@@ -79,6 +80,7 @@
 
 -(void)EditPhotoTag
 {
+    [self.tagRow removeAllObjects];
     [self.table reloadData];
 }
 
@@ -190,7 +192,7 @@
         self.navigationItem.rightBarButtonItem = cancel;
         viewBar.hidden = YES;
         tagBar.hidden = NO;
-        [self.table reloadData];
+      //  [self.table reloadData];
     }
     else
     {
@@ -251,9 +253,13 @@
             Asset *asset = [self.UrlList objectAtIndex:i];
             [tagSelector saveTagAsset:asset];
         }
-       
+        NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
+                                                           object:self 
+                                                         userInfo:dic1];
          [self cancelTag];
     }
+    
 }
 -(IBAction)resetTags{
     [self.tagRow removeAllObjects];
@@ -311,6 +317,12 @@
         if (row<[self.crwAssets count]) {
             
             Asset *dbAsset = [self.crwAssets objectAtIndex:row];
+            if([tagSelector tag:dbAsset])
+            {
+                NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
+                [tagRow addObject:selectedIndex];
+                 //[cell checkTagSelection:selectedIndex];
+            }
             [assetsInRow addObject:dbAsset];
         }
     }
@@ -351,6 +363,8 @@
         {
             [self.UrlList removeObject:asset];
             [self.tagRow removeObject:row];
+            [tagSelector deleteTag:asset];
+                      
         }
         else
         {   [self.UrlList addObject:asset];
@@ -369,34 +383,6 @@
     
 	return 79;
 }
-
--(void)viewPhotos:(id)sender{
-    
-    UIButton *button1= (UIButton *)sender;
-    NSLog(@"button tag:%d",button1.tag);
-    NSString *row=[NSString stringWithFormat:@"%d",button1.tag];
-    ALAsset *asset = [self.crwAssets objectAtIndex:button1.tag];
-    NSString *url = [[[asset defaultRepresentation]url] description];
-    if(action==YES)
-    {
-        NSDictionary *dic = [NSDictionary dictionaryWithObject:self.crwAssets forKey:[NSString stringWithFormat:@"%d",button1.tag]];
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"viewPhotos" object:nil userInfo:dic];    
-    }
-    else
-    {
-        if([self.tagRow containsObject:row])
-        {
-            [self.UrlList removeObject:url];
-            [self.tagRow removeObject:row];
-        }
-        else
-        {   [self.UrlList addObject:url];
-            [self.tagRow addObject:row];
-        }
-    }
-    [self.table reloadData];
-}
-
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation{
     oritation = toInterfaceOrientation;

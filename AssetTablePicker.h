@@ -69,6 +69,5 @@
 -(IBAction)resetTags;
 -(IBAction)selectFromFavoriteNames;
 -(IBAction)selectFromAllNames;
--(void)viewPhotos:(id)sender;
 -(void)EditPhotoTag;
 @end

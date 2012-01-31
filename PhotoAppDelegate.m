@@ -26,7 +26,9 @@
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
     NSArray *viewControllers = rootViewController.viewControllers;
+    NSLog(@"EASON");
     AlbumDataSource *_dataSource = [[AlbumDataSource alloc] initWithAppName:@"PhotoApp" navigationController:(UINavigationController *)[viewControllers objectAtIndex:0]];
+    NSLog(@"JAY");
     self.dataSource = _dataSource;
     [window addSubview:rootViewController.view];
     [window makeKeyAndVisible];

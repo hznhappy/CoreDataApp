@@ -12,7 +12,7 @@
 			<key>DefaultValue</key>
 			<string></string>
 			<key>IsSecure</key>
-			<false/>
+			<true/>
 			<key>Key</key>
 			<string>name_preference</string>
 			<key>KeyboardType</key>
