@@ -46,6 +46,7 @@
 -(NSPredicate *) excludeRuleFormation:(Album*) i; 
 -(void) syncAssetwithDataSource;
 -(void) refreshDataSource;
+-(void) refresh;
 -(void) syncDataSource;
 -(void) testDataSource;
 @end

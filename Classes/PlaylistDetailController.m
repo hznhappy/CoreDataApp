@@ -18,6 +18,8 @@
 #import "Asset.h"
 #import "TdCalendarView.h"
 #import "TestiPhoneCalViewController.h"
+#import "AlbumDataSource.h"
+
 
 @implementation PlaylistDetailController
 @synthesize listTable;
@@ -51,6 +53,8 @@
 - (void)viewDidLoad
 { 
     appDelegate =[[UIApplication sharedApplication] delegate];
+    AL=[[AlbumDataSource alloc]init];
+    AL=appDelegate.dataSource;
     keybord=NO;
     NSLog(@"AL:%@",al);
     
@@ -651,56 +655,30 @@
    //bum.byCondition=@"numOfLike";
    // bum.sortOrder=[NSNumber numberWithBool:YES];
     
-     /* if(al==nil)
-      {
-          NSLog(@"people:%d",PeopleSeg.selectedSegmentIndex); 
-          if(PeopleSeg.selectedSegmentIndex==0)
-          {
-              pr1.allOrAny=[NSNumber numberWithBool:YES];
-          }
-          else
-          {
-              NSLog(@"no");
-              pr1.allOrAny=[NSNumber numberWithBool:NO];
-          }
-      }
-      else
-      {
-          if(PeopleSeg.selectedSegmentIndex==0)
-          {
-              al.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
-          }
-          else
-          {
-              NSLog(@"no");
-              al.conPeopleRule.allOrAny=[NSNumber numberWithBool:NO];
-          }
-          
-          
-      }*/
    bum.conPeopleRule=pr1;
    pr1.conAlbum=bum;
    [appDelegate.dataSource.coreData saveContext];
+      keybord=YES;
   }
     else
     {
         bum.name=textField.text;
         [appDelegate.dataSource.coreData saveContext];
-        [appDelegate.dataSource.assetsBook removeObjectAtIndex:[appDelegate.dataSource.assetsBook count]-1];
+     //   [appDelegate.dataSource.assetsBook removeObjectAtIndex:[appDelegate.dataSource.assetsBook count]-1];
         
     }
-    AmptsAlbum * album1=[[AmptsAlbum alloc]init];
-    album1.name=bum.name;
-    album1.alblumId=bum.objectID;
-    [appDelegate.dataSource.assetsBook addObject:album1];
+   
   }
     else
     {
         al.name=textField.text;
         [appDelegate.dataSource.coreData saveContext];
     }
-    
+   // PhotoAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+   // dataSource = 
+
    
+    [AL  refresh];
 }
 
 -(IBAction)updateTable:(id)sender{

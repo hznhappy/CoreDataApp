@@ -17,11 +17,13 @@
 #import "Album.h"
 #import "PeopleRule.h"
 #import "PeopleRuleDetail.h"
+#import "AlbumDataSource.h"
 @class PhotoAppDelegate;
 @class DBOperation;
 @interface PlaylistDetailController : UIViewController<UITableViewDelegate,UITableViewDataSource,MPMediaPickerControllerDelegate,UITextFieldDelegate> {
     PhotoAppDelegate * appDelegate;
     AmptsPhotoCoreData * coreData;
+    AlbumDataSource *AL;
     Album *bum;
     Album *al;
     NSMutableArray *list;

@@ -14,8 +14,9 @@
 #import "TagManagementController.h"
 #import "Asset.h"
 #import "PhotoViewController.h"
-@implementation TagSelector
 
+@implementation TagSelector
+@dynamic mypeople;
 -(TagSelector *)initWithViewController:(UIViewController *)controller{
     self = [super init];
     if (self) {
@@ -31,8 +32,30 @@
 -(void)addTagPeople:(NSNotification *)note{
     NSDictionary *dic = [note userInfo];
     mypeople=[dic objectForKey:@"people"];
+    NSLog(@"mypeople:%@",mypeople.conPeopleTag);
     [self addTagName];
     [self resetToolBar];
+    NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
+                                                       object:self 
+                                                     userInfo:dic1];
+}
+-(BOOL)tag:(Asset *)asset
+{
+     NSPredicate *pre = [NSPredicate predicateWithFormat:@"conAsset == %@",asset];
+    NSArray *list = [dataSource simpleQuery:@"PeopleTag" predicate:pre sortField:nil sortOrder:NO];
+    if([list count]>0)
+    {
+        for (int i=0; i<[list count]; i++) {
+            PeopleTag *peopleTag =[list objectAtIndex:i];
+            if([peopleTag.conPeople isEqual:mypeople])
+            {
+                return YES;
+            }
+        }
+    }
+   
+    return NO;
 }
 -(People *)tagPeople{
     
@@ -93,6 +116,11 @@
     [viewController dismissModalViewControllerAnimated:YES];
     [self addTagName];
     [self resetToolBar];
+    NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
+                                                       object:self 
+                                                     userInfo:dic1];
+
     return NO;
 }
 

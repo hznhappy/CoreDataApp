@@ -21,7 +21,7 @@
     AlbumDataSource *dataSource;
     People *mypeople;
 }
-
+@property (nonatomic, strong)People *mypeople;
 -(TagSelector *)initWithViewController:(UIViewController *)controller;
 -(void)selectTagNameFromContacts;
 -(void)selectTagNameFromFavorites;
@@ -29,4 +29,5 @@
 -(void)saveTagAsset:(Asset *)asset;
 -(void)resetToolBar;
 -(void)addTagName;
+-(BOOL)tag:(Asset *)asset;
 @end

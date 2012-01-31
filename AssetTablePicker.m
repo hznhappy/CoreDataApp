@@ -15,6 +15,7 @@
 #import "People.h"
 #import "TagSelector.h"
 
+
 @implementation AssetTablePicker
 @synthesize crwAssets;
 @synthesize table,val;
@@ -39,8 +40,8 @@
     PASS=NO;
     tagSelector = [[TagSelector alloc]initWithViewController:self];
     
-    self.tagRow=[[NSMutableArray alloc]init];;
-    self.UrlList=[[NSMutableArray alloc] init];;
+    self.tagRow=[[NSMutableArray alloc]init];
+    self.UrlList=[[NSMutableArray alloc] init];
     
     NSString *b=NSLocalizedString(@"Back", @"title");
     UIButton* backButton = [UIButton buttonWithType:101]; // left-pointing shape!
@@ -78,6 +79,7 @@
 
 -(void)EditPhotoTag
 {
+    [self.tagRow removeAllObjects];
     [self.table reloadData];
 }
 
@@ -189,7 +191,7 @@
         self.navigationItem.rightBarButtonItem = cancel;
         viewBar.hidden = YES;
         tagBar.hidden = NO;
-        [self.table reloadData];
+      //  [self.table reloadData];
     }
     else
     {
@@ -250,9 +252,13 @@
             Asset *asset = [self.UrlList objectAtIndex:i];
             [tagSelector saveTagAsset:asset];
         }
-       
+        NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
+                                                           object:self 
+                                                         userInfo:dic1];
          [self cancelTag];
     }
+    
 }
 -(IBAction)resetTags{
     [self.tagRow removeAllObjects];
@@ -311,6 +317,12 @@
         if (row<[self.crwAssets count]) {
             
             Asset *dbAsset = [self.crwAssets objectAtIndex:row];
+            if([tagSelector tag:dbAsset])
+            {
+                NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
+                [tagRow addObject:selectedIndex];
+                 //[cell checkTagSelection:selectedIndex];
+            }
             [assetsInRow addObject:dbAsset];
         }
     }

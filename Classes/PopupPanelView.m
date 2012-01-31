@@ -96,6 +96,10 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
                                                        object:self 
                                                      userInfo:dic];
+    NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
+                                                       object:self 
+                                                     userInfo:dic1];
     
    }
 -(void)viewOpen{

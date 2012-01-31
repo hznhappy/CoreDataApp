@@ -52,13 +52,13 @@
     self.navigationItem.rightBarButtonItem = addButon;
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabled) name:@"addplay" object:nil];
-    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addcount) name:@"addcount" object:nil];
     
 }
 -(void)tabled
 {
     PhotoAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     dataSource = appDelegate.dataSource;
+    [dataSource refresh];
     assets = dataSource.assetsBook; 
     [tableView reloadData];
 }
@@ -149,13 +149,7 @@
     [request setEntity:entity1];
     NSError *error1;
        NSArray *A=[[managedObjectContext executeFetchRequest:request error:&error1] mutableCopy];
-    //NSArray *A=[managedObjectsContext executeFetchRequest:request error:&error];
-   
-   /* for(int i=0;i<[A count];i++)
-    {
-        
-    }*/
-    detailController.al=[A objectAtIndex:indexPath.row-2];
+       detailController.al=[A objectAtIndex:indexPath.row-2];
     detailController.hidesBottomBarWhenPushed = YES;
     
     [self.navigationController pushViewController:detailController animated:YES];
@@ -165,9 +159,7 @@
 #pragma mark -
 #pragma mark Table View Data Source Methods
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{      //NSEntityDescription *entity = [NSEntityDescription entityForName:@"Album" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
-    
-    AmptsAlbum *fa=[assets objectAtIndex:indexPath.row];
+{     AmptsAlbum *fa=[assets objectAtIndex:indexPath.row];
     
     if(editingStyle==UITableViewCellEditingStyleDelete)
     {
