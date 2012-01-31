@@ -10,6 +10,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 @class PhotoAppDelegate;
 @class AlbumDataSource;
+@class Album;
 @interface AlbumController : UIViewController<UITableViewDelegate,UITableViewDataSource,UINavigationBarDelegate>{
     
     IBOutlet UITableView *tableView;
@@ -23,4 +24,5 @@
 -(IBAction)toggleEdit:(id)sender;
 -(IBAction)toggleAdd:(id)sender;
 -(void)tabled;
+-(Album *)getAlbumInRow:(NSInteger)row;
 @end

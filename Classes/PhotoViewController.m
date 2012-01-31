@@ -71,11 +71,28 @@
         visiblePages  = [[NSMutableSet alloc] init];
         Playlist *tempPlaylist = [[Playlist alloc]init];
         self.playlist = tempPlaylist;
+        playingPhoto = NO;
     }
     
     return self;
 }
 
+-(id)initWithBool:(BOOL)play{
+    if ((self = [super init])) {
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleBarsNotification:) name:@"PhotoViewToggleBars" object:nil];
+		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addTagPeople) name:@"addTagPeople" object:nil];
+		self.hidesBottomBarWhenPushed = YES;
+		self.wantsFullScreenLayout = YES;		
+        recycledPages = [[NSMutableSet alloc] init];
+        visiblePages  = [[NSMutableSet alloc] init];
+        Playlist *tempPlaylist = [[Playlist alloc]init];
+        self.playlist = tempPlaylist;
+        playingPhoto = YES;
+    }
+    
+    return self;
+}
 
 - (void)performLayout {
 	
@@ -240,8 +257,10 @@
     page.imageView.image = nil;
     page.frame = rect;
     [page loadIndex:index];
-    [self showPhotoInfo];
-
+    if (!playingPhoto) {
+        [self showPhotoInfo];
+    }
+    
 }
 
 - (BOOL)isDisplayingPageForIndex:(NSUInteger)index{
@@ -1074,12 +1093,13 @@
     if (_index >= [self.playlist.storeAssets count] || _index < 0) {
         currentPageIndex = 0;
     }
+
     [self setBarsHidden:YES animated:YES];
     NSString *animateStyle = [timer userInfo];
     CATransition *animation = [CATransition animation];
     animation.delegate = self;
     animation.duration = 1.5;
-    //animation.timingFunction = UIViewAnimationCurveEaseInOut;
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     animation.subtype = kCATransitionFromRight;
     if ([animateStyle isEqualToString:@"Fade"]) {
         animation.type = kCATransitionFade;
@@ -1097,9 +1117,8 @@
         animation.type = animateStyle;
     }
     [self.scrollView.layer addAnimation:animation forKey:@"animation"];
-    
-   
-}
+    [self jumpToPageAtIndex:currentPageIndex];
+   }
 
 #pragma mark -
 #pragma mark Memory

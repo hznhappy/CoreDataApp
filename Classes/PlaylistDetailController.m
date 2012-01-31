@@ -7,7 +7,6 @@
 //
 
 #import "PlaylistDetailController.h"
-#import "DBOperation.h"
 #import "AnimaSelectController.h"
 #import "PhotoAppDelegate.h"
 #import "AmptsAlbum.h"
@@ -73,6 +72,8 @@
     if(Transtion!=nil)
   {
       self.tranLabel.text=Transtion;
+  }else{
+      self.tranLabel.text = nil;
   }
     album=[[AlbumController alloc]init];
     NSString *b=NSLocalizedString(@"Back", @"title");
@@ -267,10 +268,13 @@
            
             UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(45, 11, 126, 20)];
             name.tag = indexPath.row;
-            
+            name.backgroundColor = [UIColor clearColor];
             People *am = (People *)[list objectAtIndex:indexPath.row];
-            
-            name.text = [NSString stringWithFormat:@"%@ %@",am.firstName,am.lastName];
+            if (am.lastName.length == 0 || am.lastName == nil) {
+                name.text = am.firstName;
+            }else{
+                name.text = [NSString stringWithFormat:@"%@ %@",am.firstName,am.lastName];
+            }
             [cell.contentView addSubview:name];
 
             UIButton *selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -279,7 +283,8 @@
             selectButton.frame = CGRectMake(10, 11, 30, 30);
             [selectButton setImage:unselectImg forState:UIControlStateNormal];
             if(al!=nil)
-            {                NSManagedObjectContext *managedObjectsContext = [appDelegate.dataSource.coreData managedObjectContext];
+            {                
+                NSManagedObjectContext *managedObjectsContext = [appDelegate.dataSource.coreData managedObjectContext];
                 NSEntityDescription *entity = [NSEntityDescription entityForName:@"PeopleRuleDetail" inManagedObjectContext:managedObjectsContext];
                 NSFetchRequest *request = [[NSFetchRequest alloc]init];
                 [request setEntity:entity];
@@ -646,6 +651,7 @@
   {
   if(keybord==NO)
   {
+    keybord = YES;
    bum = [NSEntityDescription insertNewObjectForEntityForName:@"Album" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
    bum.name=textField.text;
    //bum.byCondition=@"numOfLike";

@@ -9,7 +9,7 @@
 #import "ThumbnailCell.h"
 
 @class TagSelector;
-
+@class Album;
 
 
 @interface AssetTablePicker : UIViewController<ThumbnailCellSelectionDelegate,UITableViewDelegate,UITableViewDataSource>
@@ -46,6 +46,7 @@
 
     NSUInteger selectedRow;
     TagSelector *tagSelector;
+    Album *album;
 }
 @property (nonatomic,strong)IBOutlet UITableView *table;
 @property (nonatomic,strong)IBOutlet UIToolbar *viewBar;
@@ -59,6 +60,8 @@
 @property (nonatomic,strong) NSMutableArray *crwAssets;
 @property (nonatomic,strong) NSMutableArray *UrlList;
 @property (nonatomic,strong)NSNumber *val;
+
+@property (nonatomic,strong)Album *album;
 -(IBAction)actionButtonPressed;
 -(IBAction)playPhotos;
 -(IBAction)lockButtonPressed;

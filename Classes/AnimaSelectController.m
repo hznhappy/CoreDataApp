@@ -8,11 +8,11 @@
 
 #import "AnimaSelectController.h"
 #import "PlaylistDetailController.h"
-#import "DBOperation.h"
+#import "PhotoAppDelegate.h"
 
 @implementation AnimaSelectController
 @synthesize animaArray;
-@synthesize tranStyle,Trans_list,play_id,Text;
+@synthesize tranStyle,Trans_list,album,Text;
 
 
 - (void)didReceiveMemoryWarning
@@ -37,21 +37,14 @@
     NSString *h=NSLocalizedString(@"rippleEffect", @"title");
     NSString *i=NSLocalizedString(@"pageCurl", @"title");
      NSString *j=NSLocalizedString(@"pageUnCurl", @"title");
-    NSMutableArray *tempArray = [[NSMutableArray alloc]initWithObjects:a,b,c,d,e,f,g,h,i,
-                                 j,nil];
-    NSMutableArray *tempArray1=[[NSMutableArray alloc]initWithObjects:@"fade",@"cube",@"reveal",@"push",@"moveIn",@"suckEffect",@"oglFlip",@"rippleEffect",@"pageCurl",@"pageUnCurl",nil];
-    self.Trans_list=tempArray1;
-    self.animaArray = tempArray;
-    [self creatTable];
+   
+    self.Trans_list =  [[NSMutableArray alloc]initWithObjects:@"fade",@"cube",@"reveal",@"push",@"moveIn",@"suckEffect",@"oglFlip",@"rippleEffect",@"pageCurl",@"pageUnCurl",nil];
+    self.animaArray = [[NSMutableArray alloc]initWithObjects:a,b,c,d,e,f,g,h,i,
+                       j,nil];
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
 }
--(void)creatTable;
-{
-    database=[DBOperation getInstance];
-    NSString *createPlayTable= [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(playList_id INTEGER PRIMARY KEY,playList_name,Transtion)",PlayTable];
-    [database createTable:createPlayTable];
-}
+
 #pragma mark -
 #pragma mark TableView delegate method
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -77,34 +70,11 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if(play_id!=nil)
+    PhotoAppDelegate *delegate = [UIApplication sharedApplication].delegate;
+    if(album!=nil)
     {
-        NSString *updatePlayTable= [NSString stringWithFormat:@"UPDATE %@ SET Transtion='%@' WHERE playlist_id=%d",PlayTable,[Trans_list objectAtIndex:indexPath.row],[play_id intValue]];
-        [database updateTable:updatePlayTable];
-
-    }
-    else
-    {  
-        NSString *selectPlayTable = [NSString stringWithFormat:@"select playlist_id from PlayTable"];
-        NSMutableArray *PlayIdList=[database selectFromPlayTable:selectPlayTable];
-      //database.playIdAry
-        if(Text==nil||Text.length==0)
-        {
-          int  playID=[[PlayIdList objectAtIndex:[PlayIdList count]-1]intValue]+1;
-            NSString *updatePlayTable= [NSString stringWithFormat:@"UPDATE %@ SET Transtion='%@' WHERE playlist_id=%d",PlayTable,[Trans_list objectAtIndex:indexPath.row],playID];
-            NSLog(@"%@",updatePlayTable);
-            [database updateTable:updatePlayTable];
-
-        }
-        else
-        {
-          int playID=[[PlayIdList objectAtIndex:[PlayIdList count]-1]intValue];
-            NSString *updatePlayTable= [NSString stringWithFormat:@"UPDATE %@ SET Transtion='%@' WHERE playlist_id=%d",PlayTable,[Trans_list objectAtIndex:indexPath.row],playID];
-            NSLog(@"%@",updatePlayTable);
-            [database updateTable:updatePlayTable];
-
-        }
-
+        album.transitType = [Trans_list objectAtIndex:indexPath.row];
+        [delegate.dataSource.coreData saveContext];
     }
     NSDictionary *dictionary = [NSDictionary dictionaryWithObject:cell.textLabel.text forKey:@"tranStyle"];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"changeTransitionLabel" object:nil userInfo:dictionary];

@@ -62,12 +62,13 @@
 -(void)pushAssetsTablePicker:(NSNotification *)note{
     NSDictionary *dic = [note userInfo];
    
-     NSMutableArray *assets = [dic valueForKey:@"assets"];
-    
+     NSMutableArray *assets = [dic objectForKey:@"myAssets"];
+    Album *receivedAlbum = [dic objectForKey:@"album"];
     AssetTablePicker *ap = [[AssetTablePicker alloc]initWithNibName:@"AssetTablePicker" bundle:[NSBundle mainBundle]];
     ap.hidesBottomBarWhenPushed = YES;
     ap.crwAssets=assets;
-    
+    ap.album = receivedAlbum;
+    NSLog(@"asset%d",assets.count);
     [self pushViewController:ap animated:YES];
 }
 
@@ -87,21 +88,22 @@
     pc.currentPageIndex = [key integerValue];
     [self pushViewController:pc animated:YES];
 }
-/*
+
 -(void)playPhotoWithAnimation:(NSNotification *)note{
     NSDictionary *dic = [note userInfo];
-    NSMutableArray *assets = [dic valueForKey:@"0"];
-    NSString *transtion = [dic valueForKey:@"animation"];
-    NSMutableArray *animatePhotos  = [[NSMutableArray alloc]init];
-    for (id as in assets) {
-        [animatePhotos addObject:[PhotoSource PhotoWithAsset:as]];
-    }
-
-    PhotoViewController *playPhotoController = [[PhotoViewController alloc]initWithPhotoSource:animatePhotos currentPage:0];
+    NSMutableArray *assets = [dic valueForKey:@"assets"];
+   
+    NSString *transtion  =  [dic valueForKey:@"transition"];
+    
+    PhotoAppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+    AlbumDataSource *dataSourec =   delegate.dataSource;
+    PhotoViewController *playPhotoController = [[PhotoViewController alloc]initWithBool:YES];
+    playPhotoController.playlist.storeAssets = assets;
+    playPhotoController.playlist.assets = dataSourec.deviceAssets.deviceAssetsList;
+    playPhotoController.currentPageIndex = 0;
     [playPhotoController fireTimer:transtion];
     [self pushViewController:playPhotoController animated:YES];
-    [playPhotoController release];
-}*/
+}
 
 - (void)viewDidUnload
 {

@@ -9,7 +9,6 @@
 #import "AlbumController.h"
 #import "AssetTablePicker.h"
 #import "PlaylistDetailController.h"
-#import <AVFoundation/AVFoundation.h>
 #import "PhotoAppDelegate.h"
 #import "AmptsAlbum.h"
 #import "Album.h"
@@ -122,45 +121,43 @@
 }
 -(void)tableView:(UITableView *)table didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSMutableArray *WE=[(AmptsAlbum *)[assets objectAtIndex:indexPath.row]assetsList];
-    NSDictionary *dic = [NSDictionary dictionaryWithObject:WE forKey:@"assets"];
+    NSLog(@"%d is we",WE.count);
+    Album *album = [self getAlbumInRow:indexPath.row];
+    NSMutableDictionary *dic = nil;
+    if (album == nil) {
+        dic  = [NSMutableDictionary dictionaryWithObjectsAndKeys:WE, @"myAssets", nil];
+    }else{
+        dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:album, @"album", WE, @"myAssets", nil];
+    }
     [[NSNotificationCenter defaultCenter]postNotificationName:@"pushThumbnailView" object:nil userInfo:dic];
     
     [table deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-// When the movie is done,release the controller. 
--(void)myMovieFinishedCallback:(NSNotification*)aNotification 
-{
-    MPMoviePlayerController* theMovie=[aNotification object]; 
-    [[NSNotificationCenter defaultCenter] removeObserver:self 
-                                                    name:MPMoviePlayerPlaybackDidFinishNotification 
-                                                  object:theMovie]; 
-}
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
     
     PlaylistDetailController *detailController = [[PlaylistDetailController alloc]initWithNibName:@"PlaylistDetailController" bundle:[NSBundle mainBundle]];
-    AmptsAlbum *am = (AmptsAlbum *)[assets objectAtIndex:indexPath.row];
-    NSLog(@"albumID:%@",am.alblumId);
-    NSManagedObjectContext *managedObjectContext=[dataSource.coreData managedObjectContext];
-    NSFetchRequest *request=[[NSFetchRequest alloc]init];
-    
-    NSEntityDescription *entity1=[NSEntityDescription entityForName:@"Album" inManagedObjectContext:managedObjectContext];
-    [request setEntity:entity1];
-    NSError *error1;
-       NSArray *A=[[managedObjectContext executeFetchRequest:request error:&error1] mutableCopy];
-    //NSArray *A=[managedObjectsContext executeFetchRequest:request error:&error];
-   
-   /* for(int i=0;i<[A count];i++)
-    {
-        
-    }*/
-    detailController.al=[A objectAtIndex:indexPath.row-2];
+    detailController.al = [self getAlbumInRow:indexPath.row];
     detailController.hidesBottomBarWhenPushed = YES;
     
     [self.navigationController pushViewController:detailController animated:YES];
 
     
+}
+-(Album *)getAlbumInRow:(NSInteger)row{
+    AmptsAlbum *am = (AmptsAlbum *)[assets objectAtIndex:row];
+    
+    NSArray *albums=[dataSource simpleQuery:@"Album" predicate:nil sortField:nil sortOrder:YES];
+    
+    for(Album *alb in albums)
+    {
+        if ([alb.objectID isEqual:am.alblumId]) {
+            
+            return alb;
+        }
+    }
+    return nil;
 }
 #pragma mark -
 #pragma mark Table View Data Source Methods

@@ -42,7 +42,7 @@
     BOOL editing;
     BOOL tagShow;
     BOOL croping;
-
+    BOOL playingPhoto;
     PopupPanelView *ppv;
     TagSelector *tagSelector;
                                                         
@@ -68,6 +68,7 @@
 @property(nonatomic,assign)BOOL lockMode;
 //init
 - (id)init;
+-(id)initWithBool:(BOOL)play;
 - (void)performLayout;
 
 //paging
