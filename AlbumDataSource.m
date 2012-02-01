@@ -208,7 +208,6 @@
         album.name=[i name];
         album.alblumId=[i objectID];
         pre=[self ruleFormation:i];
-        //NSLog(@"Predicate : %@",pre);
         if([i.sortOrder boolValue]==YES){
             album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:YES];
         }else {
@@ -241,6 +240,7 @@
 }
 
 -(NSMutableArray*) simpleQuery:(NSString *)table predicate:(NSPredicate *)pre sortField:(NSString *)field sortOrder:(BOOL)asc {
+
     // Define our table/entity to use  
     NSEntityDescription *entity = [NSEntityDescription entityForName:table inManagedObjectContext:coreData.managedObjectContext];   
     // Setup the fetch request  
@@ -250,6 +250,7 @@
     
     // Define the Predicate
     if (pre!=nil) {
+
         [request setPredicate:pre];
     }
     
@@ -263,6 +264,7 @@
     }
     // Fetch the records and handle an error  
     NSError *error;  
+    NSLog(@"REQUSEST:%@",request);
     NSMutableArray *mutableFetchResults = [[coreData.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];   
     
     if (!mutableFetchResults) {  
@@ -271,7 +273,7 @@
     }   
     
     // Save our fetched data to an array  
- 
+    NSLog(@"num:%d",[mutableFetchResults count]);
     
     return mutableFetchResults;
 }
@@ -359,11 +361,13 @@
 }
 -(NSPredicate*) parseDateRule:(DateRule *)rule {
     NSPredicate* result =nil;
-    if ([rule opCode]==@"INCLUDE") {
+    if ([[rule opCode] isEqualToString:@"INCLUDE"]) {
         result=[NSPredicate predicateWithFormat:@"self.date BETWEEN %@",[NSArray arrayWithObjects:[rule startDate],[rule stopDate],nil]];
+        
     } else {
                 result=[NSPredicate predicateWithFormat:@"NONE self.date  BETWEEN %@",[NSArray arrayWithObjects:[rule startDate],[rule stopDate],nil]];
     }
+    NSLog(@"result:%@",result);
     return result; 
 }
 -(NSPredicate*) parseEventRule:(EventRule *)rule {
@@ -406,7 +410,16 @@
      
      */
     if ([i conDateRule]!=nil)  {
+        if(pre!=nil)
+        {
+            
         pre=[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:pre,[self parseDateRule:[i conDateRule]], nil]];
+        }
+        else
+        {
+            pre=[self parseDateRule:[i conDateRule]];
+        }
+        NSLog(@"OOOO:%@",pre);
     }
     
     /*

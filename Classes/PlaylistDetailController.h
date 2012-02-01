@@ -18,12 +18,14 @@
 #import "PeopleRule.h"
 #import "PeopleRuleDetail.h"
 #import "AlbumDataSource.h"
+#import "DateRule.h"
 @class PhotoAppDelegate;
 @interface PlaylistDetailController : UIViewController<UITableViewDelegate,UITableViewDataSource,MPMediaPickerControllerDelegate,UITextFieldDelegate> {
     PhotoAppDelegate * appDelegate;
     AmptsPhotoCoreData * coreData;
     AlbumDataSource *AL;
     Album *bum;
+    DateRule *date;
     NSMutableArray *list;
     PeopleRule *pr1;
     NSMutableArray *nameList;
@@ -65,7 +67,7 @@
 }
 
 @property(nonatomic,strong)Album *bum;
-//@property(nonatomic,strong)Album *al;
+@property(nonatomic,strong)DateRule *date;
 @property(nonatomic,strong)PhotoAppDelegate *appDelegate;
 @property(nonatomic,strong)AmptsPhotoCoreData *coreData;
 @property(nonatomic,strong)NSMutableArray *list;

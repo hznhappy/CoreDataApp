@@ -138,6 +138,9 @@
     
     PlaylistDetailController *detailController = [[PlaylistDetailController alloc]initWithNibName:@"PlaylistDetailController" bundle:[NSBundle mainBundle]];
     detailController.bum = [self getAlbumInRow:indexPath.row];
+    NSLog(@"BUM.startDATE:%@",detailController.bum.conDateRule.startDate);
+     NSLog(@"BUM.stopDATE:%@",detailController.bum.conDateRule.stopDate);
+    NSLog(@"BUM.opcode:%@",detailController.bum.conDateRule.opCode);
     detailController.hidesBottomBarWhenPushed = YES;
     
     [self.navigationController pushViewController:detailController animated:YES];

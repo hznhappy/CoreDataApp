@@ -18,7 +18,7 @@
 #import "TdCalendarView.h"
 #import "TestiPhoneCalViewController.h"
 #import "AlbumDataSource.h"
-
+#import "DateRule.h"
 
 @implementation PlaylistDetailController
 @synthesize listTable;
@@ -30,7 +30,6 @@
 @synthesize bum,appDelegate,coreData; 
 @synthesize list;
 @synthesize nameList;
-//@synthesize al;
 @synthesize PeopleRuleCell;
 @synthesize OrderCell;
 @synthesize SortCell;
@@ -38,6 +37,7 @@
 @synthesize PeopleSeg;
 @synthesize stopText;
 @synthesize startText;
+@synthesize date;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -58,7 +58,7 @@
     keybord=NO;
     NSEntityDescription *entity5 = [NSEntityDescription entityForName:@"PeopleRule" inManagedObjectContext:[ appDelegate.dataSource.coreData managedObjectContext]]; 
     pr1=[[PeopleRule alloc]initWithEntity:entity5 insertIntoManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
-    
+   date = [NSEntityDescription insertNewObjectForEntityForName:@"DateRule" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
        
     
     NSManagedObjectContext *managedObjectContext=[appDelegate.dataSource.coreData managedObjectContext];
@@ -667,11 +667,28 @@
     if(bu==YES)
     {
         self.startText.text=[dic objectForKey:@"Date"];
+        NSLog(@"DATE:%@",[dic objectForKey:@"Date"]);
+        NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
+        //[inputFormatter setLocale:[NSLocale currentLocale]];
+        [inputFormatter setDateFormat:@"yyyy:MM:dd"];
+       // newAsset.date = [inputFormatter dateFromString:strDate];
+        date.startDate=[inputFormatter dateFromString:[dic objectForKey:@"Date"]];
+        NSLog(@"STARTTIME:%@",date.startDate);
     }
     else
     {
     self.stopText.text=[dic objectForKey:@"Date"];
+        NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
+        //[inputFormatter setLocale:[NSLocale currentLocale]];
+        [inputFormatter setDateFormat:@"yyyy:MM:dd"];
+        // newAsset.date = [inputFormatter dateFromString:strDate];
+        date.stopDate=[inputFormatter dateFromString:[dic objectForKey:@"Date"]];
+        NSLog(@"STARTTIME:%@",date.stopDate);
     }
+    date.opCode=@"INCLUDE";
+    date.conAlbum=bum;
+    bum.conDateRule=date;
+    [appDelegate.dataSource.coreData saveContext];
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
