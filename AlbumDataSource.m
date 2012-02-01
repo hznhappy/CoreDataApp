@@ -98,6 +98,7 @@
      copy the newly inserted on device asset into the asset entity.
      */
     assetsList=[self simpleQuery:@"Asset" predicate:nil sortField:nil
+                
                                        sortOrder:YES];
     NSMutableArray *tmpArray=[[NSMutableArray alloc]init ];
     for(Asset *tmpAsset in assetsList) {
@@ -127,7 +128,7 @@
         NSLog(@"strdate:%@",strDate);
         NSDateFormatter * dateFormat=[[NSDateFormatter alloc]init];
         newAsset.date=[dateFormat dateFromString:strDate];
-        NSLog(@"newAsset.date:%@",newAsset.date);    
+        NSLog(@"newAsset.date:%@",[dateFormat dateFromString:strDate]);    
         NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
         [outputFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
         NSString *newDateString = [outputFormatter stringFromDate:newAsset.date];

@@ -407,6 +407,7 @@
     if(PeopleSeg.selectedSegmentIndex==0)
     {
         bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
+        NSLog(@"WEER");
     }
     else
     {
@@ -615,7 +616,7 @@
         bum.name=textField.text;
         [appDelegate.dataSource.coreData saveContext];
    // }
-    [AL  refresh];
+    [AL refresh];
 }
 
 -(IBAction)updateTable:(id)sender{
@@ -663,10 +664,8 @@
 
 -(void)changeDate:(NSNotification *)note{
      NSDictionary *dic = [note userInfo];
-    NSLog(@"BU:%@",bu?@"YES":@"NO");
     if(bu==YES)
     {
-        NSLog(@"ok");
         self.startText.text=[dic objectForKey:@"Date"];
     }
     else
