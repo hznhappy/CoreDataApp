@@ -271,7 +271,7 @@
         frame1.size.width=60;
         [self play:frame1];
         if (playingPhoto) {
-            [self playVideo];
+            [self performSelector:@selector(playVideo) withObject:nil afterDelay:1];
             [timer invalidate];
         }
     }
@@ -395,10 +395,10 @@
     }
     
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addPhotoInfoView) object:nil];
-    [self performSelector:@selector(addPhotoInfoView) withObject:nil afterDelay:2];
+    [self performSelector:@selector(addPhotoInfoView) withObject:nil afterDelay:1];
     if (lockMode) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showLikeButton) object:nil];
-        [self performSelector:@selector(showLikeButton) withObject:nil afterDelay:2];
+        [self performSelector:@selector(showLikeButton) withObject:nil afterDelay:1];
     }
     
 }
@@ -409,13 +409,13 @@
     [assetInfoView.layer setCornerRadius:10.0];
     [assetInfoView setClipsToBounds:YES]; 
     if (!lockMode) {
-        UILabel *likeCount = [[UILabel alloc]initWithFrame:CGRectMake(10, 32, 120, 25)];
+        UILabel *likeCount = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 120, 25)];
         likeCount.backgroundColor = [UIColor clearColor];
         likeCount.text = [NSString stringWithFormat:@"LIKE COUNT:%@",[asset.numOfLike description]];
         likeCount.textColor = [UIColor colorWithRed:254/255.0 green:202/255.0 blue:24/255.0 alpha:1.0];
         likeCount.font = [UIFont boldSystemFontOfSize:14];
         
-        UILabel *tagCount = [[UILabel alloc]initWithFrame:CGRectMake(10, 64, 120, 25)];
+        UILabel *tagCount = [[UILabel alloc]initWithFrame:CGRectMake(10, 32, 120, 25)];
         tagCount.backgroundColor = [UIColor clearColor];
         tagCount.text = [NSString stringWithFormat:@"TAG COUNT:%@",[asset.numPeopleTag description]];
         tagCount.textColor = [UIColor colorWithRed:254/255.0 green:202/255.0 blue:24/255.0 alpha:1.0];
@@ -423,7 +423,7 @@
         [assetInfoView addSubview:likeCount];
         [assetInfoView addSubview:tagCount];
     }
-    UILabel *date = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 120, 25)];
+    UILabel *date = [[UILabel alloc]initWithFrame:CGRectMake(10, 64, 160, 25)];
     
     date.backgroundColor = [UIColor clearColor];
     NSString *dateStr = [asset.date description];
@@ -952,7 +952,6 @@
 		self.title = @"";
 	}
 	
-	
 }
 
 #pragma mark -
@@ -966,6 +965,8 @@
         [theMovie.view removeFromSuperview];
         theMovie = nil;
     }
+//    PhotoImageView *ph=[self pageDisplayedAtIndex:currentPageIndex];
+//    NSLog(@"ph scrollview frame is%@ and contentsize is %@",NSStringFromCGRect(ph.scrollView.frame),NSStringFromCGSize(ph.scrollView.contentSize));
     [self updatePages];
     // Calculate current page
     CGRect visibleBounds = scrollView.bounds;

@@ -64,7 +64,6 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 
 @implementation PhotoImageView 
 
-@synthesize photo=_photo;
 @synthesize imageView=_imageView;
 @synthesize scrollView=_scrollView;
 @synthesize index;
@@ -176,25 +175,6 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     //
 }
 
-
--(void)setClearPhoto{
-    CGRect imageRect = CGRectMake(0.0f,0.0f,CGImageGetWidth(self.photo.CGImage),CGImageGetHeight(self.photo.CGImage));
-    
-    UIGraphicsBeginImageContext(imageRect.size);		
-    CGContextRef context = UIGraphicsGetCurrentContext();		
-    CGContextSaveGState(context);
-    CGContextTranslateCTM(context, 0, imageRect.size.height);
-    CGContextScaleCTM(context, 1, -1);
-    CGContextDrawImage(context, imageRect, self.photo.CGImage);
-    CGContextRestoreGState(context);		
-    UIImage *backgroundImage = UIGraphicsGetImageFromCurrentImageContext();	
-    UIGraphicsEndImageContext();
-    self.imageView.image = backgroundImage;
-}
-
-- (void)displayImageFailure{
-    [_activityView stopAnimating];
-}
 
 -(void)rotatePhoto{
 
