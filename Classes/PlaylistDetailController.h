@@ -58,7 +58,6 @@
     NSMutableArray *selectedIndexPaths;
     UILabel *state;
     BOOL mySwc;
-    NSString *Transtion;
     AlbumController *album;
     NSMutableArray *playrules_idList;
     UIButton *stateButton;

@@ -10,6 +10,7 @@
 #import "PopupPanelView.h"
 #import "TagManagementController.h"
 #import "PhotoImageView.h"
+#import "PhotoScrollView.h"
 #import "CropView.h"
 #import "Playlist.h"
 #import "Asset.h"
@@ -53,7 +54,6 @@
 @synthesize ppv;
 @synthesize scrollView=_scrollView;
 @synthesize currentPageIndex;
-@synthesize video;
 @synthesize cropView;
 @synthesize playlist;
 @synthesize lockMode;
@@ -64,7 +64,6 @@
 	if ((self = [super init])) {
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleBarsNotification:) name:@"PhotoViewToggleBars" object:nil];
-		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addTagPeople) name:@"addTagPeople" object:nil];
 		self.hidesBottomBarWhenPushed = YES;
 		self.wantsFullScreenLayout = YES;		
         recycledPages = [[NSMutableSet alloc] init];
@@ -81,7 +80,6 @@
     if ((self = [super init])) {
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleBarsNotification:) name:@"PhotoViewToggleBars" object:nil];
-		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addTagPeople) name:@"addTagPeople" object:nil];
 		self.hidesBottomBarWhenPushed = YES;
 		self.wantsFullScreenLayout = YES;		
         recycledPages = [[NSMutableSet alloc] init];
@@ -113,12 +111,31 @@
 	for (PhotoImageView *page in visiblePages) {
         page.frame = [self frameForPageAtIndex:page.index];
     }
-	
+    
 	// Adjust contentOffset to preserve page location based on values collected prior to location
 	self.scrollView.contentOffset = [self contentOffsetForPageAtIndex:indexPriorToLayout];
 	
 	// Reset
 	currentPageIndex = indexPriorToLayout;
+    CGRect buttonFram = [self frameForPageAtIndex:currentPageIndex];
+    Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
+    NSString *strUrl = asset.url;
+    ALAsset *as = [self.playlist.assets objectForKey:strUrl];
+    if ([[as valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo]) 
+    {  
+        CGRect frame1 =buttonFram;
+        frame1.origin.x =buttonFram.origin.x + buttonFram.size.width/2 - 30;
+        frame1.origin.y = buttonFram.origin.y + buttonFram.size.height/2 - 20;
+        frame1.size.height=60;
+        frame1.size.width=60;
+        playButton.frame = frame1;
+        if (theMovie != nil && theMovie.view.superview != nil) {
+            PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
+            CGRect videoFrame = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
+            [[theMovie view] setFrame:videoFrame];
+        }
+    }
+
 	performingLayout = NO;
     
 }
@@ -140,8 +157,10 @@
 
 	[super viewWillDisappear:animated];
     [theMovie stop];
-    
-    [timer invalidate];
+    if (timer) {
+        [timer invalidate];
+        timer = nil;
+    }
     [self.navigationController setToolbarHidden:YES animated:YES];		
 }
 
@@ -175,8 +194,6 @@
 	}
 
     likeAssets = [[NSMutableArray alloc]init];
-    self.video=[[NSMutableArray alloc]init];;
-    
     tagShow = NO;
     editing=NO;
     croping = NO;
@@ -238,25 +255,27 @@
 
 - (void)configurePage:(PhotoImageView *)page forIndex:(NSUInteger)index{
     CGRect rect = [self frameForPageAtIndex:index];
+    page.index = index;
+    page.imageView.image = nil;
+    page.frame = rect;
+    [page loadIndex:index];
     Asset *asset = [self.playlist.storeAssets objectAtIndex:index];
     NSString *strUrl = asset.url;
     ALAsset *as = [self.playlist.assets objectForKey:strUrl];
     if ([[as valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo]) 
     {  
-        
-        NSString *p=[NSString stringWithFormat:@"%d",page];
-        [self.video addObject:p];
         CGRect frame1 =rect;
         frame1.origin.x =rect.origin.x + rect.size.width/2 - 30;
         frame1.origin.y = rect.origin.y + rect.size.height/2 - 20;
         frame1.size.height=60;
         frame1.size.width=60;
         [self play:frame1];
+        if (playingPhoto) {
+            [self playVideo];
+            [timer invalidate];
+        }
     }
-    page.index = index;
-    page.imageView.image = nil;
-    page.frame = rect;
-    [page loadIndex:index];
+    
     if (!playingPhoto) {
         [self showPhotoInfo];
     }
@@ -297,7 +316,7 @@
 #pragma mark -
 #pragma mark Frame Methods
 - (CGRect)frameForPagingScrollView{
-    NSLog(@"view bounds is %@",NSStringFromCGRect(self.view.bounds));
+   // NSLog(@"view bounds is %@",NSStringFromCGRect(self.view.bounds));
     CGRect frame = self.view.bounds;// [[UIScreen mainScreen] bounds];
     frame.origin.x -= PADDING;
     frame.size.width += (2 * PADDING);
@@ -316,7 +335,7 @@
 - (CGSize)contentSizeForPagingScrollView {
     // We have to use the paging scroll view's bounds to calculate the contentSize, for the same reason outlined above.
     CGRect bounds = self.scrollView.bounds;
-    NSLog(@"%@ is scrollView BOUNDS",NSStringFromCGSize(bounds.size));
+    //NSLog(@"%@ is scrollView BOUNDS",NSStringFromCGSize(bounds.size));
     return CGSizeMake(bounds.size.width * self.playlist.storeAssets.count, bounds.size.height);
 }
 
@@ -324,7 +343,7 @@
 - (CGPoint)contentOffsetForPageAtIndex:(NSUInteger)index {
 	CGFloat pageWidth = self.scrollView.bounds.size.width;
 	CGFloat newOffset = index * pageWidth;
-    NSLog(@"contentOffeset is %f",newOffset);
+   // NSLog(@"contentOffeset is %f",newOffset);
 	return CGPointMake(newOffset, 0);
 }
 
@@ -365,15 +384,12 @@
 #pragma mark -
 #pragma mark PhotoInfo and likeButton method
 -(void)showPhotoInfo{
-    if (photoInfoTimer) {
-        [photoInfoTimer invalidate];
-        photoInfoTimer = nil;
-    }
+    
     if (assetInfoView || assetInfoView.superview != nil) {
         [assetInfoView removeFromSuperview];
         assetInfoView = nil;
     }
-    if (likeButton || assetInfoView.superview != nil) {
+    if (likeButton || likeButton.superview != nil) {
         [likeButton removeFromSuperview];
         likeButton = nil;
     }
@@ -381,6 +397,7 @@
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addPhotoInfoView) object:nil];
     [self performSelector:@selector(addPhotoInfoView) withObject:nil afterDelay:2];
     if (lockMode) {
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showLikeButton) object:nil];
         [self performSelector:@selector(showLikeButton) withObject:nil afterDelay:2];
     }
     
@@ -394,13 +411,15 @@
     if (!lockMode) {
         UILabel *likeCount = [[UILabel alloc]initWithFrame:CGRectMake(10, 32, 120, 25)];
         likeCount.backgroundColor = [UIColor clearColor];
-        likeCount.text = [NSString stringWithFormat:@"LIKES COUNT:%@",[asset.numOfLike description]];
-        likeCount.font = [UIFont systemFontOfSize:14];
+        likeCount.text = [NSString stringWithFormat:@"LIKE COUNT:%@",[asset.numOfLike description]];
+        likeCount.textColor = [UIColor colorWithRed:254/255.0 green:202/255.0 blue:24/255.0 alpha:1.0];
+        likeCount.font = [UIFont boldSystemFontOfSize:14];
         
         UILabel *tagCount = [[UILabel alloc]initWithFrame:CGRectMake(10, 64, 120, 25)];
         tagCount.backgroundColor = [UIColor clearColor];
         tagCount.text = [NSString stringWithFormat:@"TAG COUNT:%@",[asset.numPeopleTag description]];
-        tagCount.font = [UIFont systemFontOfSize:14];
+        tagCount.textColor = [UIColor colorWithRed:254/255.0 green:202/255.0 blue:24/255.0 alpha:1.0];
+        tagCount.font = [UIFont boldSystemFontOfSize:14];
         [assetInfoView addSubview:likeCount];
         [assetInfoView addSubview:tagCount];
     }
@@ -410,13 +429,15 @@
     NSString *dateStr = [asset.date description];
     if (dateStr.length == 0 || dateStr == nil) {
         date.text = [NSString stringWithFormat:@"DATE: "];
-        date.font = [UIFont systemFontOfSize:14];
+        date.textColor = [UIColor colorWithRed:254/255.0 green:202/255.0 blue:24/255.0 alpha:1.0];
+        date.font = [UIFont boldSystemFontOfSize:14];
     }else{
         date.text = [NSString stringWithFormat:@"DATE:%@",dateStr];
+        date.textColor = [UIColor colorWithRed:254/255.0 green:202/255.0 blue:24/255.0 alpha:1.0];
         date.font = [UIFont systemFontOfSize:14];
     }
     
-    [assetInfoView setBackgroundColor:[UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0]];
+    [assetInfoView setBackgroundColor:[UIColor clearColor]];
     //assetInfoView.alpha = 0.4;
     [assetInfoView addSubview:date];
     
@@ -424,15 +445,15 @@
 }
 
 -(void)showLikeButton{
-    likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    likeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     CGRect mainScreen = self.view.frame;
-    likeButton.frame = CGRectMake(mainScreen.size.width*4/5, mainScreen.size.height*4/5, 50, 50);
+    likeButton.frame = CGRectMake(mainScreen.size.width*4/5, mainScreen.size.height*3/4, 50, 50);
     
     Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
     if ([likeAssets containsObject:asset]) {
-        likeButton.backgroundColor = [UIColor redColor];
+        [likeButton setImage:[UIImage imageNamed:@"like.png"] forState:UIControlStateNormal];
     }else{
-        likeButton.backgroundColor = [UIColor whiteColor];
+        [likeButton setImage:[UIImage imageNamed:@"unlike.png"] forState:UIControlStateNormal];
     }
     
     [likeButton addTarget:self action:@selector(likeButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -442,12 +463,12 @@
 {
     UIButton *like = (UIButton *)sender;
      Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
-    if ([likeButton.backgroundColor isEqual:[UIColor whiteColor]]) {
-        like.backgroundColor = [UIColor redColor];
+    if ([like.imageView.image isEqual:[UIImage imageNamed:@"unlike.png"]]) {
+        [likeButton setImage:[UIImage imageNamed:@"like.png"] forState:UIControlStateNormal];
         [likeAssets addObject:asset];
         asset.numOfLike = [NSNumber numberWithInt:[asset.numOfLike intValue]+1];
     }else{
-        like.backgroundColor = [UIColor whiteColor];
+        [like setImage:[UIImage imageNamed:@"unlike.png"] forState:UIControlStateNormal];
         [likeAssets removeObject:asset];
         asset.numOfLike = [NSNumber numberWithInt:[asset.numOfLike intValue]-1];
     }
@@ -460,7 +481,10 @@
 
 -(void)play:(CGRect)framek
 {
-    playButton = nil;
+    if (playButton && playButton.superview != nil) {
+        [playButton removeFromSuperview];
+        playButton = nil;
+    }
     playButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [playButton addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     UIImage *picture = [UIImage imageNamed:@"ji.png"];
@@ -469,27 +493,28 @@
     [playButton setBackgroundColor:[UIColor clearColor]];
     playButton.frame =framek;
     [self.scrollView addSubview:playButton];
-    
-    
-    
 }
 
 
 -(void)playVideo
 {
+    playButton.hidden = YES;
     Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
     NSString *strUrl = asset.url;
     
     NSURL *url = [NSURL URLWithString:strUrl];
     
-    
+    if (theMovie != nil && theMovie.view.superview != nil) {
+        [theMovie.view removeFromSuperview];
+        theMovie = nil;
+    }
     theMovie=[[MPMoviePlayerController alloc] initWithContentURL:url]; 
     //  NSTimeInterval duration = theMovie.duration;
     //  NSLog(@"LENGTH:%f",theMovie.duration);
     PhotoImageView *_imageView = [self pageDisplayedAtIndex:currentPageIndex];
-    CGRect videoFrame = [_imageView convertRect:_imageView.imageView.frame toView:self.view];
+    CGRect videoFrame = CGRectMake(0, 0, _imageView.imageView.frame.size.width, _imageView.imageView.frame.size.height);
     [[theMovie view] setFrame:videoFrame]; // Frame must match parent view
-    [self.view addSubview:[theMovie view]];
+    [_imageView.imageView addSubview:[theMovie view]];
     //theMovie.scalingMode =  MPMovieControlModeDefault;
     // theMovie.scalingMode=MPMovieScalingModeAspectFill; 
     theMovie.scalingMode=MPMovieMediaTypeMaskAudio;
@@ -513,12 +538,16 @@
 // When the movie is done,release the controller. 
 -(void)myMovieFinishedCallback:(NSNotification*)aNotification 
 {
+    playButton.hidden = NO;
     MPMoviePlayerController* theMovie2=[aNotification object]; 
     [[NSNotificationCenter defaultCenter] removeObserver:self 
                                                     name:MPMoviePlayerPlaybackDidFinishNotification 
                                                   object:theMovie2]; 
-    // Release the movie instance created in playMovieAtURL
-    //[theMovie2 release]; 
+    [theMovie.view removeFromSuperview];
+    theMovie = nil;
+    if (playingPhoto) {
+        [timer fire];
+    }
 }
 
 #pragma mark - 
@@ -852,11 +881,11 @@
 -(void)setPhotoInfoHidden:(BOOL)hidden{
     if (hidden && assetInfoView.superview != nil && assetInfoView != nil) {
         [UIView animateWithDuration:0.4 animations:^{
-            assetInfoView.frame =CGRectMake(0, self.view.frame.size.height *1/2, 0, 120);
+            assetInfoView.alpha = 0;
         }];
     }else{
         [UIView animateWithDuration:0.4 animations:^{
-            assetInfoView.frame =CGRectMake(0, self.view.frame.size.height *1/2, 130, 120);
+            assetInfoView.alpha = 1;
         }];
     }
 
@@ -931,9 +960,12 @@
 
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    
     if (performingLayout || _rotating) return;
-    
+    if (theMovie != nil && theMovie.view.superview != nil) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:MPMoviePlayerPlaybackDidFinishNotification object:theMovie];
+        [theMovie.view removeFromSuperview];
+        theMovie = nil;
+    }
     [self updatePages];
     // Calculate current page
     CGRect visibleBounds = scrollView.bounds;
@@ -1091,7 +1123,10 @@
     currentPageIndex+=1;
     NSInteger _index = self.currentPageIndex;
     if (_index >= [self.playlist.storeAssets count] || _index < 0) {
-        currentPageIndex = 0;
+        if (timer) {
+            [timer invalidate];
+            timer = nil;
+        }
     }
 
     [self setBarsHidden:YES animated:YES];

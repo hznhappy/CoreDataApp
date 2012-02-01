@@ -94,7 +94,7 @@
     NSMutableArray *assets = [dic valueForKey:@"assets"];
    
     NSString *transtion  =  [dic valueForKey:@"transition"];
-    
+    NSLog(@"this is transition %@",transtion);
     PhotoAppDelegate *delegate = [[UIApplication sharedApplication] delegate];
     AlbumDataSource *dataSourec =   delegate.dataSource;
     PhotoViewController *playPhotoController = [[PhotoViewController alloc]initWithBool:YES];
