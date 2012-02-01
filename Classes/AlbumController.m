@@ -121,7 +121,6 @@
 }
 -(void)tableView:(UITableView *)table didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSMutableArray *WE=[(AmptsAlbum *)[assets objectAtIndex:indexPath.row]assetsList];
-    NSLog(@"%d is we",WE.count);
     Album *album = [self getAlbumInRow:indexPath.row];
     NSMutableDictionary *dic = nil;
     if (album == nil) {

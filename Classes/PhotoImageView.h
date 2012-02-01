@@ -14,7 +14,6 @@
 @interface PhotoImageView : UIView <UIScrollViewDelegate>{
 @private
 	PhotoScrollView *__unsafe_unretained _scrollView;
-	UIImage *__unsafe_unretained _photo;
 	UIImageView *_imageView;
 	UIActivityIndicatorView *_activityView;
     
@@ -32,8 +31,7 @@
 @property (nonatomic, strong) Playlist *playlist;
 @property (nonatomic, strong) UIImage *fuzzy;
 @property (nonatomic, strong) UIImage *fullScreen;
-@property(nonatomic,readonly) UIImage *photo;
-@property(nonatomic,strong) UIImageView *imageView;
+@property(nonatomic,readonly) UIImageView *imageView;
 @property(nonatomic,readonly) PhotoScrollView *scrollView;
 
 
@@ -41,8 +39,7 @@
 - (void)doLoadIndex: (NSUInteger) _index;
 - (void)doLoadIndexStr: (NSString*) _index;
 - (void)doLoadImage: (UIImage *) image checkIndex: (NSUInteger) _index;
--(void)setClearPhoto;
-- (void)displayImageFailure;
+
 - (void)rotatePhoto;
 -(void)savePhoto;
 - (void)killScrollViewZoom;

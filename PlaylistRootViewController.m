@@ -68,7 +68,6 @@
     ap.hidesBottomBarWhenPushed = YES;
     ap.crwAssets=assets;
     ap.album = receivedAlbum;
-    NSLog(@"asset%d",assets.count);
     [self pushViewController:ap animated:YES];
 }
 
