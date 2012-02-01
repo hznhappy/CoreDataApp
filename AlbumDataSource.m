@@ -126,6 +126,28 @@
         newAsset.url=[[[alAsset defaultRepresentation]url]description];
         NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
         NSLog(@"strdate:%@",strDate);
+       // NSString* string = @"Wed, 05 May 2011 10:50:00";
+        NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
+        //[inputFormatter setLocale:[NSLocale currentLocale]];
+        [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
+        newAsset.date = [inputFormatter dateFromString:strDate];
+        NSLog(@"date = %@", newAsset.date);
+       /* NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+        
+        [outputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss Z"];
+        NSString *newDateString = [outputFormatter stringFromDate:inputDate];
+        NSLog(@"DATE:%@",newDateString);
+        
+        
+        NSDateFormatter *inputFormatter1 = [[NSDateFormatter alloc] init];
+        //[inputFormatter1 setLocale:[NSLocale currentLocale]];
+         inputFormatter1.locale= [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        //NSTimeZone* timeZone1 = [NSTimeZone timeZoneWithName:@"beijing/china"]; 
+        //[inputFormatter1 setTimeZone:timeZone1];
+        [inputFormatter1 setDateFormat:@"yyyy:MM:dd HH:mm:ss Z"];
+        NSDate* inputDate1 = [inputFormatter1 dateFromString:newDateString];
+        NSLog(@"date11 = %@", inputDate1);*/
+              /*
         NSDateFormatter * dateFormat=[[NSDateFormatter alloc]init];
         newAsset.date=[dateFormat dateFromString:strDate];
         NSLog(@"newAsset.date:%@",[dateFormat dateFromString:strDate]);    
@@ -133,6 +155,7 @@
         [outputFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
         NSString *newDateString = [outputFormatter stringFromDate:newAsset.date];
         NSLog(@"DATE:%@",newDateString);
+         */
         newAsset.latitude=[NSNumber numberWithDouble:0.0];
         newAsset.longitude=[NSNumber numberWithDouble:0.0];
         newAsset.numOfLike=[NSNumber numberWithInt:0];
