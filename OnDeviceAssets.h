@@ -9,19 +9,15 @@
 #import <Foundation/Foundation.h>
 #import <Assetslibrary/Assetslibrary.h>
 
-@interface OnDeviceAssets : NSOperation {
+@interface OnDeviceAssets : NSObject {
     NSMutableDictionary *deviceAssetsList;
-    BOOL stopOperation;
-    BOOL finishRefresh;
+
     ALAssetsLibrary * library;
     
 }
 @property (nonatomic,strong)NSMutableDictionary *  deviceAssetsList;
-@property (nonatomic,assign)BOOL stopOperation;
-@property(nonatomic,assign) BOOL finishRefresh;
 @property (nonatomic,strong) ALAssetsLibrary * library;
 -(ALAsset *) getAsset:(NSString *) l;
--(BOOL) getStatus;
 -(void) refreshData;
 
 @end

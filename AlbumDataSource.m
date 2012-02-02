@@ -44,26 +44,19 @@
     opQueue=[[NSOperationQueue alloc]init];
  
     
-       
-    [self syncAssetwithDataSource];
-
-    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(syncAssetwithDataSource) name:@"fetchAssetsFinished" object:nil];
+    deviceAssets=[[OnDeviceAssets alloc]init];
     return self;
 }
 -(void) syncAssetwithDataSource {
     
-    [opQueue cancelAllOperations];    
-
-
-    deviceAssets=[[OnDeviceAssets alloc]init];
+    [opQueue cancelAllOperations];   
 
    // [self testDataSource];
     NSInvocationOperation * syncData=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(syncDataSource) object:nil];
-    [syncData addDependency:deviceAssets];
    
     NSInvocationOperation * refreshData=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(refreshDataSource) object:nil];
     [refreshData addDependency:syncData];
-    [opQueue addOperation:deviceAssets];
     [opQueue addOperation:syncData];
     [opQueue addOperation:refreshData];
   // [self refreshDataSource];
@@ -125,14 +118,23 @@
         newAsset=[[Asset alloc]initWithEntity:entity insertIntoManagedObjectContext:[coreData managedObjectContext]];
         newAsset.url=[[[alAsset defaultRepresentation]url]description];
         NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
-        NSLog(@"strdate:%@",strDate);
+       // NSLog(@"strdate:%@",strDate);
        // NSString* string = @"Wed, 05 May 2011 10:50:00";
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
         //[inputFormatter setLocale:[NSLocale currentLocale]];
         [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
         newAsset.date = [inputFormatter dateFromString:strDate];
-        NSLog(@"date = %@", newAsset.date);
-       /* NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+       // NSLog(@"date = %@", newAsset.date);
+       
+        
+        
+        
+        
+        
+        
+        
+        
+        /* NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
         
         [outputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss Z"];
         NSString *newDateString = [outputFormatter stringFromDate:inputDate];
@@ -264,7 +266,7 @@
     }
     // Fetch the records and handle an error  
     NSError *error;  
-    NSLog(@"REQUSEST:%@",request);
+   // NSLog(@"REQUSEST:%@",request);
     NSMutableArray *mutableFetchResults = [[coreData.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];   
     
     if (!mutableFetchResults) {  
@@ -273,7 +275,7 @@
     }   
     
     // Save our fetched data to an array  
-    NSLog(@"num:%d",[mutableFetchResults count]);
+   // NSLog(@"num:%d",[mutableFetchResults count]);
     
     return mutableFetchResults;
 }

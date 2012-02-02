@@ -81,7 +81,7 @@
         [myscroll addSubview:button];
 		bty += 35;
 	}
-	bty = 20;
+
  }
 -(void)buttonPressed:(UIButton *)button{
 	int tag = button.tag;

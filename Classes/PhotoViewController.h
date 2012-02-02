@@ -49,7 +49,6 @@
     NSTimer *controlVisibilityTimer;
     NSTimer *timer;	
     UIButton *playButton;
-    NSMutableArray *video;
 
     MPMoviePlayerController* theMovie;
     UIView *assetInfoView;
