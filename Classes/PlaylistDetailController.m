@@ -346,7 +346,8 @@
         mediaPicker.allowsPickingMultipleItems = YES;
         mediaPicker.prompt = @"Select songs";
         
-        [self.navigationController pushViewController:mediaPicker animated:YES];
+        [self presentModalViewController:mediaPicker animated:YES];
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
     if (indexPath.section == 5) {
         if(textField.text==nil||textField.text.length==0)
@@ -439,12 +440,12 @@
         [musicPlayer play]; 
         self.musicLabel.text = [musicPlayer.nowPlayingItem valueForProperty:MPMediaItemPropertyTitle];
     }
-    [self dismissModalViewControllerAnimated: YES];
+    [mediaPicker dismissModalViewControllerAnimated: YES];
 }
 
 - (void) mediaPickerDidCancel: (MPMediaPickerController *) mediaPicker
 {
-    [self dismissModalViewControllerAnimated: YES];
+    [mediaPicker dismissModalViewControllerAnimated: YES];
 }
 
 -(void)insert:(NSInteger)Row rule:(NSString *)rule

@@ -22,9 +22,10 @@
 "NO"="NO";
 "YES"="YES";
 "Cancel"="Cancel";
-"Mark"="Mark";
+"Mark"="ShowTags";
 "Copy"="Copy";
 "Email"="Email";
+"Message"="Message";
 "Please fill out the rule name"="Please fill out the rule name";
 "Rule name can not be empty!"="Rule name can not be empty!";
 "fade"="fade";
