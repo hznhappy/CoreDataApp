@@ -455,7 +455,7 @@ const int	weekFontSize=12;
 		[self setNeedsDisplay];
 	}
     
-    NSString *time= [[NSString alloc] initWithFormat:@"%d.%d.%d",currentMonthDate.year,currentMonthDate.month,monthday];
+    NSString *time= [[NSString alloc] initWithFormat:@"%d:%d:%d",currentMonthDate.year,currentMonthDate.month,monthday];
 
     NSLog(@"TOUCH %ld年%d月%d日",currentMonthDate.year,currentMonthDate.month,monthday);
     NSDictionary *dictionary = [NSDictionary dictionaryWithObject:time forKey:@"Date"];
