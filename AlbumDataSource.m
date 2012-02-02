@@ -202,7 +202,7 @@
         }
         album.num=[album.assetsList count];
         // NSLog(@"Album %@ : %d",album.name,album.num);
-        for (Asset* tmpAsset in    album.assetsList) {
+        for (Asset* tmpAsset in   album.assetsList) {
             //NSLog(@"Photo contains: %@",tmpAsset.url);
         }
         [assetsBook addObject:album];

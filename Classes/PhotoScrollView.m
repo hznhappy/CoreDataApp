@@ -14,7 +14,7 @@
 
 - (id)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
-		self.scrollEnabled = YES;
+		self.scrollEnabled = NO;
 		self.pagingEnabled = NO;
 		self.clipsToBounds = NO;
 		self.maximumZoomScale = 3.0f;
@@ -46,8 +46,9 @@
 	rect.size = CGSizeMake(self.frame.size.width / PV_ZOOM_SCALE, self.frame.size.height / PV_ZOOM_SCALE);
 	rect.origin.x = MAX((center.x - (rect.size.width / 2.0f)), 0.0f);		
 	rect.origin.y = MAX((center.y - (rect.size.height / 2.0f)), 0.0f);
-	
+
 	CGRect frame = [self.superview convertRect:self.frame toView:self.superview];
+
 	CGFloat borderX = frame.origin.x;
 	CGFloat borderY = frame.origin.y;
 	
@@ -99,8 +100,10 @@
 	if (touch.tapCount == 1) {
 		[self performSelector:@selector(toggleBars) withObject:nil afterDelay:.3];
 	} else if (touch.tapCount == 2) {
+        self.scrollEnabled = !self.scrollEnabled;
 		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(toggleBars) object:nil];
 		[self zoomRectWithCenter:[[touches anyObject] locationInView:self.superview]];
+        
 	}
 }
 

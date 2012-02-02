@@ -161,6 +161,7 @@
         [timer invalidate];
         timer = nil;
     }
+    NSLog(@"view will disappear");
     [self.navigationController setToolbarHidden:YES animated:YES];		
 }
 
@@ -571,6 +572,7 @@
     }];
     [self performLayout];
 	[self hideControlsAfterDelay];
+   // NSLog(@"scroll frame is %@ and bounds %@  and contentsize %@",NSStringFromCGRect(self.scrollView.frame),NSStringFromCGRect(self.scrollView.bounds),NSStringFromCGSize(self.scrollView.contentSize));
     
 }
 
@@ -960,13 +962,12 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (performingLayout || _rotating) return;
+   // NSLog(@"scroll frame is %@ and bounds %@  and contentsize %@",NSStringFromCGRect(self.scrollView.frame),NSStringFromCGRect(self.scrollView.bounds),NSStringFromCGSize(self.scrollView.contentSize));
     if (theMovie != nil && theMovie.view.superview != nil) {
         [[NSNotificationCenter defaultCenter]postNotificationName:MPMoviePlayerPlaybackDidFinishNotification object:theMovie];
         [theMovie.view removeFromSuperview];
         theMovie = nil;
     }
-//    PhotoImageView *ph=[self pageDisplayedAtIndex:currentPageIndex];
-//    NSLog(@"ph scrollview frame is%@ and contentsize is %@",NSStringFromCGRect(ph.scrollView.frame),NSStringFromCGSize(ph.scrollView.contentSize));
     [self updatePages];
     // Calculate current page
     CGRect visibleBounds = scrollView.bounds;
