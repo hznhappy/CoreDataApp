@@ -56,6 +56,7 @@
 		18D402901474E55900389097 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18D402921474E55900389097 /* InfoPlist.strings */; };
 		18D4031C1474FC9A00389097 /* AssetTablePicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18D4031E1474FC9A00389097 /* AssetTablePicker.xib */; };
 		18DBCA7E14DBB23000D43062 /* deletebutton.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DBCA7D14DBB23000D43062 /* deletebutton.png */; };
+		18DBCA9914DBF9B900D43062 /* TagManagementController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18DBCA9814DBF9B900D43062 /* TagManagementController.xib */; };
 		18DD695314B6E5F7000062D1 /* crop.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DD695214B6E5F7000062D1 /* crop.png */; };
 		18DD695614B6E605000062D1 /* rotate.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DD695514B6E605000062D1 /* rotate.png */; };
 		18DD696514B6F045000062D1 /* VED.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DD696414B6F045000062D1 /* VED.png */; };
@@ -182,6 +183,7 @@
 		18D4033F14750DDA00389097 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hant"; path = "zh-Hant.lproj/PhotoApp-Info.plist"; sourceTree = "<group>"; };
 		18D4034014750E5E00389097 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/AssetTablePicker.xib"; sourceTree = "<group>"; };
 		18DBCA7D14DBB23000D43062 /* deletebutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deletebutton.png; sourceTree = "<group>"; };
+		18DBCA9814DBF9B900D43062 /* TagManagementController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagManagementController.xib; sourceTree = "<group>"; };
 		18DD695214B6E5F7000062D1 /* crop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = crop.png; sourceTree = "<group>"; };
 		18DD695514B6E605000062D1 /* rotate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rotate.png; sourceTree = "<group>"; };
 		18DD696414B6F045000062D1 /* VED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = VED.png; sourceTree = "<group>"; };
@@ -323,6 +325,7 @@
 		183DE35814C7FA2F00BDC724 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				18DBCA9814DBF9B900D43062 /* TagManagementController.xib */,
 				18C78B8E14D6736500B57B4F /* TestiPhoneCalViewController.xib */,
 				183DE31B14C7F6E200BDC724 /* PlaylistDetailController.xib */,
 				A1F7E814148C9BBF0088F366 /* MainWindow.xib */,
@@ -557,6 +560,7 @@
 				1885976314D7D31F005EB0EB /* unlike.png in Resources */,
 				1885976414D7D31F005EB0EB /* like.png in Resources */,
 				18DBCA7E14DBB23000D43062 /* deletebutton.png in Resources */,
+				18DBCA9914DBF9B900D43062 /* TagManagementController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -675,7 +679,7 @@
 				GCC_PREFIX_HEADER = PhotoApp_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "PhotoApp-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = PhotoApp;
 			};
 			name = Debug;
@@ -690,7 +694,7 @@
 				GCC_PREFIX_HEADER = PhotoApp_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "PhotoApp-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = PhotoApp;
 				VALIDATE_PRODUCT = YES;
 			};

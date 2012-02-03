@@ -212,6 +212,8 @@
     }
        
     [self updatePages];
+    NSLog(@"playlist assets is %d",self.playlist.storeAssets.count);
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(resetCropView) name:@"resetCropView" object:nil];
     
 }
 
@@ -692,8 +694,8 @@
     self.navigationItem.leftBarButtonItem = cancell;
     [self setupEditToolbar];
     editing = YES;
-    if (!self.scrollView.scrollEnabled) {
-        self.scrollView.scrollEnabled = YES;
+    if (self.scrollView.scrollEnabled) {
+        self.scrollView.scrollEnabled = NO;
     }
     if (cropView.superview !=nil) {
         [cropView removeFromSuperview];
@@ -802,11 +804,6 @@
 
 -(void)cropPhoto{
     
-    if (!self.scrollView.scrollEnabled) {
-        self.scrollView.scrollEnabled = YES;
-    }else{
-        self.scrollView.scrollEnabled = NO;
-    }
     PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
     if (photoView != nil) {
         if (cropView.superview!=nil) {
@@ -817,20 +814,38 @@
             saveItem.enabled = NO;
             croping = NO;
         }else{
+            CGPoint center = [photoView.scrollView convertPoint:photoView.imageView.center toView:self.view];
+            CGRect imageFrame = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
+            CGFloat minSize = MIN(imageFrame.size.width, imageFrame.size.height) * 4/5;
             self.navigationItem.rightBarButtonItem = nil;
             UIBarButtonItem *cropItem=[[UIBarButtonItem alloc]initWithTitle:@"Crop" style:UIBarButtonItemStyleDone target:self action:@selector(setCropPhoto:)];
             self.navigationItem.rightBarButtonItem = cropItem;
             [self setCropConstrainToolBar];
             photoView.alpha = 0.4;
-            CropView *temCV = [[CropView alloc]initWithFrame:CGRectMake(110, 190, 100, 100) ImageView:photoView superView:self.view];//CGRectMake(110, 190, 100, 100)
-            temCV.backgroundColor = [UIColor clearColor];
-            self.cropView = temCV;
+            if (photoView.scrollView.zoomScale > 1.0) {
+                CGPoint viewCenter = self.view.center;
+                self.cropView = [[CropView alloc]initWithFrame:CGRectMake(viewCenter.x - 128, viewCenter.y - 128, 256, 256) ImageView:photoView superView:self.view];
+            }else
+                self.cropView = [[CropView alloc]initWithFrame:CGRectMake(center.x - minSize/2, center.y - minSize/2, minSize, minSize) ImageView:photoView superView:self.view];//CGRectMake(110, 190, 100, 100)
+            
+            self.cropView.backgroundColor = [UIColor clearColor];;
             
             [self.view addSubview:cropView];
             croping = YES;
         }
     }
     
+}
+
+-(void)resetCropView{
+    PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
+    CGPoint center = [photoView.scrollView convertPoint:photoView.imageView.center toView:self.view];
+    CGRect imageFrame = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
+    CGFloat minSize = MIN(imageFrame.size.width, imageFrame.size.height) * 4/5;
+    [UIView animateWithDuration:0.4 animations:^{
+        self.cropView.frame = CGRectMake(center.x - minSize/2, center.y - minSize/2, minSize, minSize);
+    }];
+    [self.cropView setCropViewSubViewFrame];
 }
 
 -(void)setCropPhoto:(id)sender{
@@ -845,6 +860,7 @@
         photoView.imageView.image = self.cropView.cropImage;
     }
     [cropView removeFromSuperview];
+    self.toolbarItems = nil;
 }
 
 -(void)savePhoto{
@@ -856,7 +872,22 @@
     if (photoView == nil) {
         return;
     }else{
-        [photoView savePhoto];
+        //[photoView savePhoto];
+        Asset *as = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
+        ALAsset *asset = [self.playlist.assets objectForKey:as.url];
+        NSData *data = UIImagePNGRepresentation(photoView.fullScreen);
+        NSLog(@"asset is %@ and %@",asset,asset.editable ? @"YES":@"NO" );
+        if (asset.editable) {
+            [asset setImageData:data metadata:[[asset defaultRepresentation]metadata] completionBlock: ^(NSURL *assetURL, NSError *error){
+                
+            }];
+
+        }else{
+            [asset writeModifiedImageDataToSavedPhotosAlbum:data metadata:nil completionBlock:^(NSURL *assetURL,NSError *error){
+                NSLog(@"save"); 
+            }];
+        }
+        
         [self cancelEdit];
     }
     
@@ -965,7 +996,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (performingLayout || _rotating) return;
-   // NSLog(@"scroll frame is %@ and bounds %@  and contentsize %@",NSStringFromCGRect(self.scrollView.frame),NSStringFromCGRect(self.scrollView.bounds),NSStringFromCGSize(self.scrollView.contentSize));
+    //NSLog(@"scroll frame is %@ and bounds %@  and contentsize %@",NSStringFromCGRect(self.scrollView.frame),NSStringFromCGRect(self.scrollView.bounds),NSStringFromCGSize(self.scrollView.contentSize));
     if (theMovie != nil && theMovie.view.superview != nil) {
         [[NSNotificationCenter defaultCenter]postNotificationName:MPMoviePlayerPlaybackDidFinishNotification object:theMovie];
         [theMovie.view removeFromSuperview];
@@ -1091,33 +1122,50 @@
 		return;
 	} 
     if (editing) {
+        PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
+        CGPoint center = [photoView.scrollView convertPoint:photoView.imageView.center toView:self.view];
+        CGRect imageFrame = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
+        CGFloat minSize = MIN(imageFrame.size.width, imageFrame.size.height) * 4/5;
+        CGRect rect = self.cropView.frame;
+        rect.size.width = minSize;
+        rect.size.height = minSize;
         if (buttonIndex == actionSheet.firstOtherButtonIndex) {
-            NSLog(@"first");
-            [self.cropView setFrame:CGRectMake(110, 190, 100, 100)];
+           //origin
+            [self.cropView setFrame:CGRectMake(center.x - minSize/2, center.y - minSize/2, minSize, minSize)];
         } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
-            CGRect rect = self.cropView.frame;
-            CGPoint center = self.cropView.center;
-            rect.size.width *= 2;
-            rect.size.height *= 2;
+            //square
+            rect.size.height = rect.size.width;
             self.cropView.frame = CGRectMake(center.x-rect.size.width/2, center.y-rect.size.height/2, rect.size.width, rect.size.height);	
-            [self.cropView setCropView];
+            
         } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
            // CGFloat maxSize = MAX(self.cropView.frame.size.width, self.cropView.frame.size.height);
-            
+            //3 x 2;
+            rect.size.height = rect.size.width * 2/3;
+            self.cropView.frame = CGRectMake(center.x-rect.size.width/2, center.y-rect.size.height/2, rect.size.width, rect.size.height);
         } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 3){
-            
+            //4 x 3
+            rect.size.height = rect.size.width * 3/4;
+            self.cropView.frame = CGRectMake(center.x-rect.size.width/2, center.y-rect.size.height/2, rect.size.width, rect.size.height);
         }else if (buttonIndex == actionSheet.firstOtherButtonIndex + 4){
-
+            //4 x 6
+            rect.size.width = rect.size.height * 2/3;
+            self.cropView.frame = CGRectMake(center.x-rect.size.width/2, center.y-rect.size.height/2, rect.size.width, rect.size.height);
         }else if (buttonIndex == actionSheet.firstOtherButtonIndex + 5){
-
+            // 5 x 7
+            rect.size.width = rect.size.height * 5/7;
+            self.cropView.frame = CGRectMake(center.x-rect.size.width/2, center.y-rect.size.height/2, rect.size.width, rect.size.height);
         }else if (buttonIndex == actionSheet.firstOtherButtonIndex + 6){
-
-        }else if (buttonIndex == actionSheet.firstOtherButtonIndex + 7){
-
-        }else if (buttonIndex == actionSheet.firstOtherButtonIndex + 8){
-
+            // 8 x 10
+            rect.size.width = rect.size.height * 4/5;
+            self.cropView.frame = CGRectMake(center.x-rect.size.width/2, center.y-rect.size.height/2, rect.size.width, rect.size.height);
+        }else if (buttonIndex == actionSheet.firstOtherButtonIndex + 7){    
+            // 16 x 9
+            rect.size.width = photoView.imageView.frame.size.width;
+            rect.size.height = rect.size.width * 9/16;
+            self.cropView.frame = CGRectMake(center.x-rect.size.width/2, center.y-rect.size.height/2, rect.size.width, rect.size.height);
+            NSLog(@"%f %f",rect.size.width,rect.size.height);
         }
-        
+        [self.cropView setCropViewSubViewFrame];
     }else{
         if ([MFMailComposeViewController canSendMail] && [MFMessageComposeViewController canSendText]) {		
             if (buttonIndex == actionSheet.firstOtherButtonIndex) {

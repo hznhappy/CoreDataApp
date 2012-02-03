@@ -11,7 +11,7 @@
 #import "GridView.h"
 #import "BorderView.h"
 #import <QuartzCore/QuartzCore.h>
-#define kResizeThumbSize 15
+#define kResizeThumbSize 20
 
 @implementation CropView
 @synthesize photoImageView;
@@ -270,6 +270,7 @@
 -(void)setCropView{
     self.cropImage = [self croppedPhoto];
     [cropImageView setImage:self.cropImage];
+    [self restrictFrame:self.frame];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -341,12 +342,7 @@
         self.center = newCenter;
         self.frame = [self restrictFrame:self.frame];
     }
-    
-    CGSize size = self.frame.size;
-    [self setCropView];
-    cropImageView.frame = CGRectMake(2, 2, size.width-4, size.height-4);
-    gridView.frame = CGRectMake(1, 1, size.width-2, size.height-2);
-    borderView.frame = CGRectMake(1, 1, size.width-2, size.height-2);
+    [self setCropViewSubViewFrame];
 }
 
 -(CGRect)restrictFrame:(CGRect)rect{
@@ -379,12 +375,34 @@
         relativeRect.size.height = self.frame.size.height;
         relativeRect.origin.y = maxY - relativeRect.size.height-0.1;
     }
-    return [self.photoImageView.imageView convertRect:relativeRect toView:self.superview];
+    CGRect newFrame = [self.photoImageView.imageView convertRect:relativeRect toView:self.superview];
+    CGRect superViewFrame = self.superview.frame;
+    if (newFrame.origin.x<0) {
+        newFrame.origin.x = 0;
+        newFrame.size = self.frame.size;
+    }if (newFrame.origin.y<0) {
+        newFrame.origin.y = 0;
+        newFrame.size = self.frame.size;
+    }if (CGRectGetMaxX(newFrame) > CGRectGetMaxX(superViewFrame)) {
+        newFrame.origin.x = CGRectGetMaxX(superViewFrame) - newFrame.size.width;
+    }if (CGRectGetMaxY(newFrame) > CGRectGetMaxY(superViewFrame)) {
+        newFrame.origin.y = CGRectGetMaxY(superViewFrame) - newFrame.size.height;
+    }
+    return newFrame;
     
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     gridView.hidden = YES;
+}
+
+- (void)setCropViewSubViewFrame{
+    CGSize size = self.frame.size;    
+    cropImageView.frame = CGRectMake(2, 2, size.width-4, size.height-4);
+    gridView.frame = CGRectMake(1, 1, size.width-2, size.height-2);
+    borderView.frame = CGRectMake(1, 1, size.width-2, size.height-2);
+    [self setCropView];
+
 }
 - (void)dealloc
 {

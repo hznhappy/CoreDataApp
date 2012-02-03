@@ -341,9 +341,10 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 			
 			self.scrollView.contentOffset = CGPointMake(offsetX, offsetY);
 		}
-        
 	} else {
 		[self layoutScrollViewAnimated:YES];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"resetCropView" object:nil];
+
 	}
     [[NSNotificationCenter defaultCenter]postNotificationName:@"ChangeCropView" object:nil];
 }
