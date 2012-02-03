@@ -10,69 +10,37 @@
 
 
 @implementation OnDeviceAssets
-@synthesize deviceAssetsList,stopOperation,library,finishRefresh;
+@synthesize deviceAssetsList,library;
 
 
--(void)main{
-    NSLog(@"4");
-    @try {
-        if ([self isCancelled]) {
-            stopOperation=YES;
-            return;
-        }
-        
-        [self refreshData];
-        
-        if ([self isCancelled]) {
-            stopOperation=YES;
-            return;
-        }
-    }
-    @catch (NSException *exception) {
-        NSLog(@"exception %@ and urls is %d",exception,[self.deviceAssetsList count]);
-    }
-    
-}
 
 -(id)init {
     NSLog(@"3");
     self=[super init];
     deviceAssetsList=[[NSMutableDictionary alloc]init] ;
     library=[[ALAssetsLibrary alloc]init];
-    stopOperation=NO;
-    finishRefresh=NO;
+    [self refreshData];
     return  self;
 }
 
--(BOOL) getStatus{
-    return finishRefresh;
 
-}
 -(ALAsset*) getAsset:(NSString *)l {
     return (ALAsset*)[deviceAssetsList objectForKey:l];
 }
 
 -(void) refreshData {
-    self.stopOperation=NO;  
-    self.finishRefresh=NO;
+   
     void (^assetGroupEnumerator)(ALAssetsGroup *, BOOL *) = ^(ALAssetsGroup *group, BOOL *stop) 
     {
-        if([self isCancelled] ){
-            self.stopOperation=YES;
-            return ;
-        }
+       
         if (group == nil) 
         {
-            self.stopOperation=YES;
-            self.finishRefresh=YES;
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"fetchAssetsFinished" object:nil];
             return;
         }
         [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) 
          {         
-             if ([self isCancelled]) {
-                 self.stopOperation=YES;
-                 return;
-             }
+             
              if(result == nil) 
              { 
                  return;
@@ -97,15 +65,8 @@
     [library enumerateGroupsWithTypes:ALAssetsGroupAll
                            usingBlock:assetGroupEnumerator 
                          failureBlock:assetGroupEnumberatorFailure];
-    while (finishRefresh==NO) ;
 }
--(BOOL)isFinished{
-    if (self.stopOperation) {
-        return YES;
-    }else{
-        return [super isFinished];
-    }
-}
+
 
 
 @end

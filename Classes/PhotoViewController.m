@@ -161,6 +161,11 @@
         [timer invalidate];
         timer = nil;
     }
+    if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
+        // back button was pressed.  We know this is true because self is no longer
+        // in the navigation stack.  
+        
+    }
     [self.navigationController setToolbarHidden:YES animated:YES];		
 }
 
@@ -571,6 +576,7 @@
     }];
     [self performLayout];
 	[self hideControlsAfterDelay];
+   // NSLog(@"scroll frame is %@ and bounds %@  and contentsize %@",NSStringFromCGRect(self.scrollView.frame),NSStringFromCGRect(self.scrollView.bounds),NSStringFromCGSize(self.scrollView.contentSize));
     
 }
 
@@ -851,8 +857,7 @@
         return;
     }else{
         [photoView savePhoto];
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"The photo have save to PhotoAlbum!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
+        [self cancelEdit];
     }
     
     
@@ -960,13 +965,12 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (performingLayout || _rotating) return;
+   // NSLog(@"scroll frame is %@ and bounds %@  and contentsize %@",NSStringFromCGRect(self.scrollView.frame),NSStringFromCGRect(self.scrollView.bounds),NSStringFromCGSize(self.scrollView.contentSize));
     if (theMovie != nil && theMovie.view.superview != nil) {
         [[NSNotificationCenter defaultCenter]postNotificationName:MPMoviePlayerPlaybackDidFinishNotification object:theMovie];
         [theMovie.view removeFromSuperview];
         theMovie = nil;
     }
-//    PhotoImageView *ph=[self pageDisplayedAtIndex:currentPageIndex];
-//    NSLog(@"ph scrollview frame is%@ and contentsize is %@",NSStringFromCGRect(ph.scrollView.frame),NSStringFromCGSize(ph.scrollView.contentSize));
     [self updatePages];
     // Calculate current page
     CGRect visibleBounds = scrollView.bounds;
@@ -997,25 +1001,29 @@
 	
 }
 
-- (void)emailPhoto{
-	/*MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc]init];
+-(void)messagePhoto{
+    MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc]init];
      messageController.messageComposeDelegate = self;
-     messageController.recipients = [NSArray arrayWithObject:@"23234567"];  
-     messageController.body = @"iPhone OS4";
+//     messageController.recipients = [NSArray arrayWithObject:@"23234567"];  
+//     messageController.body = @"iPhone OS4";
      [self presentModalViewController:messageController animated:YES];
-     [messageController release];*/
-	MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
-	[mailViewController setSubject:@"Shared Photo"];
-	[mailViewController addAttachmentData:[NSData dataWithData:UIImagePNGRepresentation(((PhotoImageView*)[self pageDisplayedAtIndex:currentPageIndex]).imageView.image)] mimeType:@"png" fileName:@"Photo.png"];
-	mailViewController.mailComposeDelegate = self;
-	
-	[self presentModalViewController:mailViewController animated:YES];
-	
 }
 
 -(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result{
-    [self dismissModalViewControllerAnimated:YES];
+    [controller dismissModalViewControllerAnimated:YES];
 }
+
+- (void)emailPhoto{
+        MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
+        [mailViewController setSubject:@"Shared Photo"];
+        [mailViewController addAttachmentData:[NSData dataWithData:UIImagePNGRepresentation(((PhotoImageView*)[self pageDisplayedAtIndex:currentPageIndex]).imageView.image)] mimeType:@"png" fileName:@"Photo.png"];
+        mailViewController.mailComposeDelegate = self;
+        
+        [self presentModalViewController:mailViewController animated:YES];
+	
+}
+
+
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error{
 	
 	[self dismissModalViewControllerAnimated:YES];
@@ -1044,16 +1052,25 @@
 - (IBAction)actionButtonHit:(id)sender{
 	
 	UIActionSheet *actionSheet;
-	NSString *a=NSLocalizedString(@"Cancel", @"title");
-    NSString *b=NSLocalizedString(@"Mark", @"title");
-    NSString *c=NSLocalizedString(@"Copy", @"title");
-    NSString *d=NSLocalizedString(@"Email", @"title");
-	if ([MFMailComposeViewController canSendMail]) {		
-        actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:a destructiveButtonTitle:nil otherButtonTitles:b,c, d, nil];
+    NSString *a=NSLocalizedString(@"Email", @"title");
+    NSString *b=NSLocalizedString(@"Message", @"title");
+    NSString *c=NSLocalizedString(@"Mark", @"title");
+    NSString *d=NSLocalizedString(@"Copy", @"title");
+    NSString *e=NSLocalizedString(@"Cancel", @"title");
+	if ([MFMailComposeViewController canSendMail] && [MFMessageComposeViewController canSendText]) {		
+        actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:e destructiveButtonTitle:nil otherButtonTitles:a,b,c,d, nil];
 		
-	} else {
+	} 
+    else if([MFMailComposeViewController canSendMail] && ![MFMessageComposeViewController canSendText]) {		
+        actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:e destructiveButtonTitle:nil otherButtonTitles:a,c,d, nil];
 		
-		actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:b, c, nil];
+	}else if(![MFMailComposeViewController canSendMail] && [MFMessageComposeViewController canSendText]) {		
+        actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:e destructiveButtonTitle:nil otherButtonTitles:b,c,d, nil];
+		
+    }
+    else {
+		
+		actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:e destructiveButtonTitle:nil otherButtonTitles:c,d, nil];
 		
 	}
 	
@@ -1102,15 +1119,44 @@
         }
         
     }else{
-        if (buttonIndex == actionSheet.firstOtherButtonIndex) {
-            [self markPhoto];
-        } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
-            [self copyPhoto];	
-        } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
-            [self emailPhoto];	
-        } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 3){
-            [self cropPhoto];
+        if ([MFMailComposeViewController canSendMail] && [MFMessageComposeViewController canSendText]) {		
+            if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+                [self emailPhoto];
+            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
+                [self messagePhoto];	
+            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
+                [self markPhoto];	
+            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 3){
+                [self copyPhoto];
+            }
+        } 
+        else if([MFMailComposeViewController canSendMail] && ![MFMessageComposeViewController canSendText]) {		
+            if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+                [self emailPhoto];
+            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
+                [self markPhoto];	
+            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2){
+                [self copyPhoto];
+            }
+        }else if(![MFMailComposeViewController canSendMail] && [MFMessageComposeViewController canSendText]) {		
+            if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+                [self messagePhoto];
+            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
+                [self markPhoto];	
+            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
+                [self copyPhoto];	
+            } 
         }
+        else {
+
+            if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+                [self markPhoto];
+            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
+                [self copyPhoto];	
+            } 
+        }
+
+        
     }
 }
 

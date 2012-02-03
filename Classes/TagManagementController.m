@@ -14,11 +14,9 @@ int j=1,count=0;
 
 -(void)viewDidLoad
 {  
-   
     NSMutableArray *parray1=[[NSMutableArray alloc]init];
     self.IdList=parray1;
-    //favorate=[[People alloc]init];
-  
+
     [self table];
     bool1 = NO;
     if(bo!=nil)

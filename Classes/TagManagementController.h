@@ -12,7 +12,6 @@
 {
     
     PhotoAppDelegate * appDelegate;
-    
     AmptsPhotoCoreData * coreData;
     People *favorate;
     NSMutableArray *result;

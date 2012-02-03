@@ -21,9 +21,10 @@
 "NO"="否";
 "YES"="是";
 "Cancel"="取消";
-"Mark"="标记";
+"Mark"="显示标记";
 "Copy"="复制";
 "Email"="邮件";
+"Message"="讯息发送";
 "Please fill out the rule name"="请先填写规则名!";
 "Rule name can not be empty!"="规则名不能为空";
 "Fade"="淡化";

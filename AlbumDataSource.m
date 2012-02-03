@@ -44,26 +44,19 @@
     opQueue=[[NSOperationQueue alloc]init];
  
     
-       
-    [self syncAssetwithDataSource];
-
-    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(syncAssetwithDataSource) name:@"fetchAssetsFinished" object:nil];
+    deviceAssets=[[OnDeviceAssets alloc]init];
     return self;
 }
 -(void) syncAssetwithDataSource {
     
-    [opQueue cancelAllOperations];    
-    NSLog(@"1");
+    [opQueue cancelAllOperations];   
 
-    deviceAssets=[[OnDeviceAssets alloc]init];
-    NSLog(@"2");
-    //[self testDataSource];
+   // [self testDataSource];
     NSInvocationOperation * syncData=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(syncDataSource) object:nil];
-    [syncData addDependency:deviceAssets];
    
     NSInvocationOperation * refreshData=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(refreshDataSource) object:nil];
     [refreshData addDependency:syncData];
-    [opQueue addOperation:deviceAssets];
     [opQueue addOperation:syncData];
     [opQueue addOperation:refreshData];
   // [self refreshDataSource];
@@ -124,8 +117,8 @@
         
         newAsset=[[Asset alloc]initWithEntity:entity insertIntoManagedObjectContext:[coreData managedObjectContext]];
         newAsset.url=[[[alAsset defaultRepresentation]url]description];
-       NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
-      // NSLog(@"strdate:%@",strDate);
+        NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
+       // NSLog(@"strdate:%@",strDate);
        // NSString* string = @"Wed, 05 May 2011 10:50:00";
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
         //[inputFormatter setLocale:[NSLocale currentLocale]];
@@ -134,8 +127,17 @@
         [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
         //[inputFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"Asia/Shanghai"]];
         newAsset.date = [inputFormatter dateFromString:strDate];
-      //  NSLog(@"date = %@", newAsset.date);
-       /* NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+       // NSLog(@"date = %@", newAsset.date);
+       
+        
+        
+        
+        
+        
+        
+        
+        
+        /* NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
         
         [outputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss Z"];
         NSString *newDateString = [outputFormatter stringFromDate:inputDate];
@@ -227,7 +229,7 @@
         }
         album.num=[album.assetsList count];
         // NSLog(@"Album %@ : %d",album.name,album.num);
-        for (Asset* tmpAsset in    album.assetsList) {
+        for (Asset* tmpAsset in   album.assetsList) {
             //NSLog(@"Photo contains: %@",tmpAsset.url);
         }
         [assetsBook addObject:album];
