@@ -42,6 +42,7 @@
 		184FD006147208F90082B51D /* AnimaSelectController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 184FD005147208F90082B51D /* AnimaSelectController.xib */; };
 		18696E8B147A217100302EB8 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 18696E8A147A217100302EB8 /* Settings.bundle */; };
 		186BF9BF1470AEB500961C67 /* AlbumController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 186BF9C01470AEB500961C67 /* AlbumController.xib */; };
+		187CB28D14DBF6C000281D69 /* TagManagementController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 187CB28C14DBF6C000281D69 /* TagManagementController.xib */; };
 		1884EC9F14BBE3D1005B3EBF /* PhotoApp.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 1884EC9E14BBE3D1005B3EBF /* PhotoApp.xcdatamodel */; };
 		1884ECC314BBE586005B3EBF /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1884ECC214BBE586005B3EBF /* CoreData.framework */; };
 		1885976314D7D31F005EB0EB /* unlike.png in Resources */ = {isa = PBXBuildFile; fileRef = 1885976114D7D31F005EB0EB /* unlike.png */; };
@@ -55,7 +56,6 @@
 		18D402821474E50000389097 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18D402841474E50000389097 /* Localizable.strings */; };
 		18D402901474E55900389097 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18D402921474E55900389097 /* InfoPlist.strings */; };
 		18D4031C1474FC9A00389097 /* AssetTablePicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18D4031E1474FC9A00389097 /* AssetTablePicker.xib */; };
-		18D4033A1474FF5A00389097 /* tagManagementController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18D403391474FF5900389097 /* tagManagementController.xib */; };
 		18DBCA7E14DBB23000D43062 /* deletebutton.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DBCA7D14DBB23000D43062 /* deletebutton.png */; };
 		18DD695314B6E5F7000062D1 /* crop.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DD695214B6E5F7000062D1 /* crop.png */; };
 		18DD695614B6E605000062D1 /* rotate.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DD695514B6E605000062D1 /* rotate.png */; };
@@ -154,6 +154,7 @@
 		184FD005147208F90082B51D /* AnimaSelectController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AnimaSelectController.xib; path = Classes/AnimaSelectController.xib; sourceTree = "<group>"; };
 		18696E8A147A217100302EB8 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		186BF9C01470AEB500961C67 /* AlbumController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = AlbumController.xib; path = Classes/AlbumController.xib; sourceTree = "<group>"; };
+		187CB28C14DBF6C000281D69 /* TagManagementController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagManagementController.xib; sourceTree = "<group>"; };
 		1884EC9E14BBE3D1005B3EBF /* PhotoApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PhotoApp.xcdatamodel; sourceTree = "<group>"; };
 		1884ECC214BBE586005B3EBF /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		1885976114D7D31F005EB0EB /* unlike.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unlike.png; sourceTree = "<group>"; };
@@ -178,7 +179,6 @@
 		18D402971474E5F500389097 /* PhotoApp-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "PhotoApp-Info.plist"; sourceTree = "<group>"; };
 		18D4031D1474FC9A00389097 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/AssetTablePicker.xib; sourceTree = "<group>"; };
 		18D403201474FCA800389097 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/AssetTablePicker.xib"; sourceTree = "<group>"; };
-		18D403391474FF5900389097 /* tagManagementController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = tagManagementController.xib; sourceTree = "<group>"; };
 		18D4033D14750DCC00389097 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		18D4033E14750DD200389097 /* zh-Hant */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		18D4033F14750DDA00389097 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hant"; path = "zh-Hant.lproj/PhotoApp-Info.plist"; sourceTree = "<group>"; };
@@ -328,10 +328,10 @@
 				18C78B8E14D6736500B57B4F /* TestiPhoneCalViewController.xib */,
 				183DE31B14C7F6E200BDC724 /* PlaylistDetailController.xib */,
 				A1F7E814148C9BBF0088F366 /* MainWindow.xib */,
-				18D403391474FF5900389097 /* tagManagementController.xib */,
 				184FD005147208F90082B51D /* AnimaSelectController.xib */,
 				186BF9C01470AEB500961C67 /* AlbumController.xib */,
 				18D4031E1474FC9A00389097 /* AssetTablePicker.xib */,
+				187CB28C14DBF6C000281D69 /* TagManagementController.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -546,7 +546,6 @@
 				184FD006147208F90082B51D /* AnimaSelectController.xib in Resources */,
 				18D402821474E50000389097 /* Localizable.strings in Resources */,
 				18D402901474E55900389097 /* InfoPlist.strings in Resources */,
-				18D4033A1474FF5A00389097 /* tagManagementController.xib in Resources */,
 				A1111478147515F900AD57D0 /* empty1.png in Resources */,
 				18696E8B147A217100302EB8 /* Settings.bundle in Resources */,
 				A1F7E816148C9BBF0088F366 /* MainWindow.xib in Resources */,
@@ -561,6 +560,7 @@
 				1885976314D7D31F005EB0EB /* unlike.png in Resources */,
 				1885976414D7D31F005EB0EB /* like.png in Resources */,
 				18DBCA7E14DBB23000D43062 /* deletebutton.png in Resources */,
+				187CB28D14DBF6C000281D69 /* TagManagementController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
