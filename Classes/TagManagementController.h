@@ -12,7 +12,7 @@
 {
     
     PhotoAppDelegate * appDelegate;
-    NSMutableArray *people;
+    
     AmptsPhotoCoreData * coreData;
     People *favorate;
     NSMutableArray *result;
@@ -38,7 +38,7 @@
 @property(nonatomic,strong)NSMutableArray *IdList;
 
 @property(nonatomic,strong)NSMutableArray *list;
-@property(nonatomic,strong)NSMutableArray *people;
+
 @property(nonatomic,strong)NSMutableArray *result;
 @property(nonatomic,strong)UIToolbar *tools;
 @property(nonatomic,strong)NSString *bo;

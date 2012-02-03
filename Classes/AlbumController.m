@@ -32,7 +32,6 @@
 
 -(void)viewDidLoad
 {  
-   
     [self tabled];
     [self setWantsFullScreenLayout:YES];
 	[self.navigationItem setTitle:@"PlayList"];

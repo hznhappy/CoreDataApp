@@ -53,11 +53,11 @@
 -(void) syncAssetwithDataSource {
     
     [opQueue cancelAllOperations];    
-
+    NSLog(@"1");
 
     deviceAssets=[[OnDeviceAssets alloc]init];
-
-   // [self testDataSource];
+    NSLog(@"2");
+    //[self testDataSource];
     NSInvocationOperation * syncData=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(syncDataSource) object:nil];
     [syncData addDependency:deviceAssets];
    
@@ -124,14 +124,17 @@
         
         newAsset=[[Asset alloc]initWithEntity:entity insertIntoManagedObjectContext:[coreData managedObjectContext]];
         newAsset.url=[[[alAsset defaultRepresentation]url]description];
-        NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
-        NSLog(@"strdate:%@",strDate);
+       NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
+      // NSLog(@"strdate:%@",strDate);
        // NSString* string = @"Wed, 05 May 2011 10:50:00";
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
         //[inputFormatter setLocale:[NSLocale currentLocale]];
+        NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
+       [inputFormatter setTimeZone:timeZone1];
         [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
+        //[inputFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"Asia/Shanghai"]];
         newAsset.date = [inputFormatter dateFromString:strDate];
-        NSLog(@"date = %@", newAsset.date);
+      //  NSLog(@"date = %@", newAsset.date);
        /* NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
         
         [outputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss Z"];
@@ -161,7 +164,6 @@
         newAsset.numOfLike=[NSNumber numberWithInt:0];
         newAsset.numPeopleTag=[NSNumber numberWithInt:0];
     }
-
     [coreData saveContext];
         
 }
@@ -264,7 +266,7 @@
     }
     // Fetch the records and handle an error  
     NSError *error;  
-    NSLog(@"REQUSEST:%@",request);
+   // NSLog(@"REQUSEST:%@",request);
     NSMutableArray *mutableFetchResults = [[coreData.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];   
     
     if (!mutableFetchResults) {  
@@ -273,7 +275,6 @@
     }   
     
     // Save our fetched data to an array  
-    NSLog(@"num:%d",[mutableFetchResults count]);
     
     return mutableFetchResults;
 }
@@ -360,15 +361,21 @@
     return result;
 }
 -(NSPredicate*) parseDateRule:(DateRule *)rule {
+    if([rule startDate]!=nil&&[rule stopDate]!=nil)
+    {
     NSPredicate* result =nil;
     if ([[rule opCode] isEqualToString:@"INCLUDE"]) {
-        result=[NSPredicate predicateWithFormat:@"self.date BETWEEN %@",[NSArray arrayWithObjects:[rule startDate],[rule stopDate],nil]];
+        result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",[rule startDate],[rule stopDate]];
+               //;
+           // result=[NSPredicate predicateWithFormat:@"self.date>=%@",[rule startDate]];
         
     } else {
-                result=[NSPredicate predicateWithFormat:@"NONE self.date  BETWEEN %@",[NSArray arrayWithObjects:[rule startDate],[rule stopDate],nil]];
+        result=[NSPredicate predicateWithFormat:@"NONE self.date>=%@ and self.date<=%@",[rule startDate],[rule stopDate]];
     }
     NSLog(@"result:%@",result);
     return result; 
+    }
+    return nil;
 }
 -(NSPredicate*) parseEventRule:(EventRule *)rule {
     NSPredicate * result=nil ;
@@ -411,13 +418,13 @@
      */
     if ([i conDateRule]!=nil)  {
         if(pre!=nil)
-        {
+       {
             
         pre=[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:pre,[self parseDateRule:[i conDateRule]], nil]];
         }
-        else
+       else
         {
-            pre=[self parseDateRule:[i conDateRule]];
+           pre=[self parseDateRule:[i conDateRule]];
         }
         NSLog(@"OOOO:%@",pre);
     }
@@ -660,7 +667,29 @@
 //    
 //    al2.conPeopleRule=pr3;
 //    pr3.conAlbum=al2;
+    NSEntityDescription *entity11 = [NSEntityDescription entityForName:@"Album" inManagedObjectContext:[ coreData managedObjectContext]]; 
+    Album *al3=[[Album alloc]initWithEntity:entity11 insertIntoManagedObjectContext:[coreData managedObjectContext]];
+    al3.name=@"Date!";
+    al3.byCondition=@"numOfLike";
+    al3.sortOrder=[NSNumber numberWithBool:YES];
     
+    
+    
+    NSEntityDescription *entity51 = [NSEntityDescription entityForName:@"DateRule" inManagedObjectContext:[ coreData managedObjectContext]]; 
+    DateRule *d1=[[DateRule alloc]initWithEntity:entity51 insertIntoManagedObjectContext:[coreData managedObjectContext]];
+    
+    NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
+    //[inputFormatter setLocale:[NSLocale currentLocale]];
+    [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
+    d1.startDate= [inputFormatter dateFromString:@"2011:2:1 6:40:23"];
+    d1.stopDate= [inputFormatter dateFromString:@"2011:2:1 6:40:23"];
+    NSLog(@"DS:%@",d1.startDate);
+     NSLog(@"DS:%@",d1.stopDate);
+    d1.opCode=@"INCLUDE";
+    d1.conAlbum=al3;
+    al3.conDateRule=d1;
+    
+
     NSEntityDescription *entity6 = [NSEntityDescription entityForName:@"PeopleRuleDetail" inManagedObjectContext:[ coreData managedObjectContext]]; 
     PeopleRuleDetail*prd1=[[PeopleRuleDetail alloc]initWithEntity:entity6 insertIntoManagedObjectContext:[coreData managedObjectContext]];
     prd1.conPeopleRule=pr1;

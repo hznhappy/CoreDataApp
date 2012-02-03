@@ -14,6 +14,7 @@
 
 
 -(void)main{
+    NSLog(@"4");
     @try {
         if ([self isCancelled]) {
             stopOperation=YES;
@@ -34,6 +35,7 @@
 }
 
 -(id)init {
+    NSLog(@"3");
     self=[super init];
     deviceAssetsList=[[NSMutableDictionary alloc]init] ;
     library=[[ALAssetsLibrary alloc]init];
