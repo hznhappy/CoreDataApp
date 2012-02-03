@@ -33,12 +33,13 @@
 @synthesize PeopleRuleCell;
 @synthesize OrderCell;
 @synthesize SortCell;
-@synthesize DateRangeCell;
+@synthesize DateRangeCell,StopDateRangeCell;
 @synthesize PeopleSeg;
 @synthesize stopText;
 @synthesize startText;
 @synthesize date;
-
+@synthesize dateRule;
+@synthesize DateSeg;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -52,6 +53,13 @@
 #pragma mark - View lifecycle
 - (void)viewDidLoad
 { 
+    NSMutableArray *parry=[[NSMutableArray alloc]init];
+    self.selectedIndexPaths=parry;
+    startText.tag=2;
+    startText.delegate=self;
+    stopText.tag=3;
+    stopText.delegate=self;
+    //editable = NO
     key=0;
     appDelegate =[[UIApplication sharedApplication] delegate];
     AL=[[AlbumDataSource alloc]init];
@@ -60,7 +68,10 @@
     NSEntityDescription *entity5 = [NSEntityDescription entityForName:@"PeopleRule" inManagedObjectContext:[ appDelegate.dataSource.coreData managedObjectContext]]; 
     pr1=[[PeopleRule alloc]initWithEntity:entity5 insertIntoManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
     date = [NSEntityDescription insertNewObjectForEntityForName:@"DateRule" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
-       
+    if(bum!=nil)
+    {
+        date=bum.conDateRule;
+    }
     
     NSManagedObjectContext *managedObjectContext=[appDelegate.dataSource.coreData managedObjectContext];
     NSFetchRequest *request=[[NSFetchRequest alloc]init];
@@ -92,6 +103,7 @@
     unselectImg = [UIImage imageNamed:@"Unselected.png"];
 
     self.textField.delegate=self;
+    self.textField.tag=1;
     
     if(bum!=nil)
     {
@@ -138,7 +150,7 @@
 #pragma mark -
 #pragma mark UITableView  method
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 6;
+    return 5;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     switch (section) {
@@ -151,18 +163,15 @@
             }
             break;
         case 1:
-            return 1;
+            return 2;
             break;
         case 2:
-            return 1;
+            return 3;
             break;
         case 3:
             return 1;
             break;
         case 4:
-            return 1;
-            break;
-        case 5:
             return [list count];
             break;
         default:
@@ -217,36 +226,85 @@
     else if(indexPath.section == 1)
     {
         UITableViewCell *cell = nil;
-        cell = [tableView dequeueReusableCellWithIdentifier:@"SortCell"];
-        if (cell == nil) {
-            cell=self.SortCell;
+        switch (rowNum) {
+            case 0:
+                cell = [tableView dequeueReusableCellWithIdentifier:@"SortCell"];
+                if (cell == nil) {
+                    cell=self.SortCell;
+                }
+                break;
+            case 1:
+                cell = [tableView dequeueReusableCellWithIdentifier:@"OrderCell"];
+                if (cell == nil) {
+                    cell=self.OrderCell;
+                }
+                break;
+            default:
+                cell=nil;
+                break;
+                
         }
         return cell;
         
     }
-    else if(indexPath.section == 2)
+       else if(indexPath.section == 2)
     {
-        UITableViewCell *cell = nil;
-        cell = [tableView dequeueReusableCellWithIdentifier:@"OrderCell"];
-        if (cell == nil) {
-            cell=self.OrderCell;
+        
+               UITableViewCell *cell = nil;
+        //[self.DateRangeCell ]
+        switch (rowNum) {
+            case 0:
+                cell = [tableView dequeueReusableCellWithIdentifier:@"dateRule"];
+                if (cell == nil) {
+                    cell=self.dateRule;
+                }
+                break;
+            case 1:
+                cell = [tableView dequeueReusableCellWithIdentifier:@"DateRangeCell"];
+                if (cell == nil) {
+                    cell=self.DateRangeCell;
+                }
+                break;
+            case 2:
+                cell = [tableView dequeueReusableCellWithIdentifier:@"StopDateRangeCell"];
+                if (cell == nil) {
+                    cell=self.StopDateRangeCell;
+                }
+                break;
+            default:
+                cell=nil;
+                break;
+        
         }
+        if(bum!=nil)
+        {      
+            if([bum.conDateRule.opCode isEqualToString:@"EXCLUDE"])
+            {
+                self.DateSeg.selectedSegmentIndex=1;
+            }
+            NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+            
+            [outputFormatter setDateFormat:@"yyyy:MM:dd"];
+            if(bum.conDateRule.startDate!=nil)
+            {
+            NSString *startDateString= [outputFormatter stringFromDate:bum.conDateRule.startDate];
+            self.startText.text=[NSString stringWithFormat:startDateString];
+            }
+            if(bum.conDateRule.stopDate!=nil)
+            {
+            NSString *stopDateString= [outputFormatter stringFromDate:bum.conDateRule.stopDate];
+            self.stopText.text=[NSString stringWithFormat:stopDateString];
+            }
+        }
+        
+
         return cell;
         
     }
     else if(indexPath.section == 3)
     {
         UITableViewCell *cell = nil;
-        cell = [tableView dequeueReusableCellWithIdentifier:@"DateRangeCell"];
-        if (cell == nil) {
-            cell=self.DateRangeCell;
-        }
-        return cell;
         
-    }
-    else if(indexPath.section == 4)
-    {
-        UITableViewCell *cell = nil;
         cell = [tableView dequeueReusableCellWithIdentifier:@"PeopleRuleCell"];
         if (cell == nil) {
             cell=self.PeopleRuleCell;
@@ -255,7 +313,7 @@
         
     }
 
-   else if(indexPath.section == 5) 
+   else if(indexPath.section == 4) 
     {
         static NSString *cellIdentifier = @"nameCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -328,6 +386,8 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self.textField resignFirstResponder];
+    [self.startText resignFirstResponder];
+    [self.stopText resignFirstResponder];
     if (indexPath.section ==0 && indexPath.row == 1 && self.textField.text != nil && self.textField.text.length != 0) {
         AnimaSelectController *animateController = [[AnimaSelectController alloc]init];
         animateController.tranStyle = self.tranLabel.text;
@@ -350,7 +410,7 @@
         [self presentModalViewController:mediaPicker animated:YES];
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
-    if (indexPath.section == 5) {
+    if (indexPath.section == 4) {
         if(textField.text==nil||textField.text.length==0)
         { NSString *c=NSLocalizedString(@"note", @"title");
             NSString *b=NSLocalizedString(@"ok", @"title");
@@ -380,6 +440,8 @@
                         [button setImage:selectImg forState:UIControlStateNormal]; 
                         NSString *rule=@"INCLUDE";
                         [self insert:indexPath.row rule:rule];
+                        [selectedIndexPaths addObject:indexPath];
+                        NSLog(@"select :%@",selectedIndexPaths);
                     }
                     else
                     {
@@ -403,13 +465,13 @@
 
            }
     }
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
   }
 -(IBAction)PeopleRuleButton
 {
     if(PeopleSeg.selectedSegmentIndex==0)
     {
         bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
-        NSLog(@"WEER");
     }
     else
     {
@@ -417,8 +479,23 @@
     }
      [appDelegate.dataSource.coreData saveContext];
 }
+-(IBAction)DateRuleButton
+{
+    [self setDate];
+    [appDelegate.dataSource.coreData saveContext];
+}
+-(void)setDate
+{
+    if(DateSeg.selectedSegmentIndex==0)
+    {
+        date.opCode=@"INCLUDE";
+    }
+    else
+    {
+        date.opCode=@"EXCLUDE";
+    }
 
-
+}
 -(IBAction)AddButton1
 {
     bu=YES;
@@ -430,6 +507,25 @@
     bu=NO;
     TestiPhoneCalViewController *Test=[[TestiPhoneCalViewController alloc]init];
     [self.navigationController pushViewController:Test animated:YES];
+}
+-(IBAction)DeleteButton1
+{
+    if(self.startText.text!=nil&&self.startText.text.length!=0)
+    {
+        date.startDate=nil;
+        self.startText.text=nil;
+    }
+    [appDelegate.dataSource.coreData saveContext];
+}
+-(IBAction)DeleteButton2
+{
+    if(self.stopText.text!=nil&&self.stopText.text.length!=0)
+    {
+        date.stopDate=nil;
+        self.stopText.text=nil;
+    }
+   [appDelegate.dataSource.coreData saveContext];
+
 }
 #pragma mark -
 #pragma mark media picker delegate method
@@ -553,9 +649,28 @@
     [sender resignFirstResponder];
 
    }
+-(void)textFieldDidBeginEditing:(UITextField *)textField2
+{
+    if(textField2.tag==2)
+    {
+        bu=YES;
+        TestiPhoneCalViewController *Test=[[TestiPhoneCalViewController alloc]init];
+        [self.navigationController pushViewController:Test animated:YES];
+    }
+   else if(textField2.tag==3)
+    {
+        bu=NO;
+        TestiPhoneCalViewController *Test=[[TestiPhoneCalViewController alloc]init];
+        [self.navigationController pushViewController:Test animated:YES];
+    }
+
+    
+}
 -(void)textFieldDidEndEditing:(UITextField *)textField1
 {
-    NSLog(@"end");
+    if(textField1.tag==1)
+{
+  
     if(textField.text==nil||textField.text.length==0)
     {
         NSString *c=NSLocalizedString(@"note", @"title");
@@ -570,6 +685,7 @@
         [alert show];
         if(keybord==YES)
         {
+            NSLog(@"ds");
           textField.text=bum.name;
         }
         else
@@ -583,11 +699,11 @@
         [self addPlay];
     }   
     
-
+}
 }
 -(void)addPlay
 {
-    
+    NSLog(@"1");
   //if(bum==nil)
  // {
      // key=1;
@@ -636,8 +752,11 @@
 }
 
 -(IBAction)resetAll{
+    NSLog(@"reset:%@",selectedIndexPaths);
     for (NSIndexPath *path in selectedIndexPaths) {
-        if (path.section == 1) {
+        
+        if (path.section == 4) {
+            NSLog(@"fe");
             UITableViewCell *cell = [listTable cellForRowAtIndexPath:path];
             cell.accessoryView = nil;
             for (UIButton *button in cell.contentView.subviews) {
@@ -649,7 +768,19 @@
             }
         }
     }
-           [selectedIndexPaths removeAllObjects];
+    [selectedIndexPaths removeAllObjects];
+    NSManagedObjectContext *managedObjectsContext = [appDelegate.dataSource.coreData managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PeopleRuleDetail" inManagedObjectContext:managedObjectsContext];
+    NSFetchRequest *request = [[NSFetchRequest alloc]init];
+    [request setEntity:entity];
+    NSPredicate *pre = [NSPredicate predicateWithFormat:@"conPeopleRule == %@",bum.conPeopleRule];
+    [request setPredicate:pre];
+    NSError *error = nil;
+    NSArray *A=[managedObjectsContext executeFetchRequest:request error:&error];
+    PeopleRuleDetail *p=[A objectAtIndex:0];
+    [bum.conPeopleRule removeConPeopleRuleDetailObject:p];
+    [appDelegate.dataSource.coreData saveContext];
+
    /* NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
                                                        object:self 
@@ -672,6 +803,8 @@
         NSLog(@"DATE:%@",[dic objectForKey:@"Date"]);
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
         //[inputFormatter setLocale:[NSLocale currentLocale]];
+        NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
+        [inputFormatter setTimeZone:timeZone1];
         [inputFormatter setDateFormat:@"yyyy:MM:dd"];
        // newAsset.date = [inputFormatter dateFromString:strDate];
         date.startDate=[inputFormatter dateFromString:[dic objectForKey:@"Date"]];
@@ -682,12 +815,16 @@
     self.stopText.text=[dic objectForKey:@"Date"];
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
         //[inputFormatter setLocale:[NSLocale currentLocale]];
+        NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
+        [inputFormatter setTimeZone:timeZone1];
         [inputFormatter setDateFormat:@"yyyy:MM:dd"];
         // newAsset.date = [inputFormatter dateFromString:strDate];
         date.stopDate=[inputFormatter dateFromString:[dic objectForKey:@"Date"]];
         NSLog(@"STARTTIME:%@",date.stopDate);
     }
-    date.opCode=@"INCLUDE";
+   // date.opCode=@"INCLUDE";
+    [self setDate];
+    NSLog(@"DATE.OPCODE:%@",date.opCode);
     date.conAlbum=bum;
     bum.conDateRule=date;
     [appDelegate.dataSource.coreData saveContext];

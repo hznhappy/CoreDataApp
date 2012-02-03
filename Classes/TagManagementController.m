@@ -7,7 +7,7 @@
 @synthesize list;
 @synthesize button;
 @synthesize tableView,tools,bo;
-@synthesize coreData,favorate,people;
+@synthesize coreData,favorate;
 @synthesize result,IdList;
 int j=1,count=0;
 

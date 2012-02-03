@@ -9,11 +9,11 @@
 #import "TdCalendarView.h"
 #import <QuartzCore/QuartzCore.h>
 
-const float headHeight=120;
+const float headHeight=170;
 const float itemHeight=35;
 const float prevNextButtonSize=20;
 const float prevNextButtonSpaceWidth=15;
-const float prevNextButtonSpaceHeight=55;
+const float prevNextButtonSpaceHeight=100;
 const float titleFontSize=30;
 const int	weekFontSize=12;
 
@@ -120,30 +120,7 @@ const int	weekFontSize=12;
 }
 -(void)drawTopGradientBar{
 	
-	CGContextRef ctx=UIGraphicsGetCurrentContext();
 	
-	size_t num_locations = 3;
-	CGFloat locations[3] = { 0.0, 0.5, 1.0};
-	CGFloat components[12] = {  
-		1.0, 1.0, 1.0, 1.0,
-		0.5, 0.5, 0.5, 1.0,
-		1.0, 1.0, 1.0, 1.0 
-	};
-	
-	
-	CGGradientRef myGradient;
-	CGColorSpaceRef myColorspace = CGColorSpaceCreateDeviceRGB();
-	myGradient = CGGradientCreateWithColorComponents (myColorspace, components,
-													  locations, num_locations);
-	CGPoint myStartPoint, myEndPoint;
-	myStartPoint.x = headHeight;
-	myStartPoint.y = 0.0;
-	myEndPoint.x = headHeight;
-	myEndPoint.y = headHeight;
-	
-	CGContextDrawLinearGradient(ctx,myGradient,myStartPoint, myEndPoint, 0);
-	CGGradientRelease(myGradient);
-
 	[self drawPrevButton:CGPointMake(prevNextButtonSpaceWidth,prevNextButtonSpaceHeight)];
 	[self drawNextButton:CGPointMake(self.frame.size.width-prevNextButtonSpaceWidth-prevNextButtonSize,prevNextButtonSpaceHeight)];
 }
@@ -157,22 +134,22 @@ const int	weekFontSize=12;
 	
 	int fontsize=[UIFont buttonFontSize];
     UIFont   *font    = [UIFont systemFontOfSize:titleFontSize];
-	CGPoint  location = CGPointMake(width/2 -2.5*titleFontSize, 48);
+	CGPoint  location = CGPointMake(width/2 -2.5*titleFontSize, 88);
     [title_Month drawAtPoint:location withFont:font];
 	
 	
 	UIFont *weekfont=[UIFont boldSystemFontOfSize:weekFontSize];
 	fontsize+=3;
-	fontsize+=70;
+	fontsize+=110;
 	
-	[@"周一" drawAtPoint:CGPointMake(s_width*0+9,fontsize) withFont:weekfont];
-	[@"周二" drawAtPoint:CGPointMake(s_width*1+9,fontsize) withFont:weekfont];
-	[@"周三" drawAtPoint:CGPointMake(s_width*2+9,fontsize) withFont:weekfont];
-	[@"周四" drawAtPoint:CGPointMake(s_width*3+9,fontsize) withFont:weekfont];
-	[@"周五" drawAtPoint:CGPointMake(s_width*4+9,fontsize) withFont:weekfont];
+	[@"周一" drawAtPoint:CGPointMake(s_width*1+9,fontsize) withFont:weekfont];
+	[@"周二" drawAtPoint:CGPointMake(s_width*2+9,fontsize) withFont:weekfont];
+	[@"周三" drawAtPoint:CGPointMake(s_width*3+9,fontsize) withFont:weekfont];
+	[@"周四" drawAtPoint:CGPointMake(s_width*4+9,fontsize) withFont:weekfont];
+	[@"周五" drawAtPoint:CGPointMake(s_width*5+9,fontsize) withFont:weekfont];
 	[[UIColor redColor] set];
-	[@"周六" drawAtPoint:CGPointMake(s_width*5+9,fontsize) withFont:weekfont];
-	[@"周日" drawAtPoint:CGPointMake(s_width*6+9,fontsize) withFont:weekfont];
+	[@"周六" drawAtPoint:CGPointMake(s_width*6+9,fontsize) withFont:weekfont];
+	[@"周日" drawAtPoint:CGPointMake(s_width*0+9,fontsize) withFont:weekfont];
 	[[UIColor blackColor] set];
 	
 }
@@ -228,7 +205,7 @@ const int	weekFontSize=12;
 	CFGregorianDate month_date;
 	month_date.year=date.year;
 	month_date.month=date.month;
-	month_date.day=1;
+	month_date.day=2;
 	month_date.hour=0;
 	month_date.minute=0;
 	month_date.second=1;
@@ -246,6 +223,7 @@ const int	weekFontSize=12;
 	int y=0;
 	int s_width=width/7;
 	int curr_Weekday=[self getMonthWeekday:currentMonthDate];
+    NSLog(@"current:%d",curr_Weekday);
 	UIFont *weekfont=[UIFont boldSystemFontOfSize:12];
 
 	for(int i=1;i<dayCount+1;i++)
@@ -253,8 +231,10 @@ const int	weekFontSize=12;
 		day=i+curr_Weekday-2;
 		x=day % 7;
 		y=day / 7;
+        NSLog(@"X=%d",x);
+        NSLog(@"y=%d",y);
 		NSString *date=[[NSString alloc] initWithFormat:@"%2d",i];
-		[date drawAtPoint:CGPointMake(x*s_width+15,y*itemHeight+headHeight) withFont:weekfont];
+		[date drawAtPoint:CGPointMake(x*s_width+15,y*itemHeight+headHeight+10) withFont:weekfont];
 		if([self getDayFlag:i]==1)
 		{
 			CGContextSetRGBFillColor(ctx, 1, 0, 0, 1);
@@ -363,11 +343,11 @@ const int	weekFontSize=12;
 		CGContextAddLineToPoint(ctx, x*swidth+swidth+2, y*itemHeight+headHeight+itemHeight);
 		CGContextAddLineToPoint(ctx, x*swidth+1, y*itemHeight+headHeight+itemHeight);
 		CGContextFillPath(ctx);
-
+        
 		CGContextSetRGBFillColor(ctx, 1, 1, 1, 1);
 		UIFont *weekfont=[UIFont boldSystemFontOfSize:12];
 		NSString *date=[[NSString alloc] initWithFormat:@"%2d",today.day];
-		[date drawAtPoint:CGPointMake(x*swidth+15,y*itemHeight+headHeight) withFont:weekfont];
+		[date drawAtPoint:CGPointMake(x*swidth+15,y*itemHeight+headHeight+10) withFont:weekfont];
 		if([self getDayFlag:today.day]==1)
 		{
 			CGContextSetRGBFillColor(ctx, 1, 0, 0, 1);

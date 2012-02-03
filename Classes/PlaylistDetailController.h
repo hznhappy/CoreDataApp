@@ -41,7 +41,9 @@
     UITableViewCell *PeopleRuleCell;
     UITableViewCell *SortCell;
     UITableViewCell *OrderCell;
+    UITableViewCell *dateRule;
     UITableViewCell *DateRangeCell;
+    UITableViewCell *StopDateRangeCell;
     UITextField *startText;
     UITextField *stopText;
     UIButton *AddButton1;
@@ -55,6 +57,7 @@
     UIImage *selectImg;
     UIImage *unselectImg;
     UISegmentedControl *PeopleSeg;
+    UISegmentedControl *DateSeg;
     
     NSMutableArray *userNames;
     NSMutableArray *selectedIndexPaths;
@@ -82,6 +85,8 @@
 @property(nonatomic,strong)IBOutlet UITableViewCell *SortCell;
 @property(nonatomic,strong)IBOutlet UITableViewCell *OrderCell;
 @property(nonatomic,strong)IBOutlet UITableViewCell *DateRangeCell;
+@property(nonatomic,strong)IBOutlet UITableViewCell *StopDateRangeCell;
+@property(nonatomic,strong)IBOutlet UITableViewCell *dateRule;
 
 
 
@@ -93,7 +98,7 @@
 @property(nonatomic,strong)IBOutlet UITextField *startText;
 @property(nonatomic,strong)IBOutlet UITextField *stopText;
 
-
+@property(nonatomic,strong)IBOutlet UISegmentedControl *DateSeg;
 @property(nonatomic,strong)IBOutlet UISegmentedControl *PeopleSeg;
 @property(nonatomic,strong)NSMutableArray *selectedIndexPaths;
 @property(nonatomic,strong)NSString *Transtion;
@@ -104,11 +109,15 @@
 -(IBAction)PeopleRuleButton;
 -(IBAction)AddButton1;
 -(IBAction)AddButton2;
+-(IBAction)DeleteButton1;
+-(IBAction)DeleteButton2;
 -(IBAction)PeopleRuleButton;
+-(IBAction)DateRuleButton;
 -(UIButton *)getStateButton;
 -(void)insert:(NSInteger)Row rule:(NSString *)rule;
 -(void)update:(NSInteger)Row rule:(NSString *)rule;
 -(void)addPlay;
 -(void)changeDate:(NSNotification *)note;
 -(void)album;
+-(void)setDate;
 @end
