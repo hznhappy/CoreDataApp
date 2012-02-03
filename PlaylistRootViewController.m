@@ -17,7 +17,6 @@
 #import "Playlist.h"
 @implementation PlaylistRootViewController
 @synthesize activityView;
- static NSString* const kFileName=@"output.mov";
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -45,7 +44,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-   self.navigationItem.title= @"Loading....";
+    self.navigationItem.title= @"Loading....";
     UIActivityIndicatorView *_activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     self.activityView = _activityView;
     CGRect rect = [UIScreen mainScreen].bounds;
@@ -75,6 +74,7 @@
     NSDictionary *dicOfPhotoViewer = [note userInfo];
     NSString *key = [dicOfPhotoViewer objectForKey:@"selectIndex"];
     NSMutableArray *assets = [dicOfPhotoViewer valueForKey:@"assets"];
+    NSLog(@"assets count %d",assets.count);
     NSNumber *num = [dicOfPhotoViewer valueForKey:@"lock"];
     BOOL lock = num.boolValue;
     PhotoAppDelegate *delegate = [[UIApplication sharedApplication] delegate];

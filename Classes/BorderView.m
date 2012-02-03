@@ -36,7 +36,7 @@
         
     CGContextBeginPath(context);
     //draw the border
-    CGContextSetLineWidth(context, 2.0f);
+    CGContextSetLineWidth(context, 4.0);
     CGContextMoveToPoint(context, minX, minY);
     CGContextAddLineToPoint(context, maxX, minY);
     CGContextAddLineToPoint(context, maxX, maxY);
