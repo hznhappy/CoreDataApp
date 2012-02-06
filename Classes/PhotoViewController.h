@@ -55,7 +55,7 @@
     UIButton *likeButton;
     
 }
-@property (nonatomic, strong) Playlist *playlist;
+@property (nonatomic,strong) Playlist *playlist;
 @property(nonatomic,strong)PopupPanelView *ppv;
 
 @property(nonatomic,strong)CropView *cropView;

@@ -15,11 +15,13 @@
 
 
 -(id)init {
-    NSLog(@"3");
     self=[super init];
-    deviceAssetsList=[[NSMutableDictionary alloc]init] ;
-    library=[[ALAssetsLibrary alloc]init];
-    [self refreshData];
+    if (self) {
+        deviceAssetsList=[[NSMutableDictionary alloc]init] ;
+        library=[[ALAssetsLibrary alloc]init];
+        [self refreshData];
+    }
+  
     return  self;
 }
 

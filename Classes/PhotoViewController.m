@@ -883,7 +883,7 @@
         Asset *as = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
         ALAsset *asset = [self.playlist.assets objectForKey:as.url];
         NSData *data = UIImagePNGRepresentation(photoView.fullScreen);
-        NSLog(@"asset is %@ and %@",asset,asset.editable ? @"YES":@"NO" );
+        //NSLog(@"asset is %@ and %@",asset,asset.editable ? @"YES":@"NO" );
         if (asset.editable) {
             [asset setImageData:data metadata:[[asset defaultRepresentation]metadata] completionBlock: ^(NSURL *assetURL, NSError *error){
                 
@@ -891,7 +891,19 @@
 
         }else{
             [asset writeModifiedImageDataToSavedPhotosAlbum:data metadata:nil completionBlock:^(NSURL *assetURL,NSError *error){
-                NSLog(@"save"); 
+                NSLog(@"save and url %@",assetURL); 
+                
+                ALAssetsLibraryAssetForURLResultBlock resultBlock = ^(ALAsset *asset){
+                    [self.playlist.assets setObject:asset forKey:[assetURL description]];
+                    NSLog(@"get new");
+                };
+                
+                ALAssetsLibraryAccessFailureBlock failblock = ^(NSError *error){
+                    NSLog(@"error %@",error);
+                };
+                
+                PhotoAppDelegate *app = [UIApplication sharedApplication].delegate;
+                [app.dataSource.deviceAssets.library assetForURL:assetURL resultBlock:resultBlock failureBlock:failblock];
             }];
         }
         
