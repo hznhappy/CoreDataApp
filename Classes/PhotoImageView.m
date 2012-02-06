@@ -226,6 +226,12 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     if (CGSizeEqualToSize(self.imageView.image.size, CGSizeZero)) {
         return;
     }
+    if (self.scrollView.zoomScale == 1) {
+        self.scrollView.scrollEnabled = NO;
+    }else{
+        self.scrollView.scrollEnabled = YES;
+    }
+
 	CGFloat hfactor = self.imageView.image.size.width / self.frame.size.width;
 	CGFloat vfactor = self.imageView.image.size.height / self.frame.size.height;
 	

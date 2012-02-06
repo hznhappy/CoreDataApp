@@ -169,7 +169,7 @@
     if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
         // back button was pressed.  We know this is true because self is no longer
         // in the navigation stack.  
-        
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"reloadTableData" object:nil];
     }
     [self.navigationController setToolbarHidden:YES animated:YES];		
 }
@@ -1031,12 +1031,6 @@
     if (index != currentPageIndex) {
         currentPageIndex = index;
     }
-    PhotoImageView *photo = [self pageDisplayedAtIndex:currentPageIndex];
-    if (photo.scrollView.scrollEnabled) {
-        photo.scrollView.scrollEnabled = NO;
-    }
-    
-	
 }
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
 	// Hide controls when dragging begins

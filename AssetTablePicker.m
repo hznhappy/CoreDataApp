@@ -74,7 +74,9 @@
    
     [self.table performSelector:@selector(reloadData) withObject:nil afterDelay:.3];
     
+    
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EditPhotoTag)name:@"EditPhotoTag" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableData) name:@"reloadTableData" object:nil];
 }
 
 
@@ -84,6 +86,9 @@
     [self.table reloadData];
 }
 
+-(void)reloadTableData{
+    [self.table reloadData];
+}
 -(void)backButtonPressed
 {
     NSString *a=NSLocalizedString(@"Lock", @"title");
