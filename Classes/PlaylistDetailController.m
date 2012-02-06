@@ -848,6 +848,28 @@
                                                      userInfo:dic1];*/
 }
 
+-(IBAction)playAlbumPhotos:(id)sender{
+    NSMutableArray *assets = nil;
+    NSPredicate *pre =  [appDelegate.dataSource ruleFormation:bum];
+    if([bum.sortOrder boolValue]==YES){
+        assets=[appDelegate.dataSource simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:YES];
+    }else {
+        assets=[appDelegate.dataSource simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:NO];
+        
+    }
+    pre=[appDelegate.dataSource excludeRuleFormation:bum];
+    if (pre!=nil) {
+        NSMutableArray* excludePeople=[appDelegate.dataSource simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:YES];
+        if(excludePeople!=nil) {
+            [assets removeObjectsInArray:excludePeople];
+            //NSLog(@"Exclude predicate : %d , %@",[excludePeople count],pre );
+        }
+    }
+    
+    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:assets, @"assets", self.bum.transitType, @"transition",nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"PlayPhoto" object:nil userInfo:dic]; 
+}
+
 #pragma mark -
 #pragma mark Notification method
 -(void)changeTransitionAccessoryLabel:(NSNotification *)note{

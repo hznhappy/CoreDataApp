@@ -119,6 +119,7 @@
 -(IBAction)sortKeyButton;
 -(IBAction)sortOrderButton;
 -(UIButton *)getStateButton;
+-(IBAction)playAlbumPhotos:(id)sender;
 -(void)insert:(NSInteger)Row rule:(NSString *)rule;
 -(void)update:(NSInteger)Row rule:(NSString *)rule;
 -(void)addPlay;
