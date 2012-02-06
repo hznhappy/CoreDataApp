@@ -71,15 +71,25 @@
     passWord.backgroundColor = [UIColor whiteColor];  
     passWord.secureTextEntry = YES;
     [alert1 addSubview:passWord];  
-   
-    [self.table performSelector:@selector(reloadData) withObject:nil afterDelay:.3];
+//    oritation = [UIApplication sharedApplication].statusBarOrientation;
+//    [self resetTableContentInset];
     
+    [self.table performSelector:@selector(reloadData) withObject:nil afterDelay:.3];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EditPhotoTag)name:@"EditPhotoTag" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableData) name:@"reloadTableData" object:nil];
 }
 
-
+//-(void)resetTableContentInset{
+//    UIEdgeInsets inset = self.table.contentInset;
+//    if (UIInterfaceOrientationIsPortrait(oritation)) {
+//        
+//        inset.top = 65;
+//    }else{
+//        inset.top = 65;
+//    }
+//    self.table.contentInset = inset;
+//}
 -(void)EditPhotoTag
 {
     [self.tagRow removeAllObjects];
@@ -87,6 +97,9 @@
 }
 
 -(void)reloadTableData{
+    NSLog(@"reload");
+    oritation = [UIApplication sharedApplication].statusBarOrientation;
+    //[self resetTableContentInset];
     [self.table reloadData];
 }
 -(void)backButtonPressed
@@ -406,6 +419,7 @@
         [self.table setContentInset:UIEdgeInsetsMake(insets.top+12, insets.left, insets.bottom, insets.right)];
     }
     previousOrigaton = toInterfaceOrientation;
+   // [self resetTableContentInset];
     [self.table reloadData];
 }
 

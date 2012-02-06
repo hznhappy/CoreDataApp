@@ -70,4 +70,5 @@
 -(IBAction)selectFromFavoriteNames;
 -(IBAction)selectFromAllNames;
 -(void)EditPhotoTag;
+//-(void)resetTableContentInset;
 @end

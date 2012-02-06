@@ -169,6 +169,7 @@
     if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
         // back button was pressed.  We know this is true because self is no longer
         // in the navigation stack.  
+        [self cancelControlHiding];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"reloadTableData" object:nil];
     }
     [self.navigationController setToolbarHidden:YES animated:YES];		
