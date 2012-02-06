@@ -100,7 +100,12 @@
 	if (touch.tapCount == 1) {
 		[self performSelector:@selector(toggleBars) withObject:nil afterDelay:.3];
 	} else if (touch.tapCount == 2) {
-        self.scrollEnabled = !self.scrollEnabled;
+        if (self.zoomScale == 1) {
+            self.scrollEnabled = YES;
+        }else{
+            self.scrollEnabled = NO;
+        }
+       // self.scrollEnabled = !self.scrollEnabled;
 		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(toggleBars) object:nil];
 		[self zoomRectWithCenter:[[touches anyObject] locationInView:self.superview]];
         

@@ -74,7 +74,6 @@
     NSDictionary *dicOfPhotoViewer = [note userInfo];
     NSString *key = [dicOfPhotoViewer objectForKey:@"selectIndex"];
     NSMutableArray *assets = [dicOfPhotoViewer valueForKey:@"assets"];
-    NSLog(@"assets count %d",assets.count);
     NSNumber *num = [dicOfPhotoViewer valueForKey:@"lock"];
     BOOL lock = num.boolValue;
     PhotoAppDelegate *delegate = [[UIApplication sharedApplication] delegate];
