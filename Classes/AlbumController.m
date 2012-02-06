@@ -137,12 +137,23 @@
     
     PlaylistDetailController *detailController = [[PlaylistDetailController alloc]initWithNibName:@"PlaylistDetailController" bundle:[NSBundle mainBundle]];
     detailController.bum = [self getAlbumInRow:indexPath.row];
-    NSLog(@"BUM.startDATE:%@",detailController.bum.conDateRule.startDate);
-     NSLog(@"BUM.stopDATE:%@",detailController.bum.conDateRule.stopDate);
-    NSLog(@"BUM.opcode:%@",detailController.bum.conDateRule.opCode);
     detailController.hidesBottomBarWhenPushed = YES;
-    
+    if(detailController.bum!=nil)
+    {
     [self.navigationController pushViewController:detailController animated:YES];
+    }
+    else
+    {
+        NSLog(@"NULL");
+        UIAlertView *alert = [[UIAlertView alloc]
+                              initWithTitle:@"提示"
+                              message:@"固有成员,无法编辑"
+                              delegate:self
+                              cancelButtonTitle:nil
+                              otherButtonTitles:@"确定",nil];
+        [alert show];
+
+    }
 
     
 }

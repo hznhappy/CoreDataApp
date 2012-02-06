@@ -213,9 +213,11 @@
         album.alblumId=[i objectID];
         pre=[self ruleFormation:i];
         if([i.sortOrder boolValue]==YES){
-            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:YES];
+            NSLog(@"yes");
+            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:[i sortKey]  sortOrder:YES];
         }else {
-            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:NO];
+            NSLog(@"no");
+            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:[i sortKey]  sortOrder:NO];
             
         }
         
@@ -263,7 +265,7 @@
     if (field!=nil) {
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:field ascending:asc];  
         NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];  
-        [request setSortDescriptors:sortDescriptors]; 
+        [request setSortDescriptors:sortDescriptors];  
         
     }
     // Fetch the records and handle an error  

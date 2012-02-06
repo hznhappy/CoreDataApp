@@ -84,8 +84,20 @@
 
  }
 -(void)buttonPressed:(UIButton *)button{
-	int tag = button.tag;
-    PeopleTag *pt = [self.list objectAtIndex:tag];
+    TAG= button.tag;
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle:@"提示"
+                          message:@"确定要要删除该成员吗"
+                          delegate:self
+                          cancelButtonTitle:@"确定"
+                          otherButtonTitles:@"取消",nil];
+    [alert show];
+   }
+-(void)deleteButton
+{
+    NSLog(@"0");
+    
+    PeopleTag *pt = [self.list objectAtIndex:TAG];
     [pt.conPeople removeConPeopleTagObject:pt];
     [ass removeConPeopleTagObject:pt];
     ass.numPeopleTag = [NSNumber numberWithInt:[ass.numPeopleTag intValue]-1];
@@ -100,8 +112,22 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
                                                        object:self 
                                                      userInfo:dic1];
+}
+-(void)alertView:(UIAlertView *)alert1 didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    switch (buttonIndex) {
+        case 0:
+            
+            [self deleteButton];
+            break;
+        case 1:
+            break;
+        default:
+            break;
+    }
     
-   }
+    
+}
+
 -(void)viewOpen{
 	isOpen = YES;
     [UIView beginAnimations:nil context:nil];

@@ -2,8 +2,8 @@
 //  Album.m
 //  PhotoApp
 //
-//  Created by apple on 1/19/12.
-//  Copyright (c) 2012 chinarewards. All rights reserved.
+//  Created by  on 12-2-6.
+//  Copyright (c) 2012年 chinarewards. All rights reserved.
 //
 
 #import "Album.h"
@@ -21,6 +21,7 @@
 @dynamic name;
 @dynamic sortOrder;
 @dynamic transitType;
+@dynamic sortKey;
 @dynamic conAssetRule;
 @dynamic conDateRule;
 @dynamic conEventRule;

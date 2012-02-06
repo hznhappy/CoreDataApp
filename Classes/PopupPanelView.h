@@ -18,7 +18,8 @@
 	BOOL isOpen;
     NSMutableArray *list;
     AlbumDataSource *dataSource;
-    UIScrollView *myscroll;
+    UIScrollView *myscroll; 
+    int TAG;
 }
 @property BOOL isOpen;
 @property CGRect rectForOpen;
@@ -31,4 +32,5 @@
 -(void)viewClose;
 -(void)Buttons;
 -(void)selectTagPeople;
+-(void)deleteButton;
 @end

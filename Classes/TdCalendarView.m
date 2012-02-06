@@ -223,7 +223,6 @@ const int	weekFontSize=12;
 	int y=0;
 	int s_width=width/7;
 	int curr_Weekday=[self getMonthWeekday:currentMonthDate];
-    NSLog(@"current:%d",curr_Weekday);
 	UIFont *weekfont=[UIFont boldSystemFontOfSize:12];
 
 	for(int i=1;i<dayCount+1;i++)
@@ -231,8 +230,6 @@ const int	weekFontSize=12;
 		day=i+curr_Weekday-2;
 		x=day % 7;
 		y=day / 7;
-        NSLog(@"X=%d",x);
-        NSLog(@"y=%d",y);
 		NSString *date=[[NSString alloc] initWithFormat:@"%2d",i];
 		[date drawAtPoint:CGPointMake(x*s_width+15,y*itemHeight+headHeight+10) withFont:weekfont];
 		if([self getDayFlag:i]==1)
@@ -407,7 +404,7 @@ const int	weekFontSize=12;
 
 		UIFont *weekfont=[UIFont boldSystemFontOfSize:12];
 		NSString *date=[[NSString alloc] initWithFormat:@"%2d",currentSelectDate.day];
-		[date drawAtPoint:CGPointMake(x*swidth+15,y*itemHeight+headHeight) withFont:weekfont];
+		[date drawAtPoint:CGPointMake(x*swidth+15,y*itemHeight+headHeight+10) withFont:weekfont];
 		if([self getDayFlag:currentSelectDate.day]!=0)
 		{
 			[@"." drawAtPoint:CGPointMake(x*swidth+19,y*itemHeight+headHeight+6) withFont:[UIFont boldSystemFontOfSize:25]];

@@ -58,6 +58,8 @@
     UIImage *unselectImg;
     UISegmentedControl *PeopleSeg;
     UISegmentedControl *DateSeg;
+    UISegmentedControl *sortSeg;
+    UISegmentedControl *sortOrder;
     
     NSMutableArray *userNames;
     NSMutableArray *selectedIndexPaths;
@@ -97,7 +99,8 @@
 @property(nonatomic,strong)IBOutlet UILabel *state;
 @property(nonatomic,strong)IBOutlet UITextField *startText;
 @property(nonatomic,strong)IBOutlet UITextField *stopText;
-
+@property(nonatomic,strong)IBOutlet UISegmentedControl *sortOrder;
+@property(nonatomic,strong)IBOutlet UISegmentedControl *sortSeg;
 @property(nonatomic,strong)IBOutlet UISegmentedControl *DateSeg;
 @property(nonatomic,strong)IBOutlet UISegmentedControl *PeopleSeg;
 @property(nonatomic,strong)NSMutableArray *selectedIndexPaths;
@@ -113,6 +116,8 @@
 -(IBAction)DeleteButton2;
 -(IBAction)PeopleRuleButton;
 -(IBAction)DateRuleButton;
+-(IBAction)sortKeyButton;
+-(IBAction)sortOrderButton;
 -(UIButton *)getStateButton;
 -(void)insert:(NSInteger)Row rule:(NSString *)rule;
 -(void)update:(NSInteger)Row rule:(NSString *)rule;
@@ -120,4 +125,6 @@
 -(void)changeDate:(NSNotification *)note;
 -(void)album;
 -(void)setDate;
+-(void)setSort;
+-(void)setOrder;
 @end

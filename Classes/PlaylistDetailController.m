@@ -40,6 +40,8 @@
 @synthesize date;
 @synthesize dateRule;
 @synthesize DateSeg;
+@synthesize sortSeg;
+@synthesize sortOrder;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -59,7 +61,6 @@
     startText.delegate=self;
     stopText.tag=3;
     stopText.delegate=self;
-    //editable = NO
     key=0;
     appDelegate =[[UIApplication sharedApplication] delegate];
     AL=[[AlbumDataSource alloc]init];
@@ -125,8 +126,6 @@
     bum = [NSEntityDescription insertNewObjectForEntityForName:@"Album" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
     bum.conPeopleRule=pr1;
     pr1.conAlbum=bum;
-   // bum.name=@"WithoutName";
-    
     if(PeopleSeg.selectedSegmentIndex==0)
     {
         bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
@@ -135,7 +134,6 @@
     {
         bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:NO];
     }
- //[appDelegate.dataSource.coreData saveContext];
 }
 -(void)huyou
 {
@@ -244,6 +242,31 @@
                 break;
                 
         }
+        if(bum!=nil)
+        {      
+            if([bum.sortKey isEqualToString:@"date"])
+            {
+                self.sortSeg.selectedSegmentIndex=0;
+            }
+            else if([bum.sortKey isEqualToString:@"numPeopleTag"])
+            {
+                self.sortSeg.selectedSegmentIndex=1;
+            }
+            else if([bum.sortKey isEqualToString:@"numOfLike"])
+            {
+                self.sortSeg.selectedSegmentIndex=2;
+            }
+            
+            if([bum.sortOrder boolValue]==YES)
+            {
+                self.sortOrder.selectedSegmentIndex=0;
+            }
+            else if([bum.sortOrder boolValue]==NO)
+            {
+                self.sortOrder.selectedSegmentIndex=1;
+            }
+        }
+
         return cell;
         
     }
@@ -251,7 +274,6 @@
     {
         
                UITableViewCell *cell = nil;
-        //[self.DateRangeCell ]
         switch (rowNum) {
             case 0:
                 cell = [tableView dequeueReusableCellWithIdentifier:@"dateRule"];
@@ -441,7 +463,6 @@
                         NSString *rule=@"INCLUDE";
                         [self insert:indexPath.row rule:rule];
                         [selectedIndexPaths addObject:indexPath];
-                        NSLog(@"select :%@",selectedIndexPaths);
                     }
                     else
                     {
@@ -494,7 +515,49 @@
     {
         date.opCode=@"EXCLUDE";
     }
+    
+}
 
+-(IBAction)sortKeyButton
+{
+    [self setSort];
+    [appDelegate.dataSource.coreData saveContext];
+     
+}
+-(void)setSort
+{
+    
+    if(sortSeg.selectedSegmentIndex==0)
+    {
+        bum.sortKey=@"date";
+    }
+    else if(sortSeg.selectedSegmentIndex==1)
+    {
+       bum.sortKey=@"numPeopleTag";
+    }
+    else
+    {
+        bum.sortKey=@"numOfLike";
+        
+    }
+
+}
+-(IBAction)sortOrderButton
+{
+    [self setOrder];
+    [appDelegate.dataSource.coreData saveContext];
+  
+}
+-(void)setOrder
+{
+    if(sortOrder.selectedSegmentIndex==0)
+    {
+        bum.sortOrder=[NSNumber numberWithBool:YES];
+    }
+    else
+    {
+        bum.sortOrder=[NSNumber numberWithBool:NO];
+    }
 }
 -(IBAction)AddButton1
 {
@@ -587,7 +650,6 @@
     return stateButton;
 }
 -(void)changeState:(id)sender{
-    NSLog(@"no file");
     UIButton *button = (UIButton *)sender;
     UITableViewCell *cell = (UITableViewCell *)[button superview];
     NSIndexPath *index = [listTable indexPathForCell:cell];
@@ -685,7 +747,7 @@
         [alert show];
         if(keybord==YES)
         {
-            NSLog(@"ds");
+
           textField.text=bum.name;
         }
         else
@@ -703,7 +765,6 @@
 }
 -(void)addPlay
 {
-    NSLog(@"1");
   //if(bum==nil)
  // {
      // key=1;
@@ -726,13 +787,15 @@
      //   keybord=NO;
     if(bum==nil)
     {
-        NSLog(@"NIL");
         [self album];  
         //keybord=NO;
     }
 
-        bum.name=textField.text;
-        [appDelegate.dataSource.coreData saveContext];
+    bum.name=textField.text;
+    [self setSort];
+    [self setOrder];
+    
+    [appDelegate.dataSource.coreData saveContext];
    // }
     [AL refresh];
 }
@@ -752,11 +815,9 @@
 }
 
 -(IBAction)resetAll{
-    NSLog(@"reset:%@",selectedIndexPaths);
     for (NSIndexPath *path in selectedIndexPaths) {
         
         if (path.section == 4) {
-            NSLog(@"fe");
             UITableViewCell *cell = [listTable cellForRowAtIndexPath:path];
             cell.accessoryView = nil;
             for (UIButton *button in cell.contentView.subviews) {
@@ -800,31 +861,22 @@
     if(bu==YES)
     {
         self.startText.text=[dic objectForKey:@"Date"];
-        NSLog(@"DATE:%@",[dic objectForKey:@"Date"]);
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
-        //[inputFormatter setLocale:[NSLocale currentLocale]];
         NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
         [inputFormatter setTimeZone:timeZone1];
         [inputFormatter setDateFormat:@"yyyy:MM:dd"];
-       // newAsset.date = [inputFormatter dateFromString:strDate];
         date.startDate=[inputFormatter dateFromString:[dic objectForKey:@"Date"]];
-        NSLog(@"STARTTIME:%@",date.startDate);
     }
     else
     {
     self.stopText.text=[dic objectForKey:@"Date"];
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
-        //[inputFormatter setLocale:[NSLocale currentLocale]];
         NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
         [inputFormatter setTimeZone:timeZone1];
         [inputFormatter setDateFormat:@"yyyy:MM:dd"];
-        // newAsset.date = [inputFormatter dateFromString:strDate];
         date.stopDate=[inputFormatter dateFromString:[dic objectForKey:@"Date"]];
-        NSLog(@"STARTTIME:%@",date.stopDate);
     }
-   // date.opCode=@"INCLUDE";
     [self setDate];
-    NSLog(@"DATE.OPCODE:%@",date.opCode);
     date.conAlbum=bum;
     bum.conDateRule=date;
     [appDelegate.dataSource.coreData saveContext];
