@@ -99,5 +99,7 @@
 -(void)likeButtonPressed:(id)sender;
 -(void)addTagPeople;
 -(void)setTagToolBar;
+
+-(void)changeCropViewFrame;
 @end
 

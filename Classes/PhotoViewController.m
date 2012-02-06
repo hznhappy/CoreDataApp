@@ -109,6 +109,9 @@
 	// Recalculate contentSize based on current orientation
 	self.scrollView.contentSize = [self contentSizeForPagingScrollView];
 	for (PhotoImageView *page in visiblePages) {
+        if (page.scrollView.zoomScale>1.0) {
+            [page killScrollViewZoom];
+        }
         page.frame = [self frameForPageAtIndex:page.index];
     }
     
@@ -135,7 +138,9 @@
             [[theMovie view] setFrame:videoFrame];
         }
     }
-
+    [UIView animateWithDuration:0.4 animations:^{
+        assetInfoView.frame =CGRectMake(0, self.view.frame.size.height *1/2, 130, 120);
+    }];
 	performingLayout = NO;
     
 }
@@ -573,9 +578,9 @@
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     currentPageIndex = pageIndexBeforeRotation;
-    [UIView animateWithDuration:0.4 animations:^{
-        assetInfoView.frame =CGRectMake(0, self.view.frame.size.height *1/2, 130, 120);
-    }];
+    if (croping) {
+        [self changeCropViewFrame];
+    }
     [self performLayout];
 	[self hideControlsAfterDelay];
    // NSLog(@"scroll frame is %@ and bounds %@  and contentsize %@",NSStringFromCGRect(self.scrollView.frame),NSStringFromCGRect(self.scrollView.bounds),NSStringFromCGSize(self.scrollView.contentSize));
@@ -735,6 +740,7 @@
     if (assetInfoView.hidden) {
         assetInfoView.hidden = NO;
     }
+    croping = NO;
 }
 
 
@@ -891,7 +897,7 @@
         [self cancelEdit];
     }
     
-    
+    croping = NO;
 }
 
 #pragma mark -
@@ -990,6 +996,21 @@
 	
 }
 
+-(void)changeCropViewFrame{
+    PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
+    CGPoint center = [photoView.scrollView convertPoint:photoView.imageView.center toView:self.view];
+    CGRect imageFrame = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
+    CGFloat minSize = MIN(imageFrame.size.width, imageFrame.size.height) * 4/5;
+    [UIView animateWithDuration:0.4 animations:^{
+        if (photoView.scrollView.zoomScale >1.0) {
+            self.cropView.frame = CGRectMake(self.view.center.x - 128, self.view.center.y - 128, 256, 256);
+        }else{
+            self.cropView.frame = CGRectMake(center.x - minSize/2, center.y - minSize/2, minSize, minSize);
+        }
+        [self.cropView setCropViewSubViewFrame];
+    }];
+   
+}
 #pragma mark -
 #pragma mark UIScrollView Delegate Methods
 
@@ -1010,6 +1031,11 @@
     if (index != currentPageIndex) {
         currentPageIndex = index;
     }
+    PhotoImageView *photo = [self pageDisplayedAtIndex:currentPageIndex];
+    if (photo.scrollView.scrollEnabled) {
+        photo.scrollView.scrollEnabled = NO;
+    }
+    
 	
 }
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -1192,7 +1218,7 @@
             } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
                 [self markPhoto];	
             } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
-                [self copyPhoto];	
+                [self copyPhoto];
             } 
         }
         else {

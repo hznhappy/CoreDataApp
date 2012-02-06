@@ -346,7 +346,21 @@
 }
 
 -(CGRect)restrictFrame:(CGRect)rect{
-    
+    CGRect superViewFrame = self.superview.frame;
+    if (rect.origin.x<0) {
+        rect.origin.x = 0;
+        rect.size = self.frame.size;
+    }if (rect.origin.y<0) {
+        rect.origin.y = 0;
+        rect.size = self.frame.size;
+    }if (CGRectGetMaxX(rect) > CGRectGetMaxX(superViewFrame)) {
+        rect.size.width = self.frame.size.width;
+        rect.origin.x = CGRectGetMaxX(superViewFrame) - rect.size.width;
+    }if (CGRectGetMaxY(rect) > CGRectGetMaxY(superViewFrame)) {
+        rect.size.height = self.frame.size.height;
+        rect.origin.y = CGRectGetMaxY(superViewFrame) - rect.size.height;
+    }
+
     CGRect imageViewRect = self.photoImageView.imageView.frame;
     CGRect relativeRect = [self.superview convertRect:rect toView:self.photoImageView.imageView];
     CGFloat selfMinX = CGRectGetMinX(relativeRect);
@@ -376,18 +390,7 @@
         relativeRect.origin.y = maxY - relativeRect.size.height-0.1;
     }
     CGRect newFrame = [self.photoImageView.imageView convertRect:relativeRect toView:self.superview];
-    CGRect superViewFrame = self.superview.frame;
-    if (newFrame.origin.x<0) {
-        newFrame.origin.x = 0;
-        newFrame.size = self.frame.size;
-    }if (newFrame.origin.y<0) {
-        newFrame.origin.y = 0;
-        newFrame.size = self.frame.size;
-    }if (CGRectGetMaxX(newFrame) > CGRectGetMaxX(superViewFrame)) {
-        newFrame.origin.x = CGRectGetMaxX(superViewFrame) - newFrame.size.width;
-    }if (CGRectGetMaxY(newFrame) > CGRectGetMaxY(superViewFrame)) {
-        newFrame.origin.y = CGRectGetMaxY(superViewFrame) - newFrame.size.height;
-    }
+    
     return newFrame;
     
 }
