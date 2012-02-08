@@ -2,8 +2,8 @@
 //  DateRule.h
 //  PhotoApp
 //
-//  Created by apple on 1/19/12.
-//  Copyright (c) 2012 chinarewards. All rights reserved.
+//  Created by  on 12-2-8.
+//  Copyright (c) 2012年 chinarewards. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,9 +13,9 @@
 
 @interface DateRule : NSManagedObject
 
-@property (nonatomic, strong) NSString * opCode;
-@property (nonatomic, strong) NSDate * startDate;
-@property (nonatomic, strong) NSDate * stopDate;
-@property (nonatomic, strong) Album *conAlbum;
+@property (nonatomic, retain) NSString * opCode;
+@property (nonatomic, retain) NSDate * startDate;
+@property (nonatomic, retain) NSDate * stopDate;
+@property (nonatomic, retain) Album *conAlbum;
 
 @end

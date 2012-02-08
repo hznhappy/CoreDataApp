@@ -2,8 +2,8 @@
 //  EventRule.h
 //  PhotoApp
 //
-//  Created by apple on 1/19/12.
-//  Copyright (c) 2012 chinarewards. All rights reserved.
+//  Created by  on 12-2-8.
+//  Copyright (c) 2012年 chinarewards. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,9 +13,9 @@
 
 @interface EventRule : NSManagedObject
 
-@property (nonatomic, strong) NSString * name;
-@property (nonatomic, strong) NSString * opCode;
-@property (nonatomic, strong) Album *conAlbum;
-@property (nonatomic, strong) Event *conEvent;
+@property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSString * opCode;
+@property (nonatomic, retain) Album *conAlbum;
+@property (nonatomic, retain) Event *conEvent;
 
 @end

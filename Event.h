@@ -2,8 +2,8 @@
 //  Event.h
 //  PhotoApp
 //
-//  Created by apple on 1/19/12.
-//  Copyright (c) 2012 chinarewards. All rights reserved.
+//  Created by  on 12-2-8.
+//  Copyright (c) 2012年 chinarewards. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,9 +13,9 @@
 
 @interface Event : NSManagedObject
 
-@property (nonatomic, strong) NSString * name;
-@property (nonatomic, strong) NSSet *conAsset;
-@property (nonatomic, strong) NSSet *conEventRule;
+@property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSSet *conAsset;
+@property (nonatomic, retain) NSSet *conEventRule;
 @end
 
 @interface Event (CoreDataGeneratedAccessors)
@@ -24,8 +24,10 @@
 - (void)removeConAssetObject:(Asset *)value;
 - (void)addConAsset:(NSSet *)values;
 - (void)removeConAsset:(NSSet *)values;
+
 - (void)addConEventRuleObject:(EventRule *)value;
 - (void)removeConEventRuleObject:(EventRule *)value;
 - (void)addConEventRule:(NSSet *)values;
 - (void)removeConEventRule:(NSSet *)values;
+
 @end

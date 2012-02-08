@@ -2,8 +2,8 @@
 //  PeopleRule.h
 //  PhotoApp
 //
-//  Created by apple on 1/19/12.
-//  Copyright (c) 2012 chinarewards. All rights reserved.
+//  Created by  on 12-2-8.
+//  Copyright (c) 2012年 chinarewards. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,9 +13,9 @@
 
 @interface PeopleRule : NSManagedObject
 
-@property (nonatomic, strong) NSNumber * allOrAny;
-@property (nonatomic, strong) Album *conAlbum;
-@property (nonatomic, strong) NSSet *conPeopleRuleDetail;
+@property (nonatomic, retain) NSNumber * allOrAny;
+@property (nonatomic, retain) Album *conAlbum;
+@property (nonatomic, retain) NSSet *conPeopleRuleDetail;
 @end
 
 @interface PeopleRule (CoreDataGeneratedAccessors)
@@ -24,4 +24,5 @@
 - (void)removeConPeopleRuleDetailObject:(PeopleRuleDetail *)value;
 - (void)addConPeopleRuleDetail:(NSSet *)values;
 - (void)removeConPeopleRuleDetail:(NSSet *)values;
+
 @end

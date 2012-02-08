@@ -14,9 +14,10 @@
     PhotoAppDelegate * appDelegate;
     AmptsPhotoCoreData * coreData;
     People *favorate;
+    People *favorate1;
     NSMutableArray *result;
     NSMutableArray *IdList;
-    
+    NSMutableArray *as;
     NSNumber *fid;
     NSString *fname;
     NSString *fcolor;
@@ -37,16 +38,18 @@
 @property(nonatomic,strong)NSMutableArray *IdList;
 
 @property(nonatomic,strong)NSMutableArray *list;
-
+@property(nonatomic,strong)NSMutableArray *as;
 @property(nonatomic,strong)NSMutableArray *result;
 @property(nonatomic,strong)UIToolbar *tools;
 @property(nonatomic,strong)NSString *bo;
 @property(nonatomic,strong)People *favorate;
+@property(nonatomic,strong)People *favorate1;
 @property(nonatomic,strong)AmptsPhotoCoreData * coreData;
 -(IBAction)toggleEdit:(id)sender;
 -(IBAction)toggleAdd:(id)sender;
 -(void)creatButton;
 -(void)creatButton1;
 -(void)table;
+-(void)deletePeople;
 
 @end

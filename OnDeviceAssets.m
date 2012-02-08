@@ -7,17 +7,19 @@
 //
 
 #import "OnDeviceAssets.h"
-
+#import "AddressBook/AddressBook.h"
+#import "AddressBookUI/AddressBookUI.h"
 
 @implementation OnDeviceAssets
 @synthesize deviceAssetsList,library;
-
+@synthesize devicePeopleList;
 
 
 -(id)init {
     self=[super init];
     if (self) {
         deviceAssetsList=[[NSMutableDictionary alloc]init] ;
+        devicePeopleList=[[NSMutableDictionary alloc]init];
         library=[[ALAssetsLibrary alloc]init];
         [self refreshData];
     }
@@ -31,7 +33,25 @@
 }
 
 -(void) refreshData {
-   
+   /* ABAddressBookRef addressBook = ABAddressBookCreate();
+    
+    CFArrayRef results = ABAddressBookCopyArrayOfAllPeople(addressBook);
+    for(int i = 0; i < CFArrayGetCount(results); i++)
+    {
+        ABRecordRef person = CFArrayGetValueAtIndex(results, i);
+        ABRecordID recId = ABRecordGetRecordID(person);
+        NSString *personName = (__bridge_transfer NSString*)ABRecordCopyValue(person, kABPersonFirstNameProperty);
+        NSString *lastname = (__bridge_transfer NSString*)ABRecordCopyValue(person, kABPersonLastNameProperty);
+        //NSNumber *fid=[NSNumber numberWithInt:recId];
+        NSString *fid1=[NSString stringWithFormat:@"%d",recId];
+        NSLog(@"FID:%@",fid1);
+        NSMutableArray *A=[[NSMutableArray alloc]initWithObjects:personName,lastname,nil];
+        [self.devicePeopleList setObject:A forKey:fid1];
+        
+        
+    }
+
+   */
     void (^assetGroupEnumerator)(ALAssetsGroup *, BOOL *) = ^(ALAssetsGroup *group, BOOL *stop) 
     {
        
@@ -50,6 +70,7 @@
              
              NSString *u= [[[result defaultRepresentation]url]description];
              // XXX fixme
+             //[self.deviceAssetsList setObject:result forKey:u];
              [self.deviceAssetsList setObject:result forKey:u];
             // NSLog(@"%@", [[result defaultRepresentation]metadata]);   
          }];

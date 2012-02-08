@@ -2,8 +2,8 @@
 //  PeopleTag.h
 //  PhotoApp
 //
-//  Created by apple on 1/19/12.
-//  Copyright (c) 2012 chinarewards. All rights reserved.
+//  Created by  on 12-2-8.
+//  Copyright (c) 2012年 chinarewards. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,7 +13,7 @@
 
 @interface PeopleTag : NSManagedObject
 
-@property (nonatomic, strong) Asset *conAsset;
-@property (nonatomic, strong) People *conPeople;
+@property (nonatomic, retain) Asset *conAsset;
+@property (nonatomic, retain) People *conPeople;
 
 @end

@@ -2,7 +2,7 @@
 //  Album.h
 //  PhotoApp
 //
-//  Created by  on 12-2-6.
+//  Created by  on 12-2-8.
 //  Copyright (c) 2012年 chinarewards. All rights reserved.
 //
 
@@ -17,9 +17,9 @@
 @property (nonatomic, retain) NSNumber * maxAsset;
 @property (nonatomic, retain) NSString * music;
 @property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSString * sortKey;
 @property (nonatomic, retain) NSNumber * sortOrder;
 @property (nonatomic, retain) NSString * transitType;
-@property (nonatomic, retain) NSString * sortKey;
 @property (nonatomic, retain) NSSet *conAssetRule;
 @property (nonatomic, retain) DateRule *conDateRule;
 @property (nonatomic, retain) NSSet *conEventRule;

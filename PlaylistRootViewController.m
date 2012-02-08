@@ -59,6 +59,7 @@
 }
 
 -(void)pushAssetsTablePicker:(NSNotification *)note{
+    NSLog(@"PUSH");
     NSDictionary *dic = [note userInfo];
    
      NSMutableArray *assets = [dic objectForKey:@"myAssets"];

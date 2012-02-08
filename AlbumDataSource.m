@@ -20,6 +20,8 @@
 #import "DateRule.h"
 #import "AlbumController.h"
 #import "PlaylistRootViewController.h"
+#import "AddressBook/AddressBook.h"
+#import "AddressBookUI/AddressBookUI.h"
 @implementation AlbumDataSource
 @synthesize coreData,deviceAssets,assetsBook,opQueue;
 @synthesize nav;
@@ -110,6 +112,7 @@
     
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Asset" inManagedObjectContext:[coreData managedObjectContext]]; 
     
+  
    // NSLog(@"%@",[toBeAdded count]);
     Asset * newAsset=nil;
     for (NSString * str in toBeAdded) {
@@ -127,7 +130,7 @@
         [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
         //[inputFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"Asia/Shanghai"]];
         newAsset.date = [inputFormatter dateFromString:strDate];
-       // NSLog(@"date = %@", newAsset.date);
+      //  NSLog(@"date = %@", newAsset.date);
        
         
         
@@ -369,7 +372,8 @@
     {
     NSPredicate* result =nil;
     if ([[rule opCode] isEqualToString:@"INCLUDE"]) {
-        result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",[rule startDate],[rule stopDate]];
+      result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",[rule startDate],[rule stopDate]];
+        // result=[NSPredicate predicateWithFormat:@"some self.date between %@ and %@",[rule startDate],[rule stopDate]];
                //;
            // result=[NSPredicate predicateWithFormat:@"self.date>=%@",[rule startDate]];
         
