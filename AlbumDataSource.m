@@ -25,8 +25,7 @@
 @synthesize nav;
 
 -(id) initWithAppName: (NSString *)app navigationController:(UINavigationController *)navigationController{
-    NSLog(@"NIC");
-   self= [super init];
+    self= [super init];
     self.nav = navigationController;
     
     coreData=[[AmptsPhotoCoreData alloc]initWithAppName:app];
@@ -70,7 +69,7 @@
      get All the on device url
      */
 
-    NSArray *urlList =[[deviceAssets deviceAssetsList]allKeys];
+    NSArray *urlList =deviceAssets.urls;
    
 
     /*
@@ -117,7 +116,7 @@
         
         newAsset=[[Asset alloc]initWithEntity:entity insertIntoManagedObjectContext:[coreData managedObjectContext]];
         newAsset.url=[[[alAsset defaultRepresentation]url]description];
-        NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
+     /*   NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
        // NSLog(@"strdate:%@",strDate);
        // NSString* string = @"Wed, 05 May 2011 10:50:00";
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
@@ -127,40 +126,9 @@
         [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
         //[inputFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"Asia/Shanghai"]];
         newAsset.date = [inputFormatter dateFromString:strDate];
-       // NSLog(@"date = %@", newAsset.date);
+       // NSLog(@"date = %@", newAsset.date);*/
        
         
-        
-        
-        
-        
-        
-        
-        
-        /* NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-        
-        [outputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss Z"];
-        NSString *newDateString = [outputFormatter stringFromDate:inputDate];
-        NSLog(@"DATE:%@",newDateString);
-        
-        
-        NSDateFormatter *inputFormatter1 = [[NSDateFormatter alloc] init];
-        //[inputFormatter1 setLocale:[NSLocale currentLocale]];
-         inputFormatter1.locale= [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-        //NSTimeZone* timeZone1 = [NSTimeZone timeZoneWithName:@"beijing/china"]; 
-        //[inputFormatter1 setTimeZone:timeZone1];
-        [inputFormatter1 setDateFormat:@"yyyy:MM:dd HH:mm:ss Z"];
-        NSDate* inputDate1 = [inputFormatter1 dateFromString:newDateString];
-        NSLog(@"date11 = %@", inputDate1);*/
-              /*
-        NSDateFormatter * dateFormat=[[NSDateFormatter alloc]init];
-        newAsset.date=[dateFormat dateFromString:strDate];
-        NSLog(@"newAsset.date:%@",[dateFormat dateFromString:strDate]);    
-        NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-        [outputFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-        NSString *newDateString = [outputFormatter stringFromDate:newAsset.date];
-        NSLog(@"DATE:%@",newDateString);
-         */
         newAsset.latitude=[NSNumber numberWithDouble:0.0];
         newAsset.longitude=[NSNumber numberWithDouble:0.0];
         newAsset.numOfLike=[NSNumber numberWithInt:0];
@@ -189,7 +157,16 @@
     tmpAlbum=[[AmptsAlbum alloc]init];
     tmpAlbum.name=@"ALL";
     tmpAlbum.alblumId=nil;
-    tmpAlbum.assetsList=[self simpleQuery:@"Asset" predicate:nil sortField:nil sortOrder:YES];
+    //tmpAlbum.assetsList = [self simpleQuery:@"Asset" predicate:[NSPredicate predicateWithFormat:@"ANY url in %@",deviceAssets.urls] sortField:@"url" sortOrder:YES];
+    NSMutableArray *coreDataAssets = [self simpleQuery:@"Asset" predicate:nil sortField:nil sortOrder:YES];
+    for (NSString *u in deviceAssets.urls) {
+        for (Asset *as in coreDataAssets) {
+            if ([as.url isEqualToString:u]) {
+                [tmpAlbum.assetsList addObject:as];
+            }
+        }
+    }
+    
     tmpAlbum.num=[tmpAlbum.assetsList count];
     /* NSLog(@"Asset Fetched: %@", tmpAlbum.assetsList);
      for (Asset *a in tmpAlbum.assetsList) {
@@ -202,7 +179,14 @@
     tmpAlbum.name=@"Untag";
     tmpAlbum.alblumId=nil;
     pre=[NSPredicate predicateWithFormat:@"numPeopleTag == 0"];
-    tmpAlbum.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil sortOrder:YES];
+    NSMutableArray *unTageAssets = [self simpleQuery:@"Asset" predicate:pre sortField:nil sortOrder:YES];
+    for (NSString *u in deviceAssets.urls) {
+        for (Asset *as in unTageAssets) {
+            if ([as.url isEqualToString:u]) {
+                [tmpAlbum.assetsList addObject:as];
+            }
+        }
+    }
     tmpAlbum.num=[tmpAlbum.assetsList count];
     [assetsBook addObject:tmpAlbum];
     tmp=[self simpleQuery:@"Album" predicate:nil sortField:nil sortOrder:YES];
@@ -383,7 +367,7 @@
 }
 -(NSPredicate*) parseEventRule:(EventRule *)rule {
     NSPredicate * result=nil ;
-    if([rule opCode]==@"INCLUDE") {
+    if([[rule opCode] isEqualToString:@"INCLUDE"]) {
         result=[NSPredicate predicateWithFormat:@"conEvent==%@",[rule conEvent]];
     }else {
            result=[NSPredicate predicateWithFormat:@"conEvent!=%@",[rule conEvent]];          
@@ -392,7 +376,7 @@
 }
 -(NSPredicate *) parseAssetRule:(AssetRule *)rule {
     NSPredicate * result=nil ;
-    if([rule opCode]==@"INCLUDE") {
+    if([[rule opCode] isEqualToString:@"INCLUDE"]) {
         result=[NSPredicate predicateWithFormat:@"self==%@",[rule conAsset]];
     }else {
         result=[NSPredicate predicateWithFormat:@"self!=%@",[rule conAsset]];          

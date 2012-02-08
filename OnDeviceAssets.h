@@ -11,12 +11,13 @@
 
 @interface OnDeviceAssets : NSObject {
     NSMutableDictionary *deviceAssetsList;
-
+    NSMutableArray *urls;
     ALAssetsLibrary * library;
     
 }
 @property (nonatomic,strong)NSMutableDictionary *  deviceAssetsList;
 @property (nonatomic,strong) ALAssetsLibrary * library;
+@property (nonatomic,strong)NSMutableArray *urls;
 -(ALAsset *) getAsset:(NSString *) l;
 -(void) refreshData;
 

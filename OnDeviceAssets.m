@@ -11,7 +11,7 @@
 
 @implementation OnDeviceAssets
 @synthesize deviceAssetsList,library;
-
+@synthesize urls;
 
 
 -(id)init {
@@ -19,6 +19,7 @@
     if (self) {
         deviceAssetsList=[[NSMutableDictionary alloc]init] ;
         library=[[ALAssetsLibrary alloc]init];
+        urls = [[NSMutableArray alloc]init];
         [self refreshData];
     }
   
@@ -49,6 +50,7 @@
              }
              
              NSString *u= [[[result defaultRepresentation]url]description];
+             [urls addObject:u];
              // XXX fixme
              [self.deviceAssetsList setObject:result forKey:u];
             // NSLog(@"%@", [[result defaultRepresentation]metadata]);   
@@ -64,7 +66,7 @@
         NSLog(@"error happen when enumberatoring group,error: %@ ",[error description]);                 
     };	
 
-    [library enumerateGroupsWithTypes:ALAssetsGroupAll
+    [library enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
                            usingBlock:assetGroupEnumerator 
                          failureBlock:assetGroupEnumberatorFailure];
 }

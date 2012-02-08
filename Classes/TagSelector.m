@@ -33,7 +33,6 @@
 -(void)addTagPeople:(NSNotification *)note{
     NSDictionary *dic = [note userInfo];
     mypeople=[dic objectForKey:@"people"];
-    NSLog(@"mypeople:%@",mypeople.conPeopleTag);
     [self addTagName];
     [self resetToolBar];
     NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:nil];
@@ -134,13 +133,15 @@
     }
     [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
     [viewController dismissModalViewControllerAnimated:YES];
-    [self addTagName];
-    [self resetToolBar];
+    if ([viewController isKindOfClass:[PhotoViewController class]]) {
+        [self addTagName];
+        [self resetToolBar];
+    }
+    
     NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
                                                        object:self 
                                                      userInfo:dic1];
-
     return NO;
 }
 
@@ -160,7 +161,6 @@
         
         [(PhotoViewController *)viewController addTagPeople];
     }
-
 }
 #pragma mark -
 #pragma mark reset ToolBar
