@@ -69,13 +69,16 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 @synthesize index;
 @synthesize fuzzy,fullScreen;
 @synthesize playlist;
+@synthesize moviePlayer;
+@synthesize playingVideo;
+
 - (id)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
 		
 		self.backgroundColor = [UIColor blackColor];
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		self.opaque = YES;
-		
+		playingVideo = NO;
 		PhotoScrollView *scrollView = [[PhotoScrollView alloc] initWithFrame:self.bounds];
 		scrollView.backgroundColor = [UIColor blackColor];
 		scrollView.opaque = YES;
@@ -219,10 +222,10 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 
 - (void)layoutScrollViewAnimated:(BOOL)animated{
 
-	if (animated) {
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:0.0001];
-	}
+//	if (animated) {
+//		[UIView beginAnimations:nil context:NULL];
+//		[UIView setAnimationDuration:0.0001];
+//	}
     if (CGSizeEqualToSize(self.imageView.image.size, CGSizeZero)) {
         return;
     }
@@ -248,10 +251,9 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 	self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
 	self.scrollView.contentOffset = CGPointMake(0.0f, 0.0f);
 	self.imageView.frame = self.scrollView.bounds;
-    
-	if (animated) {
-		[UIView commitAnimations];
-	}
+//	if (animated) {
+//		[UIView commitAnimations];
+//	}
 }
 
 
@@ -299,9 +301,12 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
-	return self.imageView;
+    if (playingVideo) {
+        return moviePlayer.view;
+    }else{
+        return self.imageView;
+    }
 }
-
 -(void)scrollViewDidZoom:(UIScrollView *)scrollView{
     if (scrollView.zoomScale > 1.0f) {				
 		CGFloat height, width;	

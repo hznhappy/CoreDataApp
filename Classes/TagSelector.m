@@ -102,6 +102,7 @@
 }
 
 -(void)saveTagAsset:(Asset *)asset{
+    
     asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]+1];
     PeopleTag  *peopleTag= [NSEntityDescription insertNewObjectForEntityForName:@"PeopleTag" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
     peopleTag.conAsset = asset;
@@ -152,7 +153,6 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
                                                        object:self 
                                                      userInfo:dic1];
-
     return NO;
 }
 
@@ -168,12 +168,12 @@
 }
 
 -(void)addTagName{
+    add=@"NO";
     if ([viewController isKindOfClass:[PhotoViewController class]]) {
         NSLog(@"viewController");
         
         [(PhotoViewController *)viewController addTagPeople];
     }
-
 }
 #pragma mark -
 #pragma mark reset ToolBar

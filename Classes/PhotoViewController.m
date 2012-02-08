@@ -124,23 +124,32 @@
     Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
     NSString *strUrl = asset.url;
     ALAsset *as = [self.playlist.assets objectForKey:strUrl];
+    PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
     if ([[as valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo]) 
     {  
         CGRect frame1 =buttonFram;
-        frame1.origin.x =buttonFram.origin.x + buttonFram.size.width/2 - 30;
-        frame1.origin.y = buttonFram.origin.y + buttonFram.size.height/2 - 20;
+        frame1.origin.x = buttonFram.size.width/2 - 30;
+        frame1.origin.y = buttonFram.size.height/2 - 20;
         frame1.size.height=60;
         frame1.size.width=60;
-        playButton.frame = frame1;
+        for (UIView *view in photoView.subviews) {
+            if ([view isKindOfClass:[UIButton class]]) {
+                [view setFrame:frame1];
+            }
+        }
+
+       // playButton.frame = frame1;
         if (theMovie != nil && theMovie.view.superview != nil) {
-            PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
-            CGRect videoFrame = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
-            [[theMovie view] setFrame:videoFrame];
+            //CGRect videoFrame = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
+            theMovie.view.frame = photoView.imageView.frame;
+            //[[theMovie view] setFrame:photoView.imageView.frame];//CGRectMake(0, 0, photoView.imageView.frame.size.width, photoView.imageView.frame.size.height)];
         }
     }
-    [UIView animateWithDuration:0.4 animations:^{
-        assetInfoView.frame =CGRectMake(0, self.view.frame.size.height *1/2, 130, 120);
-    }];
+    if (assetInfoView != nil && assetInfoView.superview != nil) {
+        
+        assetInfoView.frame =CGRectMake(photoView.frame.origin.x, photoView.frame.size.height *1/2, 130, 120);
+    }
+    
 	performingLayout = NO;
     
 }
@@ -208,6 +217,7 @@
     tagShow = NO;
     editing=NO;
     croping = NO;
+    playingVideo = NO;
     NSString *u=NSLocalizedString(@"Edit", @"title");
     NSString *save = NSLocalizedString(@"Save", @"title");
     if (!lockMode) {
@@ -267,6 +277,11 @@
 }
 
 - (void)configurePage:(PhotoImageView *)page forIndex:(NSUInteger)index{
+    for (UIView *view in page.subviews) {
+        if ([view isKindOfClass:[UIButton class]]) {
+            [view removeFromSuperview];
+        }
+    }
     CGRect rect = [self frameForPageAtIndex:index];
     page.index = index;
     page.imageView.image = nil;
@@ -278,11 +293,11 @@
     if ([[as valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo]) 
     {  
         CGRect frame1 =rect;
-        frame1.origin.x =rect.origin.x + rect.size.width/2 - 30;
-        frame1.origin.y = rect.origin.y + rect.size.height/2 - 20;
+        frame1.origin.x = rect.size.width/2 - 30;
+        frame1.origin.y = rect.size.height/2 - 20;
         frame1.size.height=60;
         frame1.size.width=60;
-        [self play:frame1];
+        [page addSubview:[self configurePlayButton:frame1]];
         if (playingPhoto) {
             [self performSelector:@selector(playVideo) withObject:nil afterDelay:1];
             [timer invalidate];
@@ -290,9 +305,8 @@
     }
     
     if (!playingPhoto) {
-        [self showPhotoInfo];
+        [self showPhotoInfo:page];
     }
-    
 }
 
 - (BOOL)isDisplayingPageForIndex:(NSUInteger)index{
@@ -396,7 +410,7 @@
 
 #pragma mark -
 #pragma mark PhotoInfo and likeButton method
--(void)showPhotoInfo{
+-(void)showPhotoInfo:(PhotoImageView *)page{
     
     if (assetInfoView || assetInfoView.superview != nil) {
         [assetInfoView removeFromSuperview];
@@ -407,18 +421,19 @@
         likeButton = nil;
     }
     
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addPhotoInfoView) object:nil];
-    [self performSelector:@selector(addPhotoInfoView) withObject:nil afterDelay:1];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addPhotoInfoView:) object:page];
+    [self performSelector:@selector(addPhotoInfoView:) withObject:page afterDelay:1];
     if (lockMode) {
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showLikeButton) object:nil];
-        [self performSelector:@selector(showLikeButton) withObject:nil afterDelay:1];
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showLikeButton:) object:page];
+        [self performSelector:@selector(showLikeButton:) withObject:page afterDelay:1];
     }
     
 }
 
--(void)addPhotoInfoView{
+-(void)addPhotoInfoView:(PhotoImageView *)page{
     Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
-    assetInfoView = [[UIView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height * 1/2 , 130, 120)];
+    assetInfoView = [[UIView alloc]initWithFrame:CGRectMake(page.frame.origin.x, page.frame.size.height * 1/2 , 130, 120)];
+    assetInfoView.userInteractionEnabled = NO;
     [assetInfoView.layer setCornerRadius:10.0];
     [assetInfoView setClipsToBounds:YES]; 
     if (!lockMode) {
@@ -454,12 +469,13 @@
     //assetInfoView.alpha = 0.4;
     [assetInfoView addSubview:date];
     
-    [self.view addSubview:assetInfoView];
+    [self.scrollView addSubview:assetInfoView];
+    //[self.scrollView bringSubviewToFront:assetInfoView];
 }
 
--(void)showLikeButton{
+-(void)showLikeButton:(PhotoImageView *)page{
     likeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    CGRect mainScreen = self.view.frame;
+    CGRect mainScreen = page.frame;
     likeButton.frame = CGRectMake(mainScreen.size.width*4/5, mainScreen.size.height*3/4, 50, 50);
     
     Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
@@ -470,8 +486,9 @@
     }
     
     [likeButton addTarget:self action:@selector(likeButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:likeButton];
+    [page addSubview:likeButton];
 }
+
 -(void)likeButtonPressed:(id)sender
 {
     UIButton *like = (UIButton *)sender;
@@ -492,26 +509,35 @@
 #pragma mark -
 #pragma mark PlayVideo Methods
 
--(void)play:(CGRect)framek
+-(UIButton *)configurePlayButton:(CGRect)framek
 {
-    if (playButton && playButton.superview != nil) {
-        [playButton removeFromSuperview];
-        playButton = nil;
-    }
-    playButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [playButton addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
+//    if (playButton && playButton.superview != nil) {
+//        [playButton removeFromSuperview];
+//        playButton = nil;
+//    }
+    UIButton *playButtons = [UIButton buttonWithType:UIButtonTypeCustom];
+    //playButton = playButtons;
+    [playButtons addTarget:self action:@selector(playVideo:) forControlEvents:UIControlEventTouchUpInside];
     UIImage *picture = [UIImage imageNamed:@"ji.png"];
     // set the image for the button
-    [playButton setBackgroundImage:picture forState:UIControlStateNormal];
-    [playButton setBackgroundColor:[UIColor clearColor]];
-    playButton.frame =framek;
-    [self.scrollView addSubview:playButton];
+    [playButtons setBackgroundImage:picture forState:UIControlStateNormal];
+    [playButtons setBackgroundColor:[UIColor clearColor]];
+    playButtons.frame =framek;
+    //[self.scrollView addSubview:playButton];
+    return playButtons;
 }
 
 
--(void)playVideo
+-(void)playVideo:(id)sender
 {
-    playButton.hidden = YES;
+    UIButton *button = (UIButton *)sender;
+    [self setBarsHidden:YES animated:YES];
+    button.hidden = YES;
+    playButton = button;
+    [self playVideo];
+}
+
+-(void)playVideo{
     Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
     NSString *strUrl = asset.url;
     
@@ -524,17 +550,18 @@
     theMovie=[[MPMoviePlayerController alloc] initWithContentURL:url]; 
     //  NSTimeInterval duration = theMovie.duration;
     //  NSLog(@"LENGTH:%f",theMovie.duration);
-    PhotoImageView *_imageView = [self pageDisplayedAtIndex:currentPageIndex];
-    CGRect videoFrame = CGRectMake(0, 0, _imageView.imageView.frame.size.width, _imageView.imageView.frame.size.height);
-    [[theMovie view] setFrame:videoFrame]; // Frame must match parent view
-    [_imageView.imageView addSubview:[theMovie view]];
-    //theMovie.scalingMode =  MPMovieControlModeDefault;
-    // theMovie.scalingMode=MPMovieScalingModeAspectFill; 
+    PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
+    page.playingVideo = YES;
+    page.moviePlayer = theMovie;
+//    CGRect videoFrame = CGRectMake(0, 0, _imageView.imageView.frame.size.width, _imageView.imageView.frame.size.height);
+//    [[theMovie view] setFrame:videoFrame]; // Frame must match parent view
+//    [_imageView.imageView addSubview:[theMovie view]];
+
+    theMovie.view.frame = page.imageView.frame;
+    [page.scrollView addSubview:theMovie.view];
     theMovie.scalingMode=MPMovieMediaTypeMaskAudio;
     theMovie.controlStyle = MPMovieControlModeHidden;
-    //theMovie.scalingMode = MPMovieScalingModeFill;
-    //   UIImage *imageSel = [theMovie thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
-    // Register for the playback finished notification. 
+   
     
     [[NSNotificationCenter defaultCenter] addObserver:self 
                                              selector:@selector(myMovieFinishedCallback:) 
@@ -543,10 +570,8 @@
     
     // Movie playback is asynchronous, so this method returns immediately. 
     [theMovie play];  
-    
-    
-    
-    
+    playingVideo = YES;
+
 }
 // When the movie is done,release the controller. 
 -(void)myMovieFinishedCallback:(NSNotification*)aNotification 
@@ -555,12 +580,16 @@
     MPMoviePlayerController* theMovie2=[aNotification object]; 
     [[NSNotificationCenter defaultCenter] removeObserver:self 
                                                     name:MPMoviePlayerPlaybackDidFinishNotification 
-                                                  object:theMovie2]; 
+                                                  object:theMovie2];
     [theMovie.view removeFromSuperview];
     theMovie = nil;
     if (playingPhoto) {
+        NSLog(@"timer fire");
         [timer fire];
     }
+    PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
+    page.playingVideo = NO;
+    playingVideo = NO;
 }
 
 #pragma mark - 
@@ -589,7 +618,15 @@
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
-   
+    PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
+    if (theMovie != nil && theMovie.view.superview != nil) {
+        //CGRect videoFrame = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
+        [UIView animateWithDuration:0.2 animations:^{
+            theMovie.view.frame = photoView.imageView.frame;
+        }];
+        //[[theMovie view] setFrame:photoView.imageView.frame];//CGRectMake(0, 0, photoView.imageView.frame.size.width, photoView.imageView.frame.size.height)];
+    }
+
     _rotating = NO;
 }
 
@@ -599,7 +636,7 @@
  
 	UIBarButtonItem *action = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(actionButtonHit:)];
 	UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-	
+	//UIBarButtonItem *play = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay target:self action:@selector(playPhotoOrVideo)];
 	if ([self.playlist.storeAssets count] > 1) {
 		
 		UIBarButtonItem *fixedCenter = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
@@ -730,11 +767,11 @@
         [cropView removeFromSuperview];
     } 
     PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
-    if (photoView != nil) {
-        if (photoView.alpha!=1.0) {
-            photoView.alpha = 1.0;
-        }
+    
+    if (photoView.alpha!=1.0) {
+        photoView.alpha = 1.0;
     }
+    
     if (!self.scrollView.scrollEnabled) {
         self.scrollView.scrollEnabled = YES;
     }
@@ -815,35 +852,34 @@
 -(void)cropPhoto{
     
     PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
-    if (photoView != nil) {
-        if (cropView.superview!=nil) {
-            self.navigationItem.rightBarButtonItem = nil;
-            [cropView removeFromSuperview];
-            photoView.alpha = 1.0;
-            self.navigationItem.rightBarButtonItem = saveItem;
-            saveItem.enabled = NO;
-            croping = NO;
-        }else{
-            CGPoint center = [photoView.scrollView convertPoint:photoView.imageView.center toView:self.view];
-            CGRect imageFrame = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
-            CGFloat minSize = MIN(imageFrame.size.width, imageFrame.size.height) * 4/5;
-            self.navigationItem.rightBarButtonItem = nil;
-            UIBarButtonItem *cropItem=[[UIBarButtonItem alloc]initWithTitle:@"Crop" style:UIBarButtonItemStyleDone target:self action:@selector(setCropPhoto:)];
-            self.navigationItem.rightBarButtonItem = cropItem;
-            [self setCropConstrainToolBar];
-            photoView.alpha = 0.4;
-            if (photoView.scrollView.zoomScale > 1.0) {
-                CGPoint viewCenter = self.view.center;
-                self.cropView = [[CropView alloc]initWithFrame:CGRectMake(viewCenter.x - 128, viewCenter.y - 128, 256, 256) ImageView:photoView superView:self.view];
-            }else
-                self.cropView = [[CropView alloc]initWithFrame:CGRectMake(center.x - minSize/2, center.y - minSize/2, minSize, minSize) ImageView:photoView superView:self.view];//CGRectMake(110, 190, 100, 100)
-            
-            self.cropView.backgroundColor = [UIColor clearColor];;
-            
-            [self.view addSubview:cropView];
-            croping = YES;
-        }
+    if (cropView.superview!=nil) {
+        self.navigationItem.rightBarButtonItem = nil;
+        [cropView removeFromSuperview];
+        photoView.alpha = 1.0;
+        self.navigationItem.rightBarButtonItem = saveItem;
+        saveItem.enabled = NO;
+        croping = NO;
+    }else{
+        CGPoint center = [photoView.scrollView convertPoint:photoView.imageView.center toView:self.view];
+        CGRect imageFrame = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
+        CGFloat minSize = MIN(imageFrame.size.width, imageFrame.size.height) * 4/5;
+        self.navigationItem.rightBarButtonItem = nil;
+        UIBarButtonItem *cropItem=[[UIBarButtonItem alloc]initWithTitle:@"Crop" style:UIBarButtonItemStyleDone target:self action:@selector(setCropPhoto:)];
+        self.navigationItem.rightBarButtonItem = cropItem;
+        [self setCropConstrainToolBar];
+        photoView.alpha = 0.4;
+        if (photoView.scrollView.zoomScale > 1.0) {
+            CGPoint viewCenter = self.view.center;
+            self.cropView = [[CropView alloc]initWithFrame:CGRectMake(viewCenter.x - 128, viewCenter.y - 128, 256, 256) ImageView:photoView superView:self.view];
+        }else
+            self.cropView = [[CropView alloc]initWithFrame:CGRectMake(center.x - minSize/2, center.y - minSize/2, minSize, minSize) ImageView:photoView superView:self.view];//CGRectMake(110, 190, 100, 100)
+        
+        self.cropView.backgroundColor = [UIColor clearColor];;
+        
+        [self.view addSubview:cropView];
+        croping = YES;
     }
+    
     
 }
 
@@ -879,43 +915,43 @@
     }
     saveItem.enabled = NO;
     PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
-    if (photoView == nil) {
-        return;
-    }else{
-        //[photoView savePhoto];
-        Asset *as = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
-        ALAsset *asset = [self.playlist.assets objectForKey:as.url];
-        NSData *data = UIImagePNGRepresentation(photoView.fullScreen);
-        //NSLog(@"asset is %@ and %@",asset,asset.editable ? @"YES":@"NO" );
-        if (asset.editable) {
-            [asset setImageData:data metadata:[[asset defaultRepresentation]metadata] completionBlock: ^(NSURL *assetURL, NSError *error){
-                
-            }];
-
-        }else{
-            [asset writeModifiedImageDataToSavedPhotosAlbum:data metadata:nil completionBlock:^(NSURL *assetURL,NSError *error){
-                NSLog(@"save and url %@",assetURL); 
-                
-                ALAssetsLibraryAssetForURLResultBlock resultBlock = ^(ALAsset *asset){
-                    [self.playlist.assets setObject:asset forKey:[assetURL description]];
-                    NSLog(@"get new");
-                };
-                
-                ALAssetsLibraryAccessFailureBlock failblock = ^(NSError *error){
-                    NSLog(@"error %@",error);
-                };
-                
-                PhotoAppDelegate *app = [UIApplication sharedApplication].delegate;
-                [app.dataSource.deviceAssets.library assetForURL:assetURL resultBlock:resultBlock failureBlock:failblock];
-            }];
-        }
+    //[photoView savePhoto];
+    Asset *as = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
+    ALAsset *asset = [self.playlist.assets objectForKey:as.url];
+    NSData *data = UIImagePNGRepresentation(photoView.fullScreen);
+    //NSLog(@"asset is %@ and %@",asset,asset.editable ? @"YES":@"NO" );
+    if (asset.editable) {
+        [asset setImageData:data metadata:[[asset defaultRepresentation]metadata] completionBlock: ^(NSURL *assetURL, NSError *error){
+            
+        }];
         
-        [self cancelEdit];
+    }else{
+        [asset writeModifiedImageDataToSavedPhotosAlbum:data metadata:nil completionBlock:^(NSURL *assetURL,NSError *error){
+            NSLog(@"save and url %@",assetURL); 
+            
+            ALAssetsLibraryAssetForURLResultBlock resultBlock = ^(ALAsset *asset){
+                [self.playlist.assets setObject:asset forKey:[assetURL description]];
+                [self performSelectorOnMainThread:@selector(changeScrollView) withObject:nil waitUntilDone:YES];
+            };
+            
+            ALAssetsLibraryAccessFailureBlock failblock = ^(NSError *error){
+                NSLog(@"error %@",error);
+            };
+            
+            PhotoAppDelegate *app = [UIApplication sharedApplication].delegate;
+            [app.dataSource.deviceAssets.library assetForURL:assetURL resultBlock:resultBlock failureBlock:failblock];
+        }];
     }
+    
+    [self cancelEdit];
+    
     
     croping = NO;
 }
 
+-(void)changeScrollView{
+    self.scrollView.contentSize = [self contentSizeForPagingScrollView];
+}
 #pragma mark -
 #pragma mark Bar Methods
 
@@ -963,7 +999,11 @@
 }
 
 - (void)toggleBarsNotification:(NSNotification*)notification{
-	[self setBarsHidden:!_barsHidden animated:YES];
+   
+    if (!playingVideo) {
+        [self setBarsHidden:!_barsHidden animated:YES];
+    }
+	
 }
 
 #pragma mark -
@@ -1042,6 +1082,7 @@
     [self updatePages];
     // Calculate current page
     CGRect visibleBounds = scrollView.bounds;
+    //NSLog(@"the visible %@",NSStringFromCGRect(visibleBounds));
 	int index = (int)(floorf(CGRectGetMidX(visibleBounds) / CGRectGetWidth(visibleBounds)));    if (index < 0) index = 0;
 	if (index > self.playlist.storeAssets.count - 1) index = self.playlist.storeAssets.count - 1;
     if (index != currentPageIndex) {

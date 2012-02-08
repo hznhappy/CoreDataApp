@@ -9,6 +9,7 @@
 @class DisplayPhotoView;
 
 #include <AssetsLibrary/AssetsLibrary.h>
+#import <MediaPlayer/MediaPlayer.h>
 #import <Foundation/Foundation.h>
 @class Playlist;
 @interface PhotoImageView : UIView <UIScrollViewDelegate>{
@@ -26,15 +27,17 @@
     UIImage *fullScreen;
 	//BOOL _loading;
 	CGFloat _beginRadians;
+    MPMoviePlayerController *moviePlayer;
+    BOOL playingVideo;
 }
 @property (assign) NSUInteger index;
 @property (nonatomic, strong) Playlist *playlist;
 @property (nonatomic, strong) UIImage *fuzzy;
 @property (nonatomic, strong) UIImage *fullScreen;
-@property(nonatomic,readonly) UIImageView *imageView;
-@property(nonatomic,readonly) PhotoScrollView *scrollView;
-
-
+@property (nonatomic,readonly) UIImageView *imageView;
+@property (nonatomic,readonly) PhotoScrollView *scrollView;
+@property (nonatomic,strong)MPMoviePlayerController *moviePlayer;
+@property (nonatomic,assign)BOOL playingVideo;
 - (void)loadIndex: (NSUInteger) _index;
 - (void)doLoadIndex: (NSUInteger) _index;
 - (void)doLoadIndexStr: (NSString*) _index;

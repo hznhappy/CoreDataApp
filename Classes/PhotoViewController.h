@@ -43,6 +43,7 @@
     BOOL tagShow;
     BOOL croping;
     BOOL playingPhoto;
+    BOOL playingVideo;
     PopupPanelView *ppv;
     TagSelector *tagSelector;
                                                         
@@ -87,15 +88,16 @@
 
 //PlayVideo and play photos
 -(void)fireTimer:(NSString *)animateStyle;
+-(void)playVideo:(id)sender;
 -(void)playVideo;
--(void)play:(CGRect)framek;
+-(UIButton *)configurePlayButton:(CGRect)framek;
 
 //PhotoInfo method
--(void)showPhotoInfo;
--(void)addPhotoInfoView;
+-(void)showPhotoInfo:(PhotoImageView *)page;
+-(void)addPhotoInfoView:(PhotoImageView *)page;
 
 //LikeTag
--(void)showLikeButton;
+-(void)showLikeButton:(PhotoImageView *)page;
 -(void)likeButtonPressed:(id)sender;
 -(void)addTagPeople;
 -(void)setTagToolBar;
