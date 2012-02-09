@@ -39,8 +39,8 @@
    // { 
     if([add isEqualToString:@"YES"])
     { 
-    [self addTagName];
-    [self resetToolBar];
+        [self addTagName];
+        [self resetToolBar];
     }
     NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
@@ -107,10 +107,8 @@
     asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]+1];
     PeopleTag  *peopleTag= [NSEntityDescription insertNewObjectForEntityForName:@"PeopleTag" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
     peopleTag.conAsset = asset;
-    NSLog(@"TAGconasset:%@",peopleTag.conAsset);
     [asset addConPeopleTagObject:peopleTag];
     peopleTag.conPeople = mypeople;
-    NSLog(@"conpeople:%@",peopleTag.conPeople.firstName);
     //mypeople.tag=YES;
     [mypeople addConPeopleTagObject:peopleTag];
     [dataSource.coreData saveContext];
@@ -147,8 +145,8 @@
     [viewController dismissModalViewControllerAnimated:YES];
     if([add isEqualToString:@"YES"])
     {
-    [self addTagName];
-    [self resetToolBar];
+        [self addTagName];
+        [self resetToolBar];
     }
     NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
