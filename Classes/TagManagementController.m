@@ -327,6 +327,8 @@ int j=1,count=0;
    [self dismissModalViewControllerAnimated:YES];
  
     People *selectedPeople = [self.result objectAtIndex:indexPath.row];
+    [self dismissModalViewControllerAnimated:YES];
+    
     NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:selectedPeople,@"people",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"addTagPeople" 
                                                        object:self 

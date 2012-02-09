@@ -32,6 +32,7 @@
 }
 
 -(void)addTagPeople:(NSNotification *)note{
+    NSLog(@"twice ");
     NSDictionary *dic = [note userInfo];
     mypeople=[dic objectForKey:@"people"];
     NSLog(@"adddd:%@",add);
@@ -39,8 +40,8 @@
    // { 
     if([add isEqualToString:@"YES"])
     { 
-    [self addTagName];
-    [self resetToolBar];
+        [self addTagName];
+        [self resetToolBar];
     }
     NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
@@ -173,8 +174,8 @@
     [viewController dismissModalViewControllerAnimated:YES];
     if([add isEqualToString:@"YES"])
     {
-    [self addTagName];
-    [self resetToolBar];
+        [self addTagName];
+        [self resetToolBar];
     }
     NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 

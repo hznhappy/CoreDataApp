@@ -30,6 +30,30 @@
     self.dataSource = _dataSource;
     [window addSubview:rootViewController.view];
     [window makeKeyAndVisible];
+    UILocalNotification *localNotif = [[UILocalNotification alloc] init];
+    if (localNotif == nil)
+        return NO;
+    NSString *dateString = @"09-02-2012";
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    // this is imporant - we set our input date format to match our input string
+    // if format doesn't match you'll get nil from your string, so be careful
+    [dateFormatter setDateFormat:@"dd-MM-yyyy"];
+    NSDate *dateFromString = [[NSDate alloc] init];
+    // voila!
+    dateFromString = [dateFormatter dateFromString:dateString];
+    localNotif.fireDate = dateFromString;
+    localNotif.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0*3600];
+    
+    localNotif.alertBody = [NSString stringWithFormat:@"Test"];
+    localNotif.alertAction = @"View Details";
+    
+    localNotif.soundName = UILocalNotificationDefaultSoundName;
+    localNotif.applicationIconBadgeNumber = 1;
+    
+    NSDictionary *infoDict = [NSDictionary dictionaryWithObject:@"eventName" forKey:@"name"];
+    localNotif.userInfo = infoDict;
+    
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotif];
     return YES;
 }
 

@@ -43,6 +43,7 @@
 - (void)doLoadIndexStr: (NSString*) _index;
 - (void)doLoadImage: (UIImage *) image checkIndex: (NSUInteger) _index;
 
+-(void)setClearImage;
 - (void)rotatePhoto;
 -(void)savePhoto;
 - (void)killScrollViewZoom;

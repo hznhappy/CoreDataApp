@@ -177,9 +177,11 @@
     }
     if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
         // back button was pressed.  We know this is true because self is no longer
-        // in the navigation stack.  
+        // in the navigation stack. 
+        tagSelector = nil;
         [self cancelControlHiding];
         [[NSNotificationCenter defaultCenter] removeObserver:tagSelector];
+        [[NSNotificationCenter defaultCenter]removeObserver:self];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"reloadTableData" object:nil];
     }
     [self.navigationController setToolbarHidden:YES animated:YES];		
@@ -229,7 +231,6 @@
     }
        
     [self updatePages];
-    NSLog(@"playlist assets is %d",self.playlist.storeAssets.count);
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(resetCropView) name:@"resetCropView" object:nil];
     
 }
@@ -287,7 +288,12 @@
     page.index = index;
     page.imageView.image = nil;
     page.frame = rect;
-    [page loadIndex:index];
+    if (!playingPhoto) {
+        [self showPhotoInfo:page];
+        [page loadIndex:index];
+    }else{
+        [page setClearImage];
+    }
     Asset *asset = [self.playlist.storeAssets objectAtIndex:index];
     NSString *strUrl = asset.url;
     ALAsset *as = [self.playlist.assets objectForKey:strUrl];
@@ -298,16 +304,15 @@
         frame1.origin.y = rect.size.height/2 - 20;
         frame1.size.height=60;
         frame1.size.width=60;
-        [page addSubview:[self configurePlayButton:frame1]];
         if (playingPhoto) {
             [self performSelector:@selector(playVideo) withObject:nil afterDelay:1];
             [timer invalidate];
+        }else{
+            [page addSubview:[self configurePlayButton:frame1]];
+            
         }
     }
     
-    if (!playingPhoto) {
-        [self showPhotoInfo:page];
-    }
 }
 
 - (BOOL)isDisplayingPageForIndex:(NSUInteger)index{
@@ -557,6 +562,7 @@
     PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
     page.playingVideo = YES;
     page.moviePlayer = theMovie;
+    page.imageView.hidden = YES;
 //    CGRect videoFrame = CGRectMake(0, 0, _imageView.imageView.frame.size.width, _imageView.imageView.frame.size.height);
 //    [[theMovie view] setFrame:videoFrame]; // Frame must match parent view
 //    [_imageView.imageView addSubview:[theMovie view]];
@@ -588,11 +594,12 @@
     [theMovie.view removeFromSuperview];
     theMovie = nil;
     if (playingPhoto) {
-        NSLog(@"timer fire");
-        [timer fire];
+        [self fireTimer:playPhotoTransition];
     }
     PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
     page.playingVideo = NO;
+    page.scrollView.zoomScale = 1.0;
+    page.imageView.hidden = NO;
     playingVideo = NO;
 }
 
@@ -624,13 +631,11 @@
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
     PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
     if (theMovie != nil && theMovie.view.superview != nil) {
-        //CGRect videoFrame = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
         [UIView animateWithDuration:0.2 animations:^{
             theMovie.view.frame = photoView.imageView.frame;
         }];
-        //[[theMovie view] setFrame:photoView.imageView.frame];//CGRectMake(0, 0, photoView.imageView.frame.size.width, photoView.imageView.frame.size.height)];
     }
-
+   //[self performLayout];
     _rotating = NO;
 }
 
@@ -729,7 +734,7 @@
     UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
     [self setToolbarItems:[NSArray arrayWithObjects:flex,contacts,flex,favorites,flex,events,flex, nil]];
-     
+    NSLog(@"come to here");
 }
 
 #pragma mark -
@@ -966,7 +971,7 @@
 #pragma mark Bar Methods
 
 - (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated{
-    
+    NSLog(@"set Status hidden is %@",hidden? @"YES":@"NO");
     [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:UIStatusBarAnimationFade];
     
 }
@@ -979,6 +984,7 @@
     [self setPhotoInfoHidden:hidden];
     [self setLikeButtonHidden:hidden];
 	_barsHidden=hidden;
+    NSLog(@"hide time");
 	
 }
 
@@ -1084,11 +1090,6 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (performingLayout || _rotating) return;
     //NSLog(@"scroll frame is %@ and bounds %@  and contentsize %@",NSStringFromCGRect(self.scrollView.frame),NSStringFromCGRect(self.scrollView.bounds),NSStringFromCGSize(self.scrollView.contentSize));
-    if (theMovie != nil && theMovie.view.superview != nil) {
-        [[NSNotificationCenter defaultCenter]postNotificationName:MPMoviePlayerPlaybackDidFinishNotification object:theMovie];
-        [theMovie.view removeFromSuperview];
-        theMovie = nil;
-    }
     [self updatePages];
     // Calculate current page
     CGRect visibleBounds = scrollView.bounds;
@@ -1096,6 +1097,11 @@
 	int index = (int)(floorf(CGRectGetMidX(visibleBounds) / CGRectGetWidth(visibleBounds)));    if (index < 0) index = 0;
 	if (index > self.playlist.storeAssets.count - 1) index = self.playlist.storeAssets.count - 1;
     if (index != currentPageIndex) {
+        if (theMovie != nil && theMovie.view.superview != nil) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:MPMoviePlayerPlaybackDidFinishNotification object:theMovie];
+            [theMovie.view removeFromSuperview];
+            theMovie = nil;
+        }
         currentPageIndex = index;
     }
 }
@@ -1299,6 +1305,9 @@
 #pragma mark timer method
 
 -(void)fireTimer:(NSString *)animateStyle{
+    if (![playPhotoTransition isEqualToString:animateStyle]) {
+        playPhotoTransition = animateStyle;
+    }
     timer = [NSTimer scheduledTimerWithTimeInterval:2.5 target:self selector:@selector(playPhoto) userInfo:animateStyle repeats:YES];
 }
 -(void)playPhoto{
@@ -1308,6 +1317,9 @@
         if (timer) {
             [timer invalidate];
             timer = nil;
+            [self setBarsHidden:NO animated:NO];
+            [self.navigationController popViewControllerAnimated:YES];
+            return;
         }
     }
 
@@ -1347,11 +1359,6 @@
 - (void)viewDidUnload{
 	timer = nil;
 	_scrollView=nil;
-	
-}
-
-- (void)dealloc {
-	
 	
 }
 @end
