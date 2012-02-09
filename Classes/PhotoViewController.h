@@ -54,6 +54,7 @@
     MPMoviePlayerController* theMovie;
     UIView *assetInfoView;
     UIButton *likeButton;
+    NSInteger test;
     
 }
 @property (nonatomic,strong) Playlist *playlist;

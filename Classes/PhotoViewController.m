@@ -177,7 +177,8 @@
     }
     if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
         // back button was pressed.  We know this is true because self is no longer
-        // in the navigation stack.  
+        // in the navigation stack. 
+        tagSelector = nil;
         [self cancelControlHiding];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"reloadTableData" object:nil];
     }
@@ -228,7 +229,6 @@
     }
        
     [self updatePages];
-    NSLog(@"playlist assets is %d",self.playlist.storeAssets.count);
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(resetCropView) name:@"resetCropView" object:nil];
     
 }
@@ -303,7 +303,6 @@
             [timer invalidate];
         }
     }
-    
     if (!playingPhoto) {
         [self showPhotoInfo:page];
     }
@@ -620,13 +619,11 @@
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
     PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
     if (theMovie != nil && theMovie.view.superview != nil) {
-        //CGRect videoFrame = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
         [UIView animateWithDuration:0.2 animations:^{
             theMovie.view.frame = photoView.imageView.frame;
         }];
-        //[[theMovie view] setFrame:photoView.imageView.frame];//CGRectMake(0, 0, photoView.imageView.frame.size.width, photoView.imageView.frame.size.height)];
     }
-
+   //[self performLayout];
     _rotating = NO;
 }
 
@@ -1071,11 +1068,6 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (performingLayout || _rotating) return;
     //NSLog(@"scroll frame is %@ and bounds %@  and contentsize %@",NSStringFromCGRect(self.scrollView.frame),NSStringFromCGRect(self.scrollView.bounds),NSStringFromCGSize(self.scrollView.contentSize));
-    if (theMovie != nil && theMovie.view.superview != nil) {
-        [[NSNotificationCenter defaultCenter]postNotificationName:MPMoviePlayerPlaybackDidFinishNotification object:theMovie];
-        [theMovie.view removeFromSuperview];
-        theMovie = nil;
-    }
     [self updatePages];
     // Calculate current page
     CGRect visibleBounds = scrollView.bounds;
@@ -1083,6 +1075,11 @@
 	int index = (int)(floorf(CGRectGetMidX(visibleBounds) / CGRectGetWidth(visibleBounds)));    if (index < 0) index = 0;
 	if (index > self.playlist.storeAssets.count - 1) index = self.playlist.storeAssets.count - 1;
     if (index != currentPageIndex) {
+        if (theMovie != nil && theMovie.view.superview != nil) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:MPMoviePlayerPlaybackDidFinishNotification object:theMovie];
+            [theMovie.view removeFromSuperview];
+            theMovie = nil;
+        }
         currentPageIndex = index;
     }
 }
