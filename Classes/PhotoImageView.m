@@ -178,6 +178,13 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     //
 }
 
+-(void)setClearImage{
+    ALAsset *asset = [self.playlist assetAtIndex:index];
+    CGImageRef imageRef = [asset defaultRepresentation].fullScreenImage;
+    UIImage *image = [UIImage imageWithCGImage:imageRef];
+    self.imageView.image = image;
+    [self layoutScrollViewAnimated:NO];
+}
 
 -(void)rotatePhoto{
 
@@ -254,7 +261,6 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 //	if (animated) {
 //		[UIView commitAnimations];
 //	}
-    NSLog(@"image size is %@",NSStringFromCGSize(self.imageView.image.size));
 }
 
 

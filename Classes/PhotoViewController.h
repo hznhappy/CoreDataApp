@@ -54,8 +54,7 @@
     MPMoviePlayerController* theMovie;
     UIView *assetInfoView;
     UIButton *likeButton;
-    NSInteger test;
-    
+    NSString *playPhotoTransition;
 }
 @property (nonatomic,strong) Playlist *playlist;
 @property(nonatomic,strong)PopupPanelView *ppv;

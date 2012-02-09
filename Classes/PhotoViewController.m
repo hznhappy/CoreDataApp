@@ -180,6 +180,7 @@
         // in the navigation stack. 
         tagSelector = nil;
         [self cancelControlHiding];
+        [[NSNotificationCenter defaultCenter]removeObserver:self];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"reloadTableData" object:nil];
     }
     [self.navigationController setToolbarHidden:YES animated:YES];		
@@ -286,7 +287,12 @@
     page.index = index;
     page.imageView.image = nil;
     page.frame = rect;
-    [page loadIndex:index];
+    if (!playingPhoto) {
+        [self showPhotoInfo:page];
+        [page loadIndex:index];
+    }else{
+        [page setClearImage];
+    }
     Asset *asset = [self.playlist.storeAssets objectAtIndex:index];
     NSString *strUrl = asset.url;
     ALAsset *as = [self.playlist.assets objectForKey:strUrl];
@@ -297,15 +303,15 @@
         frame1.origin.y = rect.size.height/2 - 20;
         frame1.size.height=60;
         frame1.size.width=60;
-        [page addSubview:[self configurePlayButton:frame1]];
         if (playingPhoto) {
             [self performSelector:@selector(playVideo) withObject:nil afterDelay:1];
             [timer invalidate];
+        }else{
+            [page addSubview:[self configurePlayButton:frame1]];
+            
         }
     }
-    if (!playingPhoto) {
-        [self showPhotoInfo:page];
-    }
+    
 }
 
 - (BOOL)isDisplayingPageForIndex:(NSUInteger)index{
@@ -552,6 +558,7 @@
     PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
     page.playingVideo = YES;
     page.moviePlayer = theMovie;
+    page.imageView.hidden = YES;
 //    CGRect videoFrame = CGRectMake(0, 0, _imageView.imageView.frame.size.width, _imageView.imageView.frame.size.height);
 //    [[theMovie view] setFrame:videoFrame]; // Frame must match parent view
 //    [_imageView.imageView addSubview:[theMovie view]];
@@ -583,11 +590,12 @@
     [theMovie.view removeFromSuperview];
     theMovie = nil;
     if (playingPhoto) {
-        NSLog(@"timer fire");
-        [timer fire];
+        [self fireTimer:playPhotoTransition];
     }
     PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
     page.playingVideo = NO;
+    page.scrollView.zoomScale = 1.0;
+    page.imageView.hidden = NO;
     playingVideo = NO;
 }
 
@@ -841,7 +849,6 @@
 }
 
 -(void)addTagPeople{
-    NSLog(@"OKOKO");
     [tagSelector saveTagAsset:[self.playlist.storeAssets objectAtIndex:currentPageIndex]];
     [ppv Buttons];
 }
@@ -953,7 +960,7 @@
 #pragma mark Bar Methods
 
 - (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated{
-    
+    NSLog(@"set Status hidden is %@",hidden? @"YES":@"NO");
     [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:UIStatusBarAnimationFade];
     
 }
@@ -966,6 +973,7 @@
     [self setPhotoInfoHidden:hidden];
     [self setLikeButtonHidden:hidden];
 	_barsHidden=hidden;
+    NSLog(@"hide time");
 	
 }
 
@@ -1286,6 +1294,9 @@
 #pragma mark timer method
 
 -(void)fireTimer:(NSString *)animateStyle{
+    if (![playPhotoTransition isEqualToString:animateStyle]) {
+        playPhotoTransition = animateStyle;
+    }
     timer = [NSTimer scheduledTimerWithTimeInterval:2.5 target:self selector:@selector(playPhoto) userInfo:animateStyle repeats:YES];
 }
 -(void)playPhoto{
@@ -1295,6 +1306,9 @@
         if (timer) {
             [timer invalidate];
             timer = nil;
+            [self setBarsHidden:NO animated:NO];
+            [self.navigationController popViewControllerAnimated:YES];
+            return;
         }
     }
 
@@ -1335,10 +1349,5 @@
 	timer = nil;
 	_scrollView=nil;
 	
-}
-
-- (void)dealloc {
-	
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 @end

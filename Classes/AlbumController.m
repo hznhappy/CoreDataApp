@@ -12,6 +12,7 @@
 #import "PhotoAppDelegate.h"
 #import "AmptsAlbum.h"
 #import "Album.h"
+#import "Asset.h"
 @implementation AlbumController
 
 @synthesize tableView;
@@ -113,7 +114,14 @@
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
 	}
     AmptsAlbum *am = (AmptsAlbum *)[assets objectAtIndex:indexPath.row];
-    
+    Asset *as = [am.assetsList lastObject];
+    if (as == nil) {
+        cell.imageView.image = [UIImage imageNamed:@"empty1.png"]; 
+    }else{
+        CGImageRef imgRef = [[dataSource.deviceAssets.deviceAssetsList objectForKey:as.url] thumbnail];
+        UIImage *image = [UIImage imageWithCGImage:imgRef];
+        cell.imageView.image = image; 
+    }
     cell.textLabel.text = [NSString stringWithFormat:@"%@ (%d)",am.name, am.num];
     cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;    
     return cell;
