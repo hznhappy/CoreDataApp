@@ -14,10 +14,10 @@
 #import "TagManagementController.h"
 #import "Asset.h"
 #import "PhotoViewController.h"
-
 @implementation TagSelector
 //@dynamic mypeople;
 @synthesize mypeople;
+@synthesize add;
 -(TagSelector *)initWithViewController:(UIViewController *)controller{
     self = [super init];
     if (self) {
@@ -34,8 +34,14 @@
     NSLog(@"twice ");
     NSDictionary *dic = [note userInfo];
     mypeople=[dic objectForKey:@"people"];
+    NSLog(@"adddd:%@",add);
+  //  if([viewController isKindOfClass:[PhotoViewController class]])
+   // { 
+    if([add isEqualToString:@"YES"])
+    { 
     [self addTagName];
     [self resetToolBar];
+    }
     NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
                                                        object:self 
@@ -82,6 +88,7 @@
     return mypeople;
 }
 -(void)selectTagNameFromContacts{
+   // NSLog(@"")
     ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc]init];
     picker.peoplePickerDelegate = self;
     [viewController presentModalViewController:picker animated:YES];
@@ -96,11 +103,15 @@
 }
 
 -(void)saveTagAsset:(Asset *)asset{
+    
     asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]+1];
     PeopleTag  *peopleTag= [NSEntityDescription insertNewObjectForEntityForName:@"PeopleTag" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
     peopleTag.conAsset = asset;
+    NSLog(@"TAGconasset:%@",peopleTag.conAsset);
     [asset addConPeopleTagObject:peopleTag];
     peopleTag.conPeople = mypeople;
+    NSLog(@"conpeople:%@",peopleTag.conPeople.firstName);
+    //mypeople.tag=YES;
     [mypeople addConPeopleTagObject:peopleTag];
     [dataSource.coreData saveContext];
 }
@@ -134,11 +145,11 @@
     }
     [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
     [viewController dismissModalViewControllerAnimated:YES];
-    if ([viewController isKindOfClass:[PhotoViewController class]]) {
-        [self addTagName];
-        [self resetToolBar];
+    if([add isEqualToString:@"YES"])
+    {
+    [self addTagName];
+    [self resetToolBar];
     }
-    
     NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
                                                        object:self 
@@ -158,7 +169,9 @@
 }
 
 -(void)addTagName{
+    add=@"NO";
     if ([viewController isKindOfClass:[PhotoViewController class]]) {
+        NSLog(@"viewController");
         
         [(PhotoViewController *)viewController addTagPeople];
     }
@@ -167,7 +180,6 @@
 #pragma mark reset ToolBar
 -(void)resetToolBar{
     if ([viewController isKindOfClass:[PhotoViewController class]]) {
-        
         [(PhotoViewController *)viewController setTagToolBar];
     }
 }

@@ -808,10 +808,12 @@
 }
 
 -(void)callContactsView{
+    tagSelector.add=@"YES";
     [tagSelector selectTagNameFromContacts];
 }
 
 -(void)callFavouriteView{
+    tagSelector.add=@"YES";
     [tagSelector selectTagNameFromFavorites];
 }
 
@@ -839,6 +841,7 @@
 }
 
 -(void)addTagPeople{
+    NSLog(@"OKOKO");
     [tagSelector saveTagAsset:[self.playlist.storeAssets objectAtIndex:currentPageIndex]];
     [ppv Buttons];
 }

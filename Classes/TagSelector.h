@@ -20,8 +20,11 @@
     UIViewController *viewController;
     AlbumDataSource *dataSource;
     People *mypeople;
+    NSString *add;
 }
 @property (nonatomic, strong)People *mypeople;
+@property (nonatomic, strong)NSString *add;
+
 -(TagSelector *)initWithViewController:(UIViewController *)controller;
 -(void)selectTagNameFromContacts;
 -(void)selectTagNameFromFavorites;

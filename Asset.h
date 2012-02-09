@@ -2,8 +2,8 @@
 //  Asset.h
 //  PhotoApp
 //
-//  Created by apple on 1/19/12.
-//  Copyright (c) 2012 chinarewards. All rights reserved.
+//  Created by  on 12-2-8.
+//  Copyright (c) 2012年 chinarewards. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,15 +13,15 @@
 
 @interface Asset : NSManagedObject
 
-@property (nonatomic, strong) NSDate * date;
-@property (nonatomic, strong) NSNumber * latitude;
-@property (nonatomic, strong) NSNumber * longitude;
-@property (nonatomic, strong) NSNumber * numOfLike;
-@property (nonatomic, strong) NSNumber * numPeopleTag;
-@property (nonatomic, strong) NSString * url;
-@property (nonatomic, strong) NSSet *conAssetRule;
-@property (nonatomic, strong) Event *conEvent;
-@property (nonatomic, strong) NSSet *conPeopleTag;
+@property (nonatomic, retain) NSDate * date;
+@property (nonatomic, retain) NSNumber * latitude;
+@property (nonatomic, retain) NSNumber * longitude;
+@property (nonatomic, retain) NSNumber * numOfLike;
+@property (nonatomic, retain) NSNumber * numPeopleTag;
+@property (nonatomic, retain) NSString * url;
+@property (nonatomic, retain) NSSet *conAssetRule;
+@property (nonatomic, retain) Event *conEvent;
+@property (nonatomic, retain) NSSet *conPeopleTag;
 @end
 
 @interface Asset (CoreDataGeneratedAccessors)
@@ -30,8 +30,10 @@
 - (void)removeConAssetRuleObject:(AssetRule *)value;
 - (void)addConAssetRule:(NSSet *)values;
 - (void)removeConAssetRule:(NSSet *)values;
+
 - (void)addConPeopleTagObject:(PeopleTag *)value;
 - (void)removeConPeopleTagObject:(PeopleTag *)value;
 - (void)addConPeopleTag:(NSSet *)values;
 - (void)removeConPeopleTag:(NSSet *)values;
+
 @end

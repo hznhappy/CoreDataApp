@@ -37,8 +37,6 @@
     tagBar.hidden = YES;
     save.enabled = NO;
     reset.enabled = NO;
-    ME=NO;
-    PASS=NO;
     tagSelector = [[TagSelector alloc]initWithViewController:self];
     
     self.tagRow=[[NSMutableArray alloc]init];
@@ -71,6 +69,7 @@
     passWord.backgroundColor = [UIColor whiteColor];  
     passWord.secureTextEntry = YES;
     [alert1 addSubview:passWord];  
+    alert1.tag=1;
 //    oritation = [UIApplication sharedApplication].statusBarOrientation;
 //    [self resetTableContentInset];
     
@@ -97,7 +96,6 @@
 }
 
 -(void)reloadTableData{
-    NSLog(@"reload");
     oritation = [UIApplication sharedApplication].statusBarOrientation;
     //[self resetTableContentInset];
     [self.table reloadData];
@@ -112,32 +110,38 @@
     else
     {  
         [alert1 show];
-        ME=NO;
     }
 }
--(void)alertView:(UIAlertView *)alert1 didDismissWithButtonIndex:(NSInteger)buttonIndex{
+-(void)alertView:(UIAlertView *)alert11 didDismissWithButtonIndex:(NSInteger)buttonIndex{
     NSString *pass=[NSString stringWithFormat:@"%@",val];
     NSString *a=NSLocalizedString(@"Lock", @"title");
     NSString *b=NSLocalizedString(@"note", @"title");
     NSString *c=NSLocalizedString(@"ok", @"title");
     NSString *d=NSLocalizedString(@"The password is wrong", @"title");
-    if(ME==NO)
+    if(alert11.tag==2)
     {
         switch (buttonIndex) {
             case 0:
-                if(PASS==YES)
+                if(passWord2.text==nil||passWord2.text.length==0)
                 {
-                    if(passWord2.text==nil||passWord2.text.length==0)
-                    {
-                    }
-                    else
-                    {
-                        NSUserDefaults *defaults1=[NSUserDefaults standardUserDefaults]; 
-                        [defaults1 setObject:passWord2.text forKey:@"name_preference"]; 
-                    }
-                    PASS=NO;
                 }
-                else if([passWord.text isEqualToString:pass])
+                else
+                {
+                    NSUserDefaults *defaults1=[NSUserDefaults standardUserDefaults]; 
+                    [defaults1 setObject:passWord2.text forKey:@"name_preference"]; 
+                }
+                break;
+            case 1:
+                break;
+            default:
+                break;
+        }
+    }
+    else if(alert11.tag==1)
+    {
+        switch (buttonIndex) {
+            case 0:
+                if([passWord.text isEqualToString:pass])
                 { 
                     
                     NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults]; 
@@ -154,12 +158,20 @@
                                           cancelButtonTitle:nil
                                           otherButtonTitles:c,nil];
                     [alert show];
-                    ME=YES;
                     
+                    
+                    break;
                 }
+            case 1:
+                break;
+            default:
+                break;
         }
-        passWord.text=nil;
+        
+
+  
     }
+    passWord.text=nil;
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -194,12 +206,14 @@
     reset.enabled=NO;
     action=YES;
     [self resetTags];
-    
+    [self.tagRow removeAllObjects];
+    [self.UrlList removeAllObjects];
+    tagSelector.mypeople=nil;
     [self.table reloadData];
 }
 
 -(IBAction)actionButtonPressed{
-    action=NO;
+    
     NSString *a=NSLocalizedString(@"Lock", @"title");
     if([self.lock.title isEqualToString:a])
     {
@@ -210,11 +224,12 @@
         self.navigationItem.rightBarButtonItem = cancel;
         viewBar.hidden = YES;
         tagBar.hidden = NO;
+        action=NO;
       //  [self.table reloadData];
     }
     else
     {
-        ME=NO;
+       
         [alert1 show];
     }
 }
@@ -227,11 +242,12 @@
         val=[defaults objectForKey:@"name_preference"];
         if(val==nil)
         { 
-            PASS=YES;
+          
             UIAlertView *alert2 = [[UIAlertView alloc]initWithTitle:@"密码为空,请设置密码"  message:@"\n" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: @"取消",nil]; 
             passWord2= [[UITextField alloc] initWithFrame:CGRectMake(12, 40, 260, 30)];  
             passWord2.backgroundColor = [UIColor whiteColor];  
             passWord2.secureTextEntry = YES;
+            alert2.tag=2;
             [alert2 addSubview:passWord2];  
             [alert2 show];
         }
@@ -241,7 +257,7 @@
         }
     }
     else
-    {   ME=NO;
+    {   
         [alert1 show];
     }
 }
@@ -249,7 +265,7 @@
 -(IBAction)saveTags{
     if([tagSelector tagPeople]==nil)
     {
-        ME=YES;
+        
         NSString *message=[[NSString alloc] initWithFormat:
                            @"please select tag name"];
         
@@ -277,17 +293,24 @@
                                                          userInfo:dic1];
          [self cancelTag];
     }
-    
+    [self.UrlList removeAllObjects];
+    [self.tagRow removeAllObjects];
 }
 -(IBAction)resetTags{
     [self.tagRow removeAllObjects];
-    [UrlList removeAllObjects];
+    [self.UrlList removeAllObjects];
     [self.table reloadData];
 }
 -(IBAction)selectFromFavoriteNames{
+    [self.UrlList removeAllObjects];
+    [self.tagRow removeAllObjects];
+    tagSelector.add=@"NO";
     [tagSelector selectTagNameFromFavorites];
 }
 -(IBAction)selectFromAllNames{
+    [self.tagRow removeAllObjects];
+    [self.UrlList removeAllObjects];
+    tagSelector.add=@"NO";
     [tagSelector selectTagNameFromContacts];
 }
 -(IBAction)playPhotos{
@@ -335,9 +358,10 @@
         if (row<[self.crwAssets count]) {
             
             Asset *dbAsset = [self.crwAssets objectAtIndex:row];
-            if([tagSelector tag:dbAsset])
+            if([tagSelector tag:dbAsset]==YES)
             {
                 NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
+                NSLog(@"selectedIndex:%@",selectedIndex);
                 [tagRow addObject:selectedIndex];
                  //[cell checkTagSelection:selectedIndex];
             }

@@ -349,7 +349,7 @@
             if (am.lastName.length == 0 || am.lastName == nil) {
                 name.text = am.firstName;
             }else{
-                name.text = [NSString stringWithFormat:@"%@ %@",am.firstName,am.lastName];
+                name.text = [NSString stringWithFormat:@"%@ %@",am.lastName,am.firstName];
             }
             [cell.contentView addSubview:name];
 
@@ -882,21 +882,29 @@
      NSDictionary *dic = [note userInfo];
     if(bu==YES)
     {
-        self.startText.text=[dic objectForKey:@"Date"];
+       // self.startText.text=[dic objectForKey:@"Date"];
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
         NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
         [inputFormatter setTimeZone:timeZone1];
         [inputFormatter setDateFormat:@"yyyy:MM:dd"];
         date.startDate=[inputFormatter dateFromString:[dic objectForKey:@"Date"]];
+        NSDateFormatter *outFormatter=[[NSDateFormatter alloc]init];
+        [outFormatter setDateFormat:@"yyyy:MM:dd"];
+       NSString *startDateString= [outFormatter stringFromDate:date.startDate];
+       self.startText.text=[NSString stringWithFormat:startDateString];
     }
     else
     {
-    self.stopText.text=[dic objectForKey:@"Date"];
+    //self.stopText.text=[dic objectForKey:@"Date"];
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
         NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
         [inputFormatter setTimeZone:timeZone1];
         [inputFormatter setDateFormat:@"yyyy:MM:dd"];
         date.stopDate=[inputFormatter dateFromString:[dic objectForKey:@"Date"]];
+        NSDateFormatter *outFormatter=[[NSDateFormatter alloc]init];
+        [outFormatter setDateFormat:@"yyyy:MM:dd"];
+        NSString *stopDateString= [outFormatter stringFromDate:date.stopDate];
+        self.stopText.text=[NSString stringWithFormat:stopDateString];
     }
     [self setDate];
     date.conAlbum=bum;

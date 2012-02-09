@@ -3,19 +3,39 @@
 #import "AddressBookUI/AddressBookUI.h"
 #import "AssetTablePicker.h"
 #import "PhotoAppDelegate.h"
+#import "Asset.h"
+#import "PeopleTag.h"
 @implementation TagManagementController
 @synthesize list;
 @synthesize button;
 @synthesize tableView,tools,bo;
 @synthesize coreData,favorate;
 @synthesize result,IdList;
+@synthesize favorate1;
+@synthesize as;
 int j=1,count=0;
 
 
 -(void)viewDidLoad
 {  
+    
+   /* ABAddressBookRef addressBook = ABAddressBookCreate();
+    
+    CFArrayRef results = ABAddressBookCopyArrayOfAllPeople(addressBook);
+    
+    for(int i = 0; i < CFArrayGetCount(results); i++)
+    {
+          ABRecordRef person = CFArrayGetValueAtIndex(results, i);
+        ABRecordID recId = ABRecordGetRecordID(person);
+        //NSNumber *fid=[NSNumber numberWithInt:recId];
+        NSString *fid1=[NSString stringWithFormat:@"%d",recId];
+        NSLog(@"FID:%@",fid1);
+        
+    }*/
     NSMutableArray *parray1=[[NSMutableArray alloc]init];
+
     self.IdList=parray1;
+    //self.as=parray2;
 
     [self table];
     bool1 = NO;
@@ -113,6 +133,7 @@ int j=1,count=0;
                               cancelButtonTitle:nil
                               otherButtonTitles:c,nil];
         [alert show];
+        alert.tag=0;
    
     }
     else
@@ -218,7 +239,7 @@ int j=1,count=0;
     if (am.lastName == nil) {
         cell.textLabel.text = [NSString stringWithFormat:@"%@",am.firstName];
     }else
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ %@",am.firstName, am.lastName];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@ %@",am.lastName, am.firstName];
         
     return cell; 
 }
@@ -226,16 +247,41 @@ int j=1,count=0;
 #pragma mark Table View Data Source Methods
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {	
+        
     id1=[NSString stringWithFormat:@"%d",indexPath.row]; 
-    People *favorate1=[self.result objectAtIndex:indexPath.row];
-    if(editingStyle==UITableViewCellEditingStyleDelete)
-    {
-        [appDelegate.dataSource.coreData.managedObjectContext deleteObject:favorate1];
-        [self.result removeObject:favorate1];
-    }
-     [appDelegate.dataSource.coreData saveContext];
-    [self table];
+    favorate1=[self.result objectAtIndex:indexPath.row];
+  //  NSLog(@"conpeopletag:%@",favorate1.conPeopleTag);
+    NSPredicate *pre=[NSPredicate predicateWithFormat:@"conPeople==%@",favorate1];
+    self.as=[appDelegate.dataSource simpleQuery:@"PeopleTag" predicate:pre sortField:nil sortOrder:YES];
+   
 
+     if([self.as count]!=0)
+     {
+         NSString *a=NSLocalizedString(@"hello", @"title");
+         NSString *b=NSLocalizedString(@"This person has been used as a photo tag, you sure you want to delete it", @"title");
+         NSString *c=NSLocalizedString(@"NO", @"title");
+         NSString *d=NSLocalizedString(@"YES", @"title");
+         
+         UIAlertView *alert1=[[UIAlertView alloc] initWithTitle:a message:b delegate:self cancelButtonTitle:d otherButtonTitles:nil];
+         [alert1 addButtonWithTitle:c];
+         [alert1 show];
+         alert1.tag=1;
+
+     }
+   
+    else
+    {
+        NSLog(@"yes");
+        if(editingStyle==UITableViewCellEditingStyleDelete)
+        {
+            [appDelegate.dataSource.coreData.managedObjectContext deleteObject:favorate1];
+            [self.result removeObject:favorate1];
+        }
+        [appDelegate.dataSource.coreData saveContext];
+        [self table];
+
+        
+    }
     
     /*NSString *selectTag= [NSString stringWithFormat:@"select ID from tag"];
     
@@ -278,34 +324,54 @@ int j=1,count=0;
 }
 - (void)tableView:(UITableView *)table didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     People *selectedPeople = [self.result objectAtIndex:indexPath.row];
-   [self dismissModalViewControllerAnimated:YES];
     NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:selectedPeople,@"people",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"addTagPeople" 
                                                        object:self 
                                                      userInfo:dic];
+   [self dismissModalViewControllerAnimated:YES];
+ 
+    
     [table deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 
 -(void)alertView:(UIAlertView *)alert1 didDismissWithButtonIndex:(NSInteger)buttonIndex{
-//    switch (buttonIndex) {
-//        case 1:
-//            NSString *deleteIdTable= [NSString stringWithFormat:@"DELETE FROM idOrder WHERE ID='%@'",[list objectAtIndex:[id1 intValue]]];
-//            NSLog(@"%@",deleteIdTable);
-//            [da deleteDB:deleteIdTable];  
-//            NSString *deleteUserTable= [NSString stringWithFormat:@"DELETE FROM UserTable WHERE ID='%@'",[list objectAtIndex:[id1 intValue]]];
-//            [da deleteDB:deleteUserTable];
-//            NSString *deleteTag= [NSString stringWithFormat:@"DELETE FROM TAG WHERE ID='%@'",[list objectAtIndex:[id1 intValue]]];
-//            [da deleteDB:deleteTag];
-//            [self viewDidLoad];
-//            [self.tableView reloadData];            
-//            break;
-//        case 0:
-//            [self.tableView reloadData];
-//            break;
-//    }
+   if(alert1.tag==1)
+   {
+    switch (buttonIndex) {
+        case 0:
+            [self deletePeople];
+            break;
+        case 1:  
+            break;
+        default:
+            break;
+    }
+   }
     
+}
+-(void)deletePeople
+{
+    for(int i=0;i<[self.as count];i++)
+    {
+        PeopleTag *PT=[self.as objectAtIndex:i];
+        PT.conAsset.numPeopleTag = [NSNumber numberWithInt:[PT.conAsset.numPeopleTag intValue]-1];  
+        [favorate1 removeConPeopleTagObject:PT];
+        [PT.conAsset removeConPeopleTagObject:PT];
+    }
+    [appDelegate.dataSource.coreData.managedObjectContext deleteObject:favorate1];
+    [self.result removeObject:favorate1];
+    [appDelegate.dataSource.coreData saveContext]; 
     
+    NSDictionary *dic= [NSDictionary dictionaryWithObjectsAndKeys:nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
+                                                       object:self 
+                                                     userInfo:dic];
+    NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
+                                                       object:self 
+                                                     userInfo:dic1];
+    [self table];    
 }
 
 -(void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker

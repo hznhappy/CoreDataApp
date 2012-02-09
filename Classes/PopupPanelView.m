@@ -99,6 +99,7 @@
     
     PeopleTag *pt = [self.list objectAtIndex:TAG];
     [pt.conPeople removeConPeopleTagObject:pt];
+    NSLog(@"conassetpt:%@",pt.conAsset);
     [ass removeConPeopleTagObject:pt];
     ass.numPeopleTag = [NSNumber numberWithInt:[ass.numPeopleTag intValue]-1];
     [dataSource.coreData saveContext];

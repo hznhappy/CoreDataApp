@@ -28,14 +28,12 @@
 	NSMutableArray *crwAssets;
     NSMutableArray *tagRow;
     NSMutableArray *UrlList;
-        
-    BOOL ME;
-    BOOL PASS;
     BOOL mode;
     BOOL load;
     BOOL done;
     BOOL action;
     BOOL lockMode;
+ 
     NSNumber *val;
     UITextField *passWord2;
   
@@ -60,7 +58,6 @@
 @property (nonatomic,strong) NSMutableArray *crwAssets;
 @property (nonatomic,strong) NSMutableArray *UrlList;
 @property (nonatomic,strong)NSNumber *val;
-
 @property (nonatomic,strong)Album *album;
 -(IBAction)actionButtonPressed;
 -(IBAction)playPhotos;
