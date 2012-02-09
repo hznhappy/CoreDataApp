@@ -8,6 +8,7 @@
 "Edit"="编辑";
 "Albums"="相簿";
 "Done"="完成";
+"Save"="保存";
 "ALL"="所有";
 "UNTAG"="未标记";
 "hello"="你好";
@@ -41,3 +42,13 @@
 "Back"="返回";
 "Lock"="锁定";
 "The password is wrong"="密码错误";
+"Please enter a password"="请输入密码";
+"The password is blank, set the password"="密码为空,请设置密码";
+"Constrain"="格式";
+"Contacts"="电话簿";
+"Favourites"="好友";
+"Events"="活动";
+"Original"="原形";
+"Square"="正方形";
+"Crop"="预览";
+"Do you want to delete the member"="你确定要删除该成员吗?";

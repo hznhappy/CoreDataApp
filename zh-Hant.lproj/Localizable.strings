@@ -9,6 +9,7 @@
 "Albums"="相簿";
 "Done"="完成";
 "ALL"="所有";
+"Save"="保存";
 "UNTAG"="未標記";
 "hello"="你好";
 "Inherent members, can not be edited"="固有成員，無法編輯";
@@ -41,3 +42,13 @@
 "Back"="返回";
 "Lock"="鎖定";
 "The password is wrong"="密碼錯誤";
+"Please enter a password"="請輸入密碼";
+"The password is blank, set the password"="密碼為空，請設置密碼";
+"Constrain"="格式";
+"Contacts"="電話簿";
+"Favourites"="好友";
+"Events"="活動";
+"Original"="原形";
+"Square"="正方形";
+"Crop"="預覽";
+"Do you want to delete the member"="你確定要刪除該成員嗎?";

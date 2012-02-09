@@ -63,8 +63,10 @@
     [self setWantsFullScreenLayout:YES];
     
     NSString *a=NSLocalizedString(@"Cancel", @"title");
+    NSString *d=NSLocalizedString(@"Please enter a password", @"title");
+    NSString *c=NSLocalizedString(@"ok", @"title");
     cancel = [[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleDone target:self action:@selector(cancelTag)];
-    alert1 = [[UIAlertView alloc]initWithTitle:@"请输入密码"  message:@"\n" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: @"取消",nil];  
+    alert1 = [[UIAlertView alloc]initWithTitle:d  message:@"\n" delegate:self cancelButtonTitle:c otherButtonTitles: a,nil];  
     passWord = [[UITextField alloc] initWithFrame:CGRectMake(12, 40, 260, 30)];  
     passWord.backgroundColor = [UIColor whiteColor];  
     passWord.secureTextEntry = YES;
@@ -236,6 +238,9 @@
 -(IBAction)lockButtonPressed{
     NSString *a=NSLocalizedString(@"Lock", @"button");
     NSString *b=NSLocalizedString(@"UnLock", @"button");
+    NSString *e=NSLocalizedString(@"Cancel", @"title");
+    NSString *d=NSLocalizedString(@"The password is blank, set the password", @"title");
+    NSString *c=NSLocalizedString(@"ok", @"title");
     if([self.lock.title isEqualToString:a])
     { 
         NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults]; 
@@ -243,7 +248,7 @@
         if(val==nil)
         { 
           
-            UIAlertView *alert2 = [[UIAlertView alloc]initWithTitle:@"密码为空,请设置密码"  message:@"\n" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: @"取消",nil]; 
+            UIAlertView *alert2 = [[UIAlertView alloc]initWithTitle:d  message:@"\n" delegate:self cancelButtonTitle:c otherButtonTitles:e,nil]; 
             passWord2= [[UITextField alloc] initWithFrame:CGRectMake(12, 40, 260, 30)];  
             passWord2.backgroundColor = [UIColor whiteColor];  
             passWord2.secureTextEntry = YES;
@@ -287,14 +292,15 @@
             Asset *asset = [self.UrlList objectAtIndex:i];
             [tagSelector saveTagAsset:asset];
         }
-        NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
-                                                           object:self 
-                                                         userInfo:dic1];
+       
          [self cancelTag];
     }
     [self.UrlList removeAllObjects];
     [self.tagRow removeAllObjects];
+    NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
+                                                       object:self 
+                                                     userInfo:dic1];
 }
 -(IBAction)resetTags{
     [self.tagRow removeAllObjects];

@@ -14,7 +14,6 @@
 #import "TagManagementController.h"
 #import "Asset.h"
 #import "PhotoViewController.h"
-#import "PeopleTag.h"
 @implementation TagSelector
 //@dynamic mypeople;
 @synthesize mypeople;
@@ -34,11 +33,14 @@
 -(void)addTagPeople:(NSNotification *)note{
     NSDictionary *dic = [note userInfo];
     mypeople=[dic objectForKey:@"people"];
+<<<<<<< HEAD
     NSLog(@"adddd:%@",add);
   //  if([viewController isKindOfClass:[PhotoViewController class]])
    // { 
     if([add isEqualToString:@"YES"])
     { 
+=======
+>>>>>>> origin/master
     [self addTagName];
     [self resetToolBar];
     }
@@ -103,43 +105,16 @@
 }
 
 -(void)saveTagAsset:(Asset *)asset{
-    if([add isEqualToString:@"YES"])
-    {
-        NSPredicate *pre=[NSPredicate predicateWithFormat:@"conAsset==%@",asset];
-        NSArray *potag=[dataSource simpleQuery:@"PeopleTag" predicate:pre sortField:nil sortOrder:YES];
-        NSMutableArray *peo=[[NSMutableArray alloc]init];
-        for(int i=0;i<[potag count];i++)
-        {
-            PeopleTag *pt1=(PeopleTag *)[potag objectAtIndex:i];
-            [peo addObject:pt1.conPeople];
-        }
-        if([peo containsObject:mypeople])
-        {
-            UIAlertView *alert1=[[UIAlertView alloc] initWithTitle:@"提示" message:@"已作为标记" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
-            [alert1 show];
-        }
-        else
-        {
-            [self save:asset];
-            [(PhotoViewController *)viewController numtag];
-        }
-    }
-    else
-    {
-    [self save:asset];
-    }
-  }
--(void)save:(Asset *)asset
-{
     asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]+1];
     PeopleTag  *peopleTag= [NSEntityDescription insertNewObjectForEntityForName:@"PeopleTag" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
     peopleTag.conAsset = asset;
+    NSLog(@"TAGconasset:%@",peopleTag.conAsset);
     [asset addConPeopleTagObject:peopleTag];
     peopleTag.conPeople = mypeople;
+    NSLog(@"conpeople:%@",peopleTag.conPeople.firstName);
     //mypeople.tag=YES;
     [mypeople addConPeopleTagObject:peopleTag];
     [dataSource.coreData saveContext];
-
 }
 #pragma mark -
 #pragma mark People picker delegate
@@ -171,11 +146,19 @@
     }
     [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
     [viewController dismissModalViewControllerAnimated:YES];
+<<<<<<< HEAD
     if([add isEqualToString:@"YES"])
     {
     [self addTagName];
     [self resetToolBar];
     }
+=======
+    if ([viewController isKindOfClass:[PhotoViewController class]]) {
+        [self addTagName];
+        [self resetToolBar];
+    }
+    
+>>>>>>> origin/master
     NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
                                                        object:self 

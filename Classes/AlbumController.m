@@ -134,7 +134,9 @@
 
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
-    
+    NSString *a=NSLocalizedString(@"note", @"title");
+    NSString *b=NSLocalizedString(@"Inherent members, can not be edited", @"title");
+    NSString *c=NSLocalizedString(@"ok", @"title");
     PlaylistDetailController *detailController = [[PlaylistDetailController alloc]initWithNibName:@"PlaylistDetailController" bundle:[NSBundle mainBundle]];
     detailController.bum = [self getAlbumInRow:indexPath.row];
     detailController.hidesBottomBarWhenPushed = YES;
@@ -144,13 +146,12 @@
     }
     else
     {
-        NSLog(@"NULL");
         UIAlertView *alert = [[UIAlertView alloc]
-                              initWithTitle:@"提示"
-                              message:@"固有成员,无法编辑"
+                              initWithTitle:a
+                              message:b
                               delegate:self
                               cancelButtonTitle:nil
-                              otherButtonTitles:@"确定",nil];
+                              otherButtonTitles:c,nil];
         [alert show];
 
     }

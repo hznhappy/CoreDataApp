@@ -72,7 +72,7 @@
         if (lastName.length == 0 || lastName == nil) {
             buttonName = firstName;
         }else{
-            buttonName = [firstName stringByAppendingFormat:@"%@",peopleTag.conPeople.lastName];
+            buttonName = [lastName stringByAppendingFormat:@"%@",firstName];
         }
 		button.frame = CGRectMake(btx, bty, btwidth, byheight);
 		[button setTitle:buttonName forState:UIControlStateNormal];
@@ -84,13 +84,17 @@
 
  }
 -(void)buttonPressed:(UIButton *)button{
+    NSString *a=NSLocalizedString(@"Cancel", @"title");
+    NSString *d=NSLocalizedString(@"Do you want to delete the member", @"title");
+    NSString *c=NSLocalizedString(@"ok", @"title");
+    NSString *b=NSLocalizedString(@"note", @"title");
     TAG= button.tag;
     UIAlertView *alert = [[UIAlertView alloc]
-                          initWithTitle:@"提示"
-                          message:@"确定要要删除该成员吗"
+                          initWithTitle:b
+                          message:d
                           delegate:self
-                          cancelButtonTitle:@"确定"
-                          otherButtonTitles:@"取消",nil];
+                          cancelButtonTitle:c
+                          otherButtonTitles:a,nil];
     [alert show];
    }
 -(void)deleteButton

@@ -179,6 +179,7 @@
         // back button was pressed.  We know this is true because self is no longer
         // in the navigation stack.  
         [self cancelControlHiding];
+        [[NSNotificationCenter defaultCenter] removeObserver:tagSelector];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"reloadTableData" object:nil];
     }
     [self.navigationController setToolbarHidden:YES animated:YES];		
@@ -443,7 +444,7 @@
         likeCount.textColor = [UIColor colorWithRed:254/255.0 green:202/255.0 blue:24/255.0 alpha:1.0];
         likeCount.font = [UIFont boldSystemFontOfSize:14];
         
-        UILabel *tagCount = [[UILabel alloc]initWithFrame:CGRectMake(10, 32, 120, 25)];
+        tagCount = [[UILabel alloc]initWithFrame:CGRectMake(10, 32, 120, 25)];
         tagCount.backgroundColor = [UIColor clearColor];
         tagCount.text = [NSString stringWithFormat:@"TAG COUNT:%@",[asset.numPeopleTag description]];
         tagCount.textColor = [UIColor colorWithRed:254/255.0 green:202/255.0 blue:24/255.0 alpha:1.0];
@@ -472,7 +473,10 @@
     [self.scrollView addSubview:assetInfoView];
     //[self.scrollView bringSubviewToFront:assetInfoView];
 }
-
+-(void)numtag
+{   Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
+    tagCount.text = [NSString stringWithFormat:@"TAG COUNT:%@",[asset.numPeopleTag description]];
+}
 -(void)showLikeButton:(PhotoImageView *)page{
     likeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     CGRect mainScreen = page.frame;
@@ -704,8 +708,8 @@
     UIBarButtonItem *cancell = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(edit)];
     self.navigationItem.leftBarButtonItem = nil;
     self.navigationItem.leftBarButtonItem = cancell;
-    
-    UIBarButtonItem *constrain = [[UIBarButtonItem alloc]initWithTitle:@"Constrain" style:UIBarButtonItemStyleBordered target:self action:@selector(cropConstrain)];
+    NSString *a=NSLocalizedString(@"Constrain", @"title");
+    UIBarButtonItem *constrain = [[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleBordered target:self action:@selector(cropConstrain)];
     UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     constrain.width = 100;
     [self setToolbarItems:[NSArray arrayWithObjects:flex,constrain,flex, nil]];
@@ -716,10 +720,12 @@
     UIBarButtonItem *cancell = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(edit)];
     self.navigationItem.leftBarButtonItem = nil;
     self.navigationItem.leftBarButtonItem = cancell;
-    
-    UIBarButtonItem *contacts = [[UIBarButtonItem alloc]initWithTitle:@"Contacts" style:UIBarButtonItemStyleBordered target:self action:@selector(callContactsView)];
-    UIBarButtonItem *favorites = [[UIBarButtonItem alloc]initWithTitle:@"Favourites" style:UIBarButtonItemStyleBordered target:self action:@selector(callFavouriteView)];
-    UIBarButtonItem *events = [[UIBarButtonItem alloc]initWithTitle:@"Events" style:UIBarButtonItemStyleBordered target:self action:@selector(callEventsView)];
+     NSString *a=NSLocalizedString(@"Contacts", @"title");
+     NSString *b=NSLocalizedString(@"Favourites", @"title");
+     NSString *c=NSLocalizedString(@"Events", @"title");
+    UIBarButtonItem *contacts = [[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleBordered target:self action:@selector(callContactsView)];
+    UIBarButtonItem *favorites = [[UIBarButtonItem alloc]initWithTitle:b style:UIBarButtonItemStyleBordered target:self action:@selector(callFavouriteView)];
+    UIBarButtonItem *events = [[UIBarButtonItem alloc]initWithTitle:c style:UIBarButtonItemStyleBordered target:self action:@selector(callEventsView)];
     UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
     [self setToolbarItems:[NSArray arrayWithObjects:flex,contacts,flex,favorites,flex,events,flex, nil]];
@@ -783,25 +789,29 @@
 
 
 -(void)cropConstrain{
+    NSString *a=NSLocalizedString(@"Cancel", @"title");
+    NSString *b=NSLocalizedString(@"Original", @"title");
+    NSString *c=NSLocalizedString(@"Square", @"title");
     UIActionSheet *sheet = [[UIActionSheet alloc]initWithTitle:nil 
                                                       delegate:self 
-                                             cancelButtonTitle:@"Cancel" 
+                                             cancelButtonTitle:a 
                                         destructiveButtonTitle:nil 
-                                             otherButtonTitles:@"Original",@"Square",@"3 x 2",@"4 x 3",@"4 x 6",@"5 x 7",@"8 x 10",@"16 x 9", nil];
+                                             otherButtonTitles:b,c,@"3 x 2",@"4 x 3",@"4 x 6",@"5 x 7",@"8 x 10",@"16 x 9", nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     [sheet showInView:self.view];
 }
 
 -(void)rotatePhoto{
+     NSString *a=NSLocalizedString(@"Save", @"title");
     if (self.navigationItem.rightBarButtonItem == nil) {
-        UIBarButtonItem *cropItem=[[UIBarButtonItem alloc]initWithTitle:@"Save" style:UIBarButtonItemStyleDone target:self action:@selector(saveCropPhoto:)];
+        UIBarButtonItem *cropItem=[[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleDone target:self action:@selector(saveCropPhoto:)];
         self.navigationItem.rightBarButtonItem = cropItem;
     }
     
     if (!self.navigationItem.rightBarButtonItem.enabled) {
         self.navigationItem.rightBarButtonItem.enabled = YES;
     }
-    self.navigationItem.rightBarButtonItem.title = @"Save";
+    self.navigationItem.rightBarButtonItem.title =a;
     PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
     if (photoView != nil) {
         
@@ -844,7 +854,6 @@
 }
 
 -(void)addTagPeople{
-    NSLog(@"OKOKO");
     [tagSelector saveTagAsset:[self.playlist.storeAssets objectAtIndex:currentPageIndex]];
     [ppv Buttons];
 }
@@ -860,11 +869,12 @@
         saveItem.enabled = NO;
         croping = NO;
     }else{
+        NSString *a=NSLocalizedString(@"Crop", @"title");
         CGPoint center = [photoView.scrollView convertPoint:photoView.imageView.center toView:self.view];
         CGRect imageFrame = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
         CGFloat minSize = MIN(imageFrame.size.width, imageFrame.size.height) * 4/5;
         self.navigationItem.rightBarButtonItem = nil;
-        UIBarButtonItem *cropItem=[[UIBarButtonItem alloc]initWithTitle:@"Crop" style:UIBarButtonItemStyleDone target:self action:@selector(setCropPhoto:)];
+        UIBarButtonItem *cropItem=[[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleDone target:self action:@selector(setCropPhoto:)];
         self.navigationItem.rightBarButtonItem = cropItem;
         [self setCropConstrainToolBar];
         photoView.alpha = 0.4;
@@ -1342,6 +1352,6 @@
 
 - (void)dealloc {
 	
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
 }
 @end

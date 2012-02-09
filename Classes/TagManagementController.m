@@ -323,13 +323,14 @@ int j=1,count=0;
     }*/
 }
 - (void)tableView:(UITableView *)table didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+   
+   [self dismissModalViewControllerAnimated:YES];
+ 
     People *selectedPeople = [self.result objectAtIndex:indexPath.row];
     NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:selectedPeople,@"people",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"addTagPeople" 
                                                        object:self 
                                                      userInfo:dic];
-   [self dismissModalViewControllerAnimated:YES];
- 
     
     [table deselectRowAtIndexPath:indexPath animated:YES];
 }
@@ -362,6 +363,7 @@ int j=1,count=0;
     [appDelegate.dataSource.coreData.managedObjectContext deleteObject:favorate1];
     [self.result removeObject:favorate1];
     [appDelegate.dataSource.coreData saveContext]; 
+    [self table];    
     
     NSDictionary *dic= [NSDictionary dictionaryWithObjectsAndKeys:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
@@ -371,7 +373,6 @@ int j=1,count=0;
     [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
                                                        object:self 
                                                      userInfo:dic1];
-    [self table];    
 }
 
 -(void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker

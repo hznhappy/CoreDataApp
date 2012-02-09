@@ -69,7 +69,7 @@
     NSEntityDescription *entity5 = [NSEntityDescription entityForName:@"PeopleRule" inManagedObjectContext:[ appDelegate.dataSource.coreData managedObjectContext]]; 
     pr1=[[PeopleRule alloc]initWithEntity:entity5 insertIntoManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
     date = [NSEntityDescription insertNewObjectForEntityForName:@"DateRule" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
-    if(bum!=nil)
+    if(bum!=nil&&bum.conDateRule!=nil)
     {
         date=bum.conDateRule;
     }
@@ -765,6 +765,7 @@
 }
 -(void)addPlay
 {
+  
   //if(bum==nil)
  // {
      // key=1;
@@ -889,9 +890,9 @@
         [inputFormatter setDateFormat:@"yyyy:MM:dd"];
         date.startDate=[inputFormatter dateFromString:[dic objectForKey:@"Date"]];
         NSDateFormatter *outFormatter=[[NSDateFormatter alloc]init];
-        [outFormatter setDateFormat:@"yyyy:MM:dd"];
-       NSString *startDateString= [outFormatter stringFromDate:date.startDate];
-       self.startText.text=[NSString stringWithFormat:startDateString];
+       [outFormatter setDateFormat:@"yyyy:MM:dd"];
+        NSString *startDateString= [outFormatter stringFromDate:date.startDate];
+        self.startText.text=[NSString stringWithFormat:startDateString];
     }
     else
     {

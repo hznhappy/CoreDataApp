@@ -27,7 +27,7 @@
     Playlist *playlist;
 	NSUInteger currentPageIndex;
     NSUInteger pageIndexBeforeRotation;
-                                                        
+                                                   
 	BOOL _rotating;
 	BOOL _barsHidden;
 	BOOL performingLayout;
@@ -37,7 +37,7 @@
 	UIBarButtonItem *_actionButton;
     UIBarButtonItem *edit;
     UIBarButtonItem *saveItem;
-
+    UILabel *tagCount;
 	CropView *cropView;
     BOOL editing;
     BOOL tagShow;
@@ -103,5 +103,6 @@
 -(void)setTagToolBar;
 
 -(void)changeCropViewFrame;
+-(void)numtag;
 @end
 

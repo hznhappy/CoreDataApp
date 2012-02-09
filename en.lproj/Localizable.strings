@@ -42,3 +42,13 @@
 "Back"="Back";
 "Lock"="Lock";
 "The password is wrong"="The password is wrong";
+"Please enter a password"="Please enter a password";
+"The password is blank, set the password"="password is blank, set it";
+"Constrain"="Constrain";
+"Contacts"="Contacts";
+"Favourites"="Favourites";
+"Events"="Events";
+"Original"="Original";
+"Square"="Square";
+"Crop"="Crop";
+"Do you want to delete the member"="Do you want to delete the member?";

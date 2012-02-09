@@ -18,7 +18,6 @@
 		183DE31114C7F66A00BDC724 /* Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE30A14C7F66A00BDC724 /* Playlist.m */; };
 		183DE31214C7F66A00BDC724 /* CropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE30C14C7F66A00BDC724 /* CropView.m */; };
 		183DE31314C7F66A00BDC724 /* GridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE30E14C7F66A00BDC724 /* GridView.m */; };
-		183DE31C14C7F6E200BDC724 /* PlaylistDetailController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 183DE31B14C7F6E200BDC724 /* PlaylistDetailController.xib */; };
 		183DE32514C7F70D00BDC724 /* AlbumController.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE32214C7F70D00BDC724 /* AlbumController.m */; };
 		183DE32C14C7F72200BDC724 /* AssetTablePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE32714C7F72200BDC724 /* AssetTablePicker.m */; };
 		183DE32D14C7F72200BDC724 /* ThumbnailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE32914C7F72200BDC724 /* ThumbnailCell.m */; };
@@ -57,6 +56,7 @@
 		18DAD7A514E21E6B00BBE9B1 /* People.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DAD7A414E21E6B00BBE9B1 /* People.m */; };
 		18DBCA7E14DBB23000D43062 /* deletebutton.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DBCA7D14DBB23000D43062 /* deletebutton.png */; };
 		18DBCA9914DBF9B900D43062 /* TagManagementController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18DBCA9814DBF9B900D43062 /* TagManagementController.xib */; };
+		18DCEFEE14E39642001965EA /* PlaylistDetailController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18DCEFF014E39642001965EA /* PlaylistDetailController.xib */; };
 		18DD695314B6E5F7000062D1 /* crop.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DD695214B6E5F7000062D1 /* crop.png */; };
 		18DD695614B6E605000062D1 /* rotate.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DD695514B6E605000062D1 /* rotate.png */; };
 		18DD696514B6F045000062D1 /* VED.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DD696414B6F045000062D1 /* VED.png */; };
@@ -113,7 +113,6 @@
 		183DE30C14C7F66A00BDC724 /* CropView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CropView.m; sourceTree = "<group>"; };
 		183DE30D14C7F66A00BDC724 /* GridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridView.h; sourceTree = "<group>"; };
 		183DE30E14C7F66A00BDC724 /* GridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridView.m; sourceTree = "<group>"; };
-		183DE31B14C7F6E200BDC724 /* PlaylistDetailController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaylistDetailController.xib; sourceTree = "<group>"; };
 		183DE32114C7F70D00BDC724 /* AlbumController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumController.h; sourceTree = "<group>"; };
 		183DE32214C7F70D00BDC724 /* AlbumController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumController.m; sourceTree = "<group>"; };
 		183DE32614C7F72200BDC724 /* AssetTablePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetTablePicker.h; sourceTree = "<group>"; };
@@ -184,6 +183,9 @@
 		18DAD7A414E21E6B00BBE9B1 /* People.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = People.m; sourceTree = "<group>"; };
 		18DBCA7D14DBB23000D43062 /* deletebutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deletebutton.png; sourceTree = "<group>"; };
 		18DBCA9814DBF9B900D43062 /* TagManagementController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagManagementController.xib; sourceTree = "<group>"; };
+		18DCEFEF14E39642001965EA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PlaylistDetailController.xib; sourceTree = "<group>"; };
+		18DCEFF214E3964C001965EA /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/PlaylistDetailController.xib"; sourceTree = "<group>"; };
+		18DCEFF314E39650001965EA /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/PlaylistDetailController.xib"; sourceTree = "<group>"; };
 		18DD695214B6E5F7000062D1 /* crop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = crop.png; sourceTree = "<group>"; };
 		18DD695514B6E605000062D1 /* rotate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rotate.png; sourceTree = "<group>"; };
 		18DD696414B6F045000062D1 /* VED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = VED.png; sourceTree = "<group>"; };
@@ -327,7 +329,7 @@
 			children = (
 				18DBCA9814DBF9B900D43062 /* TagManagementController.xib */,
 				18C78B8E14D6736500B57B4F /* TestiPhoneCalViewController.xib */,
-				183DE31B14C7F6E200BDC724 /* PlaylistDetailController.xib */,
+				18DCEFF014E39642001965EA /* PlaylistDetailController.xib */,
 				A1F7E814148C9BBF0088F366 /* MainWindow.xib */,
 				184FD005147208F90082B51D /* AnimaSelectController.xib */,
 				186BF9C01470AEB500961C67 /* AlbumController.xib */,
@@ -555,7 +557,7 @@
 				18DD695614B6E605000062D1 /* rotate.png in Resources */,
 				18DD696514B6F045000062D1 /* VED.png in Resources */,
 				18DD696714B6F6F1000062D1 /* ji.png in Resources */,
-				183DE31C14C7F6E200BDC724 /* PlaylistDetailController.xib in Resources */,
+				18DCEFEE14E39642001965EA /* PlaylistDetailController.xib in Resources */,
 				18C78B9414D6736500B57B4F /* TestiPhoneCalViewController.xib in Resources */,
 				1885976314D7D31F005EB0EB /* unlike.png in Resources */,
 				1885976414D7D31F005EB0EB /* like.png in Resources */,
@@ -652,6 +654,16 @@
 				18D4034014750E5E00389097 /* zh-Hant */,
 			);
 			name = AssetTablePicker.xib;
+			sourceTree = "<group>";
+		};
+		18DCEFF014E39642001965EA /* PlaylistDetailController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				18DCEFEF14E39642001965EA /* en */,
+				18DCEFF214E3964C001965EA /* zh-Hant */,
+				18DCEFF314E39650001965EA /* zh-Hans */,
+			);
+			name = PlaylistDetailController.xib;
 			sourceTree = "<group>";
 		};
 		A1F7E814148C9BBF0088F366 /* MainWindow.xib */ = {
