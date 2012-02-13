@@ -184,6 +184,12 @@
     selectedRow = NSNotFound;
 }
 -(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
+        tagSelector=nil;
+        [[NSNotificationCenter defaultCenter] removeObserver:tagSelector];
+        [[NSNotificationCenter defaultCenter]removeObserver:self];
+    }
     
 }
 -(void)viewDidDisappear:(BOOL)animated{
@@ -374,7 +380,7 @@
         if (pthoundsNumber != 0) {
             b = [NSString stringWithFormat:@"%d,",pthoundsNumber];
         }
-        pNumber = (device.photoCount - pthoundsNumber * 1000);
+        pNumber = (device.photoCount -pmillionNumber * 1000000 - pthoundsNumber * 1000);
         if (pNumber != 0) {
             c = [NSString stringWithFormat:@"%d",pNumber];
         }
@@ -386,7 +392,7 @@
         if (vthoundsNumber != 0) {
             e = [NSString stringWithFormat:@"%d,",vthoundsNumber];
         }
-        vNumber = (device.videoCount - vthoundsNumber * 1000);
+        vNumber = (device.videoCount - vmillionNumber * 1000000 - vthoundsNumber * 1000);
         if (vNumber != 0) {
             f = [NSString stringWithFormat:@"%d",vNumber];
         }
@@ -452,6 +458,7 @@
         NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                                     [NSNumber numberWithBool:lockMode],@"lock", nil];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"viewPhotos" object:nil userInfo:dic];   
+      
     }
     else
     {

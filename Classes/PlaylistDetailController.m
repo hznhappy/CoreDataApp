@@ -137,13 +137,22 @@
 }
 -(void)huyou
 {
-    NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
+    if(keybord==NO&&textField.text!=nil&&textField.text.length!=0)
+    {
+        if(bum==nil)
+        {
+            [self album];  
+        }
+    bum.name=textField.text;
+    [appDelegate.dataSource.coreData saveContext];
+    }
+    [self.navigationController popViewControllerAnimated:YES]; 
+    NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:bum,@"name",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
                                                        object:self 
                                                      userInfo:dic1];
     
-
-    [self.navigationController popViewControllerAnimated:YES]; 
+    
 }
 #pragma mark -
 #pragma mark UITableView  method
@@ -348,7 +357,12 @@
             People *am = (People *)[list objectAtIndex:indexPath.row];
             if (am.lastName.length == 0 || am.lastName == nil) {
                 name.text = am.firstName;
-            }else{
+            }
+            else if(am.firstName.length == 0 || am.firstName == nil)
+            {
+                name.text = am.lastName;
+            }
+            else{
                 name.text = [NSString stringWithFormat:@"%@ %@",am.lastName,am.firstName];
             }
             [cell.contentView addSubview:name];
@@ -765,40 +779,14 @@
 }
 -(void)addPlay
 {
-  
-  //if(bum==nil)
- // {
-     // key=1;
       keybord=YES;
-      
-    //  bum.name=textField.text;
-      //bum.byCondition=@"numOfLike";
-      // bum.sortOrder=[NSNumber numberWithBool:YES];
-            
-      //[appDelegate.dataSource.coreData saveContext];
-   
-  //}
- // else
-   // {
-       // NSLog(@"KEY:%d",key);
-       // if(key==0)
-       // {
-        //    key=2;
-        //}
-     //   keybord=NO;
-    if(bum==nil)
+       if(bum==nil)
     {
         [self album];  
-        //keybord=NO;
     }
 
     bum.name=textField.text;
-    [self setSort];
-    [self setOrder];
-    
     [appDelegate.dataSource.coreData saveContext];
-   // }
-    [AL refresh];
 }
 
 -(IBAction)updateTable:(id)sender{

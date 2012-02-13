@@ -68,6 +68,7 @@
     ap.hidesBottomBarWhenPushed = YES;
     ap.crwAssets=assets;
     ap.album = receivedAlbum;
+    ap.navigationItem.title = [dic objectForKey:@"title"];
     [self pushViewController:ap animated:YES];
 }
 

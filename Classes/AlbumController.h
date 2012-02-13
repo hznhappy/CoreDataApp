@@ -17,12 +17,14 @@
     UIBarButtonItem *editButton;
     AlbumDataSource * dataSource;
     NSMutableArray *assets;
+    UIBarButtonItem *addButon;
+    int index;
 }
 
 @property(nonatomic,strong)IBOutlet UITableView *tableView; 
 
 -(IBAction)toggleEdit:(id)sender;
 -(IBAction)toggleAdd:(id)sender;
--(void)tabled;
+-(void)tabled:(NSNotification *)note;
 -(Album *)getAlbumInRow:(NSInteger)row;
 @end
