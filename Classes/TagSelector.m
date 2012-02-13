@@ -32,7 +32,6 @@
 }
 
 -(void)addTagPeople:(NSNotification *)note{
-    NSLog(@"twice ");
     NSDictionary *dic = [note userInfo];
     mypeople=[dic objectForKey:@"people"];
     NSLog(@"adddd:%@",add);

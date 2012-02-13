@@ -69,10 +69,15 @@
        PeopleTag *peopleTag =[self.list objectAtIndex:i];
         NSString *firstName = peopleTag.conPeople.firstName;
         NSString *lastName = peopleTag.conPeople.lastName;
-        if (lastName.length == 0 || lastName == nil) {
-            buttonName = firstName;
-        }else{
-            buttonName = [lastName stringByAppendingFormat:@"%@",firstName];
+        if (firstName.length == 0 || firstName == nil) {
+            buttonName = lastName;
+        }
+        else if(lastName.length == 0 || lastName == nil)
+        {
+            buttonName=firstName;
+        }
+        else{
+            buttonName = [NSString stringWithFormat:@"%@ %@",lastName,firstName];
         }
 		button.frame = CGRectMake(btx, bty, btwidth, byheight);
 		[button setTitle:buttonName forState:UIControlStateNormal];

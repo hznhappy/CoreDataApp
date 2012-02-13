@@ -185,6 +185,12 @@
     selectedRow = NSNotFound;
 }
 -(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
+        tagSelector=nil;
+        [[NSNotificationCenter defaultCenter] removeObserver:tagSelector];
+        [[NSNotificationCenter defaultCenter]removeObserver:self];
+    }
     
 }
 -(void)viewDidDisappear:(BOOL)animated{
@@ -404,6 +410,7 @@
         NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                                     [NSNumber numberWithBool:lockMode],@"lock", nil];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"viewPhotos" object:nil userInfo:dic];   
+      
     }
     else
     {

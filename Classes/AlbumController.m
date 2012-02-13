@@ -22,7 +22,7 @@
 #pragma mark UIViewController method
 -(void)viewWillAppear:(BOOL)animated
 {
-    self.navigationController.navigationBar.barStyle=UIBarStyleBlack;
+    //self.navigationController.navigationBar.barStyle=UIBarStyleBlack;
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -33,33 +33,46 @@
 
 -(void)viewDidLoad
 {  
-    [self tabled];
+    PhotoAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    dataSource = appDelegate.dataSource;
+    // [dataSource refresh];
+    assets = dataSource.assetsBook; 
     [self setWantsFullScreenLayout:YES];
 	[self.navigationItem setTitle:@"PlayList"];
     
     NSString *bu=NSLocalizedString(@"Edit", @"button");
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    //self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     
-    UIBarButtonItem *addButon=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(toggleAdd:)];
+    addButon=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(toggleAdd:)];
     
     editButton = [[UIBarButtonItem alloc] initWithTitle:bu style:UIBarButtonItemStyleBordered target:self action:@selector(toggleEdit:)];
     
     addButon.style = UIBarButtonItemStyleBordered;
     editButton.style = UIBarButtonItemStyleBordered;
     
-    self.navigationItem.leftBarButtonItem = editButton;
-    self.navigationItem.rightBarButtonItem = addButon;
+    self.navigationItem.rightBarButtonItem = editButton;
+   // self.navigationItem.rightBarButtonItem = addButon;
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabled) name:@"addplay" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabled:) name:@"addplay" object:nil];
     
 }
--(void)tabled
-{
-    PhotoAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    dataSource = appDelegate.dataSource;
-    [dataSource refresh];
-    assets = dataSource.assetsBook; 
-    [tableView reloadData];
+-(void)tabled:(NSNotification *)note{
+   
+    [self.tableView setEditing:!self.tableView.editing animated:NO];
+    self.navigationItem.leftBarButtonItem=nil;
+    NSString *d=NSLocalizedString(@"Edit", @"button");
+    editButton.title = d;
+    NSDictionary *dic = [note userInfo];
+    Album *a=[dic objectForKey:@"name"];
+    if(a!=nil)
+    {
+        PhotoAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        dataSource = appDelegate.dataSource;
+        [dataSource fresh:a index:index];
+        assets = dataSource.assetsBook; 
+        [tableView reloadData];
+    }
+    
 }
 -(void)addcount
 { 
@@ -73,14 +86,24 @@
     NSString *d=NSLocalizedString(@"Edit", @"button");
     if (self.tableView.editing) {
         editButton.title = d;
+        self.navigationItem.leftBarButtonItem=nil;
+        
     }
     else{
-        
+        self.navigationItem.leftBarButtonItem = addButon;
         editButton.title = c;
     }
+
+   [self.tableView setEditing:!self.tableView.editing animated:YES];
+    self.tableView.allowsSelectionDuringEditing=YES;
+  
     
-    [self.tableView setEditing:!self.tableView.editing animated:YES];
     
+}
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
+           editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    //Disable editing for 1st row in section
+    return (indexPath.row == 0 || indexPath.row == 1) ? UITableViewCellEditingStyleNone : UITableViewCellEditingStyleDelete;
 }
 
 -(IBAction)toggleAdd:(id)sender
@@ -88,6 +111,7 @@
     PlaylistDetailController *detailController = [[PlaylistDetailController alloc]initWithNibName:@"PlaylistDetailController" bundle:[NSBundle mainBundle]];
     detailController.hidesBottomBarWhenPushed = YES;
 	[self.navigationController pushViewController:detailController animated:YES];
+    index=-1;
 }
 
 #pragma mark -
@@ -107,7 +131,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)table cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{    
+{  
     static NSString *CellIdentifier = @"CellIdentifier";
 	UITableViewCell *cell = [table dequeueReusableCellWithIdentifier:CellIdentifier];
 	if (cell == nil) {
@@ -122,26 +146,65 @@
         UIImage *image = [UIImage imageWithCGImage:imgRef];
         cell.imageView.image = image; 
     }
+    if(indexPath.row==1)
+    {
+        cell.textLabel.textColor=[UIColor redColor];
+    }
     cell.textLabel.text = [NSString stringWithFormat:@"%@ (%d)",am.name, am.num];
-    cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;    
+   // cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;    
     return cell;
+    
 }
 -(void)tableView:(UITableView *)table didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSMutableArray *WE=[(AmptsAlbum *)[assets objectAtIndex:indexPath.row]assetsList];
-    Album *album = [self getAlbumInRow:indexPath.row];
-    NSMutableDictionary *dic = nil;
-    if (album == nil) {
-        dic  = [NSMutableDictionary dictionaryWithObjectsAndKeys:WE, @"myAssets", nil];
-    }else{
-        dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:album, @"album", WE, @"myAssets", nil];
+    if (self.tableView.editing) { 
+        NSLog(@"3");
+        NSString *a=NSLocalizedString(@"note", @"title");
+        NSString *b=NSLocalizedString(@"Inherent members, can not be edited", @"title");
+        NSString *c=NSLocalizedString(@"ok", @"title");
+        PlaylistDetailController *detailController = [[PlaylistDetailController alloc]initWithNibName:@"PlaylistDetailController" bundle:[NSBundle mainBundle]];
+        detailController.bum = [self getAlbumInRow:indexPath.row];
+        detailController.hidesBottomBarWhenPushed = YES;
+        if(detailController.bum!=nil)
+        {
+            [self.navigationController pushViewController:detailController animated:YES];
+            index=indexPath.row;
+        }
+        else
+        {
+            UIAlertView *alert = [[UIAlertView alloc]
+                                  initWithTitle:a
+                                  message:b
+                                  delegate:self
+                                  cancelButtonTitle:nil
+                                  otherButtonTitles:c,nil];
+            [alert show];
+            
+        }
+        
+        
+        
+        
     }
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"pushThumbnailView" object:nil userInfo:dic];
-    
-    [table deselectRowAtIndexPath:indexPath animated:YES];
+    else
+    {
+        NSMutableArray *WE=[(AmptsAlbum *)[assets objectAtIndex:indexPath.row]assetsList];
+        Album *album = [self getAlbumInRow:indexPath.row];
+        NSMutableDictionary *dic = nil;
+        if (album == nil) {
+            dic  = [NSMutableDictionary dictionaryWithObjectsAndKeys:WE, @"myAssets", nil];
+        }else{
+            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:album, @"album", WE, @"myAssets", nil];
+        }
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"pushThumbnailView" object:nil userInfo:dic];
+        
+        
+        
+    }
+     [table deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
+/*- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
     NSString *a=NSLocalizedString(@"note", @"title");
     NSString *b=NSLocalizedString(@"Inherent members, can not be edited", @"title");
     NSString *c=NSLocalizedString(@"ok", @"title");
@@ -165,7 +228,7 @@
     }
 
     
-}
+}*/
 -(Album *)getAlbumInRow:(NSInteger)row{
     AmptsAlbum *am = (AmptsAlbum *)[assets objectAtIndex:row];
     
@@ -180,10 +243,27 @@
     }
     return nil;
 }
+/*- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath 
+{ if(indexPath.row>1)
+{
+    return YES;
+}
+    return NO;
+}*/
+-(BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(indexPath.row>1)
+    {
+        return YES;
+    }
+    return NO;
+}
 #pragma mark -
 #pragma mark Table View Data Source Methods
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{     AmptsAlbum *fa=[assets objectAtIndex:indexPath.row];
+{   
+    AmptsAlbum *fa=[assets objectAtIndex:indexPath.row];
+    NSLog(@"asserts:%@",assets);
     
     if(editingStyle==UITableViewCellEditingStyleDelete)
     {
@@ -198,13 +278,21 @@
         }
             }
     [dataSource.coreData saveContext];
-    [self tabled];
+    [self.tableView reloadData];
 
     
 }
 -(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{  
-    
+{ 
+    NSUInteger fromRow=[fromIndexPath row];
+	NSUInteger toRow=[toIndexPath row];
+    if(toRow>1)
+    {
+        id object=[assets objectAtIndex:fromRow];
+        [assets removeObjectAtIndex:fromRow];
+        [assets insertObject:object atIndex:toRow];
+    }
+    [self.tableView reloadData];
 } 
 
 #pragma mark -

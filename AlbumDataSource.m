@@ -119,7 +119,7 @@
         
         newAsset=[[Asset alloc]initWithEntity:entity insertIntoManagedObjectContext:[coreData managedObjectContext]];
         newAsset.url=[[[alAsset defaultRepresentation]url]description];
-     /*   NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
+        NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
        // NSLog(@"strdate:%@",strDate);
        // NSString* string = @"Wed, 05 May 2011 10:50:00";
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
@@ -130,7 +130,7 @@
         //[inputFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"Asia/Shanghai"]];
         newAsset.date = [inputFormatter dateFromString:strDate];
       //  NSLog(@"date = %@", newAsset.date);
-       */
+       
         
         newAsset.latitude=[NSNumber numberWithDouble:0.0];
         newAsset.longitude=[NSNumber numberWithDouble:0.0];
@@ -224,6 +224,55 @@
         [assetsBook addObject:album];
         
     }
+}
+-(void)fresh:(Album *)al index:(int)index
+{
+    NSMutableArray* tmp=nil;
+    NSPredicate * pre=nil;
+    Album *i=nil;
+    if(index==-1)
+    {
+    tmp=[self simpleQuery:@"Album" predicate:nil sortField:nil sortOrder:YES];
+    //for(Album* i in tmp ) {
+     i=(Album *)[tmp lastObject];
+    }
+    else
+    {
+        i=al;
+    }
+        AmptsAlbum * album=[[AmptsAlbum alloc]init];
+        album.name=[i name];
+        album.alblumId=[i objectID];
+        pre=[self ruleFormation:i];
+        if([i.sortOrder boolValue]==YES){
+            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:[i sortKey]  sortOrder:YES];
+        }else {
+            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:[i sortKey]  sortOrder:NO];
+            
+        }
+        
+        pre=[self excludeRuleFormation:i];
+        if (pre!=nil) {
+            NSMutableArray* excludePeople=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:YES];
+            if(excludePeople!=nil) {
+                [album.assetsList removeObjectsInArray:excludePeople];
+            }
+        }
+        album.num=[album.assetsList count];
+        for (Asset* tmpAsset in   album.assetsList) {
+            //NSLog(@"Photo contains: %@",tmpAsset.url);
+        }
+    if(index==-1)
+    {
+        [assetsBook addObject:album];
+    }
+    else
+    {
+        [assetsBook replaceObjectAtIndex:index withObject:album];
+    }
+        
+   // }
+
 }
 -(void)playlistAlbum{
     PlaylistRootViewController *root = (PlaylistRootViewController*)self.nav;

@@ -16,6 +16,7 @@
 #import "EventRule.h"
 #import "AssetRule.h"
 #import <Assetslibrary/Assetslibrary.h>
+@class Album;
 @interface AlbumDataSource : NSObject {
     AmptsPhotoCoreData * coreData;
     OnDeviceAssets * deviceAssets;
@@ -49,4 +50,5 @@
 -(void) refresh;
 -(void) syncDataSource;
 -(void) testDataSource;
+-(void)fresh:(Album *)al index:(int)index;
 @end

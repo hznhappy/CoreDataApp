@@ -155,7 +155,6 @@ int j=1,count=0;
 
 -(IBAction)toggleEdit:(id)sender
 { 
-    //
     NSString *a=NSLocalizedString(@"Edit", @"title");
     NSString *b=NSLocalizedString(@"Done", @"title");
     if (self.tableView.editing) {
@@ -236,9 +235,14 @@ int j=1,count=0;
 	}
     
     People *am = (People *)[result objectAtIndex:indexPath.row];
-    if (am.lastName == nil) {
+    if (am.firstName == nil) {
+        cell.textLabel.text = [NSString stringWithFormat:@"%@",am.lastName];
+    }
+    else if(am.lastName == nil)
+    {
         cell.textLabel.text = [NSString stringWithFormat:@"%@",am.firstName];
-    }else
+    } 
+    else
         cell.textLabel.text = [NSString stringWithFormat:@"%@ %@",am.lastName, am.firstName];
         
     return cell; 
@@ -250,7 +254,6 @@ int j=1,count=0;
         
     id1=[NSString stringWithFormat:@"%d",indexPath.row]; 
     favorate1=[self.result objectAtIndex:indexPath.row];
-  //  NSLog(@"conpeopletag:%@",favorate1.conPeopleTag);
     NSPredicate *pre=[NSPredicate predicateWithFormat:@"conPeople==%@",favorate1];
     self.as=[appDelegate.dataSource simpleQuery:@"PeopleTag" predicate:pre sortField:nil sortOrder:YES];
    
@@ -283,44 +286,6 @@ int j=1,count=0;
         
     }
     
-    /*NSString *selectTag= [NSString stringWithFormat:@"select ID from tag"];
-    
-    NSMutableArray *listid1=[da selectFromTAG:selectTag];
-    if([[self.list objectAtIndex:indexPath.row]intValue]==0)
-    {
-        NSString *a=NSLocalizedString(@"hello", @"title");
-        NSString *b=NSLocalizedString(@"Inherent members, can not be deleted", @"title");
-        NSString *c=NSLocalizedString(@"ok", @"title");
-        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:a message:b delegate:self cancelButtonTitle:c otherButtonTitles:nil];
-        [alert show];
-        [alert release];
-    }
-    else
-    {
-        if([listid1 containsObject:[list objectAtIndex:indexPath.row]])
-        {
-            NSString *a=NSLocalizedString(@"hello", @"title");
-            NSString *b=NSLocalizedString(@"This person has been used as a photo tag, you sure you want to delete it", @"title");
-            NSString *c=NSLocalizedString(@"NO", @"title");
-            NSString *d=NSLocalizedString(@"YES", @"title");
-            
-            UIAlertView *alert1=[[UIAlertView alloc] initWithTitle:a message:b delegate:self cancelButtonTitle:c otherButtonTitles:nil];
-            [alert1 addButtonWithTitle:d];
-            [alert1 show];
-            [alert1 release];
-            
-        }
-        else
-        {
-            NSString *deleteIdTable = [NSString stringWithFormat:@"DELETE FROM idOrder WHERE ID='%@'",[self.list objectAtIndex:indexPath.row]];
-            NSLog(@"%@",deleteIdTable );
-            [da deleteDB:deleteIdTable ];  
-            NSString *DeleteUserTable= [NSString stringWithFormat:@"DELETE FROM UserTable WHERE ID='%@'",[self.list objectAtIndex:indexPath.row]];
-            [da deleteDB:DeleteUserTable];
-            [self creatTable];
-            [self.tableView reloadData];
-        }
-    }*/
 }
 - (void)tableView:(UITableView *)table didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
    
