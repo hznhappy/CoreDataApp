@@ -289,10 +289,12 @@
     page.imageView.image = nil;
     page.frame = rect;
     if (!playingPhoto) {
-        [self showPhotoInfo:page];
         [page loadIndex:index];
     }else{
         [page setClearImage];
+    }
+    if (!playingPhoto && !playingVideo && !_barsHidden) {
+        [self showPhotoInfo:page];
     }
     Asset *asset = [self.playlist.storeAssets objectAtIndex:index];
     NSString *strUrl = asset.url;
@@ -312,7 +314,7 @@
             
         }
     }
-    
+    //NSLog(@"self.scrollview.bounds is %@",NSStringFromCGRect(self.scrollView.bounds));
 }
 
 - (BOOL)isDisplayingPageForIndex:(NSUInteger)index{
@@ -427,11 +429,10 @@
         likeButton = nil;
     }
     
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addPhotoInfoView:) object:page];
-    [self performSelector:@selector(addPhotoInfoView:) withObject:page afterDelay:1];
+    [self performSelector:@selector(addPhotoInfoView:) withObject:page];
     if (lockMode) {
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showLikeButton:) object:page];
-        [self performSelector:@selector(showLikeButton:) withObject:page afterDelay:1];
+        //[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showLikeButton:) object:page];
+        [self performSelector:@selector(showLikeButton:) withObject:page];
     }
     
 }
@@ -441,7 +442,7 @@
     assetInfoView = [[UIView alloc]initWithFrame:CGRectMake(page.frame.origin.x, page.frame.size.height * 1/2 , 130, 120)];
     assetInfoView.userInteractionEnabled = NO;
     [assetInfoView.layer setCornerRadius:10.0];
-    [assetInfoView setClipsToBounds:YES]; 
+    [assetInfoView setClipsToBounds:YES];
     if (!lockMode) {
         UILabel *likeCount = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 120, 25)];
         likeCount.backgroundColor = [UIColor clearColor];
@@ -474,16 +475,16 @@
     [assetInfoView setBackgroundColor:[UIColor clearColor]];
     //assetInfoView.alpha = 0.4;
     [assetInfoView addSubview:date];
-    
     [self.scrollView addSubview:assetInfoView];
-    //[self.scrollView bringSubviewToFront:assetInfoView];
 }
 -(void)numtag
 {   Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
     tagCount.text = [NSString stringWithFormat:@"TAG COUNT:%@",[asset.numPeopleTag description]];
 }
 -(void)showLikeButton:(PhotoImageView *)page{
-    likeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    likeButton.layer.cornerRadius = 10.0;
+    likeButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
     CGRect mainScreen = page.frame;
     likeButton.frame = CGRectMake(mainScreen.size.width*4/5, mainScreen.size.height*3/4, 50, 50);
     
@@ -571,7 +572,7 @@
     [page.scrollView addSubview:theMovie.view];
     theMovie.scalingMode=MPMovieMediaTypeMaskAudio;
     theMovie.controlStyle = MPMovieControlModeHidden;
-   
+    [theMovie setFullscreen:YES animated:YES];
     
     [[NSNotificationCenter defaultCenter] addObserver:self 
                                              selector:@selector(myMovieFinishedCallback:) 
@@ -970,13 +971,15 @@
 }
 
 -(void)changeScrollView{
-    self.scrollView.contentSize = [self contentSizeForPagingScrollView];
+    CGRect bounds = self.scrollView.bounds;
+    //NSLog(@"%@ is scrollView BOUNDS",NSStringFromCGSize(bounds.size));
+  
+    self.scrollView.contentSize = CGSizeMake(bounds.size.width * [self.playlist.assets allKeys].count, bounds.size.height);
 }
 #pragma mark -
 #pragma mark Bar Methods
 
 - (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated{
-    NSLog(@"set Status hidden is %@",hidden? @"YES":@"NO");
     [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:UIStatusBarAnimationFade];
     
 }
@@ -988,9 +991,11 @@
     [self.navigationController setToolbarHidden:hidden animated:animated];
     [self setPhotoInfoHidden:hidden];
     [self setLikeButtonHidden:hidden];
-	_barsHidden=hidden;
-    NSLog(@"hide time");
-	
+    if (!hidden && assetInfoView == nil && assetInfoView.superview == nil) {
+        PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
+        [self showPhotoInfo:page];
+    }
+	_barsHidden=hidden;	
 }
 
 -(void)setPhotoInfoHidden:(BOOL)hidden{
@@ -1106,6 +1111,14 @@
             [[NSNotificationCenter defaultCenter]postNotificationName:MPMoviePlayerPlaybackDidFinishNotification object:theMovie];
             [theMovie.view removeFromSuperview];
             theMovie = nil;
+        }
+        if (assetInfoView != nil && assetInfoView.superview != nil) {
+            [assetInfoView removeFromSuperview];
+            assetInfoView = nil;
+        }
+        if (likeButton != nil && likeButton.superview != nil) {
+            [likeButton removeFromSuperview];
+            likeButton = nil;
         }
         currentPageIndex = index;
     }

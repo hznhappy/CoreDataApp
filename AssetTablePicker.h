@@ -41,7 +41,7 @@
 
     UIInterfaceOrientation oritation;
     UIInterfaceOrientation previousOrigaton;
-
+    NSInteger lastRow;
     NSUInteger selectedRow;
     TagSelector *tagSelector;
     Album *album;

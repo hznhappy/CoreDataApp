@@ -156,8 +156,35 @@
     {
         cell.textLabel.textColor=[UIColor redColor];
     }
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ (%d)",am.name, am.num];
-   // cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;    
+    NSInteger millionNumber = 0;
+    NSInteger thoundsNumber = 0;
+    NSInteger number = 0;
+    NSString *a = @"";
+    NSString *b = @"";
+    NSString *c = @"";
+    millionNumber = am.num/1000000;
+    thoundsNumber = (am.num - millionNumber * 1000000)/1000;
+    number = am.num - millionNumber * 1000000 - thoundsNumber * 1000;
+    if (millionNumber != 0) {
+        a = [NSString stringWithFormat:@"%d,",millionNumber];
+    }
+    if (thoundsNumber != 0) {
+        b = [NSString stringWithFormat:@"%d,",thoundsNumber];
+    }
+    if (number != 0) {
+        c = [NSString stringWithFormat:@"%d",number];
+    }
+    cell.textLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:18];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@%@%@)",am.name, a,b,c];
+    
+//    cell.detailTextLabel.contentMode=UIViewContentModeScaleToFill;
+//    cell.detailTextLabel.lineBreakMode = UILineBreakModeWordWrap;
+//    cell.detailTextLabel.baselineAdjustment=UIBaselineAdjustmentAlignCenters;
+//    cell.detailTextLabel.textAlignment=UITextAlignmentLeft;
+//    cell.detailTextLabel.font=[UIFont boldSystemFontOfSize:15];
+//    cell.detailTextLabel.textColor=[UIColor blackColor];
+//    cell.detailTextLabel.text = @"detail";
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;    
     return cell;
     
 }
@@ -193,13 +220,14 @@
     }
     else
     {
-        NSMutableArray *WE=[(AmptsAlbum *)[assets objectAtIndex:indexPath.row]assetsList];
+        AmptsAlbum *ampt = [assets objectAtIndex:indexPath.row];
+        NSMutableArray *WE = ampt.assetsList;
         Album *album = [self getAlbumInRow:indexPath.row];
         NSMutableDictionary *dic = nil;
         if (album == nil) {
-            dic  = [NSMutableDictionary dictionaryWithObjectsAndKeys:WE, @"myAssets", nil];
+            dic  = [NSMutableDictionary dictionaryWithObjectsAndKeys:WE, @"myAssets", ampt.name,@"title", nil];
         }else{
-            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:album, @"album", WE, @"myAssets", nil];
+            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:album, @"album", WE, @"myAssets",ampt.name,@"title", nil];
         }
         [[NSNotificationCenter defaultCenter]postNotificationName:@"pushThumbnailView" object:nil userInfo:dic];
         

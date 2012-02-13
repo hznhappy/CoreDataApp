@@ -14,7 +14,8 @@
 @synthesize deviceAssetsList,library;
 @synthesize devicePeopleList;
 @synthesize urls;
-
+@synthesize photoCount;
+@synthesize videoCount;
 
 -(id)init {
     self=[super init];
@@ -23,6 +24,8 @@
         devicePeopleList=[[NSMutableDictionary alloc]init];
         library=[[ALAssetsLibrary alloc]init];
         urls = [[NSMutableArray alloc]init];
+        photoCount = 0;
+        videoCount = 0;
         [self refreshData];
     }
   
@@ -69,7 +72,11 @@
              { 
                  return;
              }
-             
+             if ([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
+                 videoCount += 1;
+             }else{
+                 photoCount += 1;
+             }
              NSString *u= [[[result defaultRepresentation]url]description];
              [urls addObject:u];
              // XXX fixme

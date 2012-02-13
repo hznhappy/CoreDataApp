@@ -162,6 +162,7 @@
     tmpAlbum.alblumId=nil;
     //tmpAlbum.assetsList = [self simpleQuery:@"Asset" predicate:[NSPredicate predicateWithFormat:@"ANY url in %@",deviceAssets.urls] sortField:@"url" sortOrder:YES];
     NSMutableArray *coreDataAssets = [self simpleQuery:@"Asset" predicate:nil sortField:nil sortOrder:YES];
+    
     for (NSString *u in deviceAssets.urls) {
         for (Asset *as in coreDataAssets) {
             if ([as.url isEqualToString:u]) {
@@ -191,6 +192,7 @@
         }
     }
     tmpAlbum.num=[tmpAlbum.assetsList count];
+    [UIApplication sharedApplication].applicationIconBadgeNumber = tmpAlbum.num;
     [assetsBook addObject:tmpAlbum];
     tmp=[self simpleQuery:@"Album" predicate:nil sortField:nil sortOrder:YES];
     //NSLog(@"Number of Album :%d",[tmp count]);

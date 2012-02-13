@@ -25,7 +25,7 @@
 
 
 @interface PhotoImageView (Private)
-- (void)layoutScrollViewAnimated:(BOOL)animated;
+- (void)layoutScrollViewAnimated;
 @end
 
 CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
@@ -115,7 +115,7 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 	[super layoutSubviews];
 		
 	if (_scrollView.zoomScale == 1.0f) {
-		[self layoutScrollViewAnimated:YES];
+		[self layoutScrollViewAnimated];
 	}
 	
 }
@@ -123,12 +123,11 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 - (void)loadIndex: (NSUInteger) _index {
     //NSLog(@"Asset Loading");
     // set the tag for async operation result check
-     //[_activityView startAnimating];
+    // [_activityView startAnimating];
     self.tag = _index;
     // reset our zoomScale to 1.0 before doing any further calculations
     self.scrollView.zoomScale = 1.0;
     self.imageView.image = nil;
-    
     //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
     //        [self doLoadImage: nil checkIndex: _index];
     //    });
@@ -146,7 +145,10 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
             [self doLoadImage: nil checkIndex: _index];
         });
     }];  
-    [self doLoadImage: nil checkIndex: _index];
+    //[self doLoadImage: nil checkIndex: _index];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self doLoadImage: nil checkIndex: _index];
+    });
 }
 
 - (void)doLoadIndexStr: (NSString*) _index {
@@ -154,20 +156,24 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 }
 
 - (void)doLoadImage: (UIImage *) image checkIndex: (NSUInteger) _index {
-    
     if (self.tag != _index) {
         NSLog(@"Skipping non-matched image loading process: %d", _index);
         return;
     }
+    [self performSelectorOnMainThread:@selector(updateUI:) withObject:image waitUntilDone:YES];
+//    if (image == nil) {
+//        self.imageView.image = fullScreen != nil ? fullScreen : fuzzy;
+//    } else {
+//        self.imageView.image = image;
+//    }
+//    NSLog(@"image is %@",self.imageView.image);
+//     //[_activityView stopAnimating];
+//        NSLog(@"iamgesize is %@",NSStringFromCGSize(self.imageView.image.size));
+//        [self layoutScrollViewAnimated];
     
-    if (image == nil) {
-        self.imageView.image = fullScreen != nil ? fullScreen : fuzzy;
-    } else {
-        self.imageView.image = image;
-    }
-     //[_activityView stopAnimating];
-    [self layoutScrollViewAnimated:NO];
-    //    self.contentSize = [self.imageView.image size];
+    
+    
+        //    self.contentSize = [self.imageView.image size];
     //    
     ////    NSLog(@"Content Size: %fx%f", self.contentSize.width, self.contentSize.height);
     //    if (self.contentSize.width > 0 && self.contentSize.height > 0) {
@@ -178,12 +184,25 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     //
 }
 
+-(void)updateUI:(UIImage *)image{
+    if (image == nil) {
+        self.imageView.image = fullScreen != nil ? fullScreen : fuzzy;
+    } else {
+        self.imageView.image = image;
+    }
+    NSLog(@"image is %@",self.imageView.image);
+    //[_activityView stopAnimating];
+    CGSize imageSize = self.imageView.image.size;
+    NSLog(@"iamgesize is %@",NSStringFromCGSize(imageSize));
+    [self layoutScrollViewAnimated];
+}
+
 -(void)setClearImage{
     ALAsset *asset = [self.playlist assetAtIndex:index];
     CGImageRef imageRef = [asset defaultRepresentation].fullScreenImage;
     UIImage *image = [UIImage imageWithCGImage:imageRef];
     self.imageView.image = image;
-    [self layoutScrollViewAnimated:NO];
+    [self layoutScrollViewAnimated];
 }
 
 -(void)rotatePhoto{
@@ -191,11 +210,12 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     UIImage *image = [self.fullScreen imageRotatedByDegrees:90];
     self.fullScreen = image;
     self.imageView.image = self.fullScreen;
-    [self layoutScrollViewAnimated:NO];
+    [self layoutScrollViewAnimated];
 
 }
 
 -(void)savePhoto{
+    
     UIImageWriteToSavedPhotosAlbum(self.fullScreen, nil, nil, nil);
 
 }
@@ -223,16 +243,13 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 		self.scrollView.frame = CGRectMake((self.bounds.size.width / 2) - (width / 2), (self.bounds.size.height / 2) - (height / 2), width, height);
 	} else {
 		
-		[self layoutScrollViewAnimated:NO];
+		[self layoutScrollViewAnimated];
 	}
 }
 
-- (void)layoutScrollViewAnimated:(BOOL)animated{
+- (void)layoutScrollViewAnimated{
 
-//	if (animated) {
-//		[UIView beginAnimations:nil context:NULL];
-//		[UIView setAnimationDuration:0.0001];
-//	}
+
     if (CGSizeEqualToSize(self.imageView.image.size, CGSizeZero)) {
         return;
     }
@@ -258,12 +275,15 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 	self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
 	self.scrollView.contentOffset = CGPointMake(0.0f, 0.0f);
 	self.imageView.frame = self.scrollView.bounds;
-//	if (animated) {
-//		[UIView commitAnimations];
-//	}
+
+    //NSLog(@"self.imageview is %@,image is %@,scrollView is %@,self.frame is%@  %d",NSStringFromCGRect(self.imageView.frame),NSStringFromCGSize(self.imageView.image.size),NSStringFromCGRect(self.scrollView.frame),NSStringFromCGRect(self.frame),index);
 }
 
-
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"PhotoViewToggleBars" object:nil];
+    
+}
 #pragma mark -
 #pragma mark UIScrollView Delegate Methods
 
@@ -273,7 +293,7 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 		
 		[self.scrollView setZoomScale:1.0f animated:NO];
 		self.imageView.frame = self.scrollView.bounds;
-		[self layoutScrollViewAnimated:NO];
+		[self layoutScrollViewAnimated];
 		
 	}
 	
@@ -360,7 +380,7 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 			self.scrollView.contentOffset = CGPointMake(offsetX, offsetY);
 		}
 	} else {
-		[self layoutScrollViewAnimated:YES];
+		[self layoutScrollViewAnimated];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"resetCropView" object:nil];
 
 	}
