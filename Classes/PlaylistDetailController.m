@@ -19,6 +19,8 @@
 #import "TestiPhoneCalViewController.h"
 #import "AlbumDataSource.h"
 #import "DateRule.h"
+#import "AddressBook/AddressBook.h"
+#import "AddressBookUI/AddressBookUI.h"
 
 @implementation PlaylistDetailController
 @synthesize listTable;
@@ -33,7 +35,7 @@
 @synthesize PeopleRuleCell;
 @synthesize OrderCell;
 @synthesize SortCell;
-@synthesize DateRangeCell,StopDateRangeCell;
+@synthesize DateRangeCell,StopDateRangeCell,AddPeopleCell;
 @synthesize PeopleSeg;
 @synthesize stopText;
 @synthesize startText;
@@ -42,6 +44,7 @@
 @synthesize DateSeg;
 @synthesize sortSeg;
 @synthesize sortOrder;
+@synthesize IdList;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -74,18 +77,16 @@
         date=bum.conDateRule;
     }
     
-    NSManagedObjectContext *managedObjectContext=[appDelegate.dataSource.coreData managedObjectContext];
-    NSFetchRequest *request=[[NSFetchRequest alloc]init];
-    NSEntityDescription *entity=[NSEntityDescription entityForName:@"People" inManagedObjectContext:managedObjectContext];
-    [request setEntity:entity];
-    NSError *error;
-    NSMutableArray *parray1=[[NSMutableArray alloc]init];
+       NSMutableArray *parray1=[[NSMutableArray alloc]init];
      NSMutableArray *parray2=[[NSMutableArray alloc]init];
+    NSMutableArray *parray3=[[NSMutableArray alloc]init];
     self.list=parray1;
     self.nameList=parray2;
-    list=[[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];  
+    self.IdList=parray3;
     
     
+    
+    [self table];
     if(bum.transitType!=nil)
   {
       self.tranLabel.text=bum.transitType;
@@ -120,7 +121,24 @@
      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeDate:) name:@"changeDate" object:nil];
     [super viewDidLoad];
 }
+-(void)table
+{   
+    [self.list removeAllObjects];
+    [self.IdList removeAllObjects];
+    NSManagedObjectContext *managedObjectContext=[appDelegate.dataSource.coreData managedObjectContext];
+    NSFetchRequest *request=[[NSFetchRequest alloc]init];
+    NSEntityDescription *entity=[NSEntityDescription entityForName:@"People" inManagedObjectContext:managedObjectContext];
+    [request setEntity:entity];
+    NSError *error;
+    
+    list=[[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];  
+    for(int i=0;i<[list count];i++)
+    {
+        People *po=(People *)[list objectAtIndex:i];
+        [self.IdList addObject:po.addressBookId];
+    }
 
+}
 -(void)album
 {
     bum = [NSEntityDescription insertNewObjectForEntityForName:@"Album" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
@@ -143,8 +161,19 @@
         {
             [self album];  
         }
+        [self setSort];
+        [self setOrder];
     bum.name=textField.text;
     [appDelegate.dataSource.coreData saveContext];
+    }
+    if(bum!=nil&&keybord==YES)
+    {
+        if(textField.text==nil||textField.text.length==0)
+        {
+        [appDelegate.dataSource.coreData.managedObjectContext deleteObject:bum];
+        [appDelegate.dataSource.coreData saveContext];
+            bum=nil;
+        }
     }
     [self.navigationController popViewControllerAnimated:YES]; 
     NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:bum,@"name",nil];
@@ -176,7 +205,7 @@
             return 3;
             break;
         case 3:
-            return 1;
+            return 2;
             break;
         case 4:
             return [list count];
@@ -335,12 +364,24 @@
     else if(indexPath.section == 3)
     {
         UITableViewCell *cell = nil;
-        
-        cell = [tableView dequeueReusableCellWithIdentifier:@"PeopleRuleCell"];
-        if (cell == nil) {
-            cell=self.PeopleRuleCell;
+        switch (rowNum) {
+            case 0:
+                cell = [tableView dequeueReusableCellWithIdentifier:@"PeopleRuleCell"];
+                if (cell == nil) {
+                    cell=self.PeopleRuleCell;
+                }
+                break;
+            case 1:
+                cell = [tableView dequeueReusableCellWithIdentifier:@"AddPeopleCell"];
+                if (cell == nil) {
+                    cell=self.AddPeopleCell;
+                }
+                break;
+                default:
+                break;
         }
-        return cell;
+
+               return cell;
         
     }
 
@@ -604,6 +645,61 @@
    [appDelegate.dataSource.coreData saveContext];
 
 }
+-(IBAction)AddContacts
+{
+    ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc]init];
+    picker.peoplePickerDelegate =self;
+    [self presentModalViewController:picker animated:YES];
+}
+
+-(BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person 
+{
+    NSString *personName = (__bridge_transfer NSString*)ABRecordCopyValue(person, kABPersonFirstNameProperty);
+    NSString *lastname = (__bridge_transfer NSString*)ABRecordCopyValue(person, kABPersonLastNameProperty);
+    ABRecordID recId = ABRecordGetRecordID(person);
+   NSNumber *fid=[NSNumber numberWithInt:recId];
+    if([self.IdList containsObject:fid])
+    {
+        NSString *b=NSLocalizedString(@"Already exists", @"button");
+        NSString *a=NSLocalizedString(@"note", @"button");
+        NSString *c=NSLocalizedString(@"ok", @"button");
+        
+        
+        UIAlertView *alert = [[UIAlertView alloc]
+                              initWithTitle:a
+                              message:b
+                              delegate:self
+                              cancelButtonTitle:nil
+                              otherButtonTitles:c,nil];
+        [alert show];
+        alert.tag=0;
+        
+    }
+    else
+    {
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"People" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]]; 
+       People *favorate=[[People alloc]initWithEntity:entity insertIntoManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
+        favorate.firstName=personName;
+        favorate.lastName=lastname;
+        favorate.addressBookId=[NSNumber numberWithInt:[fid intValue]];
+        [appDelegate.dataSource.coreData saveContext];
+        [self table];
+        [self.listTable reloadData];
+    }
+
+    
+    [self dismissModalViewControllerAnimated:YES];
+    return NO;
+}
+- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier
+{
+    return 0;
+}
+-(void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker
+{
+	[self dismissModalViewControllerAnimated:YES];
+}
+
 #pragma mark -
 #pragma mark media picker delegate method
 - (void) mediaPicker: (MPMediaPickerController *) mediaPicker didPickMediaItems: (MPMediaItemCollection *) mediaItemCollection
@@ -759,7 +855,7 @@
                               cancelButtonTitle:nil
                               otherButtonTitles:b,nil];
         [alert show];
-        if(keybord==YES)
+        if(bum!=nil&&keybord==NO)
         {
 
           textField.text=bum.name;
@@ -780,11 +876,12 @@
 -(void)addPlay
 {
       keybord=YES;
-       if(bum==nil)
+      if(bum==nil)
     {
         [self album];  
     }
-
+    [self setSort];
+    [self setOrder];
     bum.name=textField.text;
     [appDelegate.dataSource.coreData saveContext];
 }
@@ -831,10 +928,6 @@
     [bum.conPeopleRule removeConPeopleRuleDetailObject:p];
     [appDelegate.dataSource.coreData saveContext];
 
-   /* NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
-                                                       object:self 
-                                                     userInfo:dic1];*/
 }
 
 -(IBAction)playAlbumPhotos:(id)sender{

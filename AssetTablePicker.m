@@ -274,23 +274,34 @@
 }
 
 -(IBAction)saveTags{
+    NSString *b=NSLocalizedString(@"please select tag name", @"message");
+    NSString *a=NSLocalizedString(@"note", @"button");
+    NSString *c=NSLocalizedString(@"ok", @"button");
+    NSString *d=NSLocalizedString(@"please select tag photo" ,@"message");
+
     if([tagSelector tagPeople]==nil)
     {
-        
-        NSString *message=[[NSString alloc] initWithFormat:
-                           @"please select tag name"];
-        
-        
         UIAlertView *alert = [[UIAlertView alloc]
-                              initWithTitle:@"note"
-                              message:message
+                              initWithTitle:a
+                              message:b
                               delegate:self
                               cancelButtonTitle:nil
-                              otherButtonTitles:@"OK!",nil];
+                              otherButtonTitles:c,nil];
         [alert show];
         
     }
-    
+    else if([self.UrlList count]==0)
+    {
+        UIAlertView *alert = [[UIAlertView alloc]
+                              initWithTitle:a
+                              message:d
+                              delegate:self
+                              cancelButtonTitle:nil
+                              otherButtonTitles:c,nil];
+        [alert show];
+
+        
+    }
     else
     {
         for(int i=0;i<[self.UrlList count];i++)
@@ -298,15 +309,15 @@
             Asset *asset = [self.UrlList objectAtIndex:i];
             [tagSelector saveTagAsset:asset];
         }
-       
          [self cancelTag];
     }
     [self.UrlList removeAllObjects];
     [self.tagRow removeAllObjects];
-    NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
+    NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"editplay" 
                                                        object:self 
                                                      userInfo:dic1];
+   
 }
 -(IBAction)resetTags{
     [self.tagRow removeAllObjects];
@@ -373,9 +384,7 @@
             if([tagSelector tag:dbAsset]==YES)
             {
                 NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
-                NSLog(@"selectedIndex:%@",selectedIndex);
                 [tagRow addObject:selectedIndex];
-                 //[cell checkTagSelection:selectedIndex];
             }
             [assetsInRow addObject:dbAsset];
         }

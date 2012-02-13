@@ -12,5 +12,5 @@
 @interface PersonRootViewController : UINavigationController {
     
 }
-
+-(void)pushPeopleAssetsTablePicker:(NSNotification *)note;
 @end

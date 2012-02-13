@@ -8,7 +8,7 @@
 
 #import "PersonRootViewController.h"
 #import "TagManagementController.h"
-
+#import "AssetTablePicker.h"
 
 @implementation PersonRootViewController
 
@@ -36,10 +36,22 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(pushPeopleAssetsTablePicker:) name:@"pushPeopleThumbnailView" object:nil];
     TagManagementController *tm = [[TagManagementController alloc]init];
     [self pushViewController:tm animated:NO];
 }
-
+-(void)pushPeopleAssetsTablePicker:(NSNotification *)note
+{
+    NSDictionary *dic = [note userInfo];
+    
+    NSMutableArray *assets = [dic objectForKey:@"myAssets"];
+   // Album *receivedAlbum = [dic objectForKey:@"album"];
+    AssetTablePicker *ap = [[AssetTablePicker alloc]initWithNibName:@"AssetTablePicker" bundle:[NSBundle mainBundle]];
+    ap.hidesBottomBarWhenPushed = YES;
+    ap.crwAssets=assets;
+    ap.album =nil;
+    [self pushViewController:ap animated:YES];
+}
 - (void)viewDidUnload
 {
     [super viewDidUnload];

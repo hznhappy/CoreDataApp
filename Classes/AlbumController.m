@@ -35,7 +35,6 @@
 {  
     PhotoAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     dataSource = appDelegate.dataSource;
-    // [dataSource refresh];
     assets = dataSource.assetsBook; 
     [self setWantsFullScreenLayout:YES];
 	[self.navigationItem setTitle:@"PlayList"];
@@ -54,6 +53,7 @@
    // self.navigationItem.rightBarButtonItem = addButon;
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabled:) name:@"addplay" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(editTable) name:@"editplay" object:nil];
     
 }
 -(void)tabled:(NSNotification *)note{
@@ -66,13 +66,19 @@
     Album *a=[dic objectForKey:@"name"];
     if(a!=nil)
     {
-        PhotoAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-        dataSource = appDelegate.dataSource;
+       // PhotoAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        //dataSource = appDelegate.dataSource;
         [dataSource fresh:a index:index];
         assets = dataSource.assetsBook; 
         [tableView reloadData];
     }
     
+}
+-(void)editTable
+{
+    [dataSource refresh];
+    assets=dataSource.assetsBook;
+    [tableView reloadData];
 }
 -(void)addcount
 { 
