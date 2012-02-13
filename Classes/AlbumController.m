@@ -62,6 +62,7 @@
     self.navigationItem.leftBarButtonItem=nil;
     NSString *d=NSLocalizedString(@"Edit", @"button");
     editButton.title = d;
+    editButton.style=UIBarButtonItemStyleBordered;
     NSDictionary *dic = [note userInfo];
     Album *a=[dic objectForKey:@"name"];
     if(a!=nil)
