@@ -21,6 +21,7 @@
 @synthesize operations;
 @synthesize tagRow;
 @synthesize album;
+@synthesize likeAssets;
 #pragma mark -
 #pragma mark UIViewController Methods
 
@@ -37,7 +38,7 @@
     
     self.tagRow=[[NSMutableArray alloc]init];
     self.UrlList=[[NSMutableArray alloc] init];
-    
+    self.likeAssets = [[NSMutableArray alloc]init];
     NSString *b=NSLocalizedString(@"Back", @"title");
     UIButton* backButton = [UIButton buttonWithType:101]; // left-pointing shape!
     [backButton addTarget:self action:@selector(backButtonPressed) forControlEvents:UIControlEventTouchUpInside];
@@ -262,6 +263,9 @@
             [alert2 show];
         }
         else{
+            if(self.likeAssets.count != 0){
+                [self.likeAssets removeAllObjects];
+            }
             lockMode = YES;
             [lock setTitle:b];
         }
@@ -398,7 +402,7 @@
         }
         UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(cell.frame.origin.x + (cell.frame.size.width)*1/5, 10, (cell.frame.size.width)*4/5, cell.frame.size.height-20)];
         
-        label.text = [NSString stringWithFormat: @"%@%@%@ Photos,%@%@%@ Videos",a,b,c,d,e,f];
+        label.text = [NSString stringWithFormat: @"%@%@%@ Photos, %@%@%@ Videos",a,b,c,d,e,f];
         label.textColor = [UIColor grayColor];
         label.font = [UIFont fontWithName:@"Arial" size:20];
         [cell addSubview:label]; 
@@ -456,7 +460,7 @@
     {
         selectedRow = cell.rowNumber;
         NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
-                                    [NSNumber numberWithBool:lockMode],@"lock", nil];
+                                    [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",nil];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"viewPhotos" object:nil userInfo:dic];   
       
     }

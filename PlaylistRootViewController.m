@@ -82,6 +82,7 @@
     AlbumDataSource *dataSourec =   delegate.dataSource;
 
     PhotoViewController *pc = [[PhotoViewController alloc]init];
+    pc.assetTablePicker = [dicOfPhotoViewer objectForKey:@"thumbnailViewController"];
     pc.lockMode = lock;
     pc.playlist.storeAssets = assets;
     pc.playlist.assets = dataSourec.deviceAssets.deviceAssetsList;

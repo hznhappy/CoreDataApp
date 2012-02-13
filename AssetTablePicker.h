@@ -14,7 +14,6 @@
 
 @interface AssetTablePicker : UIViewController<ThumbnailCellSelectionDelegate,UITableViewDelegate,UITableViewDataSource>
 {
-
     UITableView *table;
     UIToolbar *viewBar;
     UIToolbar *tagBar;
@@ -28,6 +27,7 @@
 	NSMutableArray *crwAssets;
     NSMutableArray *tagRow;
     NSMutableArray *UrlList;
+    NSMutableArray *likeAssets;
     BOOL mode;
     BOOL load;
     BOOL done;
@@ -57,6 +57,7 @@
 @property (nonatomic,strong)NSMutableArray *operations;
 @property (nonatomic,strong) NSMutableArray *crwAssets;
 @property (nonatomic,strong) NSMutableArray *UrlList;
+@property (nonatomic,strong)NSMutableArray *likeAssets;
 @property (nonatomic,strong)NSNumber *val;
 @property (nonatomic,strong)Album *album;
 -(IBAction)actionButtonPressed;

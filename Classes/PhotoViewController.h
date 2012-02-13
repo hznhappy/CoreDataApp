@@ -18,9 +18,10 @@
 @class PhotoImageView;
 @class Playlist;;
 @class TagSelector;
+@class AssetTablePicker;
 @interface PhotoViewController : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate> {
 @private
-	NSMutableArray *likeAssets;
+	
     NSMutableSet *recycledPages;
     NSMutableSet *visiblePages;
 	UIScrollView *_scrollView;	
@@ -46,6 +47,7 @@
     BOOL playingVideo;
     PopupPanelView *ppv;
     TagSelector *tagSelector;
+    AssetTablePicker *assetTablePicker;
                                                         
     NSTimer *controlVisibilityTimer;
     NSTimer *timer;	
@@ -58,7 +60,7 @@
 }
 @property (nonatomic,strong) Playlist *playlist;
 @property(nonatomic,strong)PopupPanelView *ppv;
-
+@property(nonatomic,strong)AssetTablePicker *assetTablePicker;
 @property(nonatomic,strong)CropView *cropView;
 @property(nonatomic,strong) UIScrollView *scrollView;
 @property(nonatomic,assign) NSUInteger currentPageIndex;

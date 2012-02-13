@@ -16,6 +16,7 @@
 #import "Asset.h"
 #import "TagSelector.h"
 #import "PhotoAppDelegate.h"
+#import "AssetTablePicker.h"
 
 @interface PhotoViewController (Private)
 
@@ -57,6 +58,7 @@
 @synthesize cropView;
 @synthesize playlist;
 @synthesize lockMode;
+@synthesize assetTablePicker;
 #pragma mark -
 #pragma mark init method
 
@@ -215,8 +217,6 @@
 		[self.view addSubview:_scrollView];
         
 	}
-
-    likeAssets = [[NSMutableArray alloc]init];
     tagShow = NO;
     editing=NO;
     croping = NO;
@@ -489,7 +489,7 @@
     likeButton.frame = CGRectMake(mainScreen.size.width*4/5, mainScreen.size.height*3/4, 50, 50);
     
     Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
-    if ([likeAssets containsObject:asset]) {
+    if ([self.assetTablePicker.likeAssets containsObject:asset]) {
         [likeButton setImage:[UIImage imageNamed:@"like.png"] forState:UIControlStateNormal];
     }else{
         [likeButton setImage:[UIImage imageNamed:@"unlike.png"] forState:UIControlStateNormal];
@@ -505,11 +505,11 @@
      Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
     if ([like.imageView.image isEqual:[UIImage imageNamed:@"unlike.png"]]) {
         [likeButton setImage:[UIImage imageNamed:@"like.png"] forState:UIControlStateNormal];
-        [likeAssets addObject:asset];
+        [self.assetTablePicker.likeAssets addObject:asset];
         asset.numOfLike = [NSNumber numberWithInt:[asset.numOfLike intValue]+1];
     }else{
         [like setImage:[UIImage imageNamed:@"unlike.png"] forState:UIControlStateNormal];
-        [likeAssets removeObject:asset];
+        [self.assetTablePicker.likeAssets removeObject:asset];
         asset.numOfLike = [NSNumber numberWithInt:[asset.numOfLike intValue]-1];
     }
     PhotoAppDelegate *delegate = [UIApplication sharedApplication].delegate;
