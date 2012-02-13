@@ -312,7 +312,7 @@
             
         }
     }
-    
+    NSLog(@"self.scrollview.bounds is %@",NSStringFromCGRect(self.scrollView.bounds));
 }
 
 - (BOOL)isDisplayingPageForIndex:(NSUInteger)index{
@@ -965,13 +965,15 @@
 }
 
 -(void)changeScrollView{
-    self.scrollView.contentSize = [self contentSizeForPagingScrollView];
+    CGRect bounds = self.scrollView.bounds;
+    //NSLog(@"%@ is scrollView BOUNDS",NSStringFromCGSize(bounds.size));
+  
+    self.scrollView.contentSize = CGSizeMake(bounds.size.width * [self.playlist.assets allKeys].count, bounds.size.height);
 }
 #pragma mark -
 #pragma mark Bar Methods
 
 - (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated{
-    NSLog(@"set Status hidden is %@",hidden? @"YES":@"NO");
     [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:UIStatusBarAnimationFade];
     
 }
@@ -983,9 +985,7 @@
     [self.navigationController setToolbarHidden:hidden animated:animated];
     [self setPhotoInfoHidden:hidden];
     [self setLikeButtonHidden:hidden];
-	_barsHidden=hidden;
-    NSLog(@"hide time");
-	
+	_barsHidden=hidden;	
 }
 
 -(void)setPhotoInfoHidden:(BOOL)hidden{

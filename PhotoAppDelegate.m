@@ -30,14 +30,15 @@
     self.dataSource = _dataSource;
     [window addSubview:rootViewController.view];
     [window makeKeyAndVisible];
-    UILocalNotification *localNotif = [[UILocalNotification alloc] init];
+    /*UILocalNotification *localNotif = [[UILocalNotification alloc] init];
+    
     if (localNotif == nil)
         return NO;
-    NSString *dateString = @"09-02-2012";
+    NSString *dateString = @"18-02-2012:09:58";
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     // this is imporant - we set our input date format to match our input string
     // if format doesn't match you'll get nil from your string, so be careful
-    [dateFormatter setDateFormat:@"dd-MM-yyyy"];
+    [dateFormatter setDateFormat:@"dd-MM-yyyy:hh:MM"];
     NSDate *dateFromString = [[NSDate alloc] init];
     // voila!
     dateFromString = [dateFormatter dateFromString:dateString];
@@ -53,7 +54,7 @@
     NSDictionary *infoDict = [NSDictionary dictionaryWithObject:@"eventName" forKey:@"name"];
     localNotif.userInfo = infoDict;
     
-    [[UIApplication sharedApplication] scheduleLocalNotification:localNotif];
+    [application scheduleLocalNotification:localNotif];*/
     return YES;
 }
 
@@ -96,6 +97,12 @@
     //NSUserDefaults *SaveDefaults = [NSUserDefaults standardUserDefaults];
     //[SaveDefaults setObject: array forKey:@"SaveKey"];
 
+}
+
+-(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification{
+    application.applicationIconBadgeNumber = 1;
+    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Alert" message:@"New data geted" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alertView show];
 }
 
 #pragma mark -

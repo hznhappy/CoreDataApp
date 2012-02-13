@@ -47,7 +47,7 @@
 - (void)rotatePhoto;
 -(void)savePhoto;
 - (void)killScrollViewZoom;
-- (void)layoutScrollViewAnimated:(BOOL)animated;
+- (void)layoutScrollViewAnimated;
 - (void)rotateToOrientation:(UIInterfaceOrientation)orientation;
 @end
 

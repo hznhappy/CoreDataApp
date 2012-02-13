@@ -6,16 +6,12 @@
 //
 
 #import "AssetTablePicker.h"
-#import "AlbumController.h"
-#import "PhotoViewController.h"
-#import "TagManagementController.h"
-#import <AVFoundation/AVFoundation.h>
 #import "PhotoAppDelegate.h"
 #import "Asset.h"
-#import "People.h"
 #import "TagSelector.h"
 #import "Album.h"
 #import "PeopleTag.h"
+#import "OnDeviceAssets.h"
 @implementation AssetTablePicker
 @synthesize crwAssets;
 @synthesize table,val;
@@ -75,8 +71,10 @@
 //    oritation = [UIApplication sharedApplication].statusBarOrientation;
 //    [self resetTableContentInset];
     
-    [self.table performSelector:@selector(reloadData) withObject:nil afterDelay:.3];
-    
+    //[self.table performSelector:@selector(reloadData) withObject:nil afterDelay:.3];
+    [table reloadData];    
+    NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
+    [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EditPhotoTag)name:@"EditPhotoTag" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableData) name:@"reloadTableData" object:nil];
 }
@@ -182,6 +180,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
+    
     selectedRow = NSNotFound;
 }
 -(void)viewWillDisappear:(BOOL)animated{
@@ -332,9 +331,11 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     if (UIInterfaceOrientationIsLandscape(oritation)) {
-        return ceil([self.crwAssets count]/6.0);
+        lastRow = ceil([self.crwAssets count]/6.0)+1;
     }else
-        return ceil([self.crwAssets count]/4.0);    
+        lastRow = ceil([self.crwAssets count]/4.0)+1; 
+    
+    return lastRow;
 }
 
 // Customize the appearance of table view cells.
@@ -349,49 +350,96 @@
     }
     
     [cell.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    cell.selectionDelegate = self;
-    cell.rowNumber = indexPath.row;
-    
-    NSInteger loopCount = 0;
-    if (UIInterfaceOrientationIsLandscape(oritation)) {
-        loopCount = 6;
-    }else
-        loopCount = 4;
-    NSMutableArray *assetsInRow = [[NSMutableArray alloc]init];
-    
-    for (NSInteger i = 0; i<loopCount; i++) {
-        NSInteger row = (indexPath.row*loopCount)+i;
-        if (row<[self.crwAssets count]) {
-            
-            Asset *dbAsset = [self.crwAssets objectAtIndex:row];
-            if([tagSelector tag:dbAsset]==YES)
-            {
-                NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
-                NSLog(@"selectedIndex:%@",selectedIndex);
-                [tagRow addObject:selectedIndex];
-                 //[cell checkTagSelection:selectedIndex];
-            }
-            [assetsInRow addObject:dbAsset];
+    if (indexPath.row == lastRow - 1) {
+        NSInteger pmillionNumber = 0;
+        NSInteger pthoundsNumber = 0;
+        NSInteger pNumber = 0;
+        NSInteger vmillionNumber = 0;
+        NSInteger vthoundsNumber = 0;
+        NSInteger vNumber = 0;
+        
+        NSString *a = @"";
+        NSString *b = @"";
+        NSString *c = @"";
+        NSString *d = @"";
+        NSString *e = @"";
+        NSString *f = @"";
+        PhotoAppDelegate *delegate = [UIApplication sharedApplication].delegate;
+        OnDeviceAssets *device = delegate.dataSource.deviceAssets;
+        pmillionNumber = device.photoCount/1000000;
+        if (pmillionNumber != 0) {
+            a = [NSString stringWithFormat:@"%d,",pmillionNumber];
         }
-    }
-    [cell displayThumbnails:assetsInRow count:loopCount];
-    
-    if (!action) {
+        pthoundsNumber = (device.photoCount - pmillionNumber * 1000000)/1000;
+        if (pthoundsNumber != 0) {
+            b = [NSString stringWithFormat:@"%d,",pthoundsNumber];
+        }
+        pNumber = (device.photoCount - pthoundsNumber * 1000);
+        if (pNumber != 0) {
+            c = [NSString stringWithFormat:@"%d",pNumber];
+        }
+        vmillionNumber = device.videoCount/1000000;
+        if (vmillionNumber != 0) {
+            d = [NSString stringWithFormat:@"%d,",vmillionNumber];
+        }
+        vthoundsNumber = (device.videoCount - vmillionNumber * 1000000)/1000;
+        if (vthoundsNumber != 0) {
+            e = [NSString stringWithFormat:@"%d,",vthoundsNumber];
+        }
+        vNumber = (device.videoCount - vthoundsNumber * 1000);
+        if (vNumber != 0) {
+            f = [NSString stringWithFormat:@"%d",vNumber];
+        }
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(cell.frame.origin.x + (cell.frame.size.width)*1/5, 10, (cell.frame.size.width)*4/5, cell.frame.size.height-20)];
+        
+        label.text = [NSString stringWithFormat: @"%@%@%@ Photos,%@%@%@ Videos",a,b,c,d,e,f];
+        label.textColor = [UIColor grayColor];
+        label.font = [UIFont fontWithName:@"Arial" size:20];
+        [cell addSubview:label]; 
+    }else{
+        cell.selectionDelegate = self;
+        cell.rowNumber = indexPath.row;
+        
+        NSInteger loopCount = 0;
+        if (UIInterfaceOrientationIsLandscape(oritation)) {
+            loopCount = 6;
+        }else
+            loopCount = 4;
+        NSMutableArray *assetsInRow = [[NSMutableArray alloc]init];
+        
         for (NSInteger i = 0; i<loopCount; i++) {
             NSInteger row = (indexPath.row*loopCount)+i;
             if (row<[self.crwAssets count]) {
                 
-                NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
-                if([self.tagRow containsObject:selectedIndex])
-                { 
-                    [cell checkTagSelection:selectedIndex];
+                Asset *dbAsset = [self.crwAssets objectAtIndex:row];
+                if([tagSelector tag:dbAsset]==YES)
+                {
+                    NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
+                    NSLog(@"selectedIndex:%@",selectedIndex);
+                    [tagRow addObject:selectedIndex];
+                    //[cell checkTagSelection:selectedIndex];
+                }
+                [assetsInRow addObject:dbAsset];
+            }
+        }
+        [cell displayThumbnails:assetsInRow count:loopCount];
+        
+        if (!action) {
+            for (NSInteger i = 0; i<loopCount; i++) {
+                NSInteger row = (indexPath.row*loopCount)+i;
+                if (row<[self.crwAssets count]) {
+                    
+                    NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
+                    if([self.tagRow containsObject:selectedIndex])
+                    { 
+                        [cell checkTagSelection:selectedIndex];
+                        
+                    }
                     
                 }
-                
             }
         }
     }
-    
     return cell;
 }
 
