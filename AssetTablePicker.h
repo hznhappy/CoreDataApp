@@ -28,11 +28,14 @@
 	NSMutableArray *crwAssets;
     NSMutableArray *tagRow;
     NSMutableArray *UrlList;
+  
     BOOL mode;
     BOOL load;
     BOOL done;
     BOOL action;
     BOOL lockMode;
+    
+  
  
     NSNumber *val;
     UITextField *passWord2;

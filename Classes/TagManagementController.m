@@ -144,6 +144,7 @@ int j=1,count=0;
     NSString *a=NSLocalizedString(@"Edit", @"title");
     NSString *b=NSLocalizedString(@"Done", @"title");
     if (self.tableView.editing) {
+        editButton.style=UIBarButtonItemStyleBordered;
         editButton.title = a;
         if(bo!=nil)
         {
@@ -153,9 +154,11 @@ int j=1,count=0;
         }
         else
         {
+            
         self.navigationItem.leftBarButtonItem=nil;
         }
     }else{
+        editButton.style=UIBarButtonItemStyleDone;
         editButton.title = b;
         UIBarButtonItem *addButon=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(toggleAdd:)];
         addButon.style = UIBarButtonItemStyleBordered;
@@ -313,7 +316,17 @@ int j=1,count=0;
         [WE addObject:PT.conAsset];
     }
     NSMutableDictionary *dic = nil;
-    dic =[NSMutableDictionary dictionaryWithObjectsAndKeys:WE, @"myAssets", nil];
+        NSString *a=nil;
+        if (favorate11.firstName == nil) {
+            a = [NSString stringWithFormat:@"%@",favorate11.lastName];
+        }
+        else if(favorate11.lastName == nil)
+        {
+            a = [NSString stringWithFormat:@"%@",favorate11.firstName];
+        } 
+        else
+            a = [NSString stringWithFormat:@"%@ %@",favorate11.lastName, favorate11.firstName];
+    dic =[NSMutableDictionary dictionaryWithObjectsAndKeys:WE, @"myAssets",a,@"title",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"pushPeopleThumbnailView" object:nil userInfo:dic];
     }
     [table deselectRowAtIndexPath:indexPath animated:YES];

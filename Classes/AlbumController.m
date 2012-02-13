@@ -91,11 +91,13 @@
     NSString *c=NSLocalizedString(@"Done", @"button");
     NSString *d=NSLocalizedString(@"Edit", @"button");
     if (self.tableView.editing) {
+        editButton.style=UIBarButtonItemStyleBordered;
         editButton.title = d;
         self.navigationItem.leftBarButtonItem=nil;
         
     }
     else{
+        editButton.style=UIBarButtonItemStyleDone;
         self.navigationItem.leftBarButtonItem = addButon;
         editButton.title = c;
     }
