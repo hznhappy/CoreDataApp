@@ -88,8 +88,8 @@
     
     [self table];
     if(bum.transitType!=nil)
-  {
-      self.tranLabel.text=bum.transitType;
+  {NSString *b=NSLocalizedString(bum.transitType, @"title");
+      self.tranLabel.text=b;
   }else{
       self.tranLabel.text = nil;
   }
@@ -890,10 +890,12 @@
     UISwitch *newSwitcn  = (UISwitch *)sender;
     mySwc = newSwitcn.on;
     if (newSwitcn.on) {
+        NSLog(@"UP");
         [listTable beginUpdates];
         [listTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
         [listTable endUpdates];
     }else{
+        NSLog(@"Down");
         [listTable beginUpdates];
         [listTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
         [listTable endUpdates];

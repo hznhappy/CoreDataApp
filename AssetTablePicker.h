@@ -28,12 +28,16 @@
 	NSMutableArray *crwAssets;
     NSMutableArray *tagRow;
     NSMutableArray *UrlList;
+    NSMutableArray *assertList;
+    NSMutableArray *inAssert;
   
     BOOL mode;
     BOOL load;
     BOOL done;
+    BOOL as;
     BOOL action;
     BOOL lockMode;
+  
     
   
  
