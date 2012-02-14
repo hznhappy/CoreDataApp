@@ -159,34 +159,16 @@
     {
         cell.textLabel.textColor=[UIColor redColor];
     }
-    NSInteger millionNumber = 0;
-    NSInteger thoundsNumber = 0;
-    NSInteger number = 0;
-    NSString *a = @"";
-    NSString *b = @"";
-    NSString *c = @"";
-    millionNumber = am.num/1000000;
-    thoundsNumber = (am.num - millionNumber * 1000000)/1000;
-    number = am.num - millionNumber * 1000000 - thoundsNumber * 1000;
-    if (millionNumber != 0) {
-        a = [NSString stringWithFormat:@"%d,",millionNumber];
+    if (am.num != 0) {
+        NSNumberFormatter *formatter = [NSNumberFormatter new];
+        [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+        NSString *countNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:am.num]];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)",am.name, countNumber];
+    }else{
+        cell.textLabel.text = [NSString stringWithFormat:@"%@",am.name];
     }
-    if (thoundsNumber != 0) {
-        b = [NSString stringWithFormat:@"%d,",thoundsNumber];
-    }
-    if (number != 0) {
-        c = [NSString stringWithFormat:@"%d",number];
-    }
-    cell.textLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:18];
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@%@%@)",am.name, a,b,c];
     
-//    cell.detailTextLabel.contentMode=UIViewContentModeScaleToFill;
-//    cell.detailTextLabel.lineBreakMode = UILineBreakModeWordWrap;
-//    cell.detailTextLabel.baselineAdjustment=UIBaselineAdjustmentAlignCenters;
-//    cell.detailTextLabel.textAlignment=UITextAlignmentLeft;
-//    cell.detailTextLabel.font=[UIFont boldSystemFontOfSize:15];
-//    cell.detailTextLabel.textColor=[UIColor blackColor];
-//    cell.detailTextLabel.text = @"detail";
+    cell.textLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:18];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;    
     return cell;
     

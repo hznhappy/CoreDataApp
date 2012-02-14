@@ -35,7 +35,7 @@
     BOOL keybord;
     BOOL bu;
      
- 
+    MPMusicPlayerController *musicPlayer;
     UITableView *listTable;
     UITableViewCell *textFieldCell;
     UITableViewCell *switchCell;

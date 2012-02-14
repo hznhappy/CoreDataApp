@@ -16,8 +16,6 @@
 		183DE30F14C7F66A00BDC724 /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE30614C7F66A00BDC724 /* PhotoViewController.m */; };
 		183DE31014C7F66A00BDC724 /* PhotoImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE30814C7F66A00BDC724 /* PhotoImageView.m */; };
 		183DE31114C7F66A00BDC724 /* Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE30A14C7F66A00BDC724 /* Playlist.m */; };
-		183DE31214C7F66A00BDC724 /* CropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE30C14C7F66A00BDC724 /* CropView.m */; };
-		183DE31314C7F66A00BDC724 /* GridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE30E14C7F66A00BDC724 /* GridView.m */; };
 		183DE32514C7F70D00BDC724 /* AlbumController.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE32214C7F70D00BDC724 /* AlbumController.m */; };
 		183DE32C14C7F72200BDC724 /* AssetTablePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE32714C7F72200BDC724 /* AssetTablePicker.m */; };
 		183DE32D14C7F72200BDC724 /* ThumbnailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE32914C7F72200BDC724 /* ThumbnailCell.m */; };
@@ -40,7 +38,6 @@
 		18C78B9414D6736500B57B4F /* TestiPhoneCalViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18C78B8E14D6736500B57B4F /* TestiPhoneCalViewController.xib */; };
 		18C78B9514D6736500B57B4F /* TdCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C78B9014D6736500B57B4F /* TdCalendarView.m */; };
 		18C78B9614D6736500B57B4F /* PlaylistDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C78B9214D6736500B57B4F /* PlaylistDetailController.m */; };
-		18C78B9914D67A4B00B57B4F /* BorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C78B9814D67A4B00B57B4F /* BorderView.m */; };
 		18D402821474E50000389097 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18D402841474E50000389097 /* Localizable.strings */; };
 		18D402901474E55900389097 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18D402921474E55900389097 /* InfoPlist.strings */; };
 		18D4031C1474FC9A00389097 /* AssetTablePicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18D4031E1474FC9A00389097 /* AssetTablePicker.xib */; };
@@ -57,8 +54,6 @@
 		18DBCA7E14DBB23000D43062 /* deletebutton.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DBCA7D14DBB23000D43062 /* deletebutton.png */; };
 		18DBCA9914DBF9B900D43062 /* TagManagementController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18DBCA9814DBF9B900D43062 /* TagManagementController.xib */; };
 		18DCEFEE14E39642001965EA /* PlaylistDetailController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18DCEFF014E39642001965EA /* PlaylistDetailController.xib */; };
-		18DD695314B6E5F7000062D1 /* crop.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DD695214B6E5F7000062D1 /* crop.png */; };
-		18DD695614B6E605000062D1 /* rotate.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DD695514B6E605000062D1 /* rotate.png */; };
 		18DD696514B6F045000062D1 /* VED.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DD696414B6F045000062D1 /* VED.png */; };
 		18DD696714B6F6F1000062D1 /* ji.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DD696614B6F6F1000062D1 /* ji.png */; };
 		18F7B23114B43BB700566F66 /* ThumbnailHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 18F7B23014B43BB700566F66 /* ThumbnailHighlight.png */; };
@@ -68,10 +63,6 @@
 		288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765A40DF7441C002DB57D /* CoreGraphics.framework */; };
 		844C363813FA73E5000510AF /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 844C363713FA73E5000510AF /* libsqlite3.dylib */; };
 		84F099D613EE801C0095FAEB /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F099D513EE801C0095FAEB /* MessageUI.framework */; };
-		A100BFB714455FE300D85BD6 /* left.png in Resources */ = {isa = PBXBuildFile; fileRef = A100BFB314455FE300D85BD6 /* left.png */; };
-		A100BFB814455FE300D85BD6 /* left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A100BFB414455FE300D85BD6 /* left@2x.png */; };
-		A100BFB914455FE300D85BD6 /* right.png in Resources */ = {isa = PBXBuildFile; fileRef = A100BFB514455FE300D85BD6 /* right.png */; };
-		A100BFBA14455FE300D85BD6 /* right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A100BFB614455FE300D85BD6 /* right@2x.png */; };
 		A10F000114593E7A00D007F3 /* playlist.png in Resources */ = {isa = PBXBuildFile; fileRef = A10F000014593E7A00D007F3 /* playlist.png */; };
 		A10F000314593E7F00D007F3 /* albums.png in Resources */ = {isa = PBXBuildFile; fileRef = A10F000214593E7F00D007F3 /* albums.png */; };
 		A10F59FF1468E8F100A0AC22 /* Selected.png in Resources */ = {isa = PBXBuildFile; fileRef = A10F59FD1468E8F100A0AC22 /* Selected.png */; };
@@ -109,10 +100,6 @@
 		183DE30814C7F66A00BDC724 /* PhotoImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoImageView.m; sourceTree = "<group>"; };
 		183DE30914C7F66A00BDC724 /* Playlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Playlist.h; sourceTree = "<group>"; };
 		183DE30A14C7F66A00BDC724 /* Playlist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Playlist.m; sourceTree = "<group>"; };
-		183DE30B14C7F66A00BDC724 /* CropView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CropView.h; sourceTree = "<group>"; };
-		183DE30C14C7F66A00BDC724 /* CropView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CropView.m; sourceTree = "<group>"; };
-		183DE30D14C7F66A00BDC724 /* GridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridView.h; sourceTree = "<group>"; };
-		183DE30E14C7F66A00BDC724 /* GridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridView.m; sourceTree = "<group>"; };
 		183DE32114C7F70D00BDC724 /* AlbumController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumController.h; sourceTree = "<group>"; };
 		183DE32214C7F70D00BDC724 /* AlbumController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumController.m; sourceTree = "<group>"; };
 		183DE32614C7F72200BDC724 /* AssetTablePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetTablePicker.h; sourceTree = "<group>"; };
@@ -147,8 +134,6 @@
 		18C78B9014D6736500B57B4F /* TdCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TdCalendarView.m; sourceTree = "<group>"; };
 		18C78B9114D6736500B57B4F /* PlaylistDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistDetailController.h; sourceTree = "<group>"; };
 		18C78B9214D6736500B57B4F /* PlaylistDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistDetailController.m; sourceTree = "<group>"; };
-		18C78B9714D67A4B00B57B4F /* BorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BorderView.h; sourceTree = "<group>"; };
-		18C78B9814D67A4B00B57B4F /* BorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BorderView.m; sourceTree = "<group>"; };
 		18D402831474E50000389097 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		18D402851474E50800389097 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		18D402911474E55900389097 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -186,8 +171,6 @@
 		18DCEFEF14E39642001965EA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PlaylistDetailController.xib; sourceTree = "<group>"; };
 		18DCEFF214E3964C001965EA /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/PlaylistDetailController.xib"; sourceTree = "<group>"; };
 		18DCEFF314E39650001965EA /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/PlaylistDetailController.xib"; sourceTree = "<group>"; };
-		18DD695214B6E5F7000062D1 /* crop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = crop.png; sourceTree = "<group>"; };
-		18DD695514B6E605000062D1 /* rotate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rotate.png; sourceTree = "<group>"; };
 		18DD696414B6F045000062D1 /* VED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = VED.png; sourceTree = "<group>"; };
 		18DD696614B6F6F1000062D1 /* ji.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ji.png; sourceTree = "<group>"; };
 		18F7B23014B43BB700566F66 /* ThumbnailHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ThumbnailHighlight.png; sourceTree = "<group>"; };
@@ -199,10 +182,6 @@
 		32CA4F630368D1EE00C91783 /* PhotoApp_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PhotoApp_Prefix.pch; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		844C363713FA73E5000510AF /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		84F099D513EE801C0095FAEB /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		A100BFB314455FE300D85BD6 /* left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = left.png; sourceTree = "<group>"; };
-		A100BFB414455FE300D85BD6 /* left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "left@2x.png"; sourceTree = "<group>"; };
-		A100BFB514455FE300D85BD6 /* right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = right.png; sourceTree = "<group>"; };
-		A100BFB614455FE300D85BD6 /* right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "right@2x.png"; sourceTree = "<group>"; };
 		A10F000014593E7A00D007F3 /* playlist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playlist.png; sourceTree = "<group>"; };
 		A10F000214593E7F00D007F3 /* albums.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = albums.png; sourceTree = "<group>"; };
 		A10F59FD1468E8F100A0AC22 /* Selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Selected.png; sourceTree = "<group>"; };
@@ -301,24 +280,18 @@
 				18DBCA7D14DBB23000D43062 /* deletebutton.png */,
 				1885976214D7D31F005EB0EB /* like.png */,
 				18DD696414B6F045000062D1 /* VED.png */,
-				18DD695514B6E605000062D1 /* rotate.png */,
 				18DD696614B6F6F1000062D1 /* ji.png */,
 				1885976114D7D31F005EB0EB /* unlike.png */,
 				A153D5C514A2DE710060840D /* tag.png */,
-				18DD695214B6E5F7000062D1 /* crop.png */,
 				A1111477147515F900AD57D0 /* empty1.png */,
 				184FCFF3147202A00082B51D /* selectOverlay.png */,
 				184FCFF5147202A70082B51D /* selectOverlay@2x.png */,
 				A10F59FD1468E8F100A0AC22 /* Selected.png */,
 				A10F59FE1468E8F100A0AC22 /* Unselected.png */,
 				A10F000014593E7A00D007F3 /* playlist.png */,
-				A100BFB314455FE300D85BD6 /* left.png */,
 				A10F000214593E7F00D007F3 /* albums.png */,
 				A10FFFFE14593E3F00D007F3 /* person.png */,
-				A100BFB414455FE300D85BD6 /* left@2x.png */,
-				A100BFB514455FE300D85BD6 /* right.png */,
 				18F7B23014B43BB700566F66 /* ThumbnailHighlight.png */,
-				A100BFB614455FE300D85BD6 /* right@2x.png */,
 				A11401C41440016F007B4B95 /* logo.jpg */,
 			);
 			name = Images;
@@ -442,12 +415,6 @@
 				A1EF3DAC14441A640087972B /* PhotoScrollView.m */,
 				183DE30914C7F66A00BDC724 /* Playlist.h */,
 				183DE30A14C7F66A00BDC724 /* Playlist.m */,
-				183DE30B14C7F66A00BDC724 /* CropView.h */,
-				183DE30C14C7F66A00BDC724 /* CropView.m */,
-				183DE30D14C7F66A00BDC724 /* GridView.h */,
-				183DE30E14C7F66A00BDC724 /* GridView.m */,
-				18C78B9714D67A4B00B57B4F /* BorderView.h */,
-				18C78B9814D67A4B00B57B4F /* BorderView.m */,
 			);
 			name = PhotoViewController;
 			sourceTree = "<group>";
@@ -532,10 +499,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A11401C51440016F007B4B95 /* logo.jpg in Resources */,
-				A100BFB714455FE300D85BD6 /* left.png in Resources */,
-				A100BFB814455FE300D85BD6 /* left@2x.png in Resources */,
-				A100BFB914455FE300D85BD6 /* right.png in Resources */,
-				A100BFBA14455FE300D85BD6 /* right@2x.png in Resources */,
 				186BF9BF1470AEB500961C67 /* AlbumController.xib in Resources */,
 				A10FFFFF14593E3F00D007F3 /* person.png in Resources */,
 				A10F000114593E7A00D007F3 /* playlist.png in Resources */,
@@ -553,8 +516,6 @@
 				A1F7E816148C9BBF0088F366 /* MainWindow.xib in Resources */,
 				A153D5C614A2DE710060840D /* tag.png in Resources */,
 				18F7B23114B43BB700566F66 /* ThumbnailHighlight.png in Resources */,
-				18DD695314B6E5F7000062D1 /* crop.png in Resources */,
-				18DD695614B6E605000062D1 /* rotate.png in Resources */,
 				18DD696514B6F045000062D1 /* VED.png in Resources */,
 				18DD696714B6F6F1000062D1 /* ji.png in Resources */,
 				18DCEFEE14E39642001965EA /* PlaylistDetailController.xib in Resources */,
@@ -587,8 +548,6 @@
 				183DE30F14C7F66A00BDC724 /* PhotoViewController.m in Sources */,
 				183DE31014C7F66A00BDC724 /* PhotoImageView.m in Sources */,
 				183DE31114C7F66A00BDC724 /* Playlist.m in Sources */,
-				183DE31214C7F66A00BDC724 /* CropView.m in Sources */,
-				183DE31314C7F66A00BDC724 /* GridView.m in Sources */,
 				183DE32514C7F70D00BDC724 /* AlbumController.m in Sources */,
 				183DE32C14C7F72200BDC724 /* AssetTablePicker.m in Sources */,
 				183DE32D14C7F72200BDC724 /* ThumbnailCell.m in Sources */,
@@ -598,7 +557,6 @@
 				18C78B9314D6736500B57B4F /* TestiPhoneCalViewController.m in Sources */,
 				18C78B9514D6736500B57B4F /* TdCalendarView.m in Sources */,
 				18C78B9614D6736500B57B4F /* PlaylistDetailController.m in Sources */,
-				18C78B9914D67A4B00B57B4F /* BorderView.m in Sources */,
 				18DAD78414E21BD100BBE9B1 /* PhotoApp.xcdatamodel in Sources */,
 				18DAD78714E21BF900BBE9B1 /* Event.m in Sources */,
 				18DAD78A14E21BF900BBE9B1 /* PeopleRule.m in Sources */,

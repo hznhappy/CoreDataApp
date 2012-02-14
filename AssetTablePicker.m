@@ -480,7 +480,7 @@
     {
         selectedRow = cell.rowNumber;
         NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
-                                    [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",nil];
+                                    [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"viewPhotos" object:nil userInfo:dic];   
       
     }

@@ -78,11 +78,13 @@
     NSMutableArray *assets = [dicOfPhotoViewer valueForKey:@"assets"];
     NSNumber *num = [dicOfPhotoViewer valueForKey:@"lock"];
     BOOL lock = num.boolValue;
+    NSString *transtion  =  [dicOfPhotoViewer valueForKey:@"transition"];
     PhotoAppDelegate *delegate = [[UIApplication sharedApplication] delegate];
     AlbumDataSource *dataSourec =   delegate.dataSource;
 
     PhotoViewController *pc = [[PhotoViewController alloc]init];
     pc.assetTablePicker = [dicOfPhotoViewer objectForKey:@"thumbnailViewController"];
+    pc.playPhotoTransition = transtion;
     pc.lockMode = lock;
     pc.playlist.storeAssets = assets;
     pc.playlist.assets = dataSourec.deviceAssets.deviceAssetsList;
@@ -95,14 +97,14 @@
     NSMutableArray *assets = [dic valueForKey:@"assets"];
    
     NSString *transtion  =  [dic valueForKey:@"transition"];
-    NSLog(@"this is transition %@",transtion);
     PhotoAppDelegate *delegate = [[UIApplication sharedApplication] delegate];
     AlbumDataSource *dataSourec =   delegate.dataSource;
     PhotoViewController *playPhotoController = [[PhotoViewController alloc]initWithBool:YES];
     playPhotoController.playlist.storeAssets = assets;
     playPhotoController.playlist.assets = dataSourec.deviceAssets.deviceAssetsList;
     playPhotoController.currentPageIndex = 0;
-    [playPhotoController fireTimer:transtion];
+    playPhotoController.playPhotoTransition = transtion;
+    [playPhotoController fireTimer];
     [self pushViewController:playPhotoController animated:YES];
 }
 

@@ -11,7 +11,6 @@
 #import "TagManagementController.h"
 #import "PhotoImageView.h"
 #import "PhotoScrollView.h"
-#import "CropView.h"
 #import "Playlist.h"
 #import "Asset.h"
 #import "TagSelector.h"
@@ -24,30 +23,11 @@
 - (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated;
 -(void)setPhotoInfoHidden:(BOOL)hidden;
 -(void)setLikeButtonHidden:(BOOL)hidden;
-- (NSInteger)centerPhotoIndex;
 - (void)setupToolbar;
--(void)setCropConstrainToolBar;
 - (void)setupEditToolbar;
 - (void)updateNavigation;
+- (void)updateSubviewsWhenScroll;
 @end
-
-//@implementation UIImage (Crop)
-//
-//- (UIImage *)crop:(CGRect)rect {
-//    
-//    CGFloat scale = [[UIScreen mainScreen] scale];
-//    
-//    if (scale>1.0) {        
-//        rect = CGRectMake(rect.origin.x*scale , rect.origin.y*scale, rect.size.width*scale, rect.size.height*scale);        
-//    }
-//    
-//    CGImageRef imageRef = CGImageCreateWithImageInRect([self CGImage], rect);
-//    UIImage *result = [UIImage imageWithCGImage:imageRef]; 
-//    CGImageRelease(imageRef);
-//    return result;
-//}
-//
-//@end
 
 @implementation PhotoViewController
 
@@ -55,10 +35,10 @@
 @synthesize ppv;
 @synthesize scrollView=_scrollView;
 @synthesize currentPageIndex;
-@synthesize cropView;
 @synthesize playlist;
 @synthesize lockMode;
 @synthesize assetTablePicker;
+@synthesize playPhotoTransition;
 #pragma mark -
 #pragma mark init method
 
@@ -73,6 +53,7 @@
         Playlist *tempPlaylist = [[Playlist alloc]init];
         self.playlist = tempPlaylist;
         playingPhoto = NO;
+        playingFromSelfPage = NO;
     }
     
     return self;
@@ -89,6 +70,7 @@
         Playlist *tempPlaylist = [[Playlist alloc]init];
         self.playlist = tempPlaylist;
         playingPhoto = YES;
+        playingFromSelfPage = NO;
     }
     
     return self;
@@ -218,19 +200,19 @@
         
 	}
     tagShow = NO;
-    editing=NO;
-    croping = NO;
+    //editing=NO;
     playingVideo = NO;
-    NSString *u=NSLocalizedString(@"Edit", @"title");
-    NSString *save = NSLocalizedString(@"Save", @"title");
+   // NSString *u=NSLocalizedString(@"Edit", @"title");
+   // NSString *save = NSLocalizedString(@"Save", @"title");
     if (!lockMode) {
-        edit=[[UIBarButtonItem alloc]initWithTitle:u style:UIBarButtonItemStyleBordered target:self action:@selector(edit)];
-        saveItem=[[UIBarButtonItem alloc]initWithTitle:save style:UIBarButtonItemStyleDone target:self action:@selector(savePhoto)];
+        //edit=[[UIBarButtonItem alloc]initWithTitle:u style:UIBarButtonItemStyleBordered target:self action:@selector(edit)];
+        //saveItem=[[UIBarButtonItem alloc]initWithTitle:save style:UIBarButtonItemStyleDone target:self action:@selector(savePhoto)];
         
-        self.navigationItem.rightBarButtonItem=edit;
+       // self.navigationItem.rightBarButtonItem=edit;
     }
        
     [self updatePages];
+    [self hideControlsAfterDelay];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(resetCropView) name:@"resetCropView" object:nil];
     
 }
@@ -308,7 +290,7 @@
         frame1.size.width=60;
         if (playingPhoto) {
             [self performSelector:@selector(playVideo) withObject:nil afterDelay:1];
-            [timer invalidate];
+            [self cancelPlayPhotoTimer];
         }else{
             [page addSubview:[self configurePlayButton:frame1]];
             
@@ -473,7 +455,6 @@
     }
     
     [assetInfoView setBackgroundColor:[UIColor clearColor]];
-    //assetInfoView.alpha = 0.4;
     [assetInfoView addSubview:date];
     [self.scrollView addSubview:assetInfoView];
 }
@@ -595,7 +576,7 @@
     [theMovie.view removeFromSuperview];
     theMovie = nil;
     if (playingPhoto) {
-        [self fireTimer:playPhotoTransition];
+        [self fireTimer];
     }
     PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
     page.playingVideo = NO;
@@ -620,9 +601,6 @@
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     currentPageIndex = pageIndexBeforeRotation;
-    if (croping) {
-        [self changeCropViewFrame];
-    }
     [self performLayout];
 	[self hideControlsAfterDelay];
    // NSLog(@"scroll frame is %@ and bounds %@  and contentsize %@",NSStringFromCGRect(self.scrollView.frame),NSStringFromCGRect(self.scrollView.bounds),NSStringFromCGSize(self.scrollView.contentSize));
@@ -643,50 +621,23 @@
 #pragma mark -
 #pragma mark setUp ToolBar Methods
 - (void)setupToolbar {
- 
+    
 	UIBarButtonItem *action = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(actionButtonHit:)];
 	UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-	//UIBarButtonItem *play = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay target:self action:@selector(playPhotoOrVideo)];
-	if ([self.playlist.storeAssets count] > 1) {
-		
-		UIBarButtonItem *fixedCenter = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-		fixedCenter.width = 80.0f;
-		UIBarButtonItem *fixedLeft = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-		fixedLeft.width = 40.0f;
-		
-        
-		
-		UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"left.png"] 
-                                                                 style:UIBarButtonItemStylePlain 
-                                                                target:self action:@selector(moveBack:)];
-        
-		UIBarButtonItem *right = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"right.png"] 
-                                                                  style:UIBarButtonItemStylePlain 
-                                                                 target:self 
-                                                                 action:@selector(moveForward:)];
-        if (!lockMode) {
-            [self setToolbarItems:[NSArray arrayWithObjects:fixedLeft, flex, left, fixedCenter, right, flex, action, nil]];
-        }else{
-            [self setToolbarItems:[NSArray arrayWithObjects:fixedLeft, flex, left, fixedCenter, right, flex, nil]];
-        }
-		
-		
-		_rightButton = right;
-		_leftButton = left;
-		
-		
-	} else {
-        if (!lockMode) {
-            [self setToolbarItems:[NSArray arrayWithObjects:flex, action, nil]];
-        }
-		
-	}
-	
-	_actionButton=action;
+	UIBarButtonItem *playPhoto = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemPlay target:self action:@selector(playPhotoFromSelfPage:)];
+    UIBarButtonItem *lock = [[UIBarButtonItem alloc]initWithTitle:@"Lock" style:UIBarButtonItemStylePlain target:self action:nil];
+    //UIBarButtonItem *play = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay target:self action:@selector(playPhotoOrVideo)];
+    if (!lockMode) {
+        [self setToolbarItems:[NSArray arrayWithObjects:action,flex, playPhoto, flex, lock,nil]];
+    }else{
+        [self setToolbarItems:[NSArray arrayWithObjects:flex, lock, nil]];
+    }
+    playPhotoButton = playPhoto;
+	_actionButton = action;
 	self.navigationController.toolbar.barStyle = UIBarStyleBlackTranslucent;
 	
 }
-
+/*
 - (void)setupEditToolbar{
     [self setToolbarItems:nil];
     UIBarButtonItem *rotate = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"rotate.png"] 
@@ -708,7 +659,7 @@
     [self setToolbarItems:[NSArray arrayWithObjects:rotate,flex,tag,flex,crop, nil]];
     
 }
-
+*/
 -(void)setCropConstrainToolBar{
     [self setToolbarItems:nil];
     UIBarButtonItem *cancell = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(edit)];
@@ -723,109 +674,66 @@
 
 -(void)setTagToolBar{
     [self setToolbarItems:nil];
-    UIBarButtonItem *cancell = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(edit)];
+    UIBarButtonItem *cancell = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelEdit)];
     self.navigationItem.leftBarButtonItem = nil;
     self.navigationItem.leftBarButtonItem = cancell;
      NSString *a=NSLocalizedString(@"Contacts", @"title");
      NSString *b=NSLocalizedString(@"Favourites", @"title");
-     NSString *c=NSLocalizedString(@"Events", @"title");
+    // NSString *c=NSLocalizedString(@"Events", @"title");
     UIBarButtonItem *contacts = [[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleBordered target:self action:@selector(callContactsView)];
     UIBarButtonItem *favorites = [[UIBarButtonItem alloc]initWithTitle:b style:UIBarButtonItemStyleBordered target:self action:@selector(callFavouriteView)];
-    UIBarButtonItem *events = [[UIBarButtonItem alloc]initWithTitle:c style:UIBarButtonItemStyleBordered target:self action:@selector(callEventsView)];
+   // UIBarButtonItem *events = [[UIBarButtonItem alloc]initWithTitle:c style:UIBarButtonItemStyleBordered target:self action:@selector(callEventsView)];
     UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
-    [self setToolbarItems:[NSArray arrayWithObjects:flex,contacts,flex,favorites,flex,events,flex, nil]];
-    NSLog(@"come to here");
+    [self setToolbarItems:[NSArray arrayWithObjects:contacts,flex,favorites, nil]];
 }
 
 #pragma mark -
 #pragma mark EditMethods
--(void)edit
-{
-    self.navigationItem.rightBarButtonItem = saveItem;
-    saveItem.enabled = NO;
-    self.navigationItem.hidesBackButton = YES;
-    UIBarButtonItem *cancell = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelEdit)];
-    self.navigationItem.leftBarButtonItem = cancell;
-    [self setupEditToolbar];
-    editing = YES;
-    if (self.scrollView.scrollEnabled) {
-        self.scrollView.scrollEnabled = NO;
-    }
-    if (cropView.superview !=nil) {
-        [cropView removeFromSuperview];
-    }
-    PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
-    if (photoView != nil) {
-        if (photoView.alpha!=1.0) {
-            photoView.alpha = 1.0;
-        }
-    }
-
-    if (ppv.isOpen) {
-        [ppv viewClose];
-    }
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addPhotoInfoView) object:nil];
-    assetInfoView.hidden = YES;
-}
+//-(void)edit
+//{
+//    self.navigationItem.rightBarButtonItem = saveItem;
+//    saveItem.enabled = NO;
+//    self.navigationItem.hidesBackButton = YES;
+//    UIBarButtonItem *cancell = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelEdit)];
+//    self.navigationItem.leftBarButtonItem = cancell;
+//    [self setupEditToolbar];
+//    editing = YES;
+//    if (self.scrollView.scrollEnabled) {
+//        self.scrollView.scrollEnabled = NO;
+//    }
+//    if (cropView.superview !=nil) {
+//        [cropView removeFromSuperview];
+//    }
+//    PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
+//    if (photoView != nil) {
+//        if (photoView.alpha!=1.0) {
+//            photoView.alpha = 1.0;
+//        }
+//    }
+//
+//    if (ppv.isOpen) {
+//        [ppv viewClose];
+//    }
+//    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addPhotoInfoView) object:nil];
+//    assetInfoView.hidden = YES;
+//}
 
 -(void)cancelEdit{
     self.navigationItem.leftBarButtonItem = nil;
-    self.navigationItem.rightBarButtonItem = edit;
     [self setupToolbar];
     self.navigationItem.hidesBackButton = NO;
-    editing = NO;
-    if (cropView.superview!=nil) {
-        [cropView removeFromSuperview];
-    } 
-    PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
-    
-    if (photoView.alpha!=1.0) {
-        photoView.alpha = 1.0;
-    }
-    
+    //editing = NO;
     if (!self.scrollView.scrollEnabled) {
         self.scrollView.scrollEnabled = YES;
     }
     if (assetInfoView.hidden) {
         assetInfoView.hidden = NO;
     }
-    croping = NO;
-}
-
-
--(void)cropConstrain{
-    NSString *a=NSLocalizedString(@"Cancel", @"title");
-    NSString *b=NSLocalizedString(@"Original", @"title");
-    NSString *c=NSLocalizedString(@"Square", @"title");
-    UIActionSheet *sheet = [[UIActionSheet alloc]initWithTitle:nil 
-                                                      delegate:self 
-                                             cancelButtonTitle:a 
-                                        destructiveButtonTitle:nil 
-                                             otherButtonTitles:b,c,@"3 x 2",@"4 x 3",@"4 x 6",@"5 x 7",@"8 x 10",@"16 x 9", nil];
-    sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-    [sheet showInView:self.view];
-}
-
--(void)rotatePhoto{
-     NSString *a=NSLocalizedString(@"Save", @"title");
-    if (self.navigationItem.rightBarButtonItem == nil) {
-        UIBarButtonItem *cropItem=[[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleDone target:self action:@selector(saveCropPhoto:)];
-        self.navigationItem.rightBarButtonItem = cropItem;
-    }
-    
-    if (!self.navigationItem.rightBarButtonItem.enabled) {
-        self.navigationItem.rightBarButtonItem.enabled = YES;
-    }
-    self.navigationItem.rightBarButtonItem.title =a;
-    PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
-    if (photoView != nil) {
-        
-        [photoView rotatePhoto];
-        [self.cropView setCropView];
+    if ([ppv isOpen]) {
+        [ppv viewClose];
     }
 }
-
 -(void)callContactsView{
     tagSelector.add=@"YES";
     [tagSelector selectTagNameFromContacts];
@@ -835,11 +743,7 @@
     tagSelector.add=@"YES";
     [tagSelector selectTagNameFromFavorites];
 }
-
--(void)callEventsView{
-    
-}
-
+                                  
 - (void)markPhoto{
     [self setTagToolBar];
     if (ppv) {
@@ -869,113 +773,7 @@
 
 }
 
--(void)cropPhoto{
-    
-    PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
-    if (cropView.superview!=nil) {
-        self.navigationItem.rightBarButtonItem = nil;
-        [cropView removeFromSuperview];
-        photoView.alpha = 1.0;
-        self.navigationItem.rightBarButtonItem = saveItem;
-        saveItem.enabled = NO;
-        croping = NO;
-    }else{
-        NSString *a=NSLocalizedString(@"Crop", @"title");
-        CGPoint center = [photoView.scrollView convertPoint:photoView.imageView.center toView:self.view];
-        CGRect imageFrame = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
-        CGFloat minSize = MIN(imageFrame.size.width, imageFrame.size.height) * 4/5;
-        self.navigationItem.rightBarButtonItem = nil;
-        UIBarButtonItem *cropItem=[[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleDone target:self action:@selector(setCropPhoto:)];
-        self.navigationItem.rightBarButtonItem = cropItem;
-        [self setCropConstrainToolBar];
-        photoView.alpha = 0.4;
-        if (photoView.scrollView.zoomScale > 1.0) {
-            CGPoint viewCenter = self.view.center;
-            self.cropView = [[CropView alloc]initWithFrame:CGRectMake(viewCenter.x - 128, viewCenter.y - 128, 256, 256) ImageView:photoView superView:self.view];
-        }else
-            self.cropView = [[CropView alloc]initWithFrame:CGRectMake(center.x - minSize/2, center.y - minSize/2, minSize, minSize) ImageView:photoView superView:self.view];//CGRectMake(110, 190, 100, 100)
-        
-        self.cropView.backgroundColor = [UIColor clearColor];;
-        
-        [self.view addSubview:cropView];
-        croping = YES;
-    }
-    
-    
-}
 
--(void)resetCropView{
-    PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
-    CGPoint center = [photoView.scrollView convertPoint:photoView.imageView.center toView:self.view];
-    CGRect imageFrame = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
-    CGFloat minSize = MIN(imageFrame.size.width, imageFrame.size.height) * 4/5;
-    [UIView animateWithDuration:0.4 animations:^{
-        self.cropView.frame = CGRectMake(center.x - minSize/2, center.y - minSize/2, minSize, minSize);
-    }];
-    [self.cropView setCropViewSubViewFrame];
-}
-
--(void)setCropPhoto:(id)sender{
-    self.navigationItem.rightBarButtonItem = saveItem;
-    if (!saveItem.enabled) {
-        saveItem.enabled = YES;
-    }
-    PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
-    if (photoView != nil ) {
-        photoView.alpha =1.0;
-        photoView.fullScreen= self.cropView.cropImage;
-        photoView.imageView.image = self.cropView.cropImage;
-    }
-    [cropView removeFromSuperview];
-    self.toolbarItems = nil;
-}
-
--(void)savePhoto{
-    if (!self.scrollView.scrollEnabled) {
-        self.scrollView.scrollEnabled = YES;
-    }
-    saveItem.enabled = NO;
-    PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
-    //[photoView savePhoto];
-    Asset *as = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
-    ALAsset *asset = [self.playlist.assets objectForKey:as.url];
-    NSData *data = UIImagePNGRepresentation(photoView.fullScreen);
-    //NSLog(@"asset is %@ and %@",asset,asset.editable ? @"YES":@"NO" );
-    if (asset.editable) {
-        [asset setImageData:data metadata:[[asset defaultRepresentation]metadata] completionBlock: ^(NSURL *assetURL, NSError *error){
-            
-        }];
-        
-    }else{
-        [asset writeModifiedImageDataToSavedPhotosAlbum:data metadata:nil completionBlock:^(NSURL *assetURL,NSError *error){
-            NSLog(@"save and url %@",assetURL); 
-            
-            ALAssetsLibraryAssetForURLResultBlock resultBlock = ^(ALAsset *asset){
-                [self.playlist.assets setObject:asset forKey:[assetURL description]];
-                [self performSelectorOnMainThread:@selector(changeScrollView) withObject:nil waitUntilDone:YES];
-            };
-            
-            ALAssetsLibraryAccessFailureBlock failblock = ^(NSError *error){
-                NSLog(@"error %@",error);
-            };
-            
-            PhotoAppDelegate *app = [UIApplication sharedApplication].delegate;
-            [app.dataSource.deviceAssets.library assetForURL:assetURL resultBlock:resultBlock failureBlock:failblock];
-        }];
-    }
-    
-    [self cancelEdit];
-    
-    
-    croping = NO;
-}
-
--(void)changeScrollView{
-    CGRect bounds = self.scrollView.bounds;
-    //NSLog(@"%@ is scrollView BOUNDS",NSStringFromCGSize(bounds.size));
-  
-    self.scrollView.contentSize = CGSizeMake(bounds.size.width * [self.playlist.assets allKeys].count, bounds.size.height);
-}
 #pragma mark -
 #pragma mark Bar Methods
 
@@ -994,6 +792,9 @@
     if (!hidden && assetInfoView == nil && assetInfoView.superview == nil) {
         PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
         [self showPhotoInfo:page];
+    }
+    if (!hidden) {
+        [self hideControlsAfterDelay];
     }
 	_barsHidden=hidden;	
 }
@@ -1028,48 +829,14 @@
    
     if (!playingVideo) {
         [self setBarsHidden:!_barsHidden animated:YES];
+        [self cancelPlayPhotoTimer];
     }
 	
 }
 
 #pragma mark -
-#pragma mark Photo View Methods
-
-
-- (NSInteger)centerPhotoIndex{
-	
-	CGFloat pageWidth = self.scrollView.frame.size.width;
-	return floor((self.scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-	
-}
-
-- (void)moveForward:(id)sender{
-    
-    [self jumpToPageAtIndex:currentPageIndex+1];
-
-}
-
-- (void)moveBack:(id)sender{
-    
-    [self jumpToPageAtIndex:currentPageIndex-1];
-}
-
+#pragma mark Photo View Methods                                  
 - (void)updateNavigation {	
-	
-	if (_leftButton) {
-        
-		_leftButton.enabled = (currentPageIndex > 0);
-	}
-	
-	if (_rightButton) {
-		_rightButton.enabled = (currentPageIndex < [self.playlist.storeAssets count]-1);
-	}
-	
-	if (_actionButton) {
-        
-        _actionButton.enabled = YES;
-	}
-	
 	if ([self.playlist.storeAssets count] > 1) {
 		self.title = [NSString stringWithFormat:@"%i of %i", currentPageIndex+1, [self.playlist.storeAssets count]];
 	} else {
@@ -1078,21 +845,6 @@
 	
 }
 
--(void)changeCropViewFrame{
-    PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
-    CGPoint center = [photoView.scrollView convertPoint:photoView.imageView.center toView:self.view];
-    CGRect imageFrame = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
-    CGFloat minSize = MIN(imageFrame.size.width, imageFrame.size.height) * 4/5;
-    [UIView animateWithDuration:0.4 animations:^{
-        if (photoView.scrollView.zoomScale >1.0) {
-            self.cropView.frame = CGRectMake(self.view.center.x - 128, self.view.center.y - 128, 256, 256);
-        }else{
-            self.cropView.frame = CGRectMake(center.x - minSize/2, center.y - minSize/2, minSize, minSize);
-        }
-        [self.cropView setCropViewSubViewFrame];
-    }];
-   
-}
 #pragma mark -
 #pragma mark UIScrollView Delegate Methods
 
@@ -1103,25 +855,13 @@
     [self updatePages];
     // Calculate current page
     CGRect visibleBounds = scrollView.bounds;
-    //NSLog(@"the visible %@",NSStringFromCGRect(visibleBounds));
 	int index = (int)(floorf(CGRectGetMidX(visibleBounds) / CGRectGetWidth(visibleBounds)));    if (index < 0) index = 0;
 	if (index > self.playlist.storeAssets.count - 1) index = self.playlist.storeAssets.count - 1;
     if (index != currentPageIndex) {
-        if (theMovie != nil && theMovie.view.superview != nil) {
-            [[NSNotificationCenter defaultCenter]postNotificationName:MPMoviePlayerPlaybackDidFinishNotification object:theMovie];
-            [theMovie.view removeFromSuperview];
-            theMovie = nil;
-        }
-        if (assetInfoView != nil && assetInfoView.superview != nil) {
-            [assetInfoView removeFromSuperview];
-            assetInfoView = nil;
-        }
-        if (likeButton != nil && likeButton.superview != nil) {
-            [likeButton removeFromSuperview];
-            likeButton = nil;
-        }
+        [self updateSubviewsWhenScroll];
         currentPageIndex = index;
     }
+
 }
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
 	// Hide controls when dragging begins
@@ -1133,7 +873,24 @@
     [self updateNavigation];
 }
 
-
+- (void)updateSubviewsWhenScroll{
+    if (theMovie != nil && theMovie.view.superview != nil) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:MPMoviePlayerPlaybackDidFinishNotification object:theMovie];
+        [theMovie.view removeFromSuperview];
+        theMovie = nil;
+    }
+    if (assetInfoView != nil && assetInfoView.superview != nil) {
+        [assetInfoView removeFromSuperview];
+        assetInfoView = nil;
+    }
+    if (likeButton != nil && likeButton.superview != nil) {
+        [likeButton removeFromSuperview];
+        likeButton = nil;
+    }
+    if ([ppv isOpen]) {
+        [ppv viewClose];
+    }
+}
 #pragma mark -
 #pragma mark Actions
 
@@ -1148,11 +905,13 @@
      messageController.messageComposeDelegate = self;
 //     messageController.recipients = [NSArray arrayWithObject:@"23234567"];  
 //     messageController.body = @"iPhone OS4";
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
      [self presentModalViewController:messageController animated:YES];
 }
 
 -(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result{
     [controller dismissModalViewControllerAnimated:YES];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
 }
 
 - (void)emailPhoto{
@@ -1160,7 +919,7 @@
         [mailViewController setSubject:@"Shared Photo"];
         [mailViewController addAttachmentData:[NSData dataWithData:UIImagePNGRepresentation(((PhotoImageView*)[self pageDisplayedAtIndex:currentPageIndex]).imageView.image)] mimeType:@"png" fileName:@"Photo.png"];
         mailViewController.mailComposeDelegate = self;
-        
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         [self presentModalViewController:mailViewController animated:YES];
 	
 }
@@ -1184,7 +943,7 @@
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:mailError delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 	}
-	
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
 }
 
 
@@ -1197,22 +956,22 @@
     NSString *a=NSLocalizedString(@"Email", @"title");
     NSString *b=NSLocalizedString(@"Message", @"title");
     NSString *c=NSLocalizedString(@"Mark", @"title");
-    NSString *d=NSLocalizedString(@"Copy", @"title");
+   // NSString *d=NSLocalizedString(@"Copy", @"title");
     NSString *e=NSLocalizedString(@"Cancel", @"title");
 	if ([MFMailComposeViewController canSendMail] && [MFMessageComposeViewController canSendText]) {		
-        actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:e destructiveButtonTitle:nil otherButtonTitles:a,b,c,d, nil];
+        actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:e destructiveButtonTitle:nil otherButtonTitles:a,b,c, nil];
 		
 	} 
     else if([MFMailComposeViewController canSendMail] && ![MFMessageComposeViewController canSendText]) {		
-        actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:e destructiveButtonTitle:nil otherButtonTitles:a,c,d, nil];
+        actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:e destructiveButtonTitle:nil otherButtonTitles:a,c, nil];
 		
 	}else if(![MFMailComposeViewController canSendMail] && [MFMessageComposeViewController canSendText]) {		
-        actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:e destructiveButtonTitle:nil otherButtonTitles:b,c,d, nil];
+        actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:e destructiveButtonTitle:nil otherButtonTitles:b,c, nil];
 		
     }
     else {
 		
-		actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:e destructiveButtonTitle:nil otherButtonTitles:c,d, nil];
+		actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:e destructiveButtonTitle:nil otherButtonTitles:c, nil];
 		
 	}
 	
@@ -1232,101 +991,60 @@
 	if (buttonIndex == actionSheet.cancelButtonIndex) {
 		return;
 	} 
-    if (editing) {
-        PhotoImageView *photoView = [self pageDisplayedAtIndex:currentPageIndex];
-        CGPoint center = [photoView.scrollView convertPoint:photoView.imageView.center toView:self.view];
-        CGRect imageFrame = [photoView.scrollView convertRect:photoView.imageView.frame toView:self.view];
-        CGFloat minSize = MIN(imageFrame.size.width, imageFrame.size.height) * 4/5;
-        CGRect rect = self.cropView.frame;
-        rect.size.width = minSize;
-        rect.size.height = minSize;
+    if ([MFMailComposeViewController canSendMail] && [MFMessageComposeViewController canSendText]) {		
         if (buttonIndex == actionSheet.firstOtherButtonIndex) {
-           //origin
-            [self.cropView setFrame:CGRectMake(center.x - minSize/2, center.y - minSize/2, minSize, minSize)];
+            [self emailPhoto];
         } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
-            //square
-            rect.size.height = rect.size.width;
-            self.cropView.frame = CGRectMake(center.x-rect.size.width/2, center.y-rect.size.height/2, rect.size.width, rect.size.height);	
-            
+            [self messagePhoto];	
         } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
-           // CGFloat maxSize = MAX(self.cropView.frame.size.width, self.cropView.frame.size.height);
-            //3 x 2;
-            rect.size.height = rect.size.width * 2/3;
-            self.cropView.frame = CGRectMake(center.x-rect.size.width/2, center.y-rect.size.height/2, rect.size.width, rect.size.height);
-        } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 3){
-            //4 x 3
-            rect.size.height = rect.size.width * 3/4;
-            self.cropView.frame = CGRectMake(center.x-rect.size.width/2, center.y-rect.size.height/2, rect.size.width, rect.size.height);
-        }else if (buttonIndex == actionSheet.firstOtherButtonIndex + 4){
-            //4 x 6
-            rect.size.width = rect.size.height * 2/3;
-            self.cropView.frame = CGRectMake(center.x-rect.size.width/2, center.y-rect.size.height/2, rect.size.width, rect.size.height);
-        }else if (buttonIndex == actionSheet.firstOtherButtonIndex + 5){
-            // 5 x 7
-            rect.size.width = rect.size.height * 5/7;
-            self.cropView.frame = CGRectMake(center.x-rect.size.width/2, center.y-rect.size.height/2, rect.size.width, rect.size.height);
-        }else if (buttonIndex == actionSheet.firstOtherButtonIndex + 6){
-            // 8 x 10
-            rect.size.width = rect.size.height * 4/5;
-            self.cropView.frame = CGRectMake(center.x-rect.size.width/2, center.y-rect.size.height/2, rect.size.width, rect.size.height);
-        }else if (buttonIndex == actionSheet.firstOtherButtonIndex + 7){    
-            // 16 x 9
-            rect.size.width = photoView.imageView.frame.size.width;
-            rect.size.height = rect.size.width * 9/16;
-            self.cropView.frame = CGRectMake(center.x-rect.size.width/2, center.y-rect.size.height/2, rect.size.width, rect.size.height);
-            NSLog(@"%f %f",rect.size.width,rect.size.height);
+            [self markPhoto];	
         }
-        [self.cropView setCropViewSubViewFrame];
-    }else{
-        if ([MFMailComposeViewController canSendMail] && [MFMessageComposeViewController canSendText]) {		
-            if (buttonIndex == actionSheet.firstOtherButtonIndex) {
-                [self emailPhoto];
-            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
-                [self messagePhoto];	
-            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
-                [self markPhoto];	
-            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 3){
-                [self copyPhoto];
-            }
+    } 
+    else if([MFMailComposeViewController canSendMail] && ![MFMessageComposeViewController canSendText]) {		
+        if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+            [self emailPhoto];
+        } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
+            [self markPhoto];	
+        }
+    }else if(![MFMailComposeViewController canSendMail] && [MFMessageComposeViewController canSendText]) {		
+        if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+            [self messagePhoto];
+        } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
+            [self markPhoto];	
         } 
-        else if([MFMailComposeViewController canSendMail] && ![MFMessageComposeViewController canSendText]) {		
-            if (buttonIndex == actionSheet.firstOtherButtonIndex) {
-                [self emailPhoto];
-            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
-                [self markPhoto];	
-            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2){
-                [self copyPhoto];
-            }
-        }else if(![MFMailComposeViewController canSendMail] && [MFMessageComposeViewController canSendText]) {		
-            if (buttonIndex == actionSheet.firstOtherButtonIndex) {
-                [self messagePhoto];
-            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
-                [self markPhoto];	
-            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
-                [self copyPhoto];
-            } 
-        }
-        else {
-
-            if (buttonIndex == actionSheet.firstOtherButtonIndex) {
-                [self markPhoto];
-            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
-                [self copyPhoto];	
-            } 
-        }
-
-        
     }
+    else {
+        
+        if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+            [self markPhoto];
+        } 
+    }
+    
+    
+    
 }
 
 #pragma mark -
 #pragma mark timer method
+-(void)cancelPlayPhotoTimer{
+    if (timer) {
+		[timer invalidate];
+		timer = nil;
+	}
+    playingPhoto = NO;
+}
 
--(void)fireTimer:(NSString *)animateStyle{
-    if (![playPhotoTransition isEqualToString:animateStyle]) {
-        playPhotoTransition = animateStyle;
+-(void)playPhotoFromSelfPage:(id)sender{
+    if (!playingPhoto) {
+        playingFromSelfPage = YES;
     }
-    timer = [NSTimer scheduledTimerWithTimeInterval:2.5 target:self selector:@selector(playPhoto) userInfo:animateStyle repeats:YES];
+    [self fireTimer];
+}
+-(void)fireTimer{
+    [self cancelPlayPhotoTimer];
+    playingPhoto = YES;
+    [self setBarsHidden:YES animated:YES];
+    timer = [NSTimer scheduledTimerWithTimeInterval:2.5 target:self selector:@selector(playPhoto) userInfo:playPhotoTransition repeats:YES];
 }
 -(void)playPhoto{
     currentPageIndex+=1;
@@ -1336,11 +1054,12 @@
             [timer invalidate];
             timer = nil;
             [self setBarsHidden:NO animated:NO];
-            [self.navigationController popViewControllerAnimated:YES];
+            if (!playingFromSelfPage) {
+                [self.navigationController popViewControllerAnimated:YES];
+            }
             return;
         }
     }
-    [self setBarsHidden:YES animated:YES];
     NSString *animateStyle = [timer userInfo];
     CATransition *animation = [CATransition animation];
     animation.delegate = self;

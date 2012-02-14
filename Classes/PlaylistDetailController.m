@@ -65,6 +65,18 @@
     stopText.tag=3;
     stopText.delegate=self;
     key=0;
+    
+    musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
+    if (bum != nil && bum.music != nil) {
+        NSString *musicName = [NSString stringWithFormat:@"%@",bum.music];
+        MPMediaPropertyPredicate *pre = [MPMediaPropertyPredicate predicateWithValue:musicName forProperty:MPMediaItemPropertyTitle];
+        NSSet *set = [NSSet setWithObject:pre];
+        MPMediaQuery *mediaQuery = [[MPMediaQuery alloc]initWithFilterPredicates:set];
+        [musicPlayer setQueueWithQuery:mediaQuery];
+    }
+    
+    
+    
     appDelegate =[[UIApplication sharedApplication] delegate];
     AL=[[AlbumDataSource alloc]init];
     AL=appDelegate.dataSource;
@@ -251,6 +263,9 @@
                 cell = [tableView dequeueReusableCellWithIdentifier:@"musicCell"];
                 if (cell == nil) {
                     cell = self.musicCell;
+                }
+                if (bum != nil && bum.music!=nil && bum.music.length != 0) {
+                    self.musicLabel.text = bum.music;
                 }
                 break;
             default:
@@ -705,10 +720,13 @@
 - (void) mediaPicker: (MPMediaPickerController *) mediaPicker didPickMediaItems: (MPMediaItemCollection *) mediaItemCollection
 {
     if (mediaItemCollection) {
-        MPMusicPlayerController *musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
         [musicPlayer setQueueWithItemCollection: mediaItemCollection];
-        [musicPlayer play]; 
-        self.musicLabel.text = [musicPlayer.nowPlayingItem valueForProperty:MPMediaItemPropertyTitle];
+        NSArray *items = [mediaItemCollection items];
+        MPMediaItem *item = [items objectAtIndex:0];
+       // [musicPlayer play]; 
+        //self.musicLabel.text = [musicPlayer.nowPlayingItem valueForProperty:MPMediaItemPropertyTitle];
+        self.musicLabel.text = [item valueForProperty:MPMediaItemPropertyTitle]; 
+        bum.music = self.musicLabel.text;
     }
     [mediaPicker dismissModalViewControllerAnimated: YES];
 }
@@ -931,6 +949,7 @@
 }
 
 -(IBAction)playAlbumPhotos:(id)sender{
+    [musicPlayer play];
     NSMutableArray *assets = nil;
     NSPredicate *pre =  [appDelegate.dataSource ruleFormation:bum];
     if([bum.sortOrder boolValue]==YES){

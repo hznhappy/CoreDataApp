@@ -14,7 +14,6 @@
 #import <MediaPlayer/MediaPlayer.h>
 #define PADDING 20
 
-@class CropView;
 @class PhotoImageView;
 @class Playlist;;
 @class TagSelector;
@@ -33,18 +32,18 @@
 	BOOL _barsHidden;
 	BOOL performingLayout;
     BOOL lockMode;
-	UIBarButtonItem *_leftButton;
-	UIBarButtonItem *_rightButton;
+
 	UIBarButtonItem *_actionButton;
-    UIBarButtonItem *edit;
-    UIBarButtonItem *saveItem;
+    UIBarButtonItem *playPhotoButton;
+    //UIBarButtonItem *edit;
+    //UIBarButtonItem *saveItem;
     UILabel *tagCount;
-	CropView *cropView;
+
     BOOL editing;
     BOOL tagShow;
-    BOOL croping;
     BOOL playingPhoto;
     BOOL playingVideo;
+    BOOL playingFromSelfPage;
     PopupPanelView *ppv;
     TagSelector *tagSelector;
     AssetTablePicker *assetTablePicker;
@@ -61,9 +60,9 @@
 @property (nonatomic,strong) Playlist *playlist;
 @property(nonatomic,strong)PopupPanelView *ppv;
 @property(nonatomic,strong)AssetTablePicker *assetTablePicker;
-@property(nonatomic,strong)CropView *cropView;
 @property(nonatomic,strong) UIScrollView *scrollView;
 @property(nonatomic,assign) NSUInteger currentPageIndex;
+@property(nonatomic,strong)NSString *playPhotoTransition;
 @property(nonatomic,assign)BOOL lockMode;
 //init
 - (id)init;
@@ -89,7 +88,8 @@
 - (void)cancelControlHiding;
 
 //PlayVideo and play photos
--(void)fireTimer:(NSString *)animateStyle;
+-(void)cancelPlayPhotoTimer;
+-(void)fireTimer;
 -(void)playVideo:(id)sender;
 -(void)playVideo;
 -(UIButton *)configurePlayButton:(CGRect)framek;
@@ -104,7 +104,6 @@
 -(void)addTagPeople;
 -(void)setTagToolBar;
 
--(void)changeCropViewFrame;
 -(void)numtag;
 @end
 
