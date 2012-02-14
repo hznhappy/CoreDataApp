@@ -25,6 +25,7 @@
 @implementation AlbumDataSource
 @synthesize coreData,deviceAssets,assetsBook,opQueue;
 @synthesize nav;
+@synthesize password;
 
 -(id) initWithAppName: (NSString *)app navigationController:(UINavigationController *)navigationController{
     self= [super init];
@@ -70,7 +71,19 @@
      
      get All the on device url
      */
-
+    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults]; 
+    password=[defaults objectForKey:@"name_preference"];
+    NSPredicate * pre1= [NSPredicate predicateWithFormat:@"addressBookId==%d",-1];
+    NSMutableArray *PeopleList=[self simpleQuery:@"People" predicate:pre1 sortField:nil
+                                       sortOrder:YES];
+   if([PeopleList count]==0)
+   {
+    NSEntityDescription *entity1 = [NSEntityDescription entityForName:@"People" inManagedObjectContext:[coreData managedObjectContext]]; 
+    People *favorate=[[People alloc]initWithEntity:entity1 insertIntoManagedObjectContext:[coreData managedObjectContext]];
+    favorate.firstName=@"NoBody";
+    favorate.addressBookId=[NSNumber numberWithInt:-1];
+   }
+   
     NSArray *urlList =deviceAssets.urls;
    
 
@@ -119,7 +132,7 @@
         
         newAsset=[[Asset alloc]initWithEntity:entity insertIntoManagedObjectContext:[coreData managedObjectContext]];
         newAsset.url=[[[alAsset defaultRepresentation]url]description];
-       /* NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
+        NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
        // NSLog(@"strdate:%@",strDate);
        // NSString* string = @"Wed, 05 May 2011 10:50:00";
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
@@ -129,7 +142,7 @@
         [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
         //[inputFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"Asia/Shanghai"]];
         newAsset.date = [inputFormatter dateFromString:strDate];
-      //  NSLog(@"date = %@", newAsset.date);*/
+      //  NSLog(@"date = %@", newAsset.date);
        
         if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
             newAsset.videoType = [NSNumber numberWithBool:YES];

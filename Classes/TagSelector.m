@@ -37,10 +37,6 @@
 -(void)addTagPeople:(NSNotification *)note{
     NSDictionary *dic = [note userInfo];
     mypeople=[dic objectForKey:@"people"];
-    NSLog(@"adddd:%@",add);
-    NSLog(@"name:%@",mypeople.firstName);
-  //  if([viewController isKindOfClass:[PhotoViewController class]])
-   // { 
     if([add isEqualToString:@"YES"])
     { 
         [self addTagName];

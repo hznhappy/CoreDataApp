@@ -735,7 +735,6 @@
     UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
     [self setToolbarItems:[NSArray arrayWithObjects:flex,contacts,flex,favorites,flex,events,flex, nil]];
-    NSLog(@"come to here");
 }
 
 #pragma mark -

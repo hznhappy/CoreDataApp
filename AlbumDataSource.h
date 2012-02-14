@@ -23,6 +23,7 @@
      NSMutableArray* assetsBook;
     NSOperationQueue *opQueue;
     UINavigationController *nav;
+    NSNumber *password;
     
 }
 @property (nonatomic,strong) AmptsPhotoCoreData * coreData;
@@ -30,6 +31,8 @@
 @property (nonatomic,strong) NSMutableArray * assetsBook;
 @property (nonatomic,strong) NSOperationQueue * opQueue;
 @property (nonatomic,strong)UINavigationController *nav;
+@property (nonatomic,strong)NSNumber *password;
+
 -(id) initWithAppName: (NSString*) app navigationController:(UINavigationController *)navigationController;
 -(NSMutableArray* ) getAlbumList;
 -(AmptsAlbum*) getAlbum:(NSUInteger) index;

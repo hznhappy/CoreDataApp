@@ -941,7 +941,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 								<string key="NSFrame">{{8, 11}, {153, 21}}</string>
 								<reference key="NSSuperview" ref="16636088"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
+								<reference key="NSNextKeyView" ref="924631732"/>
 								<string key="NSReuseIdentifierKey">_NS:328</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -962,6 +962,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 								<string key="NSFrame">{{259, 9}, {29, 29}}</string>
 								<reference key="NSSuperview" ref="16636088"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:225</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -1228,6 +1229,72 @@ AAgACAAIAAEAAQABAAE</bytes>
 				<reference key="IBUIContentView" ref="983063067"/>
 				<string key="IBUIReuseIdentifier">daterule</string>
 			</object>
+			<object class="IBUITableViewCell" id="645803575">
+				<reference key="NSNextResponder"/>
+				<int key="NSvFlags">292</int>
+				<object class="NSMutableArray" key="NSSubviews">
+					<bool key="EncodedWithXMLCoder">YES</bool>
+					<object class="IBUIView" id="379534880">
+						<reference key="NSNextResponder" ref="645803575"/>
+						<int key="NSvFlags">256</int>
+						<object class="NSMutableArray" key="NSSubviews">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBUILabel" id="391781067">
+								<reference key="NSNextResponder" ref="379534880"/>
+								<int key="NSvFlags">292</int>
+								<string key="NSFrame">{{11, 11}, {102, 21}}</string>
+								<reference key="NSSuperview" ref="379534880"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="505651741"/>
+								<string key="NSReuseIdentifierKey">_NS:328</string>
+								<bool key="IBUIOpaque">NO</bool>
+								<bool key="IBUIClipsSubviews">YES</bool>
+								<int key="IBUIContentMode">7</int>
+								<bool key="IBUIUserInteractionEnabled">NO</bool>
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<string key="IBUIText">设置时间规则</string>
+								<reference key="IBUITextColor" ref="582548295"/>
+								<nil key="IBUIHighlightedColor"/>
+								<int key="IBUIBaselineAdjustment">1</int>
+								<float key="IBUIMinimumFontSize">10</float>
+								<reference key="IBUIFontDescription" ref="841276121"/>
+								<reference key="IBUIFont" ref="166799729"/>
+							</object>
+							<object class="IBUISwitch" id="505651741">
+								<reference key="NSNextResponder" ref="379534880"/>
+								<int key="NSvFlags">292</int>
+								<string key="NSFrame">{{197, 8}, {94, 27}}</string>
+								<reference key="NSSuperview" ref="379534880"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
+								<string key="NSReuseIdentifierKey">_NS:606</string>
+								<bool key="IBUIOpaque">NO</bool>
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<int key="IBUIContentHorizontalAlignment">0</int>
+								<int key="IBUIContentVerticalAlignment">0</int>
+							</object>
+						</object>
+						<string key="NSFrameSize">{320, 43}</string>
+						<reference key="NSSuperview" ref="645803575"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="391781067"/>
+						<string key="NSReuseIdentifierKey">_NS:395</string>
+						<reference key="IBUIBackgroundColor" ref="30338477"/>
+						<bool key="IBUIOpaque">NO</bool>
+						<bool key="IBUIClipsSubviews">YES</bool>
+						<int key="IBUIContentMode">4</int>
+						<bool key="IBUIMultipleTouchEnabled">YES</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+					</object>
+				</object>
+				<string key="NSFrameSize">{320, 44}</string>
+				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
+				<reference key="NSNextKeyView" ref="379534880"/>
+				<string key="NSReuseIdentifierKey">_NS:384</string>
+				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+				<reference key="IBUIContentView" ref="379534880"/>
+			</object>
 		</object>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<object class="NSMutableArray" key="connectionRecords">
@@ -1418,6 +1485,22 @@ AAgACAAIAAEAAQABAAE</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">sortOrderCell</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="645803575"/>
+					</object>
+					<int key="connectionID">164</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">sortSw</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="505651741"/>
+					</object>
+					<int key="connectionID">166</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">dataSource</string>
 						<reference key="source" ref="68716488"/>
 						<reference key="destination" ref="372490531"/>
@@ -1581,6 +1664,15 @@ AAgACAAIAAEAAQABAAE</bytes>
 						<int key="IBEventType">7</int>
 					</object>
 					<int key="connectionID">158</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">upSort:</string>
+						<reference key="source" ref="505651741"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">13</int>
+					</object>
+					<int key="connectionID">165</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1896,6 +1988,26 @@ AAgACAAIAAEAAQABAAE</bytes>
 						<reference key="object" ref="924631732"/>
 						<reference key="parent" ref="1007503414"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">161</int>
+						<reference key="object" ref="645803575"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="391781067"/>
+							<reference ref="505651741"/>
+						</object>
+						<reference key="parent" ref="0"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">162</int>
+						<reference key="object" ref="391781067"/>
+						<reference key="parent" ref="645803575"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">163</int>
+						<reference key="object" ref="505651741"/>
+						<reference key="parent" ref="645803575"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1922,6 +2034,9 @@ AAgACAAIAAEAAQABAAE</bytes>
 					<string>154.IBPluginDependency</string>
 					<string>155.IBPluginDependency</string>
 					<string>156.IBPluginDependency</string>
+					<string>161.IBPluginDependency</string>
+					<string>162.IBPluginDependency</string>
+					<string>163.IBPluginDependency</string>
 					<string>19.IBPluginDependency</string>
 					<string>37.IBPluginDependency</string>
 					<string>38.IBPluginDependency</string>
@@ -1998,6 +2113,9 @@ AAgACAAIAAEAAQABAAE</bytes>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<integer value="0"/>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -2015,7 +2133,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">158</int>
+			<int key="maxID">166</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2039,10 +2157,12 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<string>resetAll</string>
 							<string>sortKeyButton</string>
 							<string>sortOrderButton</string>
+							<string>upSort:</string>
 							<string>updateTable:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -2074,6 +2194,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<string>resetAll</string>
 							<string>sortKeyButton</string>
 							<string>sortOrderButton</string>
+							<string>upSort:</string>
 							<string>updateTable:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -2127,6 +2248,10 @@ AAgACAAIAAEAAQABAAE</bytes>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
+								<string key="name">upSort:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
 								<string key="name">updateTable:</string>
 								<string key="candidateClassName">id</string>
 							</object>
@@ -2150,7 +2275,9 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<string>musicLabel</string>
 							<string>mySwitch</string>
 							<string>sortOrder</string>
+							<string>sortOrderCell</string>
 							<string>sortSeg</string>
+							<string>sortSw</string>
 							<string>startText</string>
 							<string>state</string>
 							<string>stopText</string>
@@ -2176,7 +2303,9 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<string>UILabel</string>
 							<string>UISwitch</string>
 							<string>UISegmentedControl</string>
+							<string>UITableViewCell</string>
 							<string>UISegmentedControl</string>
+							<string>UISwitch</string>
 							<string>UITextField</string>
 							<string>UILabel</string>
 							<string>UITextField</string>
@@ -2205,7 +2334,9 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<string>musicLabel</string>
 							<string>mySwitch</string>
 							<string>sortOrder</string>
+							<string>sortOrderCell</string>
 							<string>sortSeg</string>
+							<string>sortSw</string>
 							<string>startText</string>
 							<string>state</string>
 							<string>stopText</string>
@@ -2274,8 +2405,16 @@ AAgACAAIAAEAAQABAAE</bytes>
 								<string key="candidateClassName">UISegmentedControl</string>
 							</object>
 							<object class="IBToOneOutletInfo">
+								<string key="name">sortOrderCell</string>
+								<string key="candidateClassName">UITableViewCell</string>
+							</object>
+							<object class="IBToOneOutletInfo">
 								<string key="name">sortSeg</string>
 								<string key="candidateClassName">UISegmentedControl</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">sortSw</string>
+								<string key="candidateClassName">UISwitch</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">startText</string>

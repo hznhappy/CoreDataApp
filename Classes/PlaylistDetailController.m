@@ -45,6 +45,8 @@
 @synthesize sortSeg;
 @synthesize sortOrder;
 @synthesize IdList;
+@synthesize sortOrderCell;
+@synthesize sortSw;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -58,6 +60,12 @@
 #pragma mark - View lifecycle
 - (void)viewDidLoad
 { 
+    
+    
+    
+    self.textField.autocapitalizationType =  UITextAutocapitalizationTypeWords;
+    
+    sortSwc=NO;
     NSMutableArray *parry=[[NSMutableArray alloc]init];
     self.selectedIndexPaths=parry;
     startText.tag=2;
@@ -77,6 +85,12 @@
         date=bum.conDateRule;
     }
     
+    
+    if(date.startDate!=nil||date.stopDate!=nil)
+    {
+        sortSwc=YES;
+        sortSw.on=YES;
+    }
        NSMutableArray *parray1=[[NSMutableArray alloc]init];
      NSMutableArray *parray2=[[NSMutableArray alloc]init];
     NSMutableArray *parray3=[[NSMutableArray alloc]init];
@@ -101,6 +115,7 @@
     UIBarButtonItem *backItem=[[UIBarButtonItem alloc]initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem =backItem;
     mySwc = NO;
+    
     selectImg = [UIImage imageNamed:@"Selected.png"];
     unselectImg = [UIImage imageNamed:@"Unselected.png"];
 
@@ -157,6 +172,9 @@
 {
     if(keybord==NO&&textField.text!=nil&&textField.text.length!=0)
     {
+        NSString *text = [self.textField text];
+        NSString *caplitalized = [[[text substringToIndex:1] uppercaseString] stringByAppendingString:[text substringFromIndex:1]];
+        self.textField.text=caplitalized;
         if(bum==nil)
         {
             [self album];  
@@ -202,7 +220,14 @@
             return 2;
             break;
         case 2:
-            return 3;
+            if(sortSwc)
+            {
+                return 4;
+            }
+            else
+            {
+                return 1;
+            }
             break;
         case 3:
             return 2;
@@ -275,6 +300,7 @@
                     cell=self.OrderCell;
                 }
                 break;
+                
             default:
                 cell=nil;
                 break;
@@ -313,19 +339,26 @@
         
                UITableViewCell *cell = nil;
         switch (rowNum) {
-            case 0:
+                case 0:
+                cell = [tableView dequeueReusableCellWithIdentifier:@"sortOrderCell"];
+                if (cell == nil) {
+                    cell=self.sortOrderCell;
+                }
+                break;
+
+            case 1:
                 cell = [tableView dequeueReusableCellWithIdentifier:@"dateRule"];
                 if (cell == nil) {
                     cell=self.dateRule;
                 }
                 break;
-            case 1:
+            case 2:
                 cell = [tableView dequeueReusableCellWithIdentifier:@"DateRangeCell"];
                 if (cell == nil) {
                     cell=self.DateRangeCell;
                 }
                 break;
-            case 2:
+            case 3:
                 cell = [tableView dequeueReusableCellWithIdentifier:@"StopDateRangeCell"];
                 if (cell == nil) {
                     cell=self.StopDateRangeCell;
@@ -823,7 +856,19 @@
    }
 -(void)textFieldDidBeginEditing:(UITextField *)textField2
 {
-    if(textField2.tag==2)
+    if(textField2.tag==1)
+    {
+        
+        
+        if(textField.text!=nil&&textField.text.length>0)
+
+        {
+        NSString *text = [self.textField text];
+        NSString *caplitalized = [[[text substringToIndex:1] uppercaseString] stringByAppendingString:[text substringFromIndex:1]];
+        self.textField.text=caplitalized;
+        }
+    }
+    else if(textField2.tag==2)
     {
         bu=YES;
         TestiPhoneCalViewController *Test=[[TestiPhoneCalViewController alloc]init];
@@ -837,6 +882,19 @@
     }
 
     
+}
+-(IBAction)text
+{
+    NSLog(@"TEXT");
+  
+       /* NSString *text = [self.textField text];
+        NSString *caplitalized = [[[text substringToIndex:1] uppercaseString] stringByAppendingString:[text substringFromIndex:1]];
+        NSLog(@"%@ uppercased is %@", text, caplitalized);
+        if()
+        self.textField.text=caplitalized;
+    
+*/
+        
 }
 -(void)textFieldDidEndEditing:(UITextField *)textField1
 {
@@ -868,6 +926,11 @@
     }
     else
     {
+        NSString *text = [self.textField text];
+        NSString *caplitalized = [[[text substringToIndex:1] uppercaseString] stringByAppendingString:[text substringFromIndex:1]];
+        NSLog(@"%@ uppercased is %@", text, caplitalized); 
+        self.textField.text=caplitalized;
+
         [self addPlay];
     }   
     
@@ -890,14 +953,32 @@
     UISwitch *newSwitcn  = (UISwitch *)sender;
     mySwc = newSwitcn.on;
     if (newSwitcn.on) {
-        NSLog(@"UP");
         [listTable beginUpdates];
         [listTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
         [listTable endUpdates];
     }else{
-        NSLog(@"Down");
         [listTable beginUpdates];
         [listTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
+        [listTable endUpdates];
+    }
+}
+
+-(IBAction)upSort:(id)sender
+{
+    UISwitch *newSwitcn  = (UISwitch *)sender;
+    sortSwc = newSwitcn.on;
+    if (newSwitcn.on) {
+        [listTable beginUpdates];
+        [listTable insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:2],
+                                           [NSIndexPath indexPathForRow:2 inSection:2],
+                                           [NSIndexPath indexPathForRow:3 inSection:2],nil] withRowAnimation:UITableViewRowAnimationTop];
+       
+        [listTable endUpdates];
+    }else{
+        [listTable beginUpdates];
+        [listTable deleteRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:2],
+                                           [NSIndexPath indexPathForRow:2 inSection:2],
+                                           [NSIndexPath indexPathForRow:3 inSection:2],nil] withRowAnimation:UITableViewRowAnimationTop];
         [listTable endUpdates];
     }
 }

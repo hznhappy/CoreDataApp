@@ -239,33 +239,6 @@
     }
      [table deselectRowAtIndexPath:indexPath animated:YES];
 }
-
-
-/*- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
-    NSString *a=NSLocalizedString(@"note", @"title");
-    NSString *b=NSLocalizedString(@"Inherent members, can not be edited", @"title");
-    NSString *c=NSLocalizedString(@"ok", @"title");
-    PlaylistDetailController *detailController = [[PlaylistDetailController alloc]initWithNibName:@"PlaylistDetailController" bundle:[NSBundle mainBundle]];
-    detailController.bum = [self getAlbumInRow:indexPath.row];
-    detailController.hidesBottomBarWhenPushed = YES;
-    if(detailController.bum!=nil)
-    {
-    [self.navigationController pushViewController:detailController animated:YES];
-    }
-    else
-    {
-        UIAlertView *alert = [[UIAlertView alloc]
-                              initWithTitle:a
-                              message:b
-                              delegate:self
-                              cancelButtonTitle:nil
-                              otherButtonTitles:c,nil];
-        [alert show];
-
-    }
-
-    
-}*/
 -(Album *)getAlbumInRow:(NSInteger)row{
     AmptsAlbum *am = (AmptsAlbum *)[assets objectAtIndex:row];
     
@@ -280,13 +253,6 @@
     }
     return nil;
 }
-/*- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath 
-{ if(indexPath.row>1)
-{
-    return YES;
-}
-    return NO;
-}*/
 -(BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(indexPath.row>1)
