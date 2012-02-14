@@ -31,6 +31,7 @@
 		184FD006147208F90082B51D /* AnimaSelectController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 184FD005147208F90082B51D /* AnimaSelectController.xib */; };
 		18696E8B147A217100302EB8 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 18696E8A147A217100302EB8 /* Settings.bundle */; };
 		186BF9BF1470AEB500961C67 /* AlbumController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 186BF9C01470AEB500961C67 /* AlbumController.xib */; };
+		1883E25D14E9F4E100C16281 /* Asset.m in Sources */ = {isa = PBXBuildFile; fileRef = 1883E25C14E9F4E100C16281 /* Asset.m */; };
 		1884ECC314BBE586005B3EBF /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1884ECC214BBE586005B3EBF /* CoreData.framework */; };
 		1885976314D7D31F005EB0EB /* unlike.png in Resources */ = {isa = PBXBuildFile; fileRef = 1885976114D7D31F005EB0EB /* unlike.png */; };
 		1885976414D7D31F005EB0EB /* like.png in Resources */ = {isa = PBXBuildFile; fileRef = 1885976214D7D31F005EB0EB /* like.png */; };
@@ -49,7 +50,6 @@
 		18DAD78D14E21BFA00BBE9B1 /* PeopleRuleDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DAD78C14E21BFA00BBE9B1 /* PeopleRuleDetail.m */; };
 		18DAD79014E21BFA00BBE9B1 /* PeopleTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DAD78F14E21BFA00BBE9B1 /* PeopleTag.m */; };
 		18DAD79314E21BFA00BBE9B1 /* Album.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DAD79214E21BFA00BBE9B1 /* Album.m */; };
-		18DAD79614E21BFA00BBE9B1 /* Asset.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DAD79514E21BFA00BBE9B1 /* Asset.m */; };
 		18DAD79914E21BFA00BBE9B1 /* EventRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DAD79814E21BFA00BBE9B1 /* EventRule.m */; };
 		18DAD79F14E21BFA00BBE9B1 /* AssetRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DAD79E14E21BFA00BBE9B1 /* AssetRule.m */; };
 		18DAD7A214E21BFB00BBE9B1 /* DateRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DAD7A114E21BFB00BBE9B1 /* DateRule.m */; };
@@ -133,6 +133,8 @@
 		184FD005147208F90082B51D /* AnimaSelectController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AnimaSelectController.xib; path = Classes/AnimaSelectController.xib; sourceTree = "<group>"; };
 		18696E8A147A217100302EB8 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		186BF9C01470AEB500961C67 /* AlbumController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = AlbumController.xib; path = Classes/AlbumController.xib; sourceTree = "<group>"; };
+		1883E25B14E9F4E100C16281 /* Asset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Asset.h; sourceTree = "<group>"; };
+		1883E25C14E9F4E100C16281 /* Asset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Asset.m; sourceTree = "<group>"; };
 		1884ECC214BBE586005B3EBF /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		1885976114D7D31F005EB0EB /* unlike.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unlike.png; sourceTree = "<group>"; };
 		1885976214D7D31F005EB0EB /* like.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = like.png; sourceTree = "<group>"; };
@@ -171,8 +173,6 @@
 		18DAD78F14E21BFA00BBE9B1 /* PeopleTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeopleTag.m; sourceTree = "<group>"; };
 		18DAD79114E21BFA00BBE9B1 /* Album.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Album.h; sourceTree = "<group>"; };
 		18DAD79214E21BFA00BBE9B1 /* Album.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Album.m; sourceTree = "<group>"; };
-		18DAD79414E21BFA00BBE9B1 /* Asset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Asset.h; sourceTree = "<group>"; };
-		18DAD79514E21BFA00BBE9B1 /* Asset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Asset.m; sourceTree = "<group>"; };
 		18DAD79714E21BFA00BBE9B1 /* EventRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventRule.h; sourceTree = "<group>"; };
 		18DAD79814E21BFA00BBE9B1 /* EventRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventRule.m; sourceTree = "<group>"; };
 		18DAD79D14E21BFA00BBE9B1 /* AssetRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetRule.h; sourceTree = "<group>"; };
@@ -263,6 +263,8 @@
 			isa = PBXGroup;
 			children = (
 				18DAD78314E21BD100BBE9B1 /* PhotoApp.xcdatamodel */,
+				1883E25B14E9F4E100C16281 /* Asset.h */,
+				1883E25C14E9F4E100C16281 /* Asset.m */,
 				18DAD7A314E21E6B00BBE9B1 /* People.h */,
 				18DAD7A414E21E6B00BBE9B1 /* People.m */,
 				18DAD7A014E21BFB00BBE9B1 /* DateRule.h */,
@@ -271,8 +273,6 @@
 				18DAD79E14E21BFA00BBE9B1 /* AssetRule.m */,
 				18DAD79714E21BFA00BBE9B1 /* EventRule.h */,
 				18DAD79814E21BFA00BBE9B1 /* EventRule.m */,
-				18DAD79414E21BFA00BBE9B1 /* Asset.h */,
-				18DAD79514E21BFA00BBE9B1 /* Asset.m */,
 				18DAD79114E21BFA00BBE9B1 /* Album.h */,
 				18DAD79214E21BFA00BBE9B1 /* Album.m */,
 				18DAD78E14E21BFA00BBE9B1 /* PeopleTag.h */,
@@ -605,11 +605,11 @@
 				18DAD78D14E21BFA00BBE9B1 /* PeopleRuleDetail.m in Sources */,
 				18DAD79014E21BFA00BBE9B1 /* PeopleTag.m in Sources */,
 				18DAD79314E21BFA00BBE9B1 /* Album.m in Sources */,
-				18DAD79614E21BFA00BBE9B1 /* Asset.m in Sources */,
 				18DAD79914E21BFA00BBE9B1 /* EventRule.m in Sources */,
 				18DAD79F14E21BFA00BBE9B1 /* AssetRule.m in Sources */,
 				18DAD7A214E21BFB00BBE9B1 /* DateRule.m in Sources */,
 				18DAD7A514E21E6B00BBE9B1 /* People.m in Sources */,
+				1883E25D14E9F4E100C16281 /* Asset.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

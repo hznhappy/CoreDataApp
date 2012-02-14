@@ -20,6 +20,7 @@
         <attribute name="numOfLike" optional="YES" attributeType="Integer 32" defaultValueString="0"/>
         <attribute name="numPeopleTag" optional="YES" attributeType="Integer 32" defaultValueString="0"/>
         <attribute name="url" optional="YES" attributeType="String"/>
+        <attribute name="videoType" optional="YES" attributeType="Boolean" syncable="YES"/>
         <relationship name="conAssetRule" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="AssetRule" inverseName="conAsset" inverseEntity="AssetRule" indexed="YES"/>
         <relationship name="conEvent" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="Event" inverseName="conAsset" inverseEntity="Event" indexed="YES"/>
         <relationship name="conPeopleTag" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="PeopleTag" inverseName="conAsset" inverseEntity="PeopleTag" indexed="YES"/>

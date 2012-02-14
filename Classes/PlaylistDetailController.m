@@ -949,8 +949,11 @@
             //NSLog(@"Exclude predicate : %d , %@",[excludePeople count],pre );
         }
     }
+    AmptsAlbum *ampAlbum = [appDelegate.dataSource.assetsBook objectAtIndex:0];
+    NSPredicate *newPre = [NSPredicate predicateWithFormat:@"self in %@",assets];
+    NSArray *array = [ampAlbum.assetsList filteredArrayUsingPredicate:newPre];
     
-    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:assets, @"assets", self.bum.transitType, @"transition",nil];
+    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:array, @"assets", self.bum.transitType, @"transition",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"PlayPhoto" object:nil userInfo:dic]; 
 }
 
