@@ -6,12 +6,10 @@
 //
 
 #import "AssetTablePicker.h"
-#import "PhotoAppDelegate.h"
 #import "Asset.h"
 #import "TagSelector.h"
 #import "Album.h"
 #import "PeopleTag.h"
-#import "OnDeviceAssets.h"
 @implementation AssetTablePicker
 @synthesize crwAssets;
 @synthesize table,val;
@@ -33,6 +31,15 @@
     tagBar.hidden = YES;
     save.enabled = NO;
     reset.enabled = NO;
+    photoCount = 0;
+    videoCount = 0;
+    for (Asset *as in self.crwAssets) {
+        if ([as.videoType boolValue]) {
+            videoCount += 1;
+        }else{
+            photoCount += 1;
+        }
+    }
     tagSelector = [[TagSelector alloc]initWithViewController:self];
     
     self.tagRow=[[NSMutableArray alloc]init];
@@ -44,13 +51,6 @@
     [backButton setTitle:b forState:UIControlStateNormal];
     UIBarButtonItem *backItem=[[UIBarButtonItem alloc]initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem =backItem;
-    
-   
-   
-    self.table.delegate = self;
-    self.table.maximumZoomScale = 2;
-    self.table.minimumZoomScale = 1;
-    self.table.contentSize = CGSizeMake(self.table.frame.size.width, self.table.frame.size.height);
     
     [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
     [self.navigationController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
@@ -405,51 +405,27 @@
     
     [cell.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     if (indexPath.row == lastRow - 1) {
-        NSInteger pmillionNumber = 0;
-        NSInteger pthoundsNumber = 0;
-        NSInteger pNumber = 0;
-        NSInteger vmillionNumber = 0;
-        NSInteger vthoundsNumber = 0;
-        NSInteger vNumber = 0;
+        if (photoCount != 0 || videoCount != 0) {
+            UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(cell.frame.origin.x, 10, cell.frame.size.width, cell.frame.size.height-20)];
+            label.textAlignment = UITextAlignmentCenter;
+            label.textColor = [UIColor grayColor];
+            label.font = [UIFont fontWithName:@"Arial" size:20];
+            NSNumberFormatter *formatter = [NSNumberFormatter new];
+            [formatter setNumberStyle:NSNumberFormatterDecimalStyle]; // this line is important!
+            if (photoCount == 0) {
+                NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:videoCount]];
+                label.text = [NSString stringWithFormat:@"%@ Videos",videoNumber];
+            }else if(videoCount == 0){
+                NSString *photoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:photoCount]];
+                label.text = [NSString stringWithFormat:@"%@ Photos",photoNumber];
+            }else{
+                NSString *photoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:photoCount]];
+                NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:videoCount]];
+                label.text = [NSString stringWithFormat:@"%@ Photos, %@ Videos",photoNumber,videoNumber];
+            }
+             [cell addSubview:label]; 
+        }
         
-        NSString *a = @"";
-        NSString *b = @"";
-        NSString *c = @"";
-        NSString *d = @"";
-        NSString *e = @"";
-        NSString *f = @"";
-        PhotoAppDelegate *delegate = [UIApplication sharedApplication].delegate;
-        OnDeviceAssets *device = delegate.dataSource.deviceAssets;
-        pmillionNumber = device.photoCount/1000000;
-        if (pmillionNumber != 0) {
-            a = [NSString stringWithFormat:@"%d,",pmillionNumber];
-        }
-        pthoundsNumber = (device.photoCount - pmillionNumber * 1000000)/1000;
-        if (pthoundsNumber != 0) {
-            b = [NSString stringWithFormat:@"%d,",pthoundsNumber];
-        }
-        pNumber = (device.photoCount -pmillionNumber * 1000000 - pthoundsNumber * 1000);
-        if (pNumber != 0) {
-            c = [NSString stringWithFormat:@"%d",pNumber];
-        }
-        vmillionNumber = device.videoCount/1000000;
-        if (vmillionNumber != 0) {
-            d = [NSString stringWithFormat:@"%d,",vmillionNumber];
-        }
-        vthoundsNumber = (device.videoCount - vmillionNumber * 1000000)/1000;
-        if (vthoundsNumber != 0) {
-            e = [NSString stringWithFormat:@"%d,",vthoundsNumber];
-        }
-        vNumber = (device.videoCount - vmillionNumber * 1000000 - vthoundsNumber * 1000);
-        if (vNumber != 0) {
-            f = [NSString stringWithFormat:@"%d",vNumber];
-        }
-        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(cell.frame.origin.x + (cell.frame.size.width)*1/5, 10, (cell.frame.size.width)*4/5, cell.frame.size.height-20)];
-        
-        label.text = [NSString stringWithFormat: @"%@%@%@ Photos, %@%@%@ Videos",a,b,c,d,e,f];
-        label.textColor = [UIColor grayColor];
-        label.font = [UIFont fontWithName:@"Arial" size:20];
-        [cell addSubview:label]; 
     }else{
         cell.selectionDelegate = self;
         cell.rowNumber = indexPath.row;
@@ -479,7 +455,6 @@
         [cell displayThumbnails:assetsInRow count:loopCount action:action];
         
         if (!action) {
-            NSLog(@"DSDS");
             for (NSInteger i = 0; i<loopCount; i++) {
                 NSInteger row = (indexPath.row*loopCount)+i;
                 if (row<[self.crwAssets count]) {

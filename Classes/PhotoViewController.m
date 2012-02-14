@@ -1340,7 +1340,6 @@
             return;
         }
     }
-
     [self setBarsHidden:YES animated:YES];
     NSString *animateStyle = [timer userInfo];
     CATransition *animation = [CATransition animation];
@@ -1365,7 +1364,7 @@
     }
     [self.scrollView.layer addAnimation:animation forKey:@"animation"];
     [self jumpToPageAtIndex:currentPageIndex];
-   }
+}
 
 #pragma mark -
 #pragma mark Memory

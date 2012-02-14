@@ -2,8 +2,8 @@
 //  Asset.h
 //  PhotoApp
 //
-//  Created by  on 12-2-8.
-//  Copyright (c) 2012年 chinarewards. All rights reserved.
+//  Created by apple on 2/14/12.
+//  Copyright (c) 2012 chinarewards. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -19,6 +19,7 @@
 @property (nonatomic, retain) NSNumber * numOfLike;
 @property (nonatomic, retain) NSNumber * numPeopleTag;
 @property (nonatomic, retain) NSString * url;
+@property (nonatomic, retain) NSNumber * videoType;
 @property (nonatomic, retain) NSSet *conAssetRule;
 @property (nonatomic, retain) Event *conEvent;
 @property (nonatomic, retain) NSSet *conPeopleTag;

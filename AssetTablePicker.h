@@ -45,6 +45,8 @@
     UIInterfaceOrientation previousOrigaton;
     NSInteger lastRow;
     NSUInteger selectedRow;
+    NSInteger photoCount;
+    NSInteger videoCount;
     TagSelector *tagSelector;
     Album *album;
 }

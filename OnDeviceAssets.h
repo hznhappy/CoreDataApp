@@ -13,8 +13,7 @@
     NSMutableDictionary *deviceAssetsList;
     NSMutableArray *urls;
     NSMutableDictionary *devicePeopleList;
-    NSInteger photoCount;
-    NSInteger videoCount;
+    
     ALAssetsLibrary * library;
     
 }
@@ -22,8 +21,7 @@
 @property (nonatomic,strong)NSMutableDictionary *  devicePeopleList;
 @property (nonatomic,strong) ALAssetsLibrary * library;
 @property (nonatomic,strong)NSMutableArray *urls;
-@property (nonatomic,assign)NSInteger photoCount;
-@property (nonatomic,assign)NSInteger videoCount;
+
 -(ALAsset *) getAsset:(NSString *) l;
 -(void) refreshData;
 

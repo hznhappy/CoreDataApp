@@ -131,7 +131,11 @@
         newAsset.date = [inputFormatter dateFromString:strDate];
       //  NSLog(@"date = %@", newAsset.date);*/
        
-        
+        if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
+            newAsset.videoType = [NSNumber numberWithBool:YES];
+        }else{
+            newAsset.videoType = [NSNumber numberWithBool:NO];;
+        }
         newAsset.latitude=[NSNumber numberWithDouble:0.0];
         newAsset.longitude=[NSNumber numberWithDouble:0.0];
         newAsset.numOfLike=[NSNumber numberWithInt:0];
