@@ -118,10 +118,11 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
                                                        object:self 
                                                      userInfo:dic];
-    NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
+    NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"editplay" 
                                                        object:self 
                                                      userInfo:dic1];
+
 }
 -(void)alertView:(UIAlertView *)alert1 didDismissWithButtonIndex:(NSInteger)buttonIndex{
     switch (buttonIndex) {

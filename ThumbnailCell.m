@@ -11,8 +11,8 @@
 @implementation ThumbnailCell
 @synthesize selectionDelegate;
 @synthesize rowNumber;
-
--(void)displayThumbnails:(NSArray *)array count:(NSUInteger)count{
+-(void)displayThumbnails:(NSArray *)array count:(NSUInteger)count action:(BOOL)act
+{
     PhotoAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     CGRect frame = CGRectMake(4, 2, 75, 75);
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -44,7 +44,7 @@
                 [thumImageView addSubview:[self addVideoOverlay]];
                 
             }
-            if([dbAsset.numPeopleTag intValue] != 0)
+            if([dbAsset.numPeopleTag intValue] != 0&&!act)
             {   
                 NSString *numStr = [NSString stringWithFormat:@"%@",dbAsset.numPeopleTag];
                 [thumImageView addSubview:[self addTagnumberOverlay:numStr]];

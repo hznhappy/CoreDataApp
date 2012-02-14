@@ -18,20 +18,6 @@ int j=1,count=0;
 
 -(void)viewDidLoad
 {  
-    
-   /* ABAddressBookRef addressBook = ABAddressBookCreate();
-    
-    CFArrayRef results = ABAddressBookCopyArrayOfAllPeople(addressBook);
-    
-    for(int i = 0; i < CFArrayGetCount(results); i++)
-    {
-          ABRecordRef person = CFArrayGetValueAtIndex(results, i);
-        ABRecordID recId = ABRecordGetRecordID(person);
-        //NSNumber *fid=[NSNumber numberWithInt:recId];
-        NSString *fid1=[NSString stringWithFormat:@"%d",recId];
-        NSLog(@"FID:%@",fid1);
-        
-    }*/
     NSMutableArray *parray1=[[NSMutableArray alloc]init];
 
     self.IdList=parray1;
@@ -54,33 +40,33 @@ int j=1,count=0;
  }
 -(void)creatButton
 {
-    NSMutableArray* buttons = [[NSMutableArray alloc] initWithCapacity:2];
-    tools = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 100,45)];
-    tools.barStyle = UIBarStyleBlack;
+   // NSMutableArray* buttons = [[NSMutableArray alloc] initWithCapacity:2];
+    //tools = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 100,45)];
+    //tools.barStyle = UIBarStyleBlack;
     NSString *a=NSLocalizedString(@"Back", @"button");
     NSString *b=NSLocalizedString(@"Edit", @"button");
     UIBarButtonItem *BackButton=[[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleBordered target:self action:@selector(toggleback)];
     self.navigationItem.leftBarButtonItem=BackButton;
-    UIBarButtonItem *addButon=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(toggleAdd:)];
+   // UIBarButtonItem *addButon=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(toggleAdd:)];
     editButton = [[UIBarButtonItem alloc] initWithTitle:b style:UIBarButtonItemStyleBordered target:self action:@selector(toggleEdit:)];
-    addButon.style = UIBarButtonItemStyleBordered;
+   // addButon.style = UIBarButtonItemStyleBordered;
     editButton.style = UIBarButtonItemStyleBordered;
-    [buttons addObject:editButton];
-    [buttons addObject:addButon];
-    [tools setItems:buttons animated:NO];
-    UIBarButtonItem *myBtn = [[UIBarButtonItem alloc] initWithCustomView:tools];
-    self.navigationItem.rightBarButtonItem = myBtn;
+    //[buttons addObject:editButton];
+   // [buttons addObject:addButon];
+    //[tools setItems:buttons animated:NO];
+   // UIBarButtonItem *myBtn = [[UIBarButtonItem alloc] initWithCustomView:tools];
+    self.navigationItem.rightBarButtonItem = editButton;
     
 }
 -(void)creatButton1
 {
     NSString *b=NSLocalizedString(@"Edit", @"button");
-    UIBarButtonItem *addButon=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(toggleAdd:)];
+   
     editButton = [[UIBarButtonItem alloc] initWithTitle:b style:UIBarButtonItemStyleBordered target:self action:@selector(toggleEdit:)];
-    addButon.style = UIBarButtonItemStyleBordered;
+    
     editButton.style = UIBarButtonItemStyleBordered;
-    self.navigationItem.rightBarButtonItem = addButon;
-    self.navigationItem.leftBarButtonItem = editButton;
+    
+    self.navigationItem.rightBarButtonItem = editButton;
     
 }
 
@@ -158,9 +144,25 @@ int j=1,count=0;
     NSString *a=NSLocalizedString(@"Edit", @"title");
     NSString *b=NSLocalizedString(@"Done", @"title");
     if (self.tableView.editing) {
+        editButton.style=UIBarButtonItemStyleBordered;
         editButton.title = a;
+        if(bo!=nil)
+        {
+            NSString *c=NSLocalizedString(@"Back", @"button");
+            UIBarButtonItem *BackButton=[[UIBarButtonItem alloc]initWithTitle:c style:UIBarButtonItemStyleBordered target:self action:@selector(toggleback)];
+            self.navigationItem.leftBarButtonItem=BackButton;
+        }
+        else
+        {
+            
+        self.navigationItem.leftBarButtonItem=nil;
+        }
     }else{
+        editButton.style=UIBarButtonItemStyleDone;
         editButton.title = b;
+        UIBarButtonItem *addButon=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(toggleAdd:)];
+        addButon.style = UIBarButtonItemStyleBordered;
+        self.navigationItem.leftBarButtonItem = addButon;
     }
     [self.tableView setEditing:!self.tableView.editing animated:YES];
     
@@ -176,13 +178,14 @@ int j=1,count=0;
     bool1=NO;
     tools.alpha=1;
     tools.barStyle = UIBarStyleBlack;
-    self.navigationController.navigationBar.barStyle=UIBarStyleBlack;    
+    self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
+    //self.navigationController.navigationBar.barStyle=UIBarStyleBlack;    
 }
 -(void)viewWillDisappear:(BOOL)animated
 {   if(bool1==NO)
 {
     tools.alpha=0;
-    self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
+    //self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
     
 } 
 }
@@ -288,8 +291,9 @@ int j=1,count=0;
     
 }
 - (void)tableView:(UITableView *)table didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-   
-   [self dismissModalViewControllerAnimated:YES];
+   if(bo!=nil)
+   {
+  [self dismissModalViewControllerAnimated:YES];
  
     People *selectedPeople = [self.result objectAtIndex:indexPath.row];
     [self dismissModalViewControllerAnimated:YES];
@@ -298,7 +302,33 @@ int j=1,count=0;
     [[NSNotificationCenter defaultCenter]postNotificationName:@"addTagPeople" 
                                                        object:self 
                                                      userInfo:dic];
-    
+   
+   }
+    else
+    {
+    People *favorate11=[self.result objectAtIndex:indexPath.row];
+    NSPredicate *pre=[NSPredicate predicateWithFormat:@"conPeople==%@",favorate11];
+    self.as=[appDelegate.dataSource simpleQuery:@"PeopleTag" predicate:pre sortField:nil sortOrder:YES];
+    NSMutableArray *WE=[[NSMutableArray alloc]init];
+    for(int i=0;i<[self.as count];i++)
+    {
+        PeopleTag *PT=[self.as objectAtIndex:i];
+        [WE addObject:PT.conAsset];
+    }
+    NSMutableDictionary *dic = nil;
+        NSString *a=nil;
+        if (favorate11.firstName == nil) {
+            a = [NSString stringWithFormat:@"%@",favorate11.lastName];
+        }
+        else if(favorate11.lastName == nil)
+        {
+            a = [NSString stringWithFormat:@"%@",favorate11.firstName];
+        } 
+        else
+            a = [NSString stringWithFormat:@"%@ %@",favorate11.lastName, favorate11.firstName];
+    dic =[NSMutableDictionary dictionaryWithObjectsAndKeys:WE, @"myAssets",a,@"title",nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"pushPeopleThumbnailView" object:nil userInfo:dic];
+    }
     [table deselectRowAtIndexPath:indexPath animated:YES];
 }
 
@@ -320,26 +350,26 @@ int j=1,count=0;
 }
 -(void)deletePeople
 {
-    for(int i=0;i<[self.as count];i++)
+   /* for(int i=0;i<[self.as count];i++)
     {
         PeopleTag *PT=[self.as objectAtIndex:i];
         PT.conAsset.numPeopleTag = [NSNumber numberWithInt:[PT.conAsset.numPeopleTag intValue]-1];  
         [favorate1 removeConPeopleTagObject:PT];
         [PT.conAsset removeConPeopleTagObject:PT];
-    }
+    }*/
     [appDelegate.dataSource.coreData.managedObjectContext deleteObject:favorate1];
     [self.result removeObject:favorate1];
     [appDelegate.dataSource.coreData saveContext]; 
     [self table];    
     
-    NSDictionary *dic= [NSDictionary dictionaryWithObjectsAndKeys:nil];
+  /*   NSDictionary *dic= [NSDictionary dictionaryWithObjectsAndKeys:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
                                                        object:self 
                                                      userInfo:dic];
-    NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
+   NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
                                                        object:self 
-                                                     userInfo:dic1];
+                                                     userInfo:dic1];*/
 }
 
 -(void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker

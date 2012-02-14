@@ -26,7 +26,6 @@
 #pragma mark UIViewController Methods
 
 -(void)viewDidLoad {
-    
     lockMode = NO;
     done = YES;
     action=YES;
@@ -59,10 +58,11 @@
 	[self.table setAllowsSelection:NO];
     [self setWantsFullScreenLayout:YES];
     
-    NSString *a=NSLocalizedString(@"Cancel", @"title");
+    NSString *a=NSLocalizedString(@"Tag", @"title");
     NSString *d=NSLocalizedString(@"Please enter a password", @"title");
     NSString *c=NSLocalizedString(@"ok", @"title");
-    cancel = [[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleDone target:self action:@selector(cancelTag)];
+    cancel = [[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleBordered target:self action:@selector(cancelTag)];
+     self.navigationItem.rightBarButtonItem = cancel;
     alert1 = [[UIAlertView alloc]initWithTitle:d  message:@"\n" delegate:self cancelButtonTitle:c otherButtonTitles: a,nil];  
     passWord = [[UITextField alloc] initWithFrame:CGRectMake(12, 40, 260, 30)];  
     passWord.backgroundColor = [UIColor whiteColor];  
@@ -205,8 +205,39 @@
 #pragma mark -
 #pragma mark ButtonAction Methods
 -(void)cancelTag{
-    self.navigationItem.hidesBackButton = NO;
-    self.navigationItem.rightBarButtonItem = nil;
+    NSString *a=NSLocalizedString(@"Tag", @"title");
+    NSString *b=NSLocalizedString(@"Cance", @"title");
+    if([cancel.title isEqualToString:a])
+    {
+        cancel.style=UIBarButtonItemStyleDone;
+        cancel.title=b;
+        NSString *a=NSLocalizedString(@"Lock", @"title");
+        if([self.lock.title isEqualToString:a])
+        {
+            mode = YES;
+            save.enabled=YES;
+            reset.enabled=YES;
+            self.navigationItem.hidesBackButton = YES;
+            self.navigationItem.rightBarButtonItem = cancel;
+            viewBar.hidden = YES;
+            tagBar.hidden = NO;
+            action=NO;
+            [self.table reloadData];
+        }
+        else
+        {
+            
+            [alert1 show];
+        }
+
+    }
+    else
+    {
+        cancel.style=UIBarButtonItemStyleBordered;
+        cancel.title=a;
+        
+    //self.navigationItem.hidesBackButton = NO;
+   // self.navigationItem.rightBarButtonItem = nil;
     tagBar.hidden = YES;
     viewBar.hidden = NO;
     mode = NO;
@@ -218,10 +249,12 @@
     [self.UrlList removeAllObjects];
     tagSelector.mypeople=nil;
     [self.table reloadData];
+    }
 }
 
 -(IBAction)actionButtonPressed{
-    
+    NSLog(@"DE");
+ 
     NSString *a=NSLocalizedString(@"Lock", @"title");
     if([self.lock.title isEqualToString:a])
     {
@@ -233,7 +266,7 @@
         viewBar.hidden = YES;
         tagBar.hidden = NO;
         action=NO;
-      //  [self.table reloadData];
+       [self.table reloadData];
     }
     else
     {
@@ -277,23 +310,33 @@
 }
 
 -(IBAction)saveTags{
+    NSString *b=NSLocalizedString(@"please select tag name", @"message");
+    NSString *a=NSLocalizedString(@"note", @"button");
+    NSString *c=NSLocalizedString(@"ok", @"button");
+    NSString *d=NSLocalizedString(@"please select tag photo" ,@"message");
+
     if([tagSelector tagPeople]==nil)
     {
-        
-        NSString *message=[[NSString alloc] initWithFormat:
-                           @"please select tag name"];
-        
-        
         UIAlertView *alert = [[UIAlertView alloc]
-                              initWithTitle:@"note"
-                              message:message
+                              initWithTitle:a
+                              message:b
                               delegate:self
                               cancelButtonTitle:nil
-                              otherButtonTitles:@"OK!",nil];
+                              otherButtonTitles:c,nil];
+        [alert show]; 
+    }
+    else if([tagRow count]==0)
+    {
+        UIAlertView *alert = [[UIAlertView alloc]
+                              initWithTitle:a
+                              message:d
+                              delegate:self
+                              cancelButtonTitle:nil
+                              otherButtonTitles:c,nil];
         [alert show];
         
+        
     }
-    
     else
     {
         for(int i=0;i<[self.UrlList count];i++)
@@ -301,15 +344,16 @@
             Asset *asset = [self.UrlList objectAtIndex:i];
             [tagSelector saveTagAsset:asset];
         }
-       
          [self cancelTag];
+        NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"editplay" 
+                                                           object:self 
+                                                         userInfo:dic1];
+
     }
     [self.UrlList removeAllObjects];
     [self.tagRow removeAllObjects];
-    NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:@"def",@"name",nil];
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"addplay" 
-                                                       object:self 
-                                                     userInfo:dic1];
+      
 }
 -(IBAction)resetTags{
     [self.tagRow removeAllObjects];
@@ -432,9 +476,10 @@
                 [assetsInRow addObject:dbAsset];
             }
         }
-        [cell displayThumbnails:assetsInRow count:loopCount];
+        [cell displayThumbnails:assetsInRow count:loopCount action:action];
         
         if (!action) {
+            NSLog(@"DSDS");
             for (NSInteger i = 0; i<loopCount; i++) {
                 NSInteger row = (indexPath.row*loopCount)+i;
                 if (row<[self.crwAssets count]) {

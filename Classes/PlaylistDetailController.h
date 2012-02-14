@@ -19,8 +19,11 @@
 #import "PeopleRuleDetail.h"
 #import "AlbumDataSource.h"
 #import "DateRule.h"
+#import <AddressBook/AddressBook.h>
+#import <AddressBookUI/AddressBookUI.h>
 @class PhotoAppDelegate;
-@interface PlaylistDetailController : UIViewController<UITableViewDelegate,UITableViewDataSource,MPMediaPickerControllerDelegate,UITextFieldDelegate> {
+@interface PlaylistDetailController : UIViewController<UITableViewDelegate,UITableViewDataSource,MPMediaPickerControllerDelegate,UITextFieldDelegate
+,ABPeoplePickerNavigationControllerDelegate> {
     PhotoAppDelegate * appDelegate;
     AmptsPhotoCoreData * coreData;
     AlbumDataSource *AL;
@@ -44,6 +47,7 @@
     UITableViewCell *dateRule;
     UITableViewCell *DateRangeCell;
     UITableViewCell *StopDateRangeCell;
+    UITableViewCell *AddPeopleCell;
     UITextField *startText;
     UITextField *stopText;
     UIButton *AddButton1;
@@ -63,6 +67,7 @@
     
     NSMutableArray *userNames;
     NSMutableArray *selectedIndexPaths;
+    NSMutableArray *IdList;
     UILabel *state;
     BOOL mySwc;
     AlbumController *album;
@@ -77,6 +82,7 @@
 @property(nonatomic,strong)AmptsPhotoCoreData *coreData;
 @property(nonatomic,strong)NSMutableArray *list;
 @property(nonatomic,strong)NSMutableArray *nameList;
+@property(nonatomic,strong)NSMutableArray *IdList;
 
 @property(nonatomic,strong)IBOutlet UITableView *listTable;
 @property(nonatomic,strong)IBOutlet UITableViewCell *textFieldCell;
@@ -89,7 +95,7 @@
 @property(nonatomic,strong)IBOutlet UITableViewCell *DateRangeCell;
 @property(nonatomic,strong)IBOutlet UITableViewCell *StopDateRangeCell;
 @property(nonatomic,strong)IBOutlet UITableViewCell *dateRule;
-
+@property(nonatomic,strong)IBOutlet UITableViewCell *AddPeopleCell;
 
 
 @property(nonatomic,strong)IBOutlet UILabel *tranLabel;
@@ -118,6 +124,7 @@
 -(IBAction)DateRuleButton;
 -(IBAction)sortKeyButton;
 -(IBAction)sortOrderButton;
+-(IBAction)AddContacts;
 -(UIButton *)getStateButton;
 -(IBAction)playAlbumPhotos:(id)sender;
 -(void)insert:(NSInteger)Row rule:(NSString *)rule;
@@ -128,4 +135,5 @@
 -(void)setDate;
 -(void)setSort;
 -(void)setOrder;
+-(void)table;
 @end

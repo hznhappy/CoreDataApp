@@ -30,7 +30,7 @@
 @property (nonatomic, unsafe_unretained) id<ThumbnailCellSelectionDelegate> selectionDelegate;
 
 
--(void)displayThumbnails:(NSArray *)array count:(NSUInteger)count;
+-(void)displayThumbnails:(NSArray *)array count:(NSUInteger)count action:(BOOL) act;
 -(UIView *)addTagnumberOverlay:(NSString *)numbe;
 -(UIImageView *)addTagOverlayWhenSelected;
 -(UIView *)addVideoOverlay;

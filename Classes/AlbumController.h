@@ -26,5 +26,6 @@
 -(IBAction)toggleEdit:(id)sender;
 -(IBAction)toggleAdd:(id)sender;
 -(void)tabled:(NSNotification *)note;
+-(void)editTable;
 -(Album *)getAlbumInRow:(NSInteger)row;
 @end
