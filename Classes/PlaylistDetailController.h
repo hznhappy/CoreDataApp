@@ -48,6 +48,9 @@
     UITableViewCell *DateRangeCell;
     UITableViewCell *StopDateRangeCell;
     UITableViewCell *AddPeopleCell;
+    UITableViewCell *sortOrderCell;
+    
+    
     UITextField *startText;
     UITextField *stopText;
     UIButton *AddButton1;
@@ -64,12 +67,14 @@
     UISegmentedControl *DateSeg;
     UISegmentedControl *sortSeg;
     UISegmentedControl *sortOrder;
+    UISwitch *sortSw;
     
     NSMutableArray *userNames;
     NSMutableArray *selectedIndexPaths;
     NSMutableArray *IdList;
     UILabel *state;
     BOOL mySwc;
+    BOOL sortSwc;
     AlbumController *album;
     NSMutableArray *playrules_idList;
     UIButton *stateButton;
@@ -96,8 +101,8 @@
 @property(nonatomic,strong)IBOutlet UITableViewCell *StopDateRangeCell;
 @property(nonatomic,strong)IBOutlet UITableViewCell *dateRule;
 @property(nonatomic,strong)IBOutlet UITableViewCell *AddPeopleCell;
-
-
+@property(nonatomic,strong)IBOutlet UITableViewCell *sortOrderCell;
+@property(nonatomic,strong)IBOutlet UISwitch *sortSw;
 @property(nonatomic,strong)IBOutlet UILabel *tranLabel;
 @property(nonatomic,strong)IBOutlet UILabel *musicLabel;
 @property(nonatomic,strong)IBOutlet UITextField *textField;
@@ -125,6 +130,7 @@
 -(IBAction)sortKeyButton;
 -(IBAction)sortOrderButton;
 -(IBAction)AddContacts;
+-(IBAction)upSort:(id)sender;
 -(UIButton *)getStateButton;
 -(IBAction)playAlbumPhotos:(id)sender;
 -(void)insert:(NSInteger)Row rule:(NSString *)rule;
@@ -136,4 +142,6 @@
 -(void)setSort;
 -(void)setOrder;
 -(void)table;
+
+-(IBAction)text;
 @end

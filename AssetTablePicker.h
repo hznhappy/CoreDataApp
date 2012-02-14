@@ -10,7 +10,7 @@
 
 @class TagSelector;
 @class Album;
-
+@class AlbumDataSource;
 
 @interface AssetTablePicker : UIViewController<ThumbnailCellSelectionDelegate,UITableViewDelegate,UITableViewDataSource>
 {
@@ -23,20 +23,24 @@
     UIBarButtonItem *lock;
 	UIAlertView *alert1;
     UITextField *passWord;
-
+    
 	NSMutableArray *crwAssets;
     NSMutableArray *tagRow;
     NSMutableArray *UrlList;
+    NSMutableArray *assertList;
+    NSMutableArray *inAssert;
   
     BOOL mode;
     BOOL load;
     BOOL done;
+    BOOL as;
     BOOL action;
     BOOL lockMode;
+  
     
   
- 
-    NSNumber *val;
+    AlbumDataSource *dataSource;
+    //NSNumber *val;
     UITextField *passWord2;
   
    
@@ -62,7 +66,9 @@
 @property (nonatomic,strong) NSMutableArray *crwAssets;
 @property (nonatomic,strong) NSMutableArray *UrlList;
 @property (nonatomic,strong)NSMutableArray *likeAssets;
-@property (nonatomic,strong)NSNumber *val;
+
+@property (nonatomic,strong)NSMutableArray *assertList;
+//@property (nonatomic,strong)NSNumber *val;
 @property (nonatomic,strong)Album *album;
 -(IBAction)actionButtonPressed;
 -(IBAction)playPhotos;

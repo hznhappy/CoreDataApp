@@ -10,9 +10,10 @@
 #import "TagSelector.h"
 #import "Album.h"
 #import "PeopleTag.h"
+#import "PhotoAppDelegate.h"
 @implementation AssetTablePicker
 @synthesize crwAssets;
-@synthesize table,val;
+@synthesize table;
 @synthesize viewBar,tagBar;
 @synthesize save,reset,UrlList;
 @synthesize lock;
@@ -20,21 +21,32 @@
 @synthesize tagRow;
 @synthesize album;
 @synthesize likeAssets;
+@synthesize assertList;
 #pragma mark -
 #pragma mark UIViewController Methods
 
 -(void)viewDidLoad {
+    PhotoAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    dataSource = appDelegate.dataSource;
+    if(album==nil)
+    {
+        NSLog(@"yes");
+        lock.enabled=NO;
+
+        
+    }
     lockMode = NO;
     done = YES;
     action=YES;
+    as=NO;
     mode = NO;
     tagBar.hidden = YES;
     save.enabled = NO;
     reset.enabled = NO;
     photoCount = 0;
     videoCount = 0;
-    for (Asset *as in self.crwAssets) {
-        if ([as.videoType boolValue]) {
+    for (Asset *ast in self.crwAssets) {
+        if ([ast.videoType boolValue]) {
             videoCount += 1;
         }else{
             photoCount += 1;
@@ -44,6 +56,8 @@
     
     self.tagRow=[[NSMutableArray alloc]init];
     self.UrlList=[[NSMutableArray alloc] init];
+    assertList=[[NSMutableArray alloc]init];
+    inAssert=[[NSMutableArray alloc]init];
     self.likeAssets = [[NSMutableArray alloc]init];
     NSString *b=NSLocalizedString(@"Back", @"title");
     UIButton* backButton = [UIButton buttonWithType:101]; // left-pointing shape!
@@ -57,11 +71,11 @@
     [self.table setSeparatorColor:[UIColor clearColor]];
 	[self.table setAllowsSelection:NO];
     [self setWantsFullScreenLayout:YES];
-    
-    NSString *a=NSLocalizedString(@"Tag", @"title");
+    NSString *e=NSLocalizedString(@"Tag", @"title");
+    NSString *a=NSLocalizedString(@"Cance", @"title");
     NSString *d=NSLocalizedString(@"Please enter a password", @"title");
     NSString *c=NSLocalizedString(@"ok", @"title");
-    cancel = [[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleBordered target:self action:@selector(cancelTag)];
+    cancel = [[UIBarButtonItem alloc]initWithTitle:e style:UIBarButtonItemStyleBordered target:self action:@selector(cancelTag)];
      self.navigationItem.rightBarButtonItem = cancel;
     alert1 = [[UIAlertView alloc]initWithTitle:d  message:@"\n" delegate:self cancelButtonTitle:c otherButtonTitles: a,nil];  
     passWord = [[UITextField alloc] initWithFrame:CGRectMake(12, 40, 260, 30)];  
@@ -69,10 +83,6 @@
     passWord.secureTextEntry = YES;
     [alert1 addSubview:passWord];  
     alert1.tag=1;
-//    oritation = [UIApplication sharedApplication].statusBarOrientation;
-//    [self resetTableContentInset];
-    
-    //[self.table performSelector:@selector(reloadData) withObject:nil afterDelay:.3];
     [table reloadData];    
     NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
     [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
@@ -114,11 +124,12 @@
     }
 }
 -(void)alertView:(UIAlertView *)alert11 didDismissWithButtonIndex:(NSInteger)buttonIndex{
-    NSString *pass=[NSString stringWithFormat:@"%@",val];
+    NSString *pass=[NSString stringWithFormat:@"%@",dataSource.password];
     NSString *a=NSLocalizedString(@"Lock", @"title");
     NSString *b=NSLocalizedString(@"note", @"title");
     NSString *c=NSLocalizedString(@"ok", @"title");
     NSString *d=NSLocalizedString(@"The password is wrong", @"title");
+    NSString *e=NSLocalizedString(@"UnLock", @"title");
     if(alert11.tag==2)
     {
         switch (buttonIndex) {
@@ -130,6 +141,9 @@
                 {
                     NSUserDefaults *defaults1=[NSUserDefaults standardUserDefaults]; 
                     [defaults1 setObject:passWord2.text forKey:@"name_preference"]; 
+                    self.lock.title=e;
+                    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults]; 
+                    dataSource.password=[defaults objectForKey:@"name_preference"];
                 }
                 break;
             case 1:
@@ -233,11 +247,8 @@
     }
     else
     {
-        cancel.style=UIBarButtonItemStyleBordered;
-        cancel.title=a;
-        
-    //self.navigationItem.hidesBackButton = NO;
-   // self.navigationItem.rightBarButtonItem = nil;
+    cancel.style=UIBarButtonItemStyleBordered;
+    cancel.title=a;
     tagBar.hidden = YES;
     viewBar.hidden = NO;
     mode = NO;
@@ -249,12 +260,20 @@
     [self.UrlList removeAllObjects];
     tagSelector.mypeople=nil;
     [self.table reloadData];
+    /*if([tagSelector.canAssert count]>0)
+    {NSLog(@"1");
+        for(int i=0;i<[tagSelector.canAssert count];i++)
+        {
+            Asset *a=(Asset *)[tagSelector.canAssert objectAtIndex:i];
+            NSLog(@"2:%@",a);
+            [tagSelector saveTagAsset:a];
+        }
+    
+    }*/
     }
 }
 
 -(IBAction)actionButtonPressed{
-    NSLog(@"DE");
- 
     NSString *a=NSLocalizedString(@"Lock", @"title");
     if([self.lock.title isEqualToString:a])
     {
@@ -282,9 +301,9 @@
     NSString *c=NSLocalizedString(@"ok", @"title");
     if([self.lock.title isEqualToString:a])
     { 
-        NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults]; 
-        val=[defaults objectForKey:@"name_preference"];
-        if(val==nil)
+        NSLog(@"HUI:%@",dataSource.password);
+        NSString *password=[NSString stringWithFormat:@"%@",dataSource.password];
+        if(password==nil||password.length==0)
         { 
           
             UIAlertView *alert2 = [[UIAlertView alloc]initWithTitle:d  message:@"\n" delegate:self cancelButtonTitle:c otherButtonTitles:e,nil]; 
@@ -339,6 +358,15 @@
     }
     else
     {
+        if([assertList count]>0)
+        {
+            for(int i=0;i<[assertList count];i++)
+            {
+                Asset *asset=[assertList objectAtIndex:i];
+                [tagSelector deleteTag:asset];
+            }
+        }
+        
         for(int i=0;i<[self.UrlList count];i++)
         {   
             Asset *asset = [self.UrlList objectAtIndex:i];
@@ -364,12 +392,16 @@
     [self.UrlList removeAllObjects];
     [self.tagRow removeAllObjects];
     tagSelector.add=@"NO";
+    as=YES;
+    [assertList removeAllObjects];
     [tagSelector selectTagNameFromFavorites];
 }
 -(IBAction)selectFromAllNames{
     [self.tagRow removeAllObjects];
     [self.UrlList removeAllObjects];
     tagSelector.add=@"NO";
+    as=YES;
+    [assertList removeAllObjects];
     [tagSelector selectTagNameFromContacts];
 }
 -(IBAction)playPhotos{
@@ -442,12 +474,14 @@
             if (row<[self.crwAssets count]) {
                 
                 Asset *dbAsset = [self.crwAssets objectAtIndex:row];
+                if(as==YES)
+                {
                 if([tagSelector tag:dbAsset]==YES)
                 {
                     NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
-                    NSLog(@"selectedIndex:%@",selectedIndex);
                     [tagRow addObject:selectedIndex];
                     //[cell checkTagSelection:selectedIndex];
+                }
                 }
                 [assetsInRow addObject:dbAsset];
             }
@@ -486,11 +520,13 @@
     }
     else
     {
+        as=NO;
         if([self.tagRow containsObject:row])
         {
             [self.UrlList removeObject:asset];
             [self.tagRow removeObject:row];
-            [tagSelector deleteTag:asset];
+            [assertList addObject:asset];
+           // [tagSelector deleteTag:asset];
                       
         }
         else

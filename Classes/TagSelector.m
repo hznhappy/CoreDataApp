@@ -19,7 +19,10 @@
 //@dynamic mypeople;
 @synthesize mypeople;
 @synthesize add;
+
 -(TagSelector *)initWithViewController:(UIViewController *)controller{
+  
+    
     self = [super init];
     if (self) {
         PhotoAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
@@ -34,9 +37,6 @@
 -(void)addTagPeople:(NSNotification *)note{
     NSDictionary *dic = [note userInfo];
     mypeople=[dic objectForKey:@"people"];
-    NSLog(@"adddd:%@",add);
-  //  if([viewController isKindOfClass:[PhotoViewController class]])
-   // { 
     if([add isEqualToString:@"YES"])
     { 
         [self addTagName];
@@ -72,10 +72,12 @@
     for (int i=0; i<[list count]; i++) {
         PeopleTag *peopleTag =[list objectAtIndex:i];
         if([peopleTag.conPeople isEqual:mypeople])
-        {
+        { 
             [mypeople removeConPeopleTagObject:peopleTag];
             [asset removeConPeopleTagObject:peopleTag];
             asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]-1];
+           
+           
         }
     }
     [dataSource.coreData saveContext];
@@ -103,6 +105,7 @@
 }
 
 -(void)saveTagAsset:(Asset *)asset{
+    NSLog(@"save");
     if([add isEqualToString:@"YES"])
     {
         NSPredicate *pre=[NSPredicate predicateWithFormat:@"conAsset==%@",asset];
@@ -131,6 +134,7 @@
   }
 -(void)save:(Asset *)asset
 {
+    NSLog(@"3:%@",mypeople.firstName);
     asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]+1];
     PeopleTag  *peopleTag= [NSEntityDescription insertNewObjectForEntityForName:@"PeopleTag" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
     peopleTag.conAsset = asset;

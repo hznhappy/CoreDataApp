@@ -14,15 +14,12 @@
 @synthesize favorate1;
 @synthesize as;
 int j=1,count=0;
-
-
 -(void)viewDidLoad
 {  
+    [self.navigationItem setTitle:@"Favorite"];
     NSMutableArray *parray1=[[NSMutableArray alloc]init];
 
     self.IdList=parray1;
-    //self.as=parray2;
-
     [self table];
     bool1 = NO;
     if(bo!=nil)
@@ -40,21 +37,12 @@ int j=1,count=0;
  }
 -(void)creatButton
 {
-   // NSMutableArray* buttons = [[NSMutableArray alloc] initWithCapacity:2];
-    //tools = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 100,45)];
-    //tools.barStyle = UIBarStyleBlack;
     NSString *a=NSLocalizedString(@"Back", @"button");
     NSString *b=NSLocalizedString(@"Edit", @"button");
     UIBarButtonItem *BackButton=[[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleBordered target:self action:@selector(toggleback)];
     self.navigationItem.leftBarButtonItem=BackButton;
-   // UIBarButtonItem *addButon=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(toggleAdd:)];
     editButton = [[UIBarButtonItem alloc] initWithTitle:b style:UIBarButtonItemStyleBordered target:self action:@selector(toggleEdit:)];
-   // addButon.style = UIBarButtonItemStyleBordered;
     editButton.style = UIBarButtonItemStyleBordered;
-    //[buttons addObject:editButton];
-   // [buttons addObject:addButon];
-    //[tools setItems:buttons animated:NO];
-   // UIBarButtonItem *myBtn = [[UIBarButtonItem alloc] initWithCustomView:tools];
     self.navigationItem.rightBarButtonItem = editButton;
     
 }
@@ -69,27 +57,6 @@ int j=1,count=0;
     self.navigationItem.rightBarButtonItem = editButton;
     
 }
-
-
-//-(void)nobody
-//{
-//    
-//    NSString *selectIdOrder1=[NSString stringWithFormat:@"select id from idOrder where id=0"];
-//    NSMutableArray *IDList=[da selectOrderId:selectIdOrder1];
-//    if([IDList count]==0)
-//    {
-//        NSString *insertUserTable= [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@(ID,NAME) VALUES(%d,'%@')",UserTable,0,@"NoBody"];
-//        NSLog(@"%@",insertUserTable);
-//        [da insertToTable:insertUserTable];
-//        NSString *insertIdOrder= [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@(ID) VALUES(%d)",idOrder,0];
-//        NSLog(@"%@",insertIdOrder);
-//        [da insertToTable:insertIdOrder];
-//        
-//    }
-//    NSString *selectIdOrder=[NSString stringWithFormat:@"select id from idOrder"];
-//    self.list=[da selectOrderId:selectIdOrder];
-//    
-//}
 -(IBAction)toggleAdd:(id)sender
 {  
     bool1=YES;
@@ -171,6 +138,11 @@ int j=1,count=0;
 {
     [self dismissModalViewControllerAnimated:YES];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"resetToolBar" object:nil];
+    NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
+                                                       object:self 
+                                                     userInfo:dic1];
+
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -222,6 +194,18 @@ int j=1,count=0;
 	
 }
 
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
+           editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return (indexPath.row == 0) ? UITableViewCellEditingStyleNone : UITableViewCellEditingStyleDelete;
+}
+-(BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(indexPath.row==0)
+    {
+        return NO;
+    }
+    return YES;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -236,7 +220,11 @@ int j=1,count=0;
 	if (cell == nil) {
 		cell=[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
 	}
-    
+    if(indexPath.row==0)
+    {
+       cell.textLabel.textColor=[UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
+        
+    }
     People *am = (People *)[result objectAtIndex:indexPath.row];
     if (am.firstName == nil) {
         cell.textLabel.text = [NSString stringWithFormat:@"%@",am.lastName];
@@ -277,7 +265,6 @@ int j=1,count=0;
    
     else
     {
-        NSLog(@"yes");
         if(editingStyle==UITableViewCellEditingStyleDelete)
         {
             [appDelegate.dataSource.coreData.managedObjectContext deleteObject:favorate1];
@@ -380,10 +367,15 @@ int j=1,count=0;
 
 -(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
-    
-    People *p=[self.result objectAtIndex:fromIndexPath.row];
-    [self.result removeObjectAtIndex:fromIndexPath.row];
-    [self.result insertObject:p atIndex:toIndexPath.row];
+    if([toIndexPath row]>1)
+    {
+        People *p=[self.result objectAtIndex:fromIndexPath.row];
+        [self.result removeObjectAtIndex:fromIndexPath.row];
+        [self.result insertObject:p atIndex:toIndexPath.row];
+    }
+    [self.tableView reloadData];
+
+  
 
 } 
 
