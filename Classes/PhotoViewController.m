@@ -908,6 +908,26 @@
 
 -(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result{
     [controller dismissModalViewControllerAnimated:YES];
+    NSString *mailError = nil;
+    switch (result)
+    {
+        case MessageComposeResultCancelled:
+                
+            break;
+        case MessageComposeResultSent:
+            
+            break;
+        case MessageComposeResultFailed:mailError = @"Send messages failed,please try again...";
+            
+            break;
+        default:
+        
+            break;
+    }
+    if (mailError != nil) {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:mailError delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+	}
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
 }
 
@@ -925,7 +945,7 @@
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error{
 	
 	[self dismissModalViewControllerAnimated:YES];
-	
+    
 	NSString *mailError = nil;
 	
 	switch (result) {
