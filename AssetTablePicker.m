@@ -445,14 +445,31 @@
             [formatter setNumberStyle:NSNumberFormatterDecimalStyle]; // this line is important!
             if (photoCount == 0) {
                 NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:videoCount]];
-                label.text = [NSString stringWithFormat:@"%@ Videos",videoNumber];
+                if (videoCount == 1) {
+                    label.text = [NSString stringWithFormat:@"%@ Video",videoNumber];
+                }else{
+                    label.text = [NSString stringWithFormat:@"%@ Videos",videoNumber];
+                }
             }else if(videoCount == 0){
                 NSString *photoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:photoCount]];
-                label.text = [NSString stringWithFormat:@"%@ Photos",photoNumber];
+                if (photoCount == 1) {
+                    label.text = [NSString stringWithFormat:@"%@ Photo",photoNumber];
+                }else{
+                    label.text = [NSString stringWithFormat:@"%@ Photos",photoNumber];
+                }
             }else{
                 NSString *photoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:photoCount]];
                 NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:videoCount]];
-                label.text = [NSString stringWithFormat:@"%@ Photos, %@ Videos",photoNumber,videoNumber];
+                if (photoCount == 1 && videoCount == 1) {
+                    label.text = [NSString stringWithFormat:@"%@ Photo, %@ Video",photoNumber,videoNumber];
+                }else if(photoCount == 1 && videoCount != 1){
+                    label.text = [NSString stringWithFormat:@"%@ Photo, %@ Videos",photoNumber,videoNumber];
+                }else if(photoCount != 1 && videoCount == 1){
+                    label.text = [NSString stringWithFormat:@"%@ Photos, %@ Video",photoNumber,videoNumber];
+                }
+                else{
+                    label.text = [NSString stringWithFormat:@"%@ Photos, %@ Videos",photoNumber,videoNumber];
+                }
             }
              [cell addSubview:label]; 
         }

@@ -891,17 +891,14 @@
 #pragma mark -
 #pragma mark Actions
 
-- (void)copyPhoto{
-	
-	[[UIPasteboard generalPasteboard] setData:UIImagePNGRepresentation(((PhotoImageView*)[self pageDisplayedAtIndex:currentPageIndex]).imageView.image) forPasteboardType:@"public.png"];
-	
-}
-
 -(void)messagePhoto{
     MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc]init];
      messageController.messageComposeDelegate = self;
 //     messageController.recipients = [NSArray arrayWithObject:@"23234567"];  
 //     messageController.body = @"iPhone OS4";
+    NSData *data = UIImagePNGRepresentation(((PhotoImageView*)[self pageDisplayedAtIndex:currentPageIndex]).imageView.image);
+    NSString *string = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    messageController.body = string;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
      [self presentModalViewController:messageController animated:YES];
 }
