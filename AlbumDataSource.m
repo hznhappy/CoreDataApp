@@ -132,7 +132,7 @@
         
         newAsset=[[Asset alloc]initWithEntity:entity insertIntoManagedObjectContext:[coreData managedObjectContext]];
         newAsset.url=[[[alAsset defaultRepresentation]url]description];
-        NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
+      /*  NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
        // NSLog(@"strdate:%@",strDate);
        // NSString* string = @"Wed, 05 May 2011 10:50:00";
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
@@ -142,7 +142,7 @@
         [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
         //[inputFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"Asia/Shanghai"]];
         newAsset.date = [inputFormatter dateFromString:strDate];
-      //  NSLog(@"date = %@", newAsset.date);
+      //  NSLog(@"date = %@", newAsset.date);*/
        
         if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
             newAsset.videoType = [NSNumber numberWithBool:YES];
