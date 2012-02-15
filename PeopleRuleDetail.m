@@ -2,8 +2,8 @@
 //  PeopleRuleDetail.m
 //  PhotoApp
 //
-//  Created by  on 12-2-8.
-//  Copyright (c) 2012年 chinarewards. All rights reserved.
+//  Created by apple on 2/15/12.
+//  Copyright (c) 2012 chinarewards. All rights reserved.
 //
 
 #import "PeopleRuleDetail.h"

@@ -277,7 +277,6 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 }
 
 - (void)showCopyMenu:(NSSet*)touch {
-    NSLog(@"I'm tryin' Ringo, I'm tryin' reeeeal hard.");
     [self becomeFirstResponder];
     // bring up editing menu.
     UIMenuController *theMenu = [UIMenuController sharedMenuController];
@@ -285,7 +284,8 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     // doing it any way to see if it helps the "not showing up" problem...
     UITouch *tc = [touch anyObject];
     CGPoint center = [tc locationInView:self];
-    CGRect selectionRect = CGRectMake(center.x, center.y, self.frame.size.width, self.frame.size.height);
+    NSLog(@"the touch point is %@",NSStringFromCGPoint(center));
+    CGRect selectionRect = CGRectMake(center.x-50, center.y, 20, 20);
     [theMenu setTargetRect:selectionRect inView:self];
     [theMenu setMenuVisible:YES animated:YES]; // <-- doesn't show up...
 }
@@ -384,6 +384,7 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
         return self.imageView;
     }
 }
+
 -(void)scrollViewDidZoom:(UIScrollView *)scrollView{
     if (scrollView.zoomScale > 1.0f) {				
 		CGFloat height, width;	

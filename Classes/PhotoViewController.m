@@ -891,23 +891,40 @@
 #pragma mark -
 #pragma mark Actions
 
-- (void)copyPhoto{
-	
-	[[UIPasteboard generalPasteboard] setData:UIImagePNGRepresentation(((PhotoImageView*)[self pageDisplayedAtIndex:currentPageIndex]).imageView.image) forPasteboardType:@"public.png"];
-	
-}
-
 -(void)messagePhoto{
     MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc]init];
      messageController.messageComposeDelegate = self;
 //     messageController.recipients = [NSArray arrayWithObject:@"23234567"];  
 //     messageController.body = @"iPhone OS4";
+    NSData *data = UIImagePNGRepresentation(((PhotoImageView*)[self pageDisplayedAtIndex:currentPageIndex]).imageView.image);
+    NSString *string = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    messageController.body = string;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
      [self presentModalViewController:messageController animated:YES];
 }
 
 -(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result{
     [controller dismissModalViewControllerAnimated:YES];
+    NSString *mailError = nil;
+    switch (result)
+    {
+        case MessageComposeResultCancelled:
+                
+            break;
+        case MessageComposeResultSent:
+            
+            break;
+        case MessageComposeResultFailed:mailError = @"Send messages failed,please try again...";
+            
+            break;
+        default:
+        
+            break;
+    }
+    if (mailError != nil) {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:mailError delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+	}
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
 }
 
@@ -925,7 +942,7 @@
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error{
 	
 	[self dismissModalViewControllerAnimated:YES];
-	
+    
 	NSString *mailError = nil;
 	
 	switch (result) {

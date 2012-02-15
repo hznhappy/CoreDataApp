@@ -2,8 +2,8 @@
 //  Album.h
 //  PhotoApp
 //
-//  Created by  on 12-2-15.
-//  Copyright (c) 2012年 chinarewards. All rights reserved.
+//  Created by apple on 2/15/12.
+//  Copyright (c) 2012 chinarewards. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -14,13 +14,13 @@
 @interface Album : NSManagedObject
 
 @property (nonatomic, retain) NSString * byCondition;
+@property (nonatomic, retain) NSString * chooseType;
 @property (nonatomic, retain) NSNumber * maxAsset;
 @property (nonatomic, retain) NSString * music;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * sortKey;
 @property (nonatomic, retain) NSNumber * sortOrder;
 @property (nonatomic, retain) NSString * transitType;
-@property (nonatomic, retain) NSString * chooseType;
 @property (nonatomic, retain) NSSet *conAssetRule;
 @property (nonatomic, retain) DateRule *conDateRule;
 @property (nonatomic, retain) NSSet *conEventRule;

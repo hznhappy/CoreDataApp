@@ -16,7 +16,9 @@
 
 @interface ThumbnailImageView : UIImageView{
     UIImageView *highlightView;
+    UIMenuController *theMenu;
     NSUInteger thumbnailIndex;
+    BOOL copyMenuShow;
     id<ThumbnailSelectionDelegate>__unsafe_unretained delegate;
 }
 @property(nonatomic,assign)NSUInteger thumbnailIndex;
@@ -24,4 +26,5 @@
 -(ThumbnailImageView *)initWithAsset:(ALAsset*)asset index:(NSUInteger)index;
 -(void)setSelectedView;
 -(void)clearSelection;
+-(void)cancelCopyMenu;
 @end
