@@ -57,7 +57,10 @@
     
 }
 -(void)tabled:(NSNotification *)note{
-   
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    UITableViewCell *cell1 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
+    cell.selectionStyle=UITableViewCellSelectionStyleBlue;
+    cell1.selectionStyle=UITableViewCellSelectionStyleBlue;
     [self.tableView setEditing:!self.tableView.editing animated:NO];
     self.navigationItem.leftBarButtonItem=nil;
     NSString *d=NSLocalizedString(@"Edit", @"button");
@@ -85,22 +88,28 @@
 { 
     [self.tableView reloadData];
 }
-
-
 -(IBAction)toggleEdit:(id)sender
 {
     NSString *c=NSLocalizedString(@"Done", @"button");
     NSString *d=NSLocalizedString(@"Edit", @"button");
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    UITableViewCell *cell1 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
+    
+
     if (self.tableView.editing) {
         editButton.style=UIBarButtonItemStyleBordered;
         editButton.title = d;
         self.navigationItem.leftBarButtonItem=nil;
+        cell.selectionStyle=UITableViewCellSelectionStyleBlue;
+        cell1.selectionStyle=UITableViewCellSelectionStyleBlue;
         
     }
     else{
         editButton.style=UIBarButtonItemStyleDone;
         self.navigationItem.leftBarButtonItem = addButon;
         editButton.title = c;
+        cell.selectionStyle=UITableViewCellSelectionStyleNone;
+        cell1.selectionStyle=UITableViewCellSelectionStyleNone;
     }
 
    [self.tableView setEditing:!self.tableView.editing animated:YES];
@@ -186,10 +195,8 @@
     
 }
 -(void)tableView:(UITableView *)table didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+ 
     if (self.tableView.editing) { 
-        NSString *a=NSLocalizedString(@"note", @"title");
-        NSString *b=NSLocalizedString(@"Inherent members, can not be edited", @"title");
-        NSString *c=NSLocalizedString(@"ok", @"title");
         PlaylistDetailController *detailController = [[PlaylistDetailController alloc]initWithNibName:@"PlaylistDetailController" bundle:[NSBundle mainBundle]];
         detailController.bum = [self getAlbumInRow:indexPath.row];
         detailController.hidesBottomBarWhenPushed = YES;
@@ -198,21 +205,6 @@
             [self.navigationController pushViewController:detailController animated:YES];
             index=indexPath.row;
         }
-        else
-        {
-            UIAlertView *alert = [[UIAlertView alloc]
-                                  initWithTitle:a
-                                  message:b
-                                  delegate:self
-                                  cancelButtonTitle:nil
-                                  otherButtonTitles:c,nil];
-            [alert show];
-            
-        }
-        
-        
-        
-        
     }
     else
     {
@@ -283,6 +275,7 @@
 { 
     NSUInteger fromRow=[fromIndexPath row];
 	NSUInteger toRow=[toIndexPath row];
+    
     if(toRow>1)
     {
         id object=[assets objectAtIndex:fromRow];

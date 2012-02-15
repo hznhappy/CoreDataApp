@@ -63,7 +63,7 @@
 - (void)viewDidLoad
 { 
     self.textField.autocapitalizationType =  UITextAutocapitalizationTypeWords;
-    
+    self.textField.placeholder=@"标题";
     sortSwc=NO;
     NSMutableArray *parry=[[NSMutableArray alloc]init];
     self.selectedIndexPaths=parry;
@@ -947,9 +947,10 @@
    }
 -(void)textFieldDidBeginEditing:(UITextField *)textField2
 {
+
     if(textField2.tag==1)
     {
-        
+        textField.placeholder=nil;
         
         if(textField.text!=nil&&textField.text.length>0)
 
@@ -994,6 +995,7 @@
   
     if(textField.text==nil||textField.text.length==0)
     {
+        textField.placeholder=@"标题";
         NSString *c=NSLocalizedString(@"note", @"title");
         NSString *b=NSLocalizedString(@"ok", @"title");
         NSString *d=NSLocalizedString(@"Rule name can not be empty!", @"title");
