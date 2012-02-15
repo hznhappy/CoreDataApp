@@ -132,18 +132,16 @@
         
         newAsset=[[Asset alloc]initWithEntity:entity insertIntoManagedObjectContext:[coreData managedObjectContext]];
         newAsset.url=[[[alAsset defaultRepresentation]url]description];
-        NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
+      /*  NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
        // NSLog(@"strdate:%@",strDate);
-       // NSString* string = @"Wed, 05 May 2011 10:50:00";
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
         //[inputFormatter setLocale:[NSLocale currentLocale]];
         NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
        [inputFormatter setTimeZone:timeZone1];
         [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
-        //[inputFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"Asia/Shanghai"]];
         newAsset.date = [inputFormatter dateFromString:strDate];
       //  NSLog(@"date = %@", newAsset.date);
-       
+       */
         if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
             newAsset.videoType = [NSNumber numberWithBool:YES];
         }else{
@@ -258,6 +256,7 @@
         AmptsAlbum * album=[[AmptsAlbum alloc]init];
         album.name=[i name];
         album.alblumId=[i objectID];
+        album.object=[i chooseType];
         pre=[self ruleFormation:i];
         if([i.sortOrder boolValue]==YES){
             album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:YES];
