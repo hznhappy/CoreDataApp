@@ -2,7 +2,7 @@
 //  Album.m
 //  PhotoApp
 //
-//  Created by  on 12-2-8.
+//  Created by  on 12-2-15.
 //  Copyright (c) 2012年 chinarewards. All rights reserved.
 //
 
@@ -22,6 +22,7 @@
 @dynamic sortKey;
 @dynamic sortOrder;
 @dynamic transitType;
+@dynamic chooseType;
 @dynamic conAssetRule;
 @dynamic conDateRule;
 @dynamic conEventRule;

@@ -47,6 +47,8 @@
 @synthesize IdList;
 @synthesize sortOrderCell;
 @synthesize sortSw;
+@synthesize chooseCell;
+@synthesize chooseButton;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -60,9 +62,6 @@
 #pragma mark - View lifecycle
 - (void)viewDidLoad
 { 
-    
-    
-    
     self.textField.autocapitalizationType =  UITextAutocapitalizationTypeWords;
     
     sortSwc=NO;
@@ -216,7 +215,7 @@
 #pragma mark -
 #pragma mark UITableView  method
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 5;
+    return 6;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     switch (section) {
@@ -229,9 +228,12 @@
             }
             break;
         case 1:
-            return 2;
+            return 1;
             break;
         case 2:
+            return 2;
+            break;
+        case 3:
             if(sortSwc)
             {
                 return 4;
@@ -241,10 +243,10 @@
                 return 1;
             }
             break;
-        case 3:
+        case 4:
             return 2;
             break;
-        case 4:
+        case 5:
             return [list count];
             break;
         default:
@@ -299,7 +301,38 @@
         }
         return cell;
     }
-    else if(indexPath.section == 1)
+    else if(indexPath.section==1)
+    {
+        UITableViewCell *cell=nil;
+        switch ((rowNum)) {
+            case 0:
+                cell = [tableView dequeueReusableCellWithIdentifier:@"chooseCell"];
+                if (cell == nil) {
+                    cell=self.chooseCell;
+                }
+                break;
+            default:
+                break;
+        }
+        cell.accessoryView = [self chooseButton];
+        if(bum!=nil&&![bum.chooseType isEqualToString:PhotoVideo])
+        {
+        if ([bum.chooseType isEqualToString:Photo]) {
+            chooseButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+            [chooseButton setTitle:Photo forState:UIControlStateNormal];
+            
+            
+        }
+        else if ([bum.chooseType isEqualToString:Video]){
+            chooseButton.backgroundColor = [UIColor colorWithRed:81/255.0 green:142/255.0 blue:72/255.0 alpha:1.0];
+            [chooseButton setTitle:Video forState:UIControlStateNormal];
+            
+        }
+        }
+       
+      return cell;
+    }
+    else if(indexPath.section == 2)
     {
         UITableViewCell *cell = nil;
         switch (rowNum) {
@@ -349,7 +382,7 @@
         return cell;
         
     }
-       else if(indexPath.section == 2)
+       else if(indexPath.section == 3)
     {
         
                UITableViewCell *cell = nil;
@@ -409,7 +442,7 @@
         return cell;
         
     }
-    else if(indexPath.section == 3)
+    else if(indexPath.section == 4)
     {
         UITableViewCell *cell = nil;
         switch (rowNum) {
@@ -433,7 +466,7 @@
         
     }
 
-   else if(indexPath.section == 4) 
+   else if(indexPath.section == 5) 
     {
         static NSString *cellIdentifier = @"nameCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -535,7 +568,7 @@
         [self presentModalViewController:mediaPicker animated:YES];
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
-    if (indexPath.section == 4) {
+    if (indexPath.section == 5) {
         if(textField.text==nil||textField.text.length==0)
         { NSString *c=NSLocalizedString(@"note", @"title");
             NSString *b=NSLocalizedString(@"ok", @"title");
@@ -810,6 +843,45 @@
     [stateButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     return stateButton;
 }
+-(UIButton *)chooseButton{
+    chooseButton = [UIButton buttonWithType:UIButtonTypeCustom];
+   chooseButton.frame = CGRectMake(0, 0, 105, 28);
+    [chooseButton addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
+    [chooseButton setTitle:PhotoVideo forState:UIControlStateNormal];
+    chooseButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
+    [chooseButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
+    return chooseButton;
+}
+-(void)choose:(id)sender{
+    if(bum==nil)
+    {
+        [self album];
+    }
+    UIButton *button = (UIButton *)sender;
+    [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
+    if ([button.titleLabel.text isEqualToString:PhotoVideo]) {
+        button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+        [button setTitle:Photo forState:UIControlStateNormal];
+        bum.chooseType=@"Photo";
+      
+       
+    }
+    else if ([button.titleLabel.text isEqualToString:Photo]){
+        button.backgroundColor = [UIColor colorWithRed:81/255.0 green:142/255.0 blue:72/255.0 alpha:1.0];
+        [button setTitle:Video forState:UIControlStateNormal];
+        bum.chooseType=@"Video";
+  
+    }
+    else
+    {
+        button.backgroundColor =[UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
+        [button setTitle:PhotoVideo forState:UIControlStateNormal]; 
+        bum.chooseType=@"Photo&Video";
+    }
+    bum.name=textField.text;
+    [appDelegate.dataSource.coreData saveContext];
+}
+
 -(void)changeState:(id)sender{
     UIButton *button = (UIButton *)sender;
     UITableViewCell *cell = (UITableViewCell *)[button superview];
@@ -829,6 +901,7 @@
         [self update:Row rule:rule];
     }
 }
+
 -(void)setSelectState:(id)sender{
     UIButton *button = (UIButton *)sender;
     UITableViewCell *cell = (UITableViewCell *)[[button superview] superview];
@@ -1002,9 +1075,11 @@
 }
 
 -(IBAction)resetAll{
+    if([selectedIndexPaths count]>0)
+    {
     for (NSIndexPath *path in selectedIndexPaths) {
         
-        if (path.section == 4) {
+        if (path.section == 5) {
             UITableViewCell *cell = [listTable cellForRowAtIndexPath:path];
             cell.accessoryView = nil;
             for (UIButton *button in cell.contentView.subviews) {
@@ -1028,6 +1103,7 @@
     PeopleRuleDetail *p=[A objectAtIndex:0];
     [bum.conPeopleRule removeConPeopleRuleDetailObject:p];
     [appDelegate.dataSource.coreData saveContext];
+    }
 
 }
 

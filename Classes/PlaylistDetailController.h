@@ -11,6 +11,9 @@
 #import "AlbumController.h"
 #define INCLUDE     @"INCLUDE"
 #define EXCLUDE  @"Exclude"
+#define PhotoVideo @"Photo&Video"
+#define Photo @"Photo"
+#define Video @"Video"
 #define OPTIONAL @"Optional"
 #define Rules    @"Rules"
 #import "AmptsPhotoCoreData.h"
@@ -49,7 +52,7 @@
     UITableViewCell *StopDateRangeCell;
     UITableViewCell *AddPeopleCell;
     UITableViewCell *sortOrderCell;
-    
+    UITableViewCell *chooseCell;
     
     UITextField *startText;
     UITextField *stopText;
@@ -78,6 +81,7 @@
     AlbumController *album;
     NSMutableArray *playrules_idList;
     UIButton *stateButton;
+    UIButton *chooseButton;
     int key;
 }
 
@@ -90,6 +94,7 @@
 @property(nonatomic,strong)NSMutableArray *IdList;
 
 @property(nonatomic,strong)IBOutlet UITableView *listTable;
+@property(nonatomic,strong)IBOutlet UITableViewCell *chooseCell;
 @property(nonatomic,strong)IBOutlet UITableViewCell *textFieldCell;
 @property(nonatomic,strong)IBOutlet UITableViewCell *switchCell;
 @property(nonatomic,strong)IBOutlet UITableViewCell *tranCell;
@@ -117,6 +122,8 @@
 @property(nonatomic,strong)NSMutableArray *selectedIndexPaths;
 @property(nonatomic,strong)NSString *Transtion;
 @property(nonatomic,strong)UIButton *stateButton;
+@property(nonatomic,strong)UIButton *chooseButton;
+
 -(IBAction)hideKeyBoard:(id)sender;
 -(IBAction)updateTable:(id)sender;
 -(IBAction)resetAll;

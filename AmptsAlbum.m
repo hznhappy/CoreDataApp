@@ -10,7 +10,7 @@
 
 
 @implementation AmptsAlbum
-@synthesize name,num,alblumId,isDirty,assetsList;
+@synthesize name,num,alblumId,isDirty,assetsList,object;
 
 
 

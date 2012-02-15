@@ -163,7 +163,9 @@
         NSNumberFormatter *formatter = [NSNumberFormatter new];
         [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
         NSString *countNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:am.num]];
+       
         cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)",am.name, countNumber];
+        
     }else{
         cell.textLabel.text = [NSString stringWithFormat:@"%@",am.name];
     }
@@ -208,6 +210,7 @@
         AmptsAlbum *ampt = [assets objectAtIndex:indexPath.row];
         NSMutableArray *WE = ampt.assetsList;
         Album *album = [self getAlbumInRow:indexPath.row];
+        NSLog(@"album:%@",album.chooseType);
         NSMutableDictionary *dic = nil;
         if (album == nil) {
             dic  = [NSMutableDictionary dictionaryWithObjectsAndKeys:WE, @"myAssets", ampt.name,@"title", nil];

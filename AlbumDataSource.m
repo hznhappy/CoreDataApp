@@ -217,13 +217,12 @@
         AmptsAlbum * album=[[AmptsAlbum alloc]init];
         album.name=[i name];
         album.alblumId=[i objectID];
+        album.object=[i chooseType];
         pre=[self ruleFormation:i];
         if([i.sortOrder boolValue]==YES){
-            NSLog(@"yes");
-            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:[i sortKey]  sortOrder:YES];
+            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:YES];//[i sortkey]
         }else {
-            NSLog(@"no");
-            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:[i sortKey]  sortOrder:NO];
+            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:NO];
             
         }
         
@@ -232,14 +231,12 @@
             NSMutableArray* excludePeople=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:YES];
             if(excludePeople!=nil) {
                 [album.assetsList removeObjectsInArray:excludePeople];
-                //NSLog(@"Exclude predicate : %d , %@",[excludePeople count],pre );
             }
         }
         album.num=[album.assetsList count];
-        // NSLog(@"Album %@ : %d",album.name,album.num);
-        for (Asset* tmpAsset in   album.assetsList) {
-            //NSLog(@"Photo contains: %@",tmpAsset.url);
-        }
+        NSPredicate *newPre = [NSPredicate predicateWithFormat:@"self in %@",album.assetsList];
+        NSArray *array = [((AmptsAlbum*)[assetsBook objectAtIndex:0]).assetsList filteredArrayUsingPredicate:newPre];
+        album.assetsList = [NSMutableArray arrayWithArray:array];
         [assetsBook addObject:album];
         
     }
@@ -252,7 +249,6 @@
     if(index==-1)
     {
     tmp=[self simpleQuery:@"Album" predicate:nil sortField:nil sortOrder:YES];
-    //for(Album* i in tmp ) {
      i=(Album *)[tmp lastObject];
     }
     else
@@ -433,7 +429,6 @@
     } else {
         result=[NSPredicate predicateWithFormat:@"NONE self.date>=%@ and self.date<=%@",[rule startDate],[rule stopDate]];
     }
-    NSLog(@"result:%@",result);
     return result; 
     }
     return nil;
@@ -457,6 +452,17 @@
     return result;
    
 }
+-(NSPredicate *) chooseRule:(Album*) i
+{
+    NSPredicate * result=nil ;
+    if([[i chooseType] isEqualToString:@"Photo"]) {
+        result=[NSPredicate predicateWithFormat:@"some videoType==%@",[NSNumber numberWithBool:NO]];//videoType = [NSNumber numberWithBool:YES]
+    }else {
+        result=[NSPredicate predicateWithFormat:@"videoType==%@",[NSNumber numberWithBool:YES]];          
+    }
+    return result;
+
+}
 -(NSPredicate*) ruleFormation:(Album *)i {
    
     NSPredicate *pre=nil;
@@ -465,10 +471,23 @@
      People Rules or the Face Rules are parsed in here
      
      */
-    
+    if([i chooseType]!=nil&&![[i chooseType]isEqualToString:@"Photo&Video"] )
+    {
+         pre=[self chooseRule:i];
+    }
+
     if ([i conPeopleRule]!=nil) {
         
-        pre=[self parsePeopleRule:[i conPeopleRule]];
+       // pre=[self parsePeopleRule:[i conPeopleRule]];
+        if(pre!=nil)
+        {
+         pre=[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:pre,[self parsePeopleRule:[i conPeopleRule]], nil]];
+        }
+        else
+        {
+            pre=[self parsePeopleRule:[i conPeopleRule]];
+            
+        }
     }
     
     
@@ -477,7 +496,7 @@
      Date Rules are parsed in here
      
      */
-    if ([i conDateRule]!=nil)  {
+       if ([i conDateRule]!=nil)  {
         if(pre!=nil)
        {
             
@@ -487,7 +506,6 @@
         {
            pre=[self parseDateRule:[i conDateRule]];
         }
-        NSLog(@"OOOO:%@",pre);
     }
     
     /*

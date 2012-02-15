@@ -2,6 +2,7 @@
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="878" systemVersion="11C74" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Album" representedClassName="Album">
         <attribute name="byCondition" optional="YES" attributeType="String"/>
+        <attribute name="chooseType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="maxAsset" optional="YES" attributeType="Integer 32" defaultValueString="0"/>
         <attribute name="music" optional="YES" attributeType="String"/>
         <attribute name="name" attributeType="String" indexed="YES"/>
@@ -76,7 +77,7 @@
         <relationship name="conPeople" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="People" inverseName="conPeopleTag" inverseEntity="People" indexed="YES"/>
     </entity>
     <elements>
-        <element name="Album" positionX="63" positionY="36" width="128" height="195"/>
+        <element name="Album" positionX="63" positionY="36" width="128" height="225"/>
         <element name="Asset" positionX="-243" positionY="-45" width="128" height="180"/>
         <element name="AssetRule" positionX="-99" positionY="315" width="128" height="105"/>
         <element name="DateRule" positionX="351" positionY="444" width="128" height="105"/>
