@@ -303,9 +303,8 @@
     { 
         NSLog(@"HUI:%@",dataSource.password);
         NSString *password=[NSString stringWithFormat:@"%@",dataSource.password];
-        if(password==nil||password.length==0)
+        if(dataSource.password==nil||password==nil||password.length==0)
         { 
-          
             UIAlertView *alert2 = [[UIAlertView alloc]initWithTitle:d  message:@"\n" delegate:self cancelButtonTitle:c otherButtonTitles:e,nil]; 
             passWord2= [[UITextField alloc] initWithFrame:CGRectMake(12, 40, 260, 30)];  
             passWord2.backgroundColor = [UIColor whiteColor];  

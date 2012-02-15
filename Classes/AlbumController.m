@@ -163,9 +163,19 @@
         NSNumberFormatter *formatter = [NSNumberFormatter new];
         [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
         NSString *countNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:am.num]];
-       
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)",am.name, countNumber];
-        
+        if([am.object isEqualToString:@"Photo"])
+        {
+            //NSString *a=NSLocalizedString(@"Edit", @"button");
+            cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@) ^照片图像^",am.name, countNumber];
+        }
+        else if([am.object isEqualToString:@"Video"])
+        {
+             cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@) ^视频图像^",am.name, countNumber];
+        }
+        else
+        {
+            cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)",am.name, countNumber];
+        }
     }else{
         cell.textLabel.text = [NSString stringWithFormat:@"%@",am.name];
     }
@@ -177,7 +187,6 @@
 }
 -(void)tableView:(UITableView *)table didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if (self.tableView.editing) { 
-        NSLog(@"3");
         NSString *a=NSLocalizedString(@"note", @"title");
         NSString *b=NSLocalizedString(@"Inherent members, can not be edited", @"title");
         NSString *c=NSLocalizedString(@"ok", @"title");
