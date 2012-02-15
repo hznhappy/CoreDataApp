@@ -155,10 +155,7 @@
 
 	[super viewWillDisappear:animated];
     [theMovie stop];
-    if (timer) {
-        [timer invalidate];
-        timer = nil;
-    }
+    [self cancelPlayPhotoTimer];
     if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
         // back button was pressed.  We know this is true because self is no longer
         // in the navigation stack. 
@@ -1043,11 +1040,13 @@
 -(void)fireTimer{
     [self cancelPlayPhotoTimer];
     playingPhoto = YES;
-    [self setBarsHidden:YES animated:YES];
     timer = [NSTimer scheduledTimerWithTimeInterval:2.5 target:self selector:@selector(playPhoto) userInfo:playPhotoTransition repeats:YES];
 }
 -(void)playPhoto{
-    currentPageIndex+=1;
+    if (!_barsHidden) {
+        [self setBarsHidden:YES animated:YES];
+    }
+    currentPageIndex += 1;
     NSInteger _index = self.currentPageIndex;
     if (_index >= [self.playlist.storeAssets count] || _index < 0) {
         if (timer) {
@@ -1081,6 +1080,7 @@
     else{
         animation.type = animateStyle;
     }
+    NSLog(@"the count is %d and the current is %d ",self.playlist.storeAssets.count,currentPageIndex);
     [self.scrollView.layer addAnimation:animation forKey:@"animation"];
     [self jumpToPageAtIndex:currentPageIndex];
 }
