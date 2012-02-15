@@ -42,7 +42,7 @@
 - (void)doLoadIndex: (NSUInteger) _index;
 - (void)doLoadIndexStr: (NSString*) _index;
 - (void)doLoadImage: (UIImage *) image checkIndex: (NSUInteger) _index;
-
+- (void)showCopyMenu:(NSSet*)touch;
 -(void)setClearImage;
 - (void)rotatePhoto;
 -(void)savePhoto;

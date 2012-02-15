@@ -93,7 +93,7 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
         imageView.clearsContextBeforeDrawing = YES;
 		[_scrollView addSubview:imageView];
 		_imageView = imageView;
-
+       
 		UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
        // [activityView startAnimating];
 		activityView.frame = CGRectMake((CGRectGetWidth(self.frame) / 2) - 15.0f, (CGRectGetHeight(self.frame)/2) - 15.0f , 30.0f, 30.0f);
@@ -107,9 +107,6 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 	}
     return self;
 }
-
-
-
 
 - (void)layoutSubviews{
 	[super layoutSubviews];
@@ -279,10 +276,63 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     //NSLog(@"self.imageview is %@,image is %@,scrollView is %@,self.frame is%@  %d",NSStringFromCGRect(self.imageView.frame),NSStringFromCGSize(self.imageView.image.size),NSStringFromCGRect(self.scrollView.frame),NSStringFromCGRect(self.frame),index);
 }
 
+- (void)showCopyMenu:(NSSet*)touch {
+    NSLog(@"I'm tryin' Ringo, I'm tryin' reeeeal hard.");
+    [self becomeFirstResponder];
+    // bring up editing menu.
+    UIMenuController *theMenu = [UIMenuController sharedMenuController];
+    // do i even need to show a selection? There's really no point for my implementation...
+    // doing it any way to see if it helps the "not showing up" problem...
+    UITouch *tc = [touch anyObject];
+    CGPoint center = [tc locationInView:self];
+    CGRect selectionRect = CGRectMake(center.x, center.y, self.frame.size.width, self.frame.size.height);
+    [theMenu setTargetRect:selectionRect inView:self];
+    [theMenu setMenuVisible:YES animated:YES]; // <-- doesn't show up...
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender 
+{   
+    if (action == @selector(cut:))
+        return NO;
+    else if (action == @selector(copy:))
+        return YES;
+    else if (action == @selector(paste:))
+        return NO;
+    else if (action == @selector(select:) || action == @selector(selectAll:)) 
+        return NO;
+    else
+        return [super canPerformAction:action withSender:sender];
+}
+
+- (BOOL)canBecomeFirstResponder 
+{
+    return YES;
+}
+
+-(void)copy:(id)sender{
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.fullScreen];
+    UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
+    if (data) {
+        [pasteBoard setData:data forPasteboardType:@"fullScreenImage"];
+    }
+}
+
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    
+    [self performSelector:@selector(showCopyMenu:) withObject:touches afterDelay:0.8f];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"PhotoViewToggleBars" object:nil];
     
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCopyMenu:) object:touches];
+}
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCopyMenu:) object:touches];
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCopyMenu:) object:touches];
 }
 #pragma mark -
 #pragma mark UIScrollView Delegate Methods
@@ -381,15 +431,9 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 		}
 	} else {
 		[self layoutScrollViewAnimated];
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"resetCropView" object:nil];
-
 	}
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"ChangeCropView" object:nil];
 }
 
--(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"ChangeCropView" object:nil];
-}
 
 #pragma mark -
 #pragma mark RotateGesture

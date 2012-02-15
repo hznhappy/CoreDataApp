@@ -92,8 +92,12 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
 	[super touchesBegan:touches withEvent:event];
+    [((PhotoImageView*)self.superview) performSelector:@selector(showCopyMenu:) withObject:touches afterDelay:0.8f];
 }
 
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    [NSObject cancelPreviousPerformRequestsWithTarget:((PhotoImageView*)self.superview) selector:@selector(showCopyMenu:) object:nil];
+}
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
 	[super touchesEnded:touches withEvent:event];
 	UITouch *touch = [touches anyObject];
@@ -110,6 +114,7 @@
 		[self zoomRectWithCenter:[[touches anyObject] locationInView:self.superview]];
         
 	}
+    [NSObject cancelPreviousPerformRequestsWithTarget:((PhotoImageView*)self.superview) selector:@selector(showCopyMenu:) object:nil];
 }
 
 @end
