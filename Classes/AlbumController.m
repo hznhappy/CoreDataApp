@@ -163,9 +163,14 @@
         NSNumberFormatter *formatter = [NSNumberFormatter new];
         [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
         NSString *countNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:am.num]];
-       
+         if([am.object isEqualToString:@"Photo"])
+         {
+         cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@) ^照片图像^",am.name, countNumber];
+         }
+         else
+         {
         cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)",am.name, countNumber];
-        
+         }
     }else{
         cell.textLabel.text = [NSString stringWithFormat:@"%@",am.name];
     }
