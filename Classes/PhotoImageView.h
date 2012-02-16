@@ -16,7 +16,8 @@
 @private
 	PhotoScrollView *__unsafe_unretained _scrollView;
 	UIImageView *_imageView;
-	UIActivityIndicatorView *_activityView;
+	//UIActivityIndicatorView *_activityView;
+    UIMenuController *theMenu;
     
     Playlist       *playlist;
     

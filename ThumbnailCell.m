@@ -28,7 +28,7 @@
             thumImageView.delegate = self;
             [self addSubview:thumImageView];
             frame.origin.x = frame.origin.x + frame.size.width + 4;
-            if ([[asset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo]) 
+            if ([dbAsset.videoType boolValue]) 
             {
                 NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
                                                                  forKey:AVURLAssetPreferPreciseDurationAndTimingKey];           
@@ -93,11 +93,18 @@
     
     [length setBackgroundColor:[UIColor clearColor]];
     length.alpha=0.8;
-    NSString *a=[NSString stringWithFormat:@"%d",minute];
-    NSString *b=[NSString stringWithFormat:@"%d",second];
-    length.text=a;
-    length.text=[length.text stringByAppendingString:@":"];
-    length.text=[length.text stringByAppendingString:b];
+    if (minute == 0 && second == 0) {
+        length.text = [NSString stringWithFormat:@"00:00"];
+    }else if(minute != 0 && second == 0){
+        NSString *a=[NSString stringWithFormat:@"%d",minute];
+        length.text = [NSString stringWithFormat:@"%@:00",a];
+    }else{
+        NSString *a=[NSString stringWithFormat:@"%d",minute];
+        NSString *b=[NSString stringWithFormat:@"%d",second];
+        length.text=a;
+        length.text=[length.text stringByAppendingString:@":"];
+        length.text=[length.text stringByAppendingString:b];
+    }
     length.textColor = [UIColor whiteColor];
     length.textAlignment = UITextAlignmentLeft;
     length.font = [UIFont boldSystemFontOfSize:12.0];
@@ -118,6 +125,7 @@
     [overlayView setImage:[UIImage imageNamed:@"selectOverlay.png"]];
     return overlayView;
 }
+
 -(void)checkTagSelection:(NSString *)selectedRow{
     for (UIView *view in self.subviews) {
         if ([view isKindOfClass:[ThumbnailImageView class]] && [selectedRow isEqualToString:[NSString stringWithFormat:@"%d",((ThumbnailImageView *)view).thumbnailIndex]]) {

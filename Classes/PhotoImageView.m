@@ -94,16 +94,18 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 		[_scrollView addSubview:imageView];
 		_imageView = imageView;
        
-		UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-       // [activityView startAnimating];
-		activityView.frame = CGRectMake((CGRectGetWidth(self.frame) / 2) - 15.0f, (CGRectGetHeight(self.frame)/2) - 15.0f , 30.0f, 30.0f);
-		activityView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
-		[self addSubview:activityView];
-		_activityView = activityView;
+//		UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+//       // [activityView startAnimating];
+//		activityView.frame = CGRectMake((CGRectGetWidth(self.frame) / 2) - 15.0f, (CGRectGetHeight(self.frame)/2) - 15.0f , 30.0f, 30.0f);
+//		activityView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
+//		[self addSubview:activityView];
+//		_activityView = activityView;
 		
 		RotateGesture *gesture = [[RotateGesture alloc] initWithTarget:self action:@selector(rotate:)];
 		[self addGestureRecognizer:gesture];
 		
+        UILongPressGestureRecognizer *gr = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showCopyMenu:)];
+        [self addGestureRecognizer:gr];
 	}
     return self;
 }
@@ -187,10 +189,10 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     } else {
         self.imageView.image = image;
     }
-    NSLog(@"image is %@",self.imageView.image);
-    //[_activityView stopAnimating];
-    CGSize imageSize = self.imageView.image.size;
-    NSLog(@"iamgesize is %@",NSStringFromCGSize(imageSize));
+//    NSLog(@"image is %@",self.imageView.image);
+//    [_activityView stopAnimating];
+//    CGSize imageSize = self.imageView.image.size;
+//    NSLog(@"iamgesize is %@",NSStringFromCGSize(imageSize));
     [self layoutScrollViewAnimated];
 }
 
@@ -276,18 +278,19 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
     //NSLog(@"self.imageview is %@,image is %@,scrollView is %@,self.frame is%@  %d",NSStringFromCGRect(self.imageView.frame),NSStringFromCGSize(self.imageView.image.size),NSStringFromCGRect(self.scrollView.frame),NSStringFromCGRect(self.frame),index);
 }
 
-- (void)showCopyMenu:(NSSet*)touch {
+- (void)showCopyMenu:(UILongPressGestureRecognizer *) gestureRecognizer {
     [self becomeFirstResponder];
-    // bring up editing menu.
-    UIMenuController *theMenu = [UIMenuController sharedMenuController];
-    // do i even need to show a selection? There's really no point for my implementation...
-    // doing it any way to see if it helps the "not showing up" problem...
-    UITouch *tc = [touch anyObject];
-    CGPoint center = [tc locationInView:self];
-    NSLog(@"the touch point is %@",NSStringFromCGPoint(center));
-    CGRect selectionRect = CGRectMake(center.x-50, center.y, 20, 20);
-    [theMenu setTargetRect:selectionRect inView:self];
-    [theMenu setMenuVisible:YES animated:YES]; // <-- doesn't show up...
+    if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
+        CGPoint location = [gestureRecognizer locationInView:[gestureRecognizer view]];
+        // bring up editing menu.
+        if(theMenu){
+            theMenu = nil;
+        }
+        theMenu = [UIMenuController sharedMenuController];
+        CGRect selectionRect = CGRectMake(location.x, location.y, 0.0f, 0.0f);
+        [theMenu setTargetRect:selectionRect inView:self];
+        [theMenu setMenuVisible:YES animated:YES]; 
+    }
 }
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender 
@@ -318,27 +321,21 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    [self performSelector:@selector(showCopyMenu:) withObject:touches afterDelay:0.8f];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"PhotoViewToggleBars" object:nil];
     
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCopyMenu:) object:touches];
+    if (theMenu.isMenuVisible) {
+        theMenu.menuVisible = NO;
+    }
 }
 
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCopyMenu:) object:touches];
-}
-
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCopyMenu:) object:touches];
-}
 #pragma mark -
 #pragma mark UIScrollView Delegate Methods
 
 - (void)killZoomAnimationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context{
-	
+	NSLog(@"my scal is %.1f",self.scrollView.zoomScale);
 	if([finished boolValue]){
 		
 		[self.scrollView setZoomScale:1.0f animated:NO];

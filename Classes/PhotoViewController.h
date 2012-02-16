@@ -35,8 +35,8 @@
 
 	UIBarButtonItem *_actionButton;
     UIBarButtonItem *playPhotoButton;
-    //UIBarButtonItem *edit;
-    //UIBarButtonItem *saveItem;
+    UIBarButtonItem *tag;
+    UIBarButtonItem *cancel;
     UILabel *tagCount;
 
     BOOL editing;
@@ -81,7 +81,7 @@
 - (CGRect)frameForPageAtIndex:(NSUInteger)index;
 - (CGSize)contentSizeForPagingScrollView;
 - (CGPoint)contentOffsetForPageAtIndex:(NSUInteger)index;
-
+-(CGRect)frameForTagOverlay;
 //control
 - (void)jumpToPageAtIndex:(NSUInteger)index;
 - (void)hideControlsAfterDelay;

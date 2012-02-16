@@ -38,6 +38,8 @@
         [self selectTagPeople];
         [myscroll setContentSize:CGSizeMake(320, 45*[self.list count])];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(Buttons) name:@"edit" object:nil];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(toggleBars)];
+        [myscroll addGestureRecognizer:tap];
     }
    
     return self;
@@ -154,5 +156,8 @@
 	[UIView commitAnimations];
 }
 
+- (void)toggleBars{
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"PhotoViewToggleBars" object:nil];
+}
 
 @end

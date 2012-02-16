@@ -472,7 +472,7 @@
             label.textAlignment = UITextAlignmentCenter;
             label.textColor = [UIColor grayColor];
             label.font = [UIFont fontWithName:@"Arial" size:20];
-            NSNumberFormatter *formatter = [NSNumberFormatter new];
+            NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
             [formatter setNumberStyle:NSNumberFormatterDecimalStyle]; // this line is important!
             if (photoCount == 0) {
                 NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:videoCount]];
@@ -614,6 +614,11 @@
 	return 79;
 }
 
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    for (ThumbnailCell *cell in self.table.visibleCells) {
+        [cell clearSelection];
+    }
+}
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation{
     oritation = toInterfaceOrientation;
 	return (UIInterfaceOrientationIsPortrait(toInterfaceOrientation) || toInterfaceOrientation == UIInterfaceOrientationPortrait);

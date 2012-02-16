@@ -1061,16 +1061,13 @@
     UISwitch *newSwitcn  = (UISwitch *)sender;
     sortSwc = newSwitcn.on;
     if (newSwitcn.on) {
-     [listTable beginUpdates];
+        [listTable beginUpdates];
         [listTable insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:3],
                                            [NSIndexPath indexPathForRow:2 inSection:3],
                                            [NSIndexPath indexPathForRow:3 inSection:3],nil] withRowAnimation:UITableViewRowAnimationTop];
-        
-
-             [listTable endUpdates];
-        
-    }else{
        
+        [listTable endUpdates];
+    }else{
         [listTable beginUpdates];
         [listTable deleteRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:3],
                                            [NSIndexPath indexPathForRow:2 inSection:3],
