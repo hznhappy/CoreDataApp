@@ -563,6 +563,11 @@
 	return 79;
 }
 
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    for (ThumbnailCell *cell in self.table.visibleCells) {
+        [cell clearSelection];
+    }
+}
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation{
     oritation = toInterfaceOrientation;
 	return (UIInterfaceOrientationIsPortrait(toInterfaceOrientation) || toInterfaceOrientation == UIInterfaceOrientationPortrait);

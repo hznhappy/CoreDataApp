@@ -29,14 +29,56 @@
 		self.backgroundColor = [UIColor blackColor];
 		self.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
 		self.decelerationRate = UIScrollViewDecelerationRateFast;
-		
+        UILongPressGestureRecognizer *gr = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showCopyMenu:)];
+        [self addGestureRecognizer:gr];
     }
     return self;
 }
 
+- (void)showCopyMenu:(UILongPressGestureRecognizer *) gestureRecognizer {
+    [self becomeFirstResponder];
+    if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
+        CGPoint location = [gestureRecognizer locationInView:[gestureRecognizer view]];
+        // bring up editing menu.
+        if (theMenu) {
+            theMenu = nil;
+        }
+        theMenu = [UIMenuController sharedMenuController];
+        CGRect selectionRect = CGRectMake(location.x, location.y, 0.0f, 0.0f);
+        [theMenu setTargetRect:selectionRect inView:self];
+        [theMenu setMenuVisible:YES animated:YES]; 
+    }
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender 
+{   
+    if (action == @selector(cut:))
+        return NO;
+    else if (action == @selector(copy:))
+        return YES;
+    else if (action == @selector(paste:))
+        return NO;
+    else if (action == @selector(select:) || action == @selector(selectAll:)) 
+        return NO;
+    else
+        return [super canPerformAction:action withSender:sender];
+}
+
+- (BOOL)canBecomeFirstResponder 
+{
+    return YES;
+}
+
+-(void)copy:(id)sender{
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:((PhotoImageView*)self.superview).fullScreen];
+    UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
+    if (data) {
+        [pasteBoard setData:data forPasteboardType:@"fullScreenImage"];
+    }
+}
+
 - (void)zoomRectWithCenter:(CGPoint)center{
-	
-	if (self.zoomScale > 1.0f) {
+		if (self.zoomScale > 1.0f) {
         
 		[((PhotoImageView*)self.superview) killScrollViewZoom];
 		return;
@@ -92,14 +134,13 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
 	[super touchesBegan:touches withEvent:event];
-   // [((PhotoImageView*)self.superview) performSelector:@selector(showCopyMenu:) withObject:touches afterDelay:0.8f];
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    //[NSObject cancelPreviousPerformRequestsWithTarget:((PhotoImageView*)self.superview) selector:@selector(showCopyMenu:) object:nil];
-}
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
 	[super touchesEnded:touches withEvent:event];
+    if (theMenu.isMenuVisible) {
+        theMenu.menuVisible = NO;
+    }
 	UITouch *touch = [touches anyObject];
 	if (touch.tapCount == 1) {
 		[self performSelector:@selector(toggleBars) withObject:nil afterDelay:.3];
@@ -109,12 +150,10 @@
         }else{
             self.scrollEnabled = NO;
         }
-       // self.scrollEnabled = !self.scrollEnabled;
 		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(toggleBars) object:nil];
 		[self zoomRectWithCenter:[[touches anyObject] locationInView:self.superview]];
         
 	}
-    //[NSObject cancelPreviousPerformRequestsWithTarget:((PhotoImageView*)self.superview) selector:@selector(showCopyMenu:) object:nil];
 }
 
 @end

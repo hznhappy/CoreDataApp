@@ -28,7 +28,7 @@
             thumImageView.delegate = self;
             [self addSubview:thumImageView];
             frame.origin.x = frame.origin.x + frame.size.width + 4;
-            if ([[asset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo]) 
+            if ([dbAsset.videoType boolValue]) 
             {
                 NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
                                                                  forKey:AVURLAssetPreferPreciseDurationAndTimingKey];           

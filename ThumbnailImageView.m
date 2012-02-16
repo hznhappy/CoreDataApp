@@ -7,7 +7,7 @@
 //
 
 #import "ThumbnailImageView.h"
-
+#import "ThumbnailCell.h"
 @implementation ThumbnailImageView
 @synthesize thumbnailIndex;
 @synthesize delegate;
@@ -65,6 +65,7 @@
     if (data) {
         [pasteBoard setData:data forPasteboardType:@"thumbnail"];
     }
+    [self clearSelection];
 }
 - (BOOL)canBecomeFirstResponder 
 {
@@ -72,6 +73,9 @@
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    for (ThumbnailCell *cell in ((UITableView *)self.superview.superview).visibleCells) {
+        [cell clearSelection];
+    }
     [self performSelector:@selector(showCopyMenu) withObject:nil afterDelay:0.8f];
     [self setSelectedView];
     [self addSubview:highlightView];
@@ -85,7 +89,6 @@
     }else{
         copyMenuShow = NO;
     }
-    NSLog(@"touchEnd");
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -95,7 +98,6 @@
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCopyMenu) object:nil];
     [self cancelCopyMenu];
     [highlightView removeFromSuperview];
-    NSLog(@"cancel");
 }
 
 -(void)cancelCopyMenu{
