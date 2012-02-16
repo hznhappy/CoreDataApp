@@ -1062,16 +1062,16 @@
     sortSwc = newSwitcn.on;
     if (newSwitcn.on) {
         [listTable beginUpdates];
-        [listTable insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:2],
-                                           [NSIndexPath indexPathForRow:2 inSection:2],
-                                           [NSIndexPath indexPathForRow:3 inSection:2],nil] withRowAnimation:UITableViewRowAnimationTop];
+        [listTable insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:3],
+                                           [NSIndexPath indexPathForRow:2 inSection:3],
+                                           [NSIndexPath indexPathForRow:3 inSection:3],nil] withRowAnimation:UITableViewRowAnimationTop];
        
         [listTable endUpdates];
     }else{
         [listTable beginUpdates];
-        [listTable deleteRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:2],
-                                           [NSIndexPath indexPathForRow:2 inSection:2],
-                                           [NSIndexPath indexPathForRow:3 inSection:2],nil] withRowAnimation:UITableViewRowAnimationTop];
+        [listTable deleteRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:3],
+                                           [NSIndexPath indexPathForRow:2 inSection:3],
+                                           [NSIndexPath indexPathForRow:3 inSection:3],nil] withRowAnimation:UITableViewRowAnimationTop];
         [listTable endUpdates];
     }
 }

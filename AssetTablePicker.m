@@ -451,7 +451,7 @@
             label.textAlignment = UITextAlignmentCenter;
             label.textColor = [UIColor grayColor];
             label.font = [UIFont fontWithName:@"Arial" size:20];
-            NSNumberFormatter *formatter = [NSNumberFormatter new];
+            NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
             [formatter setNumberStyle:NSNumberFormatterDecimalStyle]; // this line is important!
             if (photoCount == 0) {
                 NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:videoCount]];
