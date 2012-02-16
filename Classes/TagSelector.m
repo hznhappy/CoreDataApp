@@ -39,13 +39,19 @@
     mypeople=[dic objectForKey:@"people"];
     if([add isEqualToString:@"YES"])
     { 
+        NSLog(@"DS");
         [self addTagName];
         [self resetToolBar];
     }
-    NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:nil];
+    else if([add isEqualToString:@"NO"])
+    {
+        NSLog(@"else");
+    NSString *people=[NSString stringWithFormat:@"%@ %@",mypeople.firstName,mypeople.lastName];
+    NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:people,@"name",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
                                                        object:self 
                                                      userInfo:dic1];
+    }
 }
 -(BOOL)tag:(Asset *)asset
 {
@@ -105,7 +111,6 @@
 }
 
 -(void)saveTagAsset:(Asset *)asset{
-    NSLog(@"save");
     if([add isEqualToString:@"YES"])
     {
         NSPredicate *pre=[NSPredicate predicateWithFormat:@"conAsset==%@",asset];
@@ -180,10 +185,15 @@
         [self addTagName];
         [self resetToolBar];
     }
-    NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:nil];
+    else
+    {
+    NSString *people=[NSString stringWithFormat:@"%@ %@",mypeople.firstName,mypeople.lastName];
+    NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:people,@"name",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
                                                        object:self 
                                                      userInfo:dic1];
+    }
+
     return NO;
 }
 

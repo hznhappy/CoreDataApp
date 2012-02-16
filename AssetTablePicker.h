@@ -37,7 +37,7 @@
     BOOL action;
     BOOL lockMode;
   
-    
+    UIButton *name;
   
     AlbumDataSource *dataSource;
     //NSNumber *val;
@@ -77,6 +77,6 @@
 -(IBAction)resetTags;
 -(IBAction)selectFromFavoriteNames;
 -(IBAction)selectFromAllNames;
--(void)EditPhotoTag;
+-(void)EditPhotoTag:(NSNotification *)note;
 //-(void)resetTableContentInset;
 @end

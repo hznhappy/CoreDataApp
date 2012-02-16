@@ -26,6 +26,7 @@
 #pragma mark UIViewController Methods
 
 -(void)viewDidLoad {
+     name= [UIButton buttonWithType:UIButtonTypeCustom];
     PhotoAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     dataSource = appDelegate.dataSource;
     if(album==nil)
@@ -86,7 +87,7 @@
     [table reloadData];    
     NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
     [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EditPhotoTag)name:@"EditPhotoTag" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EditPhotoTag:)name:@"EditPhotoTag" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableData) name:@"reloadTableData" object:nil];
 }
 
@@ -100,8 +101,17 @@
 //    }
 //    self.table.contentInset = inset;
 //}
--(void)EditPhotoTag
+-(void)EditPhotoTag:(NSNotification *)note
 {
+    
+    NSDictionary *dic = [note userInfo];
+    NSLog(@"FD");
+   // tagSelector.mypeople.f
+   
+   
+    [name setTitle:[dic objectForKey:@"name"] forState:UIControlStateNormal];
+    name.frame = CGRectMake(0, 0,100, 40);
+    [tagBar addSubview:name];
     [self.tagRow removeAllObjects];
     [self.table reloadData];
 }
@@ -542,7 +552,7 @@
             [self.UrlList removeObject:asset];
             [self.tagRow removeObject:row];
             [assertList addObject:asset];
-           // [tagSelector deleteTag:asset];
+            [tagSelector deleteTag:asset];
                       
         }
         else

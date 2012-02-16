@@ -81,7 +81,6 @@
     NSEntityDescription *entity1 = [NSEntityDescription entityForName:@"People" inManagedObjectContext:[coreData managedObjectContext]]; 
     People *favorate=[[People alloc]initWithEntity:entity1 insertIntoManagedObjectContext:[coreData managedObjectContext]];
     favorate.firstName=@"NoBody";
-    favorate.favorite=[NSNumber numberWithBool:YES];
     favorate.addressBookId=[NSNumber numberWithInt:-1];
    }
    
@@ -141,8 +140,13 @@
        [inputFormatter setTimeZone:timeZone1];
         [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
         newAsset.date = [inputFormatter dateFromString:strDate];
+<<<<<<< HEAD
       //  NSLog(@"date = %@", newAsset.date);
        */
+=======
+      //  NSLog(@"date = %@", newAsset.date);*/
+       
+>>>>>>> origin/master
         if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
             newAsset.videoType = [NSNumber numberWithBool:YES];
         }else{

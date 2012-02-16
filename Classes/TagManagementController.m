@@ -96,6 +96,7 @@ int j=1,count=0;
         favorate.firstName=personName;
         favorate.lastName=lastname;
         favorate.addressBookId=[NSNumber numberWithInt:[fid intValue]];
+        favorate.favorite=[NSNumber numberWithBool:YES];
         [appDelegate.dataSource.coreData saveContext];
         [self table];
     }
@@ -151,23 +152,23 @@ int j=1,count=0;
     tools.alpha=1;
     tools.barStyle = UIBarStyleBlack;
     self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
-    //self.navigationController.navigationBar.barStyle=UIBarStyleBlack;    
 }
 -(void)viewWillDisappear:(BOOL)animated
 {   if(bool1==NO)
 {
     tools.alpha=0;
-    //self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
-    
 } 
 }
 -(void)table
 {
+   //favorate.favorite=[NSNumber numberWithBool:YES];
     appDelegate = [[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *managedObjectContext=[appDelegate.dataSource.coreData managedObjectContext];
     NSFetchRequest *request=[[NSFetchRequest alloc]init];
     NSEntityDescription *entity=[NSEntityDescription entityForName:@"People" inManagedObjectContext:managedObjectContext];
     [request setEntity:entity];
+    NSPredicate *pre = [NSPredicate predicateWithFormat:@"some favorite==%@",[NSNumber numberWithBool:YES]];
+    [request setPredicate:pre];
     NSError *error;
     NSMutableArray *parray1=[[NSMutableArray alloc]init];
     self.result=parray1;

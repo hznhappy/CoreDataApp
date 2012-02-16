@@ -106,8 +106,6 @@
    }
 -(void)deleteButton
 {
-    NSLog(@"0");
-    
     PeopleTag *pt = [self.list objectAtIndex:TAG];
     [pt.conPeople removeConPeopleTagObject:pt];
     NSLog(@"conassetpt:%@",pt.conAsset);
