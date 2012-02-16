@@ -19,10 +19,10 @@
 //@dynamic mypeople;
 @synthesize mypeople;
 @synthesize add;
-
+@synthesize peopleList;
 -(TagSelector *)initWithViewController:(UIViewController *)controller{
   
-    
+    peopleList=[[NSMutableArray alloc]init];
     self = [super init];
     if (self) {
         PhotoAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
@@ -36,48 +36,84 @@
 
 -(void)addTagPeople:(NSNotification *)note{
     NSDictionary *dic = [note userInfo];
-    mypeople=[dic objectForKey:@"people"];
+    peopleList=[dic objectForKey:@"people"];
+  //  mypeople=[dic objectForKey:@"people"];
     if([add isEqualToString:@"YES"])
     { 
-        NSLog(@"DS");
         [self addTagName];
         [self resetToolBar];
     }
     else if([add isEqualToString:@"NO"])
     {
-        NSLog(@"else");
-    NSString *people=[NSString stringWithFormat:@"%@ %@",mypeople.firstName,mypeople.lastName];
-    NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:people,@"name",nil];
+        add=nil;
+    NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:peopleList,@"name",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
                                                        object:self 
-                                                     userInfo:dic1];
+                                                     userInfo:dic1]; 
     }
 }
 -(BOOL)tag:(Asset *)asset
 {
-     NSPredicate *pre = [NSPredicate predicateWithFormat:@"conAsset == %@",asset];
+    if([peopleList count]!=0)
+    {
+
+    NSPredicate *pre = [NSPredicate predicateWithFormat:@"conAsset == %@",asset];
     NSArray *list = [dataSource simpleQuery:@"PeopleTag" predicate:pre sortField:nil sortOrder:NO];
     if([list count]>0)
+    {NSMutableArray *pet=[[NSMutableArray alloc]init];
+        for (int i=0; i<[list count]; i++)
     {
-        for (int i=0; i<[list count]; i++) {
+        PeopleTag *peopleTag =[list objectAtIndex:i];
+        [pet addObject:peopleTag.conPeople];
+    }
+        for(People *p in peopleList)
+        {
+        if(![pet containsObject:p])
+        {
+                return NO;
+            }
+        }
+        return YES;
+        /*for (int i=0; i<[list count]; i++)
+        {
             PeopleTag *peopleTag =[list objectAtIndex:i];
-            if([peopleTag.conPeople isEqual:mypeople])
+            // if([peopleList count]>1)
+             //{
+                 for(int i=0;i<[peopleList count];i++)
+                 {NSLog(@"1");
+                     if(![peopleTag.conPeople isEqual:[peopleList objectAtIndex:i]])
+                     {
+                         NSLog(@"2");
+                         return NO;
+                     }
+                 }
+                 return YES;
+            NSLog(@"3");*/
+            // }
+            /*else
+            {
+            if([peopleTag.conPeople isEqual:[peopleList objectAtIndex:0]])
             {
                 return YES;
             }
-        }
+            }*/
+        // }
+    }
+    
     }
    
     return NO;
 }
 -(void)deleteTag:(Asset *)asset
 {
-    
+    NSLog(@"delete");
+    for(People *pe in peopleList)
+    {
     NSPredicate *pre = [NSPredicate predicateWithFormat:@"conAsset == %@",asset];
     NSArray *list = [dataSource simpleQuery:@"PeopleTag" predicate:pre sortField:nil sortOrder:NO];
     for (int i=0; i<[list count]; i++) {
         PeopleTag *peopleTag =[list objectAtIndex:i];
-        if([peopleTag.conPeople isEqual:mypeople])
+        if([peopleTag.conPeople isEqual:pe])
         { 
             [mypeople removeConPeopleTagObject:peopleTag];
             [asset removeConPeopleTagObject:peopleTag];
@@ -86,9 +122,9 @@
            
         }
     }
-    [dataSource.coreData saveContext];
-
-    
+   
+    }
+     [dataSource.coreData saveContext];
     
 }
 -(People *)tagPeople{
@@ -113,40 +149,76 @@
 -(void)saveTagAsset:(Asset *)asset{
     if([add isEqualToString:@"YES"])
     {
-        NSPredicate *pre=[NSPredicate predicateWithFormat:@"conAsset==%@",asset];
-        NSArray *potag=[dataSource simpleQuery:@"PeopleTag" predicate:pre sortField:nil sortOrder:YES];
-        NSMutableArray *peo=[[NSMutableArray alloc]init];
-        for(int i=0;i<[potag count];i++)
+        for(People *po in peopleList)
         {
-            PeopleTag *pt1=(PeopleTag *)[potag objectAtIndex:i];
-            [peo addObject:pt1.conPeople];
-        }
-        if([peo containsObject:mypeople])
-        {
-            UIAlertView *alert1=[[UIAlertView alloc] initWithTitle:@"提示" message:@"已作为标记" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
-            [alert1 show];
-        }
-        else
-        {
+            BOOL b=[self deletePeople:asset people:po];
+            if(b==NO)
+            {
+            
             [self save:asset];
             [(PhotoViewController *)viewController numtag];
         }
+  }
     }
     else
-    {
-    [self save:asset];
+    { 
+        [self save:asset];
     }
-  }
+     }
+-(BOOL)deletePeople:(Asset *)asset people:(People *)pe
+{ 
+    NSPredicate *pre = [NSPredicate predicateWithFormat:@"conAsset == %@",asset];
+    NSArray *list = [dataSource simpleQuery:@"PeopleTag" predicate:pre sortField:nil sortOrder:NO];
+    if([list count]>0)
+    {NSMutableArray *pet=[[NSMutableArray alloc]init];
+        for (int i=0; i<[list count]; i++)
+        {
+            PeopleTag *peopleTag =[list objectAtIndex:i];
+            [pet addObject:peopleTag.conPeople];
+        }
+        
+        if([pet containsObject:pe])
+        {
+            return YES;
+        }
+    }
+   
+
+
+     return NO;
+}
 -(void)save:(Asset *)asset
 {
-    NSLog(@"3:%@",mypeople.firstName);
-    asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]+1];
-    PeopleTag  *peopleTag= [NSEntityDescription insertNewObjectForEntityForName:@"PeopleTag" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
-    peopleTag.conAsset = asset;
-    [asset addConPeopleTagObject:peopleTag];
-    peopleTag.conPeople = mypeople;
-    //mypeople.tag=YES;
-    [mypeople addConPeopleTagObject:peopleTag];
+    if([peopleList count]>1)
+    {
+        for(People *pe in peopleList)
+        {
+            BOOL add1=[self deletePeople:asset people:pe];
+            if(add1==NO)
+            {
+                asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]+1];
+                PeopleTag  *peopleTag= [NSEntityDescription insertNewObjectForEntityForName:@"PeopleTag" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
+                peopleTag.conAsset = asset;
+                [asset addConPeopleTagObject:peopleTag];
+                peopleTag.conPeople = pe;
+                [pe addConPeopleTagObject:peopleTag];
+            }
+        }
+    }
+   
+    else
+    {
+    for(People *pe in peopleList)
+    {
+        asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]+1];
+        PeopleTag  *peopleTag= [NSEntityDescription insertNewObjectForEntityForName:@"PeopleTag" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
+        peopleTag.conAsset = asset;
+        [asset addConPeopleTagObject:peopleTag];
+        peopleTag.conPeople = pe;
+        [pe addConPeopleTagObject:peopleTag];
+        
+    }
+    }
     [dataSource.coreData saveContext];
 
 }
@@ -154,7 +226,8 @@
 #pragma mark People picker delegate
 -(BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person{
     
-    
+    [peopleList removeAllObjects];
+    mypeople=nil;
     NSString *firstName = (__bridge_transfer NSString*)ABRecordCopyValue(person, kABPersonFirstNameProperty);
     NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(person, kABPersonLastNameProperty);
     
@@ -187,8 +260,24 @@
     }
     else
     {
-    NSString *people=[NSString stringWithFormat:@"%@ %@",mypeople.firstName,mypeople.lastName];
-    NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:people,@"name",nil];
+        add=nil;
+       /* NSString *people=nil;
+        if(mypeople.firstName==nil)
+        {
+            people=[NSString stringWithFormat:@"%@",mypeople.lastName];
+        }
+        else if(mypeople.lastName==nil)
+        {
+            people=[NSString stringWithFormat:@"%@",mypeople.firstName];
+            
+        }
+        else
+        {
+            people=[NSString stringWithFormat:@"%@ %@",mypeople.firstName,mypeople.lastName];
+        }*/
+        [peopleList addObject:mypeople];
+
+    NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:peopleList,@"name",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
                                                        object:self 
                                                      userInfo:dic1];

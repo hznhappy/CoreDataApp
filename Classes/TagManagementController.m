@@ -13,15 +13,17 @@
 @synthesize result,IdList;
 @synthesize favorate1;
 @synthesize as;
+@synthesize choosePeople;
 int j=1,count=0;
 -(void)viewDidLoad
 {  
     [self.navigationItem setTitle:@"Favorite"];
     NSMutableArray *parray1=[[NSMutableArray alloc]init];
-
+    choosePeople=[[NSMutableArray alloc]init];
     self.IdList=parray1;
     [self table];
     bool1 = NO;
+    choose=NO;
     if(bo!=nil)
     {  
         [self creatButton];
@@ -37,8 +39,9 @@ int j=1,count=0;
  }
 -(void)creatButton
 {
+    self.tableView.allowsMultipleSelectionDuringEditing=YES;
     NSString *a=NSLocalizedString(@"Back", @"button");
-    NSString *b=NSLocalizedString(@"Edit", @"button");
+    NSString *b=NSLocalizedString(@"choose", @"button");
     UIBarButtonItem *BackButton=[[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleBordered target:self action:@selector(toggleback)];
     self.navigationItem.leftBarButtonItem=BackButton;
     editButton = [[UIBarButtonItem alloc] initWithTitle:b style:UIBarButtonItemStyleBordered target:self action:@selector(toggleEdit:)];
@@ -111,14 +114,34 @@ int j=1,count=0;
 { 
     NSString *a=NSLocalizedString(@"Edit", @"title");
     NSString *b=NSLocalizedString(@"Done", @"title");
+     NSString *c=NSLocalizedString(@"choose", @"button");
     if (self.tableView.editing) {
         editButton.style=UIBarButtonItemStyleBordered;
-        editButton.title = a;
+        if(bo==nil)
+        {
+            editButton.title = a;
+        }
+        else
+        {
+            editButton.title=c;
+        }
+
         if(bo!=nil)
         {
             NSString *c=NSLocalizedString(@"Back", @"button");
             UIBarButtonItem *BackButton=[[UIBarButtonItem alloc]initWithTitle:c style:UIBarButtonItemStyleBordered target:self action:@selector(toggleback)];
             self.navigationItem.leftBarButtonItem=BackButton;
+            choose=NO;
+            if([choosePeople count]!=0)
+            {
+            [self dismissModalViewControllerAnimated:YES];
+           NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:choosePeople,@"people",nil];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"addTagPeople" 
+                                                               object:self 
+                                                             userInfo:dic];
+            }
+           
+ 
         }
         else
         {
@@ -126,11 +149,17 @@ int j=1,count=0;
         self.navigationItem.leftBarButtonItem=nil;
         }
     }else{
+        [choosePeople removeAllObjects];
         editButton.style=UIBarButtonItemStyleDone;
+       
         editButton.title = b;
-        UIBarButtonItem *addButon=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(toggleAdd:)];
+              UIBarButtonItem *addButon=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(toggleAdd:)];
         addButon.style = UIBarButtonItemStyleBordered;
         self.navigationItem.leftBarButtonItem = addButon;
+        if(bo!=nil)
+        {
+        choose=YES;
+        }
     }
     [self.tableView setEditing:!self.tableView.editing animated:YES];
     
@@ -279,14 +308,23 @@ int j=1,count=0;
     
 }
 - (void)tableView:(UITableView *)table didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(choose==YES)
+    {
+         People *selectedPeople = [self.result objectAtIndex:indexPath.row];
+        [choosePeople addObject:selectedPeople];
+    }
+    else
+    {
    if(bo!=nil)
    {
-  [self dismissModalViewControllerAnimated:YES];
+    [choosePeople removeAllObjects];
+       
+   [self dismissModalViewControllerAnimated:YES];
  
     People *selectedPeople = [self.result objectAtIndex:indexPath.row];
     [self dismissModalViewControllerAnimated:YES];
-    
-    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:selectedPeople,@"people",nil];
+       [choosePeople addObject:selectedPeople];
+    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:choosePeople,@"people",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"addTagPeople" 
                                                        object:self 
                                                      userInfo:dic];
@@ -317,9 +355,18 @@ int j=1,count=0;
     dic =[NSMutableDictionary dictionaryWithObjectsAndKeys:WE, @"myAssets",a,@"title",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"pushPeopleThumbnailView" object:nil userInfo:dic];
     }
-    [table deselectRowAtIndexPath:indexPath animated:YES];
+        [table deselectRowAtIndexPath:indexPath animated:YES];
+    }
+    
+  
+    
 }
-
+-(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"delete:%d",indexPath.row);
+    People *selectedPeople = [self.result objectAtIndex:indexPath.row];
+    [choosePeople removeObject:selectedPeople];
+}
 
 -(void)alertView:(UIAlertView *)alert1 didDismissWithButtonIndex:(NSInteger)buttonIndex{
    if(alert1.tag==1)

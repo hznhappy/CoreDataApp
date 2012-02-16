@@ -30,13 +30,15 @@
     NSString *id1;
     UITableView *tableView;
     BOOL bool1;
+    BOOL choose;
     UIBarButtonItem *editButton;
     NSString *bo;
+    NSMutableArray *choosePeople;
 }
 @property(nonatomic,strong)IBOutlet UITableView *tableView; 
 @property(nonatomic,strong)UIButton *button;
 @property(nonatomic,strong)NSMutableArray *IdList;
-
+@property(nonatomic,strong)NSMutableArray *choosePeople;
 @property(nonatomic,strong)NSMutableArray *list;
 @property(nonatomic,strong)NSMutableArray *as;
 @property(nonatomic,strong)NSMutableArray *result;

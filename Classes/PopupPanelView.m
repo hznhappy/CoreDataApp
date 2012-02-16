@@ -106,7 +106,6 @@
 {
     PeopleTag *pt = [self.list objectAtIndex:TAG];
     [pt.conPeople removeConPeopleTagObject:pt];
-    NSLog(@"conassetpt:%@",pt.conAsset);
     [ass removeConPeopleTagObject:pt];
     ass.numPeopleTag = [NSNumber numberWithInt:[ass.numPeopleTag intValue]-1];
     [dataSource.coreData saveContext];
@@ -116,10 +115,10 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
                                                        object:self 
                                                      userInfo:dic];
-    NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
+   /* NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"editplay" 
                                                        object:self 
-                                                     userInfo:dic1];
+                                                     userInfo:dic1];*/
 
 }
 -(void)alertView:(UIAlertView *)alert1 didDismissWithButtonIndex:(NSInteger)buttonIndex{

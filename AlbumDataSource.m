@@ -166,50 +166,51 @@
 {    assetsBook=[[NSMutableArray alloc]init]; 
     NSMutableArray* tmp=nil;
     NSPredicate * pre=nil;
-    
-    // Clear AssetsBook
     [assetsBook removeAllObjects];
-    AmptsAlbum *tmpAlbum=nil;
-    
-    // Add All People Entry
-    
-    tmpAlbum=[[AmptsAlbum alloc]init];
-    tmpAlbum.name=@"ALL";
-    tmpAlbum.alblumId=nil;
-    //tmpAlbum.assetsList = [self simpleQuery:@"Asset" predicate:[NSPredicate predicateWithFormat:@"ANY url in %@",deviceAssets.urls] sortField:@"url" sortOrder:YES];
+    AlbumAll=[[AmptsAlbum alloc]init];
+    AlbumAll.name=@"ALL";
+    AlbumAll.alblumId=nil;
     NSMutableArray *coreDataAssets = [self simpleQuery:@"Asset" predicate:nil sortField:nil sortOrder:YES];
     
     for (NSString *u in deviceAssets.urls) {
         for (Asset *as in coreDataAssets) {
             if ([as.url isEqualToString:u]) {
-                [tmpAlbum.assetsList addObject:as];
+                [AlbumAll.assetsList addObject:as];
             }
         }
     }
     
-    tmpAlbum.num=[tmpAlbum.assetsList count];
-    /* NSLog(@"Asset Fetched: %@", tmpAlbum.assetsList);
-     for (Asset *a in tmpAlbum.assetsList) {
-     NSLog(@"Asset URL: %@", a.url);
-     }*/
-    [assetsBook addObject:tmpAlbum];
-    //Add Untag People Entry
-    
-    tmpAlbum=[[AmptsAlbum alloc]init];
-    tmpAlbum.name=@"Untag";
-    tmpAlbum.alblumId=nil;
-    pre=[NSPredicate predicateWithFormat:@"numPeopleTag == 0"];
-    NSMutableArray *unTageAssets = [self simpleQuery:@"Asset" predicate:pre sortField:nil sortOrder:YES];
-    for (NSString *u in deviceAssets.urls) {
+    AlbumAll.num=[AlbumAll.assetsList count];
+    [assetsBook addObject:AlbumAll];
+    AmptsAlbum *tmpAlbum=nil;
+    tmpAlbum=[[AmptsAlbum alloc]init]; 
+    NSMutableArray *tem=[[NSMutableArray alloc]init];
+    for(AmptsAlbum *al in AlbumAll.assetsList)
+    {
+        [tem addObject:al];
+    }
+    tmpAlbum.assetsList=tem;    
+    AlbumUnTAG=[[AmptsAlbum alloc]init];
+    AlbumUnTAG.name=@"Untag";
+    AlbumUnTAG.alblumId=nil;
+    pre=[NSPredicate predicateWithFormat:@"numPeopleTag!=0"];
+    NSMutableArray *TageAssets = [self simpleQuery:@"Asset" predicate:pre sortField:nil sortOrder:YES];
+    /*for (NSString *u in deviceAssets.urls) {
         for (Asset *as in unTageAssets) {
             if ([as.url isEqualToString:u]) {
-                [tmpAlbum.assetsList addObject:as];
+                [AlbumUnTAG.assetsList addObject:as];
             }
         }
+    }*/
+    for (Asset *as in TageAssets)
+    {
+        [tmpAlbum.assetsList removeObject:as];
     }
-    tmpAlbum.num=[tmpAlbum.assetsList count];
-    [UIApplication sharedApplication].applicationIconBadgeNumber = tmpAlbum.num;
-    [assetsBook addObject:tmpAlbum];
+    AlbumUnTAG.assetsList=tmpAlbum.assetsList;
+    
+    AlbumUnTAG.num=[AlbumUnTAG.assetsList count];
+    [UIApplication sharedApplication].applicationIconBadgeNumber = AlbumUnTAG.num;
+    [assetsBook addObject:AlbumUnTAG];
     tmp=[self simpleQuery:@"Album" predicate:nil sortField:nil sortOrder:YES];
     //NSLog(@"Number of Album :%d",[tmp count]);
     for(Album* i in tmp ) {
@@ -289,6 +290,63 @@
         
    // }
 
+}
+-(void) refreshTag
+{
+    NSMutableArray* tmp=nil;
+    NSPredicate * pre=nil;
+    [assetsBook removeAllObjects];
+    [assetsBook addObject:AlbumAll];
+    NSLog(@"all count:%d",[AlbumAll.assetsList count]);
+    AmptsAlbum *tmpAlbum=nil;
+    tmpAlbum=[[AmptsAlbum alloc]init]; 
+    NSMutableArray *tem=[[NSMutableArray alloc]init];
+    for(AmptsAlbum *al in AlbumAll.assetsList)
+    {
+        [tem addObject:al];
+    }
+    NSLog(@"al count %d",[tem count]);
+    tmpAlbum.assetsList=tem;
+    pre=[NSPredicate predicateWithFormat:@"numPeopleTag != 0"];
+    NSMutableArray *TageAssets = [self simpleQuery:@"Asset" predicate:pre sortField:nil sortOrder:YES];
+    for (Asset *as in TageAssets)
+    {
+        [tmpAlbum.assetsList removeObject:as];
+    }
+    AlbumUnTAG.assetsList=tmpAlbum.assetsList;
+    AlbumUnTAG.num=[AlbumUnTAG.assetsList count];
+    [UIApplication sharedApplication].applicationIconBadgeNumber = AlbumUnTAG.num;
+    [assetsBook addObject:AlbumUnTAG];
+     NSLog(@"after all count:%d",[AlbumAll.assetsList count]);
+    tmp=[self simpleQuery:@"Album" predicate:nil sortField:nil sortOrder:YES];
+    for(Album* i in tmp ) {
+        AmptsAlbum * album=[[AmptsAlbum alloc]init];
+        album.name=[i name];
+        album.alblumId=[i objectID];
+        album.object=[i chooseType];
+        pre=[self ruleFormation:i];
+        if([i.sortOrder boolValue]==YES){
+            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:YES];
+        }else {
+            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:NO];
+            
+        }
+        
+        pre=[self excludeRuleFormation:i];
+        if (pre!=nil) {
+            NSMutableArray* excludePeople=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:YES];
+            if(excludePeople!=nil) {
+                [album.assetsList removeObjectsInArray:excludePeople];
+            }
+        }
+        album.num=[album.assetsList count];
+        NSPredicate *newPre = [NSPredicate predicateWithFormat:@"self in %@",album.assetsList];
+        NSArray *array = [((AmptsAlbum*)[assetsBook objectAtIndex:0]).assetsList filteredArrayUsingPredicate:newPre];
+        album.assetsList = [NSMutableArray arrayWithArray:array];
+        [assetsBook addObject:album];
+        
+    }
+ 
 }
 -(void)playlistAlbum{
     PlaylistRootViewController *root = (PlaylistRootViewController*)self.nav;

@@ -11,17 +11,19 @@
 #import "Album.h"
 #import "PeopleTag.h"
 #import "PhotoAppDelegate.h"
+#import "People.h"
 @implementation AssetTablePicker
 @synthesize crwAssets;
 @synthesize table;
 @synthesize viewBar,tagBar;
-@synthesize save,reset,UrlList;
+@synthesize UrlList;
 @synthesize lock;
 @synthesize operations;
 @synthesize tagRow;
 @synthesize album;
 @synthesize likeAssets;
 @synthesize assertList;
+@synthesize AddAssertList;
 #pragma mark -
 #pragma mark UIViewController Methods
 
@@ -42,8 +44,8 @@
     as=NO;
     mode = NO;
     tagBar.hidden = YES;
-    save.enabled = NO;
-    reset.enabled = NO;
+    //save.enabled = NO;
+    //reset.enabled = NO;
     photoCount = 0;
     videoCount = 0;
     for (Asset *ast in self.crwAssets) {
@@ -58,6 +60,7 @@
     self.tagRow=[[NSMutableArray alloc]init];
     self.UrlList=[[NSMutableArray alloc] init];
     assertList=[[NSMutableArray alloc]init];
+    AddAssertList=[[NSMutableArray alloc]init];
     inAssert=[[NSMutableArray alloc]init];
     self.likeAssets = [[NSMutableArray alloc]init];
     NSString *b=NSLocalizedString(@"Back", @"title");
@@ -73,7 +76,7 @@
 	[self.table setAllowsSelection:NO];
     [self setWantsFullScreenLayout:YES];
     NSString *e=NSLocalizedString(@"Tag", @"title");
-    NSString *a=NSLocalizedString(@"Cance", @"title");
+    NSString *a=NSLocalizedString(@"Done", @"title");
     NSString *d=NSLocalizedString(@"Please enter a password", @"title");
     NSString *c=NSLocalizedString(@"ok", @"title");
     cancel = [[UIBarButtonItem alloc]initWithTitle:e style:UIBarButtonItemStyleBordered target:self action:@selector(cancelTag)];
@@ -103,15 +106,37 @@
 //}
 -(void)EditPhotoTag:(NSNotification *)note
 {
-    
     NSDictionary *dic = [note userInfo];
-    NSLog(@"FD");
    // tagSelector.mypeople.f
-   
-   
-    [name setTitle:[dic objectForKey:@"name"] forState:UIControlStateNormal];
-    name.frame = CGRectMake(0, 0,100, 40);
+    NSMutableArray *a=[dic objectForKey:@"name"];
+    if([a count]!=0)
+    {
+    NSString *people=nil;
+    People *po=[a objectAtIndex:0];
+    if( po.firstName==nil)
+    {
+        people=[NSString stringWithFormat:@"%@",po.lastName];
+    }
+    else if(po.lastName==nil)
+    {
+        people=[NSString stringWithFormat:@"%@",po.firstName];
+        
+    }
+    else
+    {
+        people=[NSString stringWithFormat:@"%@ %@",po.firstName,po.lastName];
+    }
+    if([a count]>1)
+    {
+    [name setTitle:[NSString stringWithFormat:@"选%@等%d人",people,[a count]] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [name setTitle:[NSString stringWithFormat:@"选取%@",people] forState:UIControlStateNormal];
+    }
+    name.frame = CGRectMake(0, 0,160, 40);
     [tagBar addSubview:name];
+    }
     [self.tagRow removeAllObjects];
     [self.table reloadData];
 }
@@ -127,6 +152,11 @@
     if([self.lock.title isEqualToString:a])
     {
         [self.navigationController popViewControllerAnimated:YES];
+        NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"editplay" 
+                                                           object:self 
+                                                         userInfo:dic1];
+
     }
     else
     {  
@@ -230,7 +260,7 @@
 #pragma mark ButtonAction Methods
 -(void)cancelTag{
     NSString *a=NSLocalizedString(@"Tag", @"title");
-    NSString *b=NSLocalizedString(@"Cance", @"title");
+    NSString *b=NSLocalizedString(@"Done", @"title");
     if([cancel.title isEqualToString:a])
     {
         cancel.style=UIBarButtonItemStyleDone;
@@ -239,8 +269,6 @@
         if([self.lock.title isEqualToString:a])
         {
             mode = YES;
-            save.enabled=YES;
-            reset.enabled=YES;
             self.navigationItem.hidesBackButton = YES;
             self.navigationItem.rightBarButtonItem = cancel;
             viewBar.hidden = YES;
@@ -257,29 +285,18 @@
     }
     else
     {
+  [name removeFromSuperview];
     cancel.style=UIBarButtonItemStyleBordered;
     cancel.title=a;
     tagBar.hidden = YES;
     viewBar.hidden = NO;
     mode = NO;
-    save.enabled=NO;
-    reset.enabled=NO;
     action=YES;
     [self resetTags];
     [self.tagRow removeAllObjects];
     [self.UrlList removeAllObjects];
     tagSelector.mypeople=nil;
     [self.table reloadData];
-    /*if([tagSelector.canAssert count]>0)
-    {NSLog(@"1");
-        for(int i=0;i<[tagSelector.canAssert count];i++)
-        {
-            Asset *a=(Asset *)[tagSelector.canAssert objectAtIndex:i];
-            NSLog(@"2:%@",a);
-            [tagSelector saveTagAsset:a];
-        }
-    
-    }*/
     }
 }
 
@@ -288,8 +305,8 @@
     if([self.lock.title isEqualToString:a])
     {
         mode = YES;
-        save.enabled=YES;
-        reset.enabled=YES;
+       // save.enabled=YES;
+        //reset.enabled=YES;
         self.navigationItem.hidesBackButton = YES;
         self.navigationItem.rightBarButtonItem = cancel;
         viewBar.hidden = YES;
@@ -341,6 +358,14 @@
     NSString *b=NSLocalizedString(@"please select tag name", @"message");
     NSString *a=NSLocalizedString(@"note", @"button");
     NSString *c=NSLocalizedString(@"ok", @"button");
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle:a
+                          message:b
+                          delegate:self
+                          cancelButtonTitle:nil
+                          otherButtonTitles:c,nil];
+    [alert show]; 
+
     NSString *d=NSLocalizedString(@"please select tag photo" ,@"message");
 
     if([tagSelector tagPeople]==nil)
@@ -382,11 +407,7 @@
             [tagSelector saveTagAsset:asset];
         }
          [self cancelTag];
-        NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"editplay" 
-                                                           object:self 
-                                                         userInfo:dic1];
-
+        
     }
     [self.UrlList removeAllObjects];
     [self.tagRow removeAllObjects];
@@ -546,6 +567,8 @@
     }
     else
     {
+       if([tagSelector.peopleList count]!=0)
+       {
         as=NO;
         if([self.tagRow containsObject:row])
         {
@@ -556,13 +579,31 @@
                       
         }
         else
-        {   [self.UrlList addObject:asset];
+        {  
+            [self.UrlList addObject:asset];
             [self.tagRow addObject:row];
+            [tagSelector saveTagAsset:asset];
+            [AddAssertList addObject:asset];
         }
     }
+       else
+       {
+           NSString *b=NSLocalizedString(@"please select tag name", @"message");
+           NSString *a=NSLocalizedString(@"note", @"button");
+           NSString *c=NSLocalizedString(@"ok", @"button");
+           UIAlertView *alert = [[UIAlertView alloc]
+                                 initWithTitle:a
+                                 message:b
+                                 delegate:self
+                                 cancelButtonTitle:nil
+                                 otherButtonTitles:c,nil];
+           [alert show]; 
+           
+       }
+
     [self.table reloadData];
-    
-}
+    }
+      }
 
 
     
@@ -601,8 +642,6 @@
     self.crwAssets = nil;
     self.viewBar = nil;
     self.tagBar = nil;
-    self.save = nil;
-    self.reset = nil;
     [super viewDidUnload];
 }
 

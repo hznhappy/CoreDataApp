@@ -17,8 +17,8 @@
     UITableView *table;
     UIToolbar *viewBar;
     UIToolbar *tagBar;
-    UIBarButtonItem *save;
-    UIBarButtonItem *reset;
+    //UIBarButtonItem *save;
+    //UIBarButtonItem *reset;
     UIBarButtonItem *cancel;
     UIBarButtonItem *lock;
 	UIAlertView *alert1;
@@ -28,6 +28,7 @@
     NSMutableArray *tagRow;
     NSMutableArray *UrlList;
     NSMutableArray *assertList;
+    NSMutableArray *AddAssertList;
     NSMutableArray *inAssert;
   
     BOOL mode;
@@ -57,8 +58,8 @@
 @property (nonatomic,strong)IBOutlet UITableView *table;
 @property (nonatomic,strong)IBOutlet UIToolbar *viewBar;
 @property (nonatomic,strong)IBOutlet UIToolbar *tagBar;
-@property (nonatomic,strong)IBOutlet UIBarButtonItem *save;
-@property (nonatomic,strong)IBOutlet UIBarButtonItem *reset;
+//@property (nonatomic,strong)IBOutlet UIBarButtonItem *save;
+//@property (nonatomic,strong)IBOutlet UIBarButtonItem *reset;
 @property (nonatomic,strong)IBOutlet UIBarButtonItem *lock;
 
 @property (nonatomic,strong)NSMutableArray *tagRow;
@@ -66,7 +67,7 @@
 @property (nonatomic,strong) NSMutableArray *crwAssets;
 @property (nonatomic,strong) NSMutableArray *UrlList;
 @property (nonatomic,strong)NSMutableArray *likeAssets;
-
+@property (nonatomic,strong)NSMutableArray *AddAssertList;
 @property (nonatomic,strong)NSMutableArray *assertList;
 //@property (nonatomic,strong)NSNumber *val;
 @property (nonatomic,strong)Album *album;

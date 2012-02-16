@@ -24,6 +24,8 @@
     NSOperationQueue *opQueue;
     UINavigationController *nav;
     NSNumber *password;
+    AmptsAlbum *AlbumAll;
+    AmptsAlbum *AlbumUnTAG;
     
 }
 @property (nonatomic,strong) AmptsPhotoCoreData * coreData;
@@ -52,6 +54,7 @@
 -(void) syncAssetwithDataSource;
 -(void) refreshDataSource;
 -(void) refresh;
+-(void) refreshTag;
 -(void) syncDataSource;
 -(void) testDataSource;
 -(void)fresh:(Album *)al index:(int)index;
