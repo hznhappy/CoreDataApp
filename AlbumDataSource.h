@@ -58,7 +58,7 @@
 -(void) refresh;
 -(void) refreshTag;
 -(void) syncDataSource;
--(void) testDataSource;
+//-(void) testDataSource;
 -(void)fresh:(Album *)al index:(int)index;
 -(NSMutableArray *)addPeople:(People*)po;
 -(void)refreshPeople;

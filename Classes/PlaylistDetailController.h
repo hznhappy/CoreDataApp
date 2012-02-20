@@ -26,7 +26,7 @@
 #import <AddressBookUI/AddressBookUI.h>
 @class PhotoAppDelegate;
 @interface PlaylistDetailController : UIViewController<UITableViewDelegate,UITableViewDataSource,MPMediaPickerControllerDelegate,UITextFieldDelegate
-,ABPeoplePickerNavigationControllerDelegate> {
+,ABPeoplePickerNavigationControllerDelegate,UIPickerViewDelegate,UIPickerViewDataSource> {
     PhotoAppDelegate * appDelegate;
     AmptsPhotoCoreData * coreData;
     AlbumDataSource *AL;
@@ -35,6 +35,7 @@
     NSMutableArray *list;
     PeopleRule *pr1;
     NSMutableArray *nameList;
+    NSArray *dateList;
     BOOL keybord;
     BOOL bu;
      
@@ -48,17 +49,10 @@
     UITableViewCell *SortCell;
     UITableViewCell *OrderCell;
     UITableViewCell *dateRule;
-    UITableViewCell *DateRangeCell;
-    UITableViewCell *StopDateRangeCell;
     UITableViewCell *AddPeopleCell;
     UITableViewCell *sortOrderCell;
     UITableViewCell *chooseCell;
-    
-    UITextField *startText;
-    UITextField *stopText;
-    UIButton *AddButton1;
-    UIButton *AddButton2;
-    
+    UIPickerView *pickerView;
     
     UILabel *tranLabel;
     UILabel *musicLabel;
@@ -67,7 +61,6 @@
     UIImage *selectImg;
     UIImage *unselectImg;
     UISegmentedControl *PeopleSeg;
-    UISegmentedControl *DateSeg;
     UISegmentedControl *sortSeg;
     UISegmentedControl *sortOrder;
     UISwitch *sortSw;
@@ -102,8 +95,6 @@
 @property(nonatomic,strong)IBOutlet UITableViewCell *PeopleRuleCell;
 @property(nonatomic,strong)IBOutlet UITableViewCell *SortCell;
 @property(nonatomic,strong)IBOutlet UITableViewCell *OrderCell;
-@property(nonatomic,strong)IBOutlet UITableViewCell *DateRangeCell;
-@property(nonatomic,strong)IBOutlet UITableViewCell *StopDateRangeCell;
 @property(nonatomic,strong)IBOutlet UITableViewCell *dateRule;
 @property(nonatomic,strong)IBOutlet UITableViewCell *AddPeopleCell;
 @property(nonatomic,strong)IBOutlet UITableViewCell *sortOrderCell;
@@ -113,12 +104,10 @@
 @property(nonatomic,strong)IBOutlet UITextField *textField;
 @property(nonatomic,strong)IBOutlet UISwitch *mySwitch;
 @property(nonatomic,strong)IBOutlet UILabel *state;
-@property(nonatomic,strong)IBOutlet UITextField *startText;
-@property(nonatomic,strong)IBOutlet UITextField *stopText;
 @property(nonatomic,strong)IBOutlet UISegmentedControl *sortOrder;
 @property(nonatomic,strong)IBOutlet UISegmentedControl *sortSeg;
-@property(nonatomic,strong)IBOutlet UISegmentedControl *DateSeg;
 @property(nonatomic,strong)IBOutlet UISegmentedControl *PeopleSeg;
+@property(nonatomic,strong)IBOutlet UIPickerView *pickerView;
 @property(nonatomic,strong)NSMutableArray *selectedIndexPaths;
 @property(nonatomic,strong)NSString *Transtion;
 @property(nonatomic,strong)UIButton *stateButton;
@@ -128,12 +117,7 @@
 -(IBAction)updateTable:(id)sender;
 -(IBAction)resetAll;
 -(IBAction)PeopleRuleButton;
--(IBAction)AddButton1;
--(IBAction)AddButton2;
--(IBAction)DeleteButton1;
--(IBAction)DeleteButton2;
 -(IBAction)PeopleRuleButton;
--(IBAction)DateRuleButton;
 -(IBAction)sortKeyButton;
 -(IBAction)sortOrderButton;
 -(IBAction)AddContacts;
@@ -143,9 +127,8 @@
 -(void)insert:(NSInteger)Row rule:(NSString *)rule;
 -(void)update:(NSInteger)Row rule:(NSString *)rule;
 -(void)addPlay;
--(void)changeDate:(NSNotification *)note;
+//-(void)changeDate:(NSNotification *)note;
 -(void)album;
--(void)setDate;
 -(void)setSort;
 -(void)setOrder;
 -(void)table;
