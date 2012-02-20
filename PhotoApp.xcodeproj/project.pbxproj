@@ -47,6 +47,7 @@
 		18C78B9414D6736500B57B4F /* TestiPhoneCalViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18C78B8E14D6736500B57B4F /* TestiPhoneCalViewController.xib */; };
 		18C78B9514D6736500B57B4F /* TdCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C78B9014D6736500B57B4F /* TdCalendarView.m */; };
 		18C78B9614D6736500B57B4F /* PlaylistDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C78B9214D6736500B57B4F /* PlaylistDetailController.m */; };
+		18CE49B114F23C4700C2C681 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18CE49B014F23C4700C2C681 /* CoreMedia.framework */; };
 		18D402821474E50000389097 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18D402841474E50000389097 /* Localizable.strings */; };
 		18D402901474E55900389097 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18D402921474E55900389097 /* InfoPlist.strings */; };
 		18D4031C1474FC9A00389097 /* AssetTablePicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18D4031E1474FC9A00389097 /* AssetTablePicker.xib */; };
@@ -155,6 +156,7 @@
 		18C78B9214D6736500B57B4F /* PlaylistDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistDetailController.m; sourceTree = "<group>"; };
 		18CE49AA14F1ECB900C2C681 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/PlaylistDetailController.xib"; sourceTree = "<group>"; };
 		18CE49AB14F1ECBD00C2C681 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/PlaylistDetailController.xib"; sourceTree = "<group>"; };
+		18CE49B014F23C4700C2C681 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		18D402831474E50000389097 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		18D402851474E50800389097 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		18D402911474E55900389097 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -212,6 +214,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18CE49B114F23C4700C2C681 /* CoreMedia.framework in Frameworks */,
 				1884ECC314BBE586005B3EBF /* CoreData.framework in Frameworks */,
 				A15C2AC21492098F00DC5339 /* AVFoundation.framework in Frameworks */,
 				184F8D87146B9B81004A87DE /* MediaPlayer.framework in Frameworks */,
@@ -393,6 +396,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				18CE49B014F23C4700C2C681 /* CoreMedia.framework */,
 				1884ECC214BBE586005B3EBF /* CoreData.framework */,
 				A15C2AC11492098F00DC5339 /* AVFoundation.framework */,
 				184F8D86146B9B81004A87DE /* MediaPlayer.framework */,

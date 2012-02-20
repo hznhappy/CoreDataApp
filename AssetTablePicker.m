@@ -25,6 +25,7 @@
 @synthesize assertList;
 @synthesize AddAssertList;
 @synthesize action;
+@synthesize side;
 #pragma mark -
 #pragma mark UIViewController Methods
 
@@ -155,6 +156,11 @@
         [[NSNotificationCenter defaultCenter]postNotificationName:@"editplay" 
                                                            object:self 
                                                          userInfo:dic1];
+        NSDictionary *dic2 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"add" 
+                                                           object:self 
+                                                         userInfo:dic2];
+
         
 
     }
@@ -435,8 +441,18 @@
     [tagSelector selectTagNameFromContacts];
 }
 -(IBAction)playPhotos{
+    NSLog(@"play");
+    if([side isEqualToString:@"favorite"])
+    {
+        NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:self.crwAssets, @"assets", self.album.transitType, @"transition",nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"PeoplePlayPhoto" object:nil userInfo:dic]; 
+
+    }
+    else
+    {
     NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:self.crwAssets, @"assets", self.album.transitType, @"transition",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"PlayPhoto" object:nil userInfo:dic]; 
+    }
 }
 
 
@@ -559,10 +575,22 @@
     Asset *asset = [self.crwAssets objectAtIndex:index];
     if(action==YES)
     {
+        NSLog(@"action");
+        if([side isEqualToString:@"favorite"])
+        {
+            NSLog(@"people");
+            selectedRow = cell.rowNumber;
+            NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
+                                        [NSNumber numberWithBool:lockMode],@"lock", self,@"pushPeopleThumbnailView",self.album.transitType,@"transition",nil];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"PeopleviewPhotos" object:nil userInfo:dic]; 
+        }
+        else
+        {
         selectedRow = cell.rowNumber;
         NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                                     [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"viewPhotos" object:nil userInfo:dic];   
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"viewPhotos" object:nil userInfo:dic]; 
+        }
       
     }
     else

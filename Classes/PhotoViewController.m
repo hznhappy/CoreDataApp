@@ -386,8 +386,10 @@
 
 // Enable/disable control visiblity timer
 - (void)hideControlsAfterDelay {
+    NSLog(@"hide control");
 	[self cancelControlHiding];
 	if (![UIApplication sharedApplication].isStatusBarHidden) {
+        NSLog(@"hidding");
 		controlVisibilityTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(hideControls) userInfo:nil repeats:NO];
 	}
 }
@@ -770,7 +772,6 @@
 
 - (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated{
     [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:UIStatusBarAnimationFade];
-    
 }
 
 - (void)setBarsHidden:(BOOL)hidden animated:(BOOL)animated{
@@ -796,8 +797,8 @@
         PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
         [self showPhotoInfo:page];
     }
+    [self cancelControlHiding];
     if (!hidden) {
-        NSLog(@"work");
         [self hideControlsAfterDelay];
     }
 	_barsHidden=hidden;	
@@ -1041,17 +1042,20 @@
 }
 
 -(void)playPhotoFromSelfPage:(id)sender{
+    NSLog(@"PLAYING");
     if (!playingPhoto) {
         playingFromSelfPage = YES;
     }
     [self fireTimer];
 }
 -(void)fireTimer{
+    NSLog(@"fireTimer");
     [self cancelPlayPhotoTimer];
     playingPhoto = YES;
     timer = [NSTimer scheduledTimerWithTimeInterval:2.5 target:self selector:@selector(playPhoto) userInfo:playPhotoTransition repeats:YES];
 }
 -(void)playPhoto{
+    NSLog(@"play photo");
     if (!_barsHidden) {
         [self setBarsHidden:YES animated:YES];
     }
