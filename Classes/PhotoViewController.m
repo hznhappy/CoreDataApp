@@ -776,8 +776,20 @@
 - (void)setBarsHidden:(BOOL)hidden animated:(BOOL)animated{
 	if (hidden&&_barsHidden) return;
     [self setStatusBarHidden:hidden animated:animated];
-    [self.navigationController setNavigationBarHidden:hidden animated:animated];
-    [self.navigationController setToolbarHidden:hidden animated:animated];
+    //[self.navigationController setNavigationBarHidden:hidden animated:animated];
+   // [self.navigationController setToolbarHidden:hidden animated:animated];
+    if (hidden) {
+        [UIView animateWithDuration:0.4 animations:^{
+            self.navigationController.navigationBar.alpha = 0;
+            self.navigationController.toolbar.alpha = 0;
+        }];
+    }else{
+        [UIView animateWithDuration:0.4 animations:^{
+            self.navigationController.navigationBar.alpha = 1;
+            self.navigationController.toolbar.alpha = 1;
+        }];
+    }
+    
     [self setPhotoInfoHidden:hidden];
     [self setLikeButtonHidden:hidden];
     if (!playingPhoto && !playingVideo &&!hidden && assetInfoView == nil && assetInfoView.superview == nil) {
@@ -785,6 +797,7 @@
         [self showPhotoInfo:page];
     }
     if (!hidden) {
+        NSLog(@"work");
         [self hideControlsAfterDelay];
     }
 	_barsHidden=hidden;	
@@ -1048,7 +1061,7 @@
         if (timer) {
             [timer invalidate];
             timer = nil;
-            [self setBarsHidden:NO animated:NO];
+            [self setBarsHidden:NO animated:YES];
             if (!playingFromSelfPage) {
                 [self.navigationController popViewControllerAnimated:YES];
             }

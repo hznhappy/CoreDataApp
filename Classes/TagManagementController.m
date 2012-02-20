@@ -70,6 +70,7 @@ int j=1,count=0;
     ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc]init];
     picker.peoplePickerDelegate = self;
     [self presentModalViewController:picker animated:YES];
+    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
 } 
 -(BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person 
 {
@@ -124,7 +125,7 @@ int j=1,count=0;
             
        }
     }
-    
+    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
     [self dismissModalViewControllerAnimated:YES];
     return NO;
     
@@ -413,6 +414,7 @@ int j=1,count=0;
 
 -(void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker
 {
+    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
 	[self dismissModalViewControllerAnimated:YES];
 }
 

@@ -39,7 +39,7 @@
             if (second >= 60) {
                 int index = second / 60;
                 minute = index;
-                second = second - index*60;                        
+                second = second - index*60;                   
             }    
             [self addSubview:[self addVideoOverlay]];
             
