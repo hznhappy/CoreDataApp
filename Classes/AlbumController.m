@@ -70,8 +70,6 @@
     Album *a=[dic objectForKey:@"name"];
     if(a!=nil)
     {
-       // PhotoAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-        //dataSource = appDelegate.dataSource;
         [dataSource fresh:a index:index];
         assets = dataSource.assetsBook; 
         [tableView reloadData];

@@ -41,7 +41,6 @@
     UIButton *name;
   
     AlbumDataSource *dataSource;
-    //NSNumber *val;
     UITextField *passWord2;
   
    
@@ -52,6 +51,7 @@
     NSUInteger selectedRow;
     NSInteger photoCount;
     NSInteger videoCount;
+    NSString *side;
     TagSelector *tagSelector;
     Album *album;
 }
@@ -69,6 +69,7 @@
 @property (nonatomic,strong)NSMutableArray *likeAssets;
 @property (nonatomic,strong)NSMutableArray *AddAssertList;
 @property (nonatomic,strong)NSMutableArray *assertList;
+@property (nonatomic,strong)NSString *side;
 //@property (nonatomic,strong)NSNumber *val;
 @property (nonatomic,strong)Album *album;
 @property (nonatomic,assign)BOOL action;

@@ -30,7 +30,7 @@
             frame.origin.x = frame.origin.x + frame.size.width + 4;
             if ([dbAsset.videoType boolValue]) 
             {
-                NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
+               /* NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
                                                                  forKey:AVURLAssetPreferPreciseDurationAndTimingKey];           
                 AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:url options:opts]; 
                 
@@ -40,7 +40,7 @@
                     int index = second / 60;
                     minute = index;
                     second = second - index*60;                        
-                }    
+                }    */
                 [thumImageView addSubview:[self addVideoOverlay]];
                 
             }

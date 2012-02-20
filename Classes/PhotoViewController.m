@@ -1028,17 +1028,20 @@
 }
 
 -(void)playPhotoFromSelfPage:(id)sender{
+    NSLog(@"PLAYING");
     if (!playingPhoto) {
         playingFromSelfPage = YES;
     }
     [self fireTimer];
 }
 -(void)fireTimer{
+    NSLog(@"fireTimer");
     [self cancelPlayPhotoTimer];
     playingPhoto = YES;
     timer = [NSTimer scheduledTimerWithTimeInterval:2.5 target:self selector:@selector(playPhoto) userInfo:playPhotoTransition repeats:YES];
 }
 -(void)playPhoto{
+    NSLog(@"play photo");
     if (!_barsHidden) {
         [self setBarsHidden:YES animated:YES];
     }
