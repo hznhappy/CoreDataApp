@@ -417,10 +417,36 @@
     return result;
 }
 -(NSPredicate*) parseDateRule:(DateRule *)rule {
-    if([rule startDate]!=nil&&[rule stopDate]!=nil)
+    if(rule.datePeriod != nil)
     {
-    NSPredicate* result =nil;
-    if ([[rule opCode] isEqualToString:@"INCLUDE"]) {
+        NSPredicate* result =nil;
+        NSDate *date = [NSDate date];
+        NSDateComponents *components = [[NSDateComponents alloc]init];
+        NSCalendar *gregorian = [[NSCalendar alloc]initWithCalendarIdentifier:NSGregorianCalendar];
+        if ([rule.datePeriod isEqualToString:@"Last Week"]) {
+            [components setDay:-7];
+            NSDate *lastWeek = [gregorian dateByAddingComponents:components toDate:date options:0];
+            NSLog(@"the date is %@ and %@",date,lastWeek);
+            result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",lastWeek,date];
+        }else if ([rule.datePeriod isEqualToString:@"Last Two Weeks"]) {
+            [components setDay:-14];
+            NSDate *lastTwoWeek = [gregorian dateByAddingComponents:components toDate:date options:0];
+            result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",lastTwoWeek,date];
+            
+        }else if([rule.datePeriod isEqualToString:@"Last Three Weeks"]){
+            [components setDay:-21];
+            NSDate *lastThreeWeek = [gregorian dateByAddingComponents:components toDate:date options:0];
+            result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",lastThreeWeek,date];
+        }else if([rule.datePeriod isEqualToString:@"Last Month"]){
+            [components setDay:-30];
+            NSDate *lastMonth = [gregorian dateByAddingComponents:components toDate:date options:0];
+            result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",lastMonth,date];
+        }else{
+            [components setDay:-90];
+            NSDate *lastMonth = [gregorian dateByAddingComponents:components toDate:date options:0];
+            result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",lastMonth,date];
+        }
+    /*if ([[rule opCode] isEqualToString:@"INCLUDE"]) {
       result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",[rule startDate],[rule stopDate]];
         // result=[NSPredicate predicateWithFormat:@"some self.date between %@ and %@",[rule startDate],[rule stopDate]];
                //;
@@ -428,8 +454,8 @@
         
     } else {
         result=[NSPredicate predicateWithFormat:@"NONE self.date>=%@ and self.date<=%@",[rule startDate],[rule stopDate]];
-    }
-    return result; 
+    }*/
+        return result; 
     }
     return nil;
 }
@@ -571,7 +597,7 @@
 -(ALAsset*) getAsset:(NSString *)u {
     return [deviceAssets getAsset: u];
 }
-
+/*
 -(void) testDataSource {
     
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"People" inManagedObjectContext:[ coreData managedObjectContext]]; 
@@ -819,6 +845,6 @@
 //    [p addConPeopleRuleDetailObject:prd7];
 //    prd7.opcode=@"EXCLUDE";     
     [coreData saveContext];   
-}
+}*/
 
 @end

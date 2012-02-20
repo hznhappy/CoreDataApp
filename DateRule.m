@@ -2,7 +2,7 @@
 //  DateRule.m
 //  PhotoApp
 //
-//  Created by apple on 2/15/12.
+//  Created by apple on 2/17/12.
 //  Copyright (c) 2012 chinarewards. All rights reserved.
 //
 
@@ -12,9 +12,7 @@
 
 @implementation DateRule
 
-@dynamic opCode;
-@dynamic startDate;
-@dynamic stopDate;
+@dynamic datePeriod;
 @dynamic conAlbum;
 
 @end

@@ -53,6 +53,6 @@
 -(void) refreshDataSource;
 -(void) refresh;
 -(void) syncDataSource;
--(void) testDataSource;
+//-(void) testDataSource;
 -(void)fresh:(Album *)al index:(int)index;
 @end

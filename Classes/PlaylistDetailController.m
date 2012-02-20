@@ -15,8 +15,6 @@
 #import "PeopleRuleDetail.h"
 #import "Album.h"
 #import "Asset.h"
-#import "TdCalendarView.h"
-#import "TestiPhoneCalViewController.h"
 #import "AlbumDataSource.h"
 #import "DateRule.h"
 #import "AddressBook/AddressBook.h"
@@ -35,13 +33,10 @@
 @synthesize PeopleRuleCell;
 @synthesize OrderCell;
 @synthesize SortCell;
-@synthesize DateRangeCell,StopDateRangeCell,AddPeopleCell;
+@synthesize AddPeopleCell;
 @synthesize PeopleSeg;
-@synthesize stopText;
-@synthesize startText;
 @synthesize date;
 @synthesize dateRule;
-@synthesize DateSeg;
 @synthesize sortSeg;
 @synthesize sortOrder;
 @synthesize IdList;
@@ -49,28 +44,32 @@
 @synthesize sortSw;
 @synthesize chooseCell;
 @synthesize chooseButton;
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
+@synthesize pickerView;
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
 }
 
+
 #pragma mark - View lifecycle
+-(void)viewWillDisappear:(BOOL)animated{
+    if ([self.navigationController.viewControllers indexOfObject:self] == NSNotFound) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self];
+    }
+}
 - (void)viewDidLoad
 { 
+    
+    self.list=[[NSMutableArray alloc]init];;
+    self.nameList=[[NSMutableArray alloc]init];;
+    self.IdList=[[NSMutableArray alloc]init];;
+    dateList = [NSArray arrayWithObjects:@"Last Week",@"Last Two Weeks",@"Last Three Weeks",@"Last Month",@"Three Month Ago", nil];
     self.textField.autocapitalizationType =  UITextAutocapitalizationTypeWords;
     self.textField.placeholder=@"标题";
     sortSwc=NO;
     NSMutableArray *parry=[[NSMutableArray alloc]init];
     self.selectedIndexPaths=parry;
-    startText.tag=2;
-    startText.delegate=self;
-    stopText.tag=3;
-    stopText.delegate=self;
     key=0;
     
     musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
@@ -90,30 +89,29 @@
     keybord=NO;
     NSEntityDescription *entity5 = [NSEntityDescription entityForName:@"PeopleRule" inManagedObjectContext:[ appDelegate.dataSource.coreData managedObjectContext]]; 
     pr1=[[PeopleRule alloc]initWithEntity:entity5 insertIntoManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
-    date = [NSEntityDescription insertNewObjectForEntityForName:@"DateRule" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
+    if (bum == nil) {
+        date = [NSEntityDescription insertNewObjectForEntityForName:@"DateRule" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
+    }
+    
     if(bum!=nil&&bum.conDateRule!=nil)
     {
         date=bum.conDateRule;
     }
     
     
-    if(date.startDate!=nil||date.stopDate!=nil)
+    if(date.datePeriod!=nil)
     {
         sortSwc=YES;
         sortSw.on=YES;
     }
-       NSMutableArray *parray1=[[NSMutableArray alloc]init];
-     NSMutableArray *parray2=[[NSMutableArray alloc]init];
-    NSMutableArray *parray3=[[NSMutableArray alloc]init];
-    self.list=parray1;
-    self.nameList=parray2;
-    self.IdList=parray3;
-    
+ 
+   
     
     
     [self table];
     if(bum.transitType!=nil)
-  {NSString *b=NSLocalizedString(bum.transitType, @"title");
+  {
+      NSString *b=NSLocalizedString(bum.transitType, @"title");
       self.tranLabel.text=b;
   }else{
       self.tranLabel.text = nil;
@@ -236,7 +234,7 @@
         case 3:
             if(sortSwc)
             {
-                return 4;
+                return 2;
             }
             else
             {
@@ -255,6 +253,14 @@
     }
     return 0;
 }
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 3 && indexPath.row == 1) {
+        return 216;
+    }else{
+        return 44;
+    }
+}
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     int rowNum=indexPath.row;
    
@@ -270,7 +276,7 @@
                 {
                     if(keybord==NO)
                     {
-                self.textField.text = bum.name;
+                        self.textField.text = bum.name;
                     }
                 }
                 break;
@@ -328,7 +334,7 @@
             [chooseButton setTitle:Video forState:UIControlStateNormal];
             
         }
-        }
+    }
        
       return cell;
     }
@@ -385,7 +391,7 @@
        else if(indexPath.section == 3)
     {
         
-               UITableViewCell *cell = nil;
+        UITableViewCell *cell = nil;
         switch (rowNum) {
                 case 0:
                 cell = [tableView dequeueReusableCellWithIdentifier:@"sortOrderCell"];
@@ -395,21 +401,9 @@
                 break;
 
             case 1:
-                cell = [tableView dequeueReusableCellWithIdentifier:@"dateRule"];
+                cell = [tableView dequeueReusableCellWithIdentifier:@"daterule"];
                 if (cell == nil) {
-                    cell=self.dateRule;
-                }
-                break;
-            case 2:
-                cell = [tableView dequeueReusableCellWithIdentifier:@"DateRangeCell"];
-                if (cell == nil) {
-                    cell=self.DateRangeCell;
-                }
-                break;
-            case 3:
-                cell = [tableView dequeueReusableCellWithIdentifier:@"StopDateRangeCell"];
-                if (cell == nil) {
-                    cell=self.StopDateRangeCell;
+                    cell = self.dateRule;
                 }
                 break;
             default:
@@ -419,23 +413,25 @@
         }
         if(bum!=nil)
         {      
-            if([bum.conDateRule.opCode isEqualToString:@"EXCLUDE"])
-            {
-                self.DateSeg.selectedSegmentIndex=1;
-            }
-            NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-            
-            [outputFormatter setDateFormat:@"yyyy:MM:dd"];
-            if(bum.conDateRule.startDate!=nil)
-            {
-            NSString *startDateString= [outputFormatter stringFromDate:bum.conDateRule.startDate];
-            self.startText.text=[NSString stringWithFormat:startDateString];
-            }
-            if(bum.conDateRule.stopDate!=nil)
-            {
-            NSString *stopDateString= [outputFormatter stringFromDate:bum.conDateRule.stopDate];
-            self.stopText.text=[NSString stringWithFormat:stopDateString];
-            }
+            [pickerView selectRow:[dateList indexOfObject:date.datePeriod] inComponent:0 animated:NO];
+
+//            if([bum.conDateRule.opCode isEqualToString:@"EXCLUDE"])
+//            {
+//                self.DateSeg.selectedSegmentIndex=1;
+//            }
+//            NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+//            
+//            [outputFormatter setDateFormat:@"yyyy:MM:dd"];
+//            if(bum.conDateRule.startDate!=nil)
+//            {
+//            NSString *startDateString= [outputFormatter stringFromDate:bum.conDateRule.startDate];
+//            self.startText.text=[NSString stringWithFormat:startDateString];
+//            }
+//            if(bum.conDateRule.stopDate!=nil)
+//            {
+//            NSString *stopDateString= [outputFormatter stringFromDate:bum.conDateRule.stopDate];
+//            self.stopText.text=[NSString stringWithFormat:stopDateString];
+//            }
         }
         
 
@@ -458,7 +454,8 @@
                     cell=self.AddPeopleCell;
                 }
                 break;
-                default:
+                
+            default:
                 break;
         }
 
@@ -544,8 +541,6 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self.textField resignFirstResponder];
-    [self.startText resignFirstResponder];
-    [self.stopText resignFirstResponder];
     if (indexPath.section ==0 && indexPath.row == 1 && self.textField.text != nil && self.textField.text.length != 0) {
         AnimaSelectController *animateController = [[AnimaSelectController alloc]init];
         animateController.tranStyle = self.tranLabel.text;
@@ -636,23 +631,7 @@
     }
      [appDelegate.dataSource.coreData saveContext];
 }
--(IBAction)DateRuleButton
-{
-    [self setDate];
-    [appDelegate.dataSource.coreData saveContext];
-}
--(void)setDate
-{
-    if(DateSeg.selectedSegmentIndex==0)
-    {
-        date.opCode=@"INCLUDE";
-    }
-    else
-    {
-        date.opCode=@"EXCLUDE";
-    }
-    
-}
+
 
 -(IBAction)sortKeyButton
 {
@@ -694,37 +673,6 @@
     {
         bum.sortOrder=[NSNumber numberWithBool:NO];
     }
-}
--(IBAction)AddButton1
-{
-    bu=YES;
-    TestiPhoneCalViewController *Test=[[TestiPhoneCalViewController alloc]init];
-    [self.navigationController pushViewController:Test animated:YES];
-}
--(IBAction)AddButton2
-{
-    bu=NO;
-    TestiPhoneCalViewController *Test=[[TestiPhoneCalViewController alloc]init];
-    [self.navigationController pushViewController:Test animated:YES];
-}
--(IBAction)DeleteButton1
-{
-    if(self.startText.text!=nil&&self.startText.text.length!=0)
-    {
-        date.startDate=nil;
-        self.startText.text=nil;
-    }
-    [appDelegate.dataSource.coreData saveContext];
-}
--(IBAction)DeleteButton2
-{
-    if(self.stopText.text!=nil&&self.stopText.text.length!=0)
-    {
-        date.stopDate=nil;
-        self.stopText.text=nil;
-    }
-   [appDelegate.dataSource.coreData saveContext];
-
 }
 -(IBAction)AddContacts
 {
@@ -801,6 +749,41 @@
 {
     [mediaPicker dismissModalViewControllerAnimated: YES];
 }
+
+#pragma mark - 
+#pragma mark UIPickerView delegate method
+-(void)pickerView:(UIPickerView *)pickerViews didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
+    NSString *selectDate = [NSString stringWithFormat:@"%@",[dateList objectAtIndex:[pickerViews selectedRowInComponent:0]]];
+    date.datePeriod = selectDate;
+    date.conAlbum=bum;
+    bum.conDateRule=date;
+    [appDelegate.dataSource.coreData saveContext];
+}
+
+#pragma mark - 
+#pragma mark UIPickerView Datasource method
+-(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView{
+    return 1;
+}
+
+-(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
+    return [dateList count];
+}
+
+-(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
+    return [dateList objectAtIndex:row];
+}
+
+-(CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component{
+    return 240;
+}
+
+-(CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component{
+    return 40;
+}
+
+
+
 
 -(void)insert:(NSInteger)Row rule:(NSString *)rule
 {
@@ -960,19 +943,6 @@
         self.textField.text=caplitalized;
         }
     }
-    else if(textField2.tag==2)
-    {
-        bu=YES;
-        TestiPhoneCalViewController *Test=[[TestiPhoneCalViewController alloc]init];
-        [self.navigationController pushViewController:Test animated:YES];
-    }
-   else if(textField2.tag==3)
-    {
-        bu=NO;
-        TestiPhoneCalViewController *Test=[[TestiPhoneCalViewController alloc]init];
-        [self.navigationController pushViewController:Test animated:YES];
-    }
-
     
 }
 -(IBAction)text
@@ -1062,16 +1032,11 @@
     sortSwc = newSwitcn.on;
     if (newSwitcn.on) {
         [listTable beginUpdates];
-        [listTable insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:3],
-                                           [NSIndexPath indexPathForRow:2 inSection:3],
-                                           [NSIndexPath indexPathForRow:3 inSection:3],nil] withRowAnimation:UITableViewRowAnimationTop];
-       
+        [listTable insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:3],nil] withRowAnimation:UITableViewRowAnimationAutomatic];
         [listTable endUpdates];
     }else{
         [listTable beginUpdates];
-        [listTable deleteRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:3],
-                                           [NSIndexPath indexPathForRow:2 inSection:3],
-                                           [NSIndexPath indexPathForRow:3 inSection:3],nil] withRowAnimation:UITableViewRowAnimationTop];
+        [listTable deleteRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:3],nil] withRowAnimation:UITableViewRowAnimationAutomatic];
         [listTable endUpdates];
     }
 }
@@ -1142,7 +1107,7 @@
     NSString *labelText = [dic objectForKey:@"tranStyle"];
     self.tranLabel.text = labelText;
 }
-
+/*
 -(void)changeDate:(NSNotification *)note{
      NSDictionary *dic = [note userInfo];
     if(bu==YES)
@@ -1176,9 +1141,7 @@
     bum.conDateRule=date;
     [appDelegate.dataSource.coreData saveContext];
 }
-
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-}
+*/
 
 - (void)viewDidUnload
 {
