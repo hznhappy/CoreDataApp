@@ -22,10 +22,12 @@
 #import "PlaylistRootViewController.h"
 #import "AddressBook/AddressBook.h"
 #import "AddressBookUI/AddressBookUI.h"
+#import "favorite.h"
 @implementation AlbumDataSource
 @synthesize coreData,deviceAssets,assetsBook,opQueue;
 @synthesize nav;
 @synthesize password;
+@synthesize favoriteList;
 
 -(id) initWithAppName: (NSString *)app navigationController:(UINavigationController *)navigationController{
     self= [super init];
@@ -164,6 +166,7 @@
 }
 -(void) refresh
 {    assetsBook=[[NSMutableArray alloc]init]; 
+    favoriteList=[[NSMutableArray alloc]init];
     NSMutableArray* tmp=nil;
     NSPredicate * pre=nil;
     [assetsBook removeAllObjects];
@@ -240,6 +243,53 @@
         [assetsBook addObject:album];
         
     }
+    [self refreshPeople];
+}
+-(void)refreshPeople
+{
+    [favoriteList removeAllObjects];
+    NSPredicate *favor=[NSPredicate predicateWithFormat:@"favorite==%@",[NSNumber numberWithBool:YES]];
+    NSArray *fa2 = [self simpleQuery:@"People" predicate:favor sortField:nil sortOrder:YES];
+    for(People *p in fa2)
+    {
+        NSPredicate *ptag=[NSPredicate predicateWithFormat:@"conPeople==%@",p];
+        NSArray *Pt=[self simpleQuery:@"PeopleTag" predicate:ptag sortField:nil sortOrder:YES];
+        NSMutableArray *WE=[[NSMutableArray alloc]init];
+        for(int i=0;i<[Pt count];i++)
+        {
+            PeopleTag *PT=[Pt objectAtIndex:i];
+            [WE addObject:PT.conAsset];
+        }
+        favorite *pop=[[favorite alloc]init];
+        pop.firstname=p.firstName;
+        pop.lastname=p.lastName;
+        pop.assetsList=WE;
+        pop.num=[WE count];
+        pop.people=p;
+        [favoriteList addObject:pop];
+    }
+
+}
+-(NSMutableArray *)addPeople:(People*)po
+{
+    NSPredicate *ptag=[NSPredicate predicateWithFormat:@"conPeople==%@",po];
+    NSMutableArray *Pt=[self simpleQuery:@"PeopleTag" predicate:ptag sortField:nil sortOrder:YES];
+    NSMutableArray *WE=[[NSMutableArray alloc]init];
+    for(int i=0;i<[Pt count];i++)
+    {
+        PeopleTag *PT=[Pt objectAtIndex:i];
+        [WE addObject:PT.conAsset];
+    }
+    favorite *pop=[[favorite alloc]init];
+    pop.firstname=po.firstName;
+    pop.lastname=po.lastName;
+    pop.assetsList=WE;
+    pop.num=[WE count];
+    pop.people=po;
+    [favoriteList addObject:pop];
+    NSLog(@"favotite:%d",[favoriteList count]);
+    return favoriteList;
+
 }
 -(void)fresh:(Album *)al index:(int)index
 {
@@ -287,8 +337,19 @@
     {
         [assetsBook replaceObjectAtIndex:index withObject:album];
     }
-        
+   /* NSManagedObjectContext *managedObjectContext=[coreData managedObjectContext];
+    NSFetchRequest *request=[[NSFetchRequest alloc]init];
+    NSEntityDescription *entity=[NSEntityDescription entityForName:@"People" inManagedObjectContext:managedObjectContext];
+    [request setEntity:entity];
+    NSPredicate *favor = [NSPredicate predicateWithFormat:@"some favorite==%@",[NSNumber numberWithBool:YES]];
+    [request setPredicate:favor];
+    NSError *error;
+    NSMutableArray *parray=[[NSMutableArray alloc]init];
+    parray=[[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+*/
+    //result=[[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
    // }
+  
 
 }
 -(void) refreshTag

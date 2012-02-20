@@ -8,6 +8,7 @@
 
 #import "ThumbnailImageView.h"
 #import "ThumbnailCell.h"
+#import "AssetTablePicker.h"
 @implementation ThumbnailImageView
 @synthesize thumbnailIndex;
 @synthesize delegate;
@@ -76,9 +77,14 @@
     for (ThumbnailCell *cell in ((UITableView *)self.superview.superview).visibleCells) {
         [cell clearSelection];
     }
-    [self performSelector:@selector(showCopyMenu) withObject:nil afterDelay:0.8f];
-    [self setSelectedView];
-    [self addSubview:highlightView];
+   
+    
+    if (((AssetTablePicker *)[self.superview.superview.superview nextResponder]).action) {
+        [self performSelector:@selector(showCopyMenu) withObject:nil afterDelay:0.8f];
+        [self setSelectedView];
+        [self addSubview:highlightView];
+    }
+    
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {

@@ -21,6 +21,7 @@
     AmptsPhotoCoreData * coreData;
     OnDeviceAssets * deviceAssets;
      NSMutableArray* assetsBook;
+    NSMutableArray *favoriteList;
     NSOperationQueue *opQueue;
     UINavigationController *nav;
     NSNumber *password;
@@ -31,6 +32,7 @@
 @property (nonatomic,strong) AmptsPhotoCoreData * coreData;
 @property (nonatomic,strong) OnDeviceAssets * deviceAssets;
 @property (nonatomic,strong) NSMutableArray * assetsBook;
+@property (nonatomic,strong) NSMutableArray * favoriteList;
 @property (nonatomic,strong) NSOperationQueue * opQueue;
 @property (nonatomic,strong)UINavigationController *nav;
 @property (nonatomic,strong)NSNumber *password;
@@ -58,4 +60,6 @@
 -(void) syncDataSource;
 -(void) testDataSource;
 -(void)fresh:(Album *)al index:(int)index;
+-(NSMutableArray *)addPeople:(People*)po;
+-(void)refreshPeople;
 @end

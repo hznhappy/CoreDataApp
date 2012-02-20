@@ -35,5 +35,7 @@
 -(UIImageView *)addTagOverlayWhenSelected;
 -(UIView *)addVideoOverlay;
 -(void)checkTagSelection:(NSString *)selectedRow;
+-(void)removeTag:(NSString *)selectedRow;
+//-(void)addnum;
 -(void)clearSelection;
 @end

@@ -165,7 +165,7 @@
         [self cancelControlHiding];
         [[NSNotificationCenter defaultCenter] removeObserver:tagSelector];
         [[NSNotificationCenter defaultCenter]removeObserver:self];
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"reloadTableData" object:nil];
+        //[[NSNotificationCenter defaultCenter]postNotificationName:@"reloadTableData" object:nil];
     }
     [self.navigationController setToolbarHidden:YES animated:YES];		
 }

@@ -56,6 +56,7 @@
 		18DCEFEE14E39642001965EA /* PlaylistDetailController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18DCEFF014E39642001965EA /* PlaylistDetailController.xib */; };
 		18DD696514B6F045000062D1 /* VED.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DD696414B6F045000062D1 /* VED.png */; };
 		18DD696714B6F6F1000062D1 /* ji.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DD696614B6F6F1000062D1 /* ji.png */; };
+		18DDA24B14ED0B23006C05C8 /* favorite.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DDA24A14ED0B23006C05C8 /* favorite.m */; };
 		18F7B23114B43BB700566F66 /* ThumbnailHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 18F7B23014B43BB700566F66 /* ThumbnailHighlight.png */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -173,6 +174,8 @@
 		18DCEFF314E39650001965EA /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/PlaylistDetailController.xib"; sourceTree = "<group>"; };
 		18DD696414B6F045000062D1 /* VED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = VED.png; sourceTree = "<group>"; };
 		18DD696614B6F6F1000062D1 /* ji.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ji.png; sourceTree = "<group>"; };
+		18DDA24914ED0B23006C05C8 /* favorite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = favorite.h; sourceTree = "<group>"; };
+		18DDA24A14ED0B23006C05C8 /* favorite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = favorite.m; sourceTree = "<group>"; };
 		18F7B23014B43BB700566F66 /* ThumbnailHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ThumbnailHighlight.png; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* PhotoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -270,6 +273,8 @@
 				183DE2FF14C7F5D700BDC724 /* AmptsPhotoCoreData.m */,
 				183DE30014C7F5D700BDC724 /* OnDeviceAssets.h */,
 				183DE30114C7F5D700BDC724 /* OnDeviceAssets.m */,
+				18DDA24914ED0B23006C05C8 /* favorite.h */,
+				18DDA24A14ED0B23006C05C8 /* favorite.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -568,6 +573,7 @@
 				18A9039614EB9AD6001CA960 /* PeopleRule.m in Sources */,
 				18A9039914EB9AD6001CA960 /* Album.m in Sources */,
 				18A9039C14EB9AD6001CA960 /* AssetRule.m in Sources */,
+				18DDA24B14ED0B23006C05C8 /* favorite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

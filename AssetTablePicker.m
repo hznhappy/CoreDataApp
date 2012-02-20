@@ -24,6 +24,7 @@
 @synthesize likeAssets;
 @synthesize assertList;
 @synthesize AddAssertList;
+@synthesize action;
 #pragma mark -
 #pragma mark UIViewController Methods
 
@@ -44,8 +45,6 @@
     as=NO;
     mode = NO;
     tagBar.hidden = YES;
-    //save.enabled = NO;
-    //reset.enabled = NO;
     photoCount = 0;
     videoCount = 0;
     for (Asset *ast in self.crwAssets) {
@@ -91,7 +90,7 @@
     NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
     [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EditPhotoTag:)name:@"EditPhotoTag" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableData) name:@"reloadTableData" object:nil];
+   // [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableData) name:@"reloadTableData" object:nil];
 }
 
 //-(void)resetTableContentInset{
@@ -141,11 +140,11 @@
     [self.table reloadData];
 }
 
--(void)reloadTableData{
+/*-(void)reloadTableData{
     oritation = [UIApplication sharedApplication].statusBarOrientation;
     //[self resetTableContentInset];
     [self.table reloadData];
-}
+}*/
 -(void)backButtonPressed
 {
     NSString *a=NSLocalizedString(@"Lock", @"title");
@@ -156,6 +155,7 @@
         [[NSNotificationCenter defaultCenter]postNotificationName:@"editplay" 
                                                            object:self 
                                                          userInfo:dic1];
+        
 
     }
     else
@@ -574,17 +574,24 @@
         {
             [self.UrlList removeObject:asset];
             [self.tagRow removeObject:row];
+            NSString *selectedIndex = [NSString stringWithFormat:@"%d",index];
+            [cell removeTag:selectedIndex];
             [assertList addObject:asset];
             [tagSelector deleteTag:asset];
+            //[self.table reloadData];
                       
         }
         else
         {  
-            [self.UrlList addObject:asset];
             [self.tagRow addObject:row];
-            [tagSelector saveTagAsset:asset];
+            NSString *selectedIndex = [NSString stringWithFormat:@"%d",index];
+            [cell checkTagSelection:selectedIndex];
+            [tagSelector save:asset];
             [AddAssertList addObject:asset];
-        }
+                   
+                    
+                }
+            
     }
        else
        {
@@ -601,7 +608,6 @@
            
        }
 
-    [self.table reloadData];
     }
       }
 

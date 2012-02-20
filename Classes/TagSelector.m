@@ -115,7 +115,7 @@
         PeopleTag *peopleTag =[list objectAtIndex:i];
         if([peopleTag.conPeople isEqual:pe])
         { 
-            [mypeople removeConPeopleTagObject:peopleTag];
+            [pe removeConPeopleTagObject:peopleTag];
             [asset removeConPeopleTagObject:peopleTag];
             asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]-1];
            
@@ -142,13 +142,12 @@
 -(void)selectTagNameFromFavorites{
     TagManagementController *nameController = [[TagManagementController alloc]init];
     nameController.bo=[NSString stringWithFormat:@"yes"];
+    [nameController table];
     UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:nameController];
     [viewController presentModalViewController:navController animated:YES];
 }
 
 -(void)saveTagAsset:(Asset *)asset{
-    if([add isEqualToString:@"YES"])
-    {
         for(People *po in peopleList)
         {
             BOOL b=[self deletePeople:asset people:po];
@@ -158,13 +157,9 @@
             [self save:asset];
             [(PhotoViewController *)viewController numtag];
         }
-  }
+  
     }
-    else
-    { 
-        [self save:asset];
-    }
-     }
+}
 -(BOOL)deletePeople:(Asset *)asset people:(People *)pe
 { 
     NSPredicate *pre = [NSPredicate predicateWithFormat:@"conAsset == %@",asset];
@@ -255,6 +250,8 @@
     [viewController dismissModalViewControllerAnimated:YES];
     if([add isEqualToString:@"YES"])
     {
+        [peopleList addObject:mypeople];
+        NSLog(@"tag contact");
         [self addTagName];
         [self resetToolBar];
     }

@@ -71,6 +71,7 @@
 @property (nonatomic,strong)NSMutableArray *assertList;
 //@property (nonatomic,strong)NSNumber *val;
 @property (nonatomic,strong)Album *album;
+@property (nonatomic,assign)BOOL action;
 -(IBAction)actionButtonPressed;
 -(IBAction)playPhotos;
 -(IBAction)lockButtonPressed;

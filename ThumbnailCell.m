@@ -125,11 +125,31 @@
     [overlayView setImage:[UIImage imageNamed:@"selectOverlay.png"]];
     return overlayView;
 }
+-(void)removeTag:(NSString *)selectedRow
+{
+    for (UIView *view in self.subviews) {
+        if ([view isKindOfClass:[ThumbnailImageView class]] && [selectedRow isEqualToString:[NSString stringWithFormat:@"%d",((ThumbnailImageView *)view).thumbnailIndex]]) {
+            for (UIView *vi in view.subviews) {
+                NSLog(@"vi:%@",vi);
+                if ([vi isKindOfClass:[UIImageView class]] ) {
+                    if ([((UIImageView *)vi).image isEqual:[UIImage imageNamed:@"selectOverlay.png"]]) {
+                        [vi removeFromSuperview];
+                    }
+                }
+            }
+            
+        }
+    }
+
+}
 
 -(void)checkTagSelection:(NSString *)selectedRow{
     for (UIView *view in self.subviews) {
         if ([view isKindOfClass:[ThumbnailImageView class]] && [selectedRow isEqualToString:[NSString stringWithFormat:@"%d",((ThumbnailImageView *)view).thumbnailIndex]]) {
+            
             [(ThumbnailImageView *)view addSubview:[self addTagOverlayWhenSelected]];
+            
+            
         }
     }
 }
