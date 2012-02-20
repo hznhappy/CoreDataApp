@@ -2,8 +2,8 @@
 //  People.h
 //  PhotoApp
 //
-//  Created by apple on 2/15/12.
-//  Copyright (c) 2012 chinarewards. All rights reserved.
+//  Created by  on 12-2-20.
+//  Copyright (c) 2012年 chinarewards. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -19,7 +19,7 @@
 @property (nonatomic, retain) NSString * firstName;
 @property (nonatomic, retain) NSNumber * inAddressBook;
 @property (nonatomic, retain) NSString * lastName;
-@property (nonatomic, retain) NSNumber * listSeq;
+@property (nonatomic, retain) NSNumber * listSort;
 @property (nonatomic, retain) NSSet *conPeopleRuleDetail;
 @property (nonatomic, retain) NSSet *conPeopleTag;
 @end

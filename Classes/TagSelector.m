@@ -106,7 +106,6 @@
 }
 -(void)deleteTag:(Asset *)asset
 {
-    NSLog(@"delete");
     for(People *pe in peopleList)
     {
     NSPredicate *pre = [NSPredicate predicateWithFormat:@"conAsset == %@",asset];
@@ -251,7 +250,6 @@
     if([add isEqualToString:@"YES"])
     {
         [peopleList addObject:mypeople];
-        NSLog(@"tag contact");
         [self addTagName];
         [self resetToolBar];
     }
@@ -295,9 +293,7 @@
 }
 
 -(void)addTagName{
-    if ([viewController isKindOfClass:[PhotoViewController class]]) {
-        NSLog(@"viewController");
-        
+    if ([viewController isKindOfClass:[PhotoViewController class]]) { 
         [(PhotoViewController *)viewController addTagPeople];
     }
 }

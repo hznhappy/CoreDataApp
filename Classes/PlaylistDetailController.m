@@ -144,13 +144,13 @@
 {   
     [self.list removeAllObjects];
     [self.IdList removeAllObjects];
-    NSManagedObjectContext *managedObjectContext=[appDelegate.dataSource.coreData managedObjectContext];
+  /*  NSManagedObjectContext *managedObjectContext=[appDelegate.dataSource.coreData managedObjectContext];
     NSFetchRequest *request=[[NSFetchRequest alloc]init];
     NSEntityDescription *entity=[NSEntityDescription entityForName:@"People" inManagedObjectContext:managedObjectContext];
     [request setEntity:entity];
-    NSError *error;
-    
-    list=[[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];  
+    NSError *error;*/
+     list= [AL simpleQuery:@"People" predicate:nil sortField:@"listSort" sortOrder:YES];
+  //  list=[[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];  
     for(int i=0;i<[list count];i++)
     {
         People *po=(People *)[list objectAtIndex:i];

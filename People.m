@@ -2,8 +2,8 @@
 //  People.m
 //  PhotoApp
 //
-//  Created by apple on 2/15/12.
-//  Copyright (c) 2012 chinarewards. All rights reserved.
+//  Created by  on 12-2-20.
+//  Copyright (c) 2012年 chinarewards. All rights reserved.
 //
 
 #import "People.h"
@@ -19,7 +19,7 @@
 @dynamic firstName;
 @dynamic inAddressBook;
 @dynamic lastName;
-@dynamic listSeq;
+@dynamic listSort;
 @dynamic conPeopleRuleDetail;
 @dynamic conPeopleTag;
 

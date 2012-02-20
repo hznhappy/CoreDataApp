@@ -81,7 +81,7 @@ int j=1,count=0;
     fid=[NSNumber numberWithInt:recId];
     if([self.IdList containsObject:fid])
     {
-        NSString *b=NSLocalizedString(@"Already exists", @"button");
+       /* NSString *b=NSLocalizedString(@"Already exists", @"button");
         NSString *a=NSLocalizedString(@"note", @"button");
         NSString *c=NSLocalizedString(@"ok", @"button");
         
@@ -93,7 +93,7 @@ int j=1,count=0;
                               cancelButtonTitle:nil
                               otherButtonTitles:c,nil];
         [alert show];
-        alert.tag=0;
+        alert.tag=0;*/
    
     }
     else
@@ -109,6 +109,7 @@ int j=1,count=0;
             favorate.lastName=lastname;
             favorate.addressBookId=[NSNumber numberWithInt:[fid intValue]];
             favorate.favorite=[NSNumber numberWithBool:YES];
+            favorate.listSort=[NSNumber numberWithInt:[peopleList count]];
             [datasource.coreData saveContext];
             peopleList=[datasource addPeople:favorate];
             [self.result addObject:favorate];
@@ -223,7 +224,8 @@ int j=1,count=0;
     {
         [self.result addObject:a.people];
         [IdList addObject:a.people.addressBookId];
-       NSLog(@"people:%@",IdList);
+        NSLog(@"listSort:%@",a.people.listSort);
+       //  NSLog(@"ID:%@",a.people.addressBookId);
     }
     [self.tableView reloadData];
 }
@@ -270,7 +272,10 @@ int j=1,count=0;
    // People *am = (People *)[result objectAtIndex:indexPath.row];
     
     favorite *fa=[peopleList objectAtIndex:indexPath.row];
-    
+    People *pl=fa.people;
+    pl.listSort=[NSNumber numberWithInt:indexPath.row];
+    if(fa.num!=0)
+    {
     if (fa.firstname == nil) {
         cell.textLabel.text = [NSString stringWithFormat:@"%@ (%d)",fa.lastname,fa.num];
     }
@@ -280,7 +285,20 @@ int j=1,count=0;
     } 
     else
         cell.textLabel.text = [NSString stringWithFormat:@"%@ %@ (%d)",fa.lastname, fa.firstname,fa.num];
-        
+    }
+    else
+    {
+        if (fa.firstname == nil) {
+            cell.textLabel.text = [NSString stringWithFormat:@"%@",fa.lastname];
+        }
+        else if(fa.lastname == nil)
+        {
+            cell.textLabel.text = [NSString stringWithFormat:@"%@",fa.firstname];
+        } 
+        else
+            cell.textLabel.text = [NSString stringWithFormat:@"%@ %@",fa.lastname, fa.firstname];
+
+    }
     return cell; 
 }
 #pragma mark -
@@ -380,7 +398,6 @@ int j=1,count=0;
 }
 -(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"delete:%d",indexPath.row);
     People *selectedPeople = [self.result objectAtIndex:indexPath.row];
     [choosePeople removeObject:selectedPeople];
 }
@@ -402,7 +419,8 @@ int j=1,count=0;
 }
 -(void)deletePeople:(NSInteger)Index
 {
-    [datasource.coreData.managedObjectContext deleteObject:favorate1];
+    //[datasource.coreData.managedObjectContext deleteObject:favorate1];
+    favorate1.favorite=[NSNumber numberWithBool:YES];
     [datasource.coreData saveContext]; 
     [self.result removeObjectAtIndex:Index];
     [self.peopleList removeObjectAtIndex:Index];
@@ -419,13 +437,43 @@ int j=1,count=0;
 
 -(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
-    if([toIndexPath row]>1)
+    if([toIndexPath row]>0)
     {
-        People *p=[self.result objectAtIndex:fromIndexPath.row];
-        [self.result removeObjectAtIndex:fromIndexPath.row];
-        [self.result insertObject:p atIndex:toIndexPath.row];
+      favorite *p=[self.peopleList objectAtIndex:fromIndexPath.row];
+      People *po=p.people;
+      favorite *pp=[self.peopleList objectAtIndex:toIndexPath.row];
+      People *pop=pp.people;
+      //po.listSort=[NSNumber numberWithInt:toIndexPath.row];
+        po.listSort=pop.listSort;
+        NSLog(@"from row:%d, to row:%d",fromIndexPath.row,toIndexPath.row);
+        if(fromIndexPath.row>toIndexPath.row)
+        {
+            for(int i=toIndexPath.row;i<fromIndexPath.row;i++)
+            {
+                favorite *p1=[self.peopleList objectAtIndex:i];
+                People *po1=p1.people;
+                
+                po1.listSort=[NSNumber numberWithInt:i+1];
+                //[datasource.coreData saveContext];
+            }
+        }
+        if(fromIndexPath.row<toIndexPath.row)
+        {
+            for(int i=fromIndexPath.row+1;i<=toIndexPath.row;i++)
+            {
+                favorite *p1=[self.peopleList objectAtIndex:i];
+                People *po1=p1.people;
+                po1.listSort=[NSNumber numberWithInt:i-1];
+                
+            }
     }
-    [self.tableView reloadData];
+        [datasource.coreData saveContext];
+
+        [self.peopleList removeObjectAtIndex:fromIndexPath.row];
+        [self.peopleList insertObject:p atIndex:toIndexPath.row];              
+    }
+    [self table];
+   
 
   
 

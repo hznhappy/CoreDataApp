@@ -35,7 +35,6 @@
     dataSource = appDelegate.dataSource;
     if(album==nil)
     {
-        NSLog(@"yes");
         lock.enabled=NO;
 
         
@@ -334,7 +333,6 @@
     NSString *c=NSLocalizedString(@"ok", @"title");
     if([self.lock.title isEqualToString:a])
     { 
-        NSLog(@"HUI:%@",dataSource.password);
         NSString *password=[NSString stringWithFormat:@"%@",dataSource.password];
         if(dataSource.password==nil||password==nil||password.length==0)
         { 
@@ -441,7 +439,6 @@
     [tagSelector selectTagNameFromContacts];
 }
 -(IBAction)playPhotos{
-    NSLog(@"play");
     if([side isEqualToString:@"favorite"])
     {
         NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:self.crwAssets, @"assets", self.album.transitType, @"transition",nil];
