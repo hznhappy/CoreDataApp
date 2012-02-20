@@ -165,7 +165,7 @@
         [self cancelControlHiding];
         [[NSNotificationCenter defaultCenter] removeObserver:tagSelector];
         [[NSNotificationCenter defaultCenter]removeObserver:self];
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"reloadTableData" object:nil];
+        //[[NSNotificationCenter defaultCenter]postNotificationName:@"reloadTableData" object:nil];
     }
     [self.navigationController setToolbarHidden:YES animated:YES];		
 }
@@ -762,11 +762,6 @@
 -(void)addTagPeople{
     [tagSelector saveTagAsset:[self.playlist.storeAssets objectAtIndex:currentPageIndex]];
     [ppv Buttons];
-    NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"editplay" 
-                                                       object:self 
-                                                     userInfo:dic1];
-
 }
 
 

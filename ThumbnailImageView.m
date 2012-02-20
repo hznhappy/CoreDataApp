@@ -8,23 +8,116 @@
 
 #import "ThumbnailImageView.h"
 #import "ThumbnailCell.h"
+#import "AssetTablePicker.h"
+#import "Asset.h"
+#import "PhotoAppDelegate.h"
 @implementation ThumbnailImageView
 @synthesize thumbnailIndex;
 @synthesize delegate;
 
--(ThumbnailImageView *)initWithAsset:(ALAsset*)asset index:(NSUInteger)index{
+-(ThumbnailImageView *)initWithAsset:(Asset*)asset index:(NSUInteger)index action:(BOOL)act{
     self = [super init];
     if (self) {
+        PhotoAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
         self.userInteractionEnabled = YES;
-        CGImageRef ref = [asset thumbnail];
+        NSString *dbUrl = asset.url;
+        NSURL *url = [NSURL URLWithString:dbUrl];
+        ALAsset *as = [appDelegate.dataSource getAsset:dbUrl];
+        CGImageRef ref = [as thumbnail];
         UIImage *img = [UIImage imageWithCGImage:ref];
         [self setImage:img];
         self.thumbnailIndex = index;
         copyMenuShow = NO;
+        if ([asset.videoType boolValue]) 
+        {
+            NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
+                                                             forKey:AVURLAssetPreferPreciseDurationAndTimingKey];           
+            AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:url options:opts]; 
+            
+            minute = 0, second = 0; 
+            second = urlAsset.duration.value / urlAsset.duration.timescale;
+            if (second >= 60) {
+                int index = second / 60;
+                minute = index;
+                second = second - index*60;                        
+            }    
+            [self addSubview:[self addVideoOverlay]];
+            
+        }
+        if([asset.numPeopleTag intValue] != 0&&!act)
+        {   
+            NSString *numStr = [NSString stringWithFormat:@"%@",asset.numPeopleTag];
+            [self addSubview:[self addTagnumberOverlay:numStr]];
+        }
+
        // [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clearSelection) name:@"clearSelection" object:nil];
     }
     return self;
 }
+
+#pragma mark -
+#pragma mark OverLay method
+-(UIView *)addTagnumberOverlay:(NSString *)number
+{
+    UIView *tagBg =[[UIView alloc]initWithFrame:CGRectMake(3, 3, 25, 25)];
+    CGPoint tagBgCenter = tagBg.center;
+    tagBg.layer.cornerRadius = 25 / 2.0;
+    tagBg.center = tagBgCenter;
+    
+    UIView *tagCount = [[UIView alloc]initWithFrame:CGRectMake(2.6, 2.2, 20, 20)];
+    tagCount.backgroundColor = [UIColor colorWithRed:182/255.0 green:0 blue:0 alpha:1];
+    CGPoint saveCenter = tagCount.center;
+    tagCount.layer.cornerRadius = 20 / 2.0;
+    tagCount.center = saveCenter;
+    UILabel *count= [[UILabel alloc]initWithFrame:CGRectMake(3, 4, 13, 12)];
+    count.backgroundColor = [UIColor colorWithRed:182/255.0 green:0 blue:0 alpha:1];
+    count.textColor = [UIColor whiteColor];
+    count.textAlignment = UITextAlignmentCenter;
+    count.font = [UIFont boldSystemFontOfSize:11];
+    count.text = number;
+    [tagCount addSubview:count];
+    [tagBg addSubview:tagCount];
+    return tagBg;
+    
+}
+-(UIView *)addVideoOverlay{
+    UIView *video =[[UIView alloc]initWithFrame:CGRectMake(0, 54, 74, 16)];
+    UILabel *length=[[UILabel alloc]initWithFrame:CGRectMake(40, 3, 44, 10)];
+    UIImageView *tu=[[UIImageView alloc]initWithFrame:CGRectMake(6, 4,15, 8)];
+    //  tu= [UIButton buttonWithType:UIButtonTypeCustom]; 
+    UIImage *picture = [UIImage imageNamed:@"VED.png"];
+    // set the image for the button
+    [tu setImage:picture];
+    [video addSubview:tu];
+    
+    
+    [length setBackgroundColor:[UIColor clearColor]];
+    length.alpha=0.8;
+    if (minute == 0 && second == 0) {
+        length.text = [NSString stringWithFormat:@"00:00"];
+    }else if(minute != 0 && second == 0){
+        NSString *a=[NSString stringWithFormat:@"%d",minute];
+        length.text = [NSString stringWithFormat:@"%@:00",a];
+    }else{
+        NSString *a=[NSString stringWithFormat:@"%d",minute];
+        NSString *b=[NSString stringWithFormat:@"%d",second];
+        length.text=a;
+        length.text=[length.text stringByAppendingString:@":"];
+        length.text=[length.text stringByAppendingString:b];
+    }
+    length.textColor = [UIColor whiteColor];
+    length.textAlignment = UITextAlignmentLeft;
+    length.font = [UIFont boldSystemFontOfSize:12.0];
+    [video addSubview:length];
+    
+    [video setBackgroundColor:[UIColor grayColor]];
+    video.alpha=0.9;
+    length.alpha = 1.0;
+    tu.alpha = 1.0;
+    return video;
+    
+}
+
 #pragma mark -
 #pragma mark Touch handling
 - (void)showCopyMenu {
@@ -72,13 +165,23 @@
     return YES;
 }
 
+-(void)cancelCopyMenu{
+    if (theMenu.isMenuVisible) {
+        theMenu.menuVisible = NO;
+    }
+}
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     for (ThumbnailCell *cell in ((UITableView *)self.superview.superview).visibleCells) {
         [cell clearSelection];
     }
-    [self performSelector:@selector(showCopyMenu) withObject:nil afterDelay:0.8f];
-    [self setSelectedView];
-    [self addSubview:highlightView];
+   
+    
+    if (((AssetTablePicker *)[self.superview.superview.superview nextResponder]).action) {
+        [self performSelector:@selector(showCopyMenu) withObject:nil afterDelay:0.8f];
+        [self setSelectedView];
+        [self addSubview:highlightView];
+    }
+    
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -100,11 +203,6 @@
     [highlightView removeFromSuperview];
 }
 
--(void)cancelCopyMenu{
-    if (theMenu.isMenuVisible) {
-        theMenu.menuVisible = NO;
-    }
-}
 #pragma mark -
 #pragma mark Helper mehtods;
 - (void)clearSelection {

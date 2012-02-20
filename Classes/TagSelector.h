@@ -21,10 +21,11 @@
     AlbumDataSource *dataSource;
     People *mypeople;
     NSString *add;
+    NSMutableArray *peopleList;
 }
 @property (nonatomic, strong)People *mypeople;
 @property (nonatomic, strong)NSString *add;
-
+@property (nonatomic, strong)NSMutableArray *peopleList;
 -(TagSelector *)initWithViewController:(UIViewController *)controller;
 -(void)selectTagNameFromContacts;
 -(void)selectTagNameFromFavorites;
@@ -35,4 +36,5 @@
 -(void)addTagName;
 -(BOOL)tag:(Asset *)asset;
 -(void)deleteTag:(Asset *)asset;
+-(BOOL)deletePeople:(Asset *)asset people:(People *)pe;
 @end

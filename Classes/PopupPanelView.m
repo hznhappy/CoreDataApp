@@ -38,8 +38,8 @@
         [self selectTagPeople];
         [myscroll setContentSize:CGSizeMake(320, 45*[self.list count])];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(Buttons) name:@"edit" object:nil];
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(toggleBars)];
-        [myscroll addGestureRecognizer:tap];
+        //UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(toggleBars)];
+        //[myscroll addGestureRecognizer:tap];
     }
    
     return self;
@@ -108,7 +108,6 @@
 {
     PeopleTag *pt = [self.list objectAtIndex:TAG];
     [pt.conPeople removeConPeopleTagObject:pt];
-    NSLog(@"conassetpt:%@",pt.conAsset);
     [ass removeConPeopleTagObject:pt];
     ass.numPeopleTag = [NSNumber numberWithInt:[ass.numPeopleTag intValue]-1];
     [dataSource.coreData saveContext];
@@ -118,10 +117,10 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
                                                        object:self 
                                                      userInfo:dic];
-    NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
+   /* NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"editplay" 
                                                        object:self 
-                                                     userInfo:dic1];
+                                                     userInfo:dic1];*/
 
 }
 -(void)alertView:(UIAlertView *)alert1 didDismissWithButtonIndex:(NSInteger)buttonIndex{

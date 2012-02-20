@@ -80,7 +80,7 @@
 }
 -(void)editTable
 {
-    [dataSource refresh];
+    [dataSource refreshTag];
     assets=dataSource.assetsBook;
     [tableView reloadData];
 }

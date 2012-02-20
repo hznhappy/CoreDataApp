@@ -21,8 +21,6 @@
 @interface ThumbnailCell : UITableViewCell<ThumbnailSelectionDelegate>
 {
     NSUInteger rowNumber;
-    int minute;
-    int second;
     id<ThumbnailCellSelectionDelegate>__unsafe_unretained selectionDelegate;
 }
 
@@ -31,9 +29,10 @@
 
 
 -(void)displayThumbnails:(NSArray *)array count:(NSUInteger)count action:(BOOL) act;
--(UIView *)addTagnumberOverlay:(NSString *)numbe;
+
 -(UIImageView *)addTagOverlayWhenSelected;
--(UIView *)addVideoOverlay;
 -(void)checkTagSelection:(NSString *)selectedRow;
+-(void)removeTag:(NSString *)selectedRow;
+//-(void)addnum;
 -(void)clearSelection;
 @end
