@@ -24,8 +24,9 @@
         NSURL *url = [NSURL URLWithString:dbUrl];
         ALAsset *as = [appDelegate.dataSource getAsset:dbUrl];
         CGImageRef ref = [as thumbnail];
-        UIImage *img = [UIImage imageWithCGImage:ref];
-        [self setImage:img];
+        //UIImage *img = [UIImage imageWithCGImage:ref];
+        //[self setImage:img];
+        thumbnail = [UIImage imageWithCGImage:ref];
         self.thumbnailIndex = index;
         copyMenuShow = NO;
         if ([asset.videoType boolValue]) 
@@ -41,7 +42,7 @@
 //            if (second >= 60) {
 //                int index = second / 60;
 //                minute = index;
-//                second = second - index*60;                   
+//                second = second - index*60;                 
 //            }    
            [self addSubview:[self addVideoOverlay:durationSeconds]];
             
@@ -57,6 +58,10 @@
     return self;
 }
 
+-(void)drawRect:(CGRect)rect{
+    [thumbnail drawInRect:rect];
+    
+}
 #pragma mark -
 #pragma mark OverLay method
 -(UIView *)addTagnumberOverlay:(NSString *)number
@@ -104,18 +109,6 @@
     
     [length setBackgroundColor:[UIColor clearColor]];
     length.alpha=0.8;
-//    if (minute == 0 && second == 0) {
-//        length.text = [NSString stringWithFormat:@"00:00"];
-//    }else if(minute != 0 && second == 0){
-//        NSString *a=[NSString stringWithFormat:@"%2d",minute];
-//        length.text = [NSString stringWithFormat:@"%@:00",a];
-//    }else{
-//        NSString *a=[NSString stringWithFormat:@"%2d",minute];
-//        NSString *b=[NSString stringWithFormat:@"%2d",second];
-//        length.text=a;
-//        length.text=[length.text stringByAppendingString:@":"];
-//        length.text=[length.text stringByAppendingString:b];
-//    }
     length.text = formattedTimeString;
     length.textColor = [UIColor whiteColor];
     length.textAlignment = UITextAlignmentLeft;
@@ -165,7 +158,7 @@
 }
 
 -(void)copy:(id)sender{
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.image];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:thumbnail];//self.image];
     UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
     if (data) {
         [pasteBoard setData:data forPasteboardType:@"thumbnail"];

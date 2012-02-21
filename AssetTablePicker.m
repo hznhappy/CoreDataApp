@@ -36,7 +36,6 @@
     if(album==nil)
     {
         lock.enabled=NO;
-
         
     }
     lockMode = NO;
@@ -189,6 +188,7 @@
                     self.lock.title=e;
                     NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults]; 
                     dataSource.password=[defaults objectForKey:@"name_preference"];
+                    lockMode = YES;
                 }
                 break;
             case 1:

@@ -25,6 +25,7 @@
 -(void)setLikeButtonHidden:(BOOL)hidden;
 - (void)setupToolbar;
 - (void)setupEditToolbar;
+-(void)setNavigationBarItem;
 - (void)updateNavigation;
 - (void)updateSubviewsWhenScroll;
 @end
@@ -201,15 +202,13 @@
     tagShow = NO;
     editing=NO;
     playingVideo = NO;
-    NSString *tagStr=NSLocalizedString(@"Tag", @"title");
-   // NSString *u=NSLocalizedString(@"Edit", @"title");
-    NSString *cancelStr = NSLocalizedString(@"Done", @"title");
-    if (!lockMode) {
-        tag=[[UIBarButtonItem alloc]initWithTitle:tagStr style:UIBarButtonItemStyleBordered target:self action:@selector(markPhoto)];
-        cancel=[[UIBarButtonItem alloc]initWithTitle:cancelStr style:UIBarButtonItemStyleDone target:self action:@selector(cancelEdit)];
-        self.navigationItem.rightBarButtonItem=tag;
+    
+    [self setNavigationBarItem];
+    
+    if (lockMode) {
+        PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
+        [self performSelector:@selector(showLikeButton:) withObject:page afterDelay:1.0];
     }
-       
     [self updatePages];
     [self hideControlsAfterDelay];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(resetCropView) name:@"resetCropView" object:nil];
@@ -386,10 +385,8 @@
 
 // Enable/disable control visiblity timer
 - (void)hideControlsAfterDelay {
-    NSLog(@"hide control");
 	[self cancelControlHiding];
 	if (![UIApplication sharedApplication].isStatusBarHidden) {
-        NSLog(@"hidding");
 		controlVisibilityTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(hideControls) userInfo:nil repeats:NO];
 	}
 }
@@ -404,14 +401,9 @@
         [assetInfoView removeFromSuperview];
         assetInfoView = nil;
     }
-    if (likeButton || likeButton.superview != nil) {
-        [likeButton removeFromSuperview];
-        likeButton = nil;
-    }
-    
     [self performSelector:@selector(addPhotoInfoView:) withObject:page];
     if (lockMode) {
-        //[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showLikeButton:) object:page];
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showLikeButton:) object:page];
         [self performSelector:@selector(showLikeButton:) withObject:page];
     }
     
@@ -461,6 +453,10 @@
     tagCount.text = [NSString stringWithFormat:@"TAG COUNT:%@",[asset.numPeopleTag description]];
 }
 -(void)showLikeButton:(PhotoImageView *)page{
+    if (likeButton || likeButton.superview != nil) {
+        [likeButton removeFromSuperview];
+        likeButton = nil;
+    }
     likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     likeButton.layer.cornerRadius = 10.0;
     likeButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -640,16 +636,34 @@
 
 #pragma mark -
 #pragma mark setUp ToolBar Methods
+-(void)setNavigationBarItem{
+    NSString *tagStr=NSLocalizedString(@"Tag", @"title");
+    // NSString *u=NSLocalizedString(@"Edit", @"title");
+    NSString *cancelStr = NSLocalizedString(@"Done", @"title");
+    if (!lockMode) {
+        if (!tag) {
+            NSLog(@"tag");
+            tag=[[UIBarButtonItem alloc]initWithTitle:tagStr style:UIBarButtonItemStyleBordered target:self action:@selector(markPhoto)];
+            cancel=[[UIBarButtonItem alloc]initWithTitle:cancelStr style:UIBarButtonItemStyleDone target:self action:@selector(cancelEdit)];
+        }
+        self.navigationItem.rightBarButtonItem=tag;
+    }else
+        self.navigationItem.rightBarButtonItem = nil;
+
+}
 - (void)setupToolbar {
-    
+    [self setToolbarItems:nil];
 	UIBarButtonItem *action = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(actionButtonHit:)];
 	UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 	UIBarButtonItem *playPhoto = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemPlay target:self action:@selector(playPhotoFromSelfPage:)];
     UIBarButtonItem *lock = nil;
-    if (!lockMode)
-        lock = [[UIBarButtonItem alloc]initWithTitle:@"UnLock" style:UIBarButtonItemStylePlain target:self action:nil];
-    else
-        lock = [[UIBarButtonItem alloc]initWithTitle:@"Lock" style:UIBarButtonItemStylePlain target:self action:nil];
+    if (self.assetTablePicker.album != nil) {
+        if (lockMode)
+            lock = [[UIBarButtonItem alloc]initWithTitle:@"UnLock" style:UIBarButtonItemStylePlain target:self action:@selector(lockButtonPressed:)];
+        else
+            lock = [[UIBarButtonItem alloc]initWithTitle:@"Lock" style:UIBarButtonItemStylePlain target:self action:@selector(lockButtonPressed:)];
+    }
+    
     //UIBarButtonItem *play = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay target:self action:@selector(playPhotoOrVideo)];
     if (!lockMode) {
         [self setToolbarItems:[NSArray arrayWithObjects:action,flex, playPhoto, flex, lock,nil]];
@@ -677,6 +691,28 @@
     [self setToolbarItems:[NSArray arrayWithObjects:contacts,flex,favorites, nil]];
 }
 
+-(void)lockButtonPressed:(id)sender{
+    if (assetInfoView != nil && assetInfoView.superview != nil) {
+        [assetInfoView removeFromSuperview];
+        assetInfoView = nil;
+    }
+    if (likeButton != nil && likeButton.superview != nil) {
+        [likeButton removeFromSuperview];
+        likeButton = nil;
+    }
+    UIBarButtonItem *bt = (UIBarButtonItem *)sender;
+    if ([bt.title isEqualToString:@"UnLock"]) {
+        [self.assetTablePicker lockButtonPressed];
+        lockMode = NO;
+        [self setupToolbar];
+        [self setNavigationBarItem];
+    }else{
+        [self.assetTablePicker lockButtonPressed];
+        lockMode = YES;
+        [self setupToolbar];
+        [self setNavigationBarItem];
+    }
+}
 #pragma mark -
 #pragma mark EditMethods
 //-(void)edit
@@ -865,6 +901,13 @@
     if (index != currentPageIndex) {
         [self updateSubviewsWhenScroll];
         currentPageIndex = index;
+        if (lockMode) {
+            NSLog(@"lock:");
+            PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showLikeButton:) object:page];
+            [self performSelector:@selector(showLikeButton:) withObject:page afterDelay:1.0];
+        }
+
     }
 
 }
@@ -968,7 +1011,6 @@
 	}
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
 }
-
 
 #pragma mark -
 #pragma mark UIActionSheet Methods

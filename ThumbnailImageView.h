@@ -17,11 +17,11 @@
 -(void)thumbnailImageViewSelected:(ThumbnailImageView *)thumbnailImageView;
 @end
 
-@interface ThumbnailImageView : UIImageView{
+@interface ThumbnailImageView : UIView{
     UIImageView *highlightView;
     UIMenuController *theMenu;
     NSUInteger thumbnailIndex;
-  
+    UIImage *thumbnail;
     BOOL copyMenuShow;
     id<ThumbnailSelectionDelegate>__unsafe_unretained delegate;
 }
