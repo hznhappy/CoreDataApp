@@ -20,7 +20,6 @@
 @interface PhotoViewController (Private)
 
 - (void)setBarsHidden:(BOOL)hidden animated:(BOOL)animated;
-- (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated;
 -(void)setPhotoInfoHidden:(BOOL)hidden;
 -(void)setLikeButtonHidden:(BOOL)hidden;
 - (void)setupToolbar;
@@ -166,7 +165,7 @@
         [self cancelControlHiding];
         [[NSNotificationCenter defaultCenter] removeObserver:tagSelector];
         [[NSNotificationCenter defaultCenter]removeObserver:self];
-        //[[NSNotificationCenter defaultCenter]postNotificationName:@"reloadTableData" object:nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"reloadTableData" object:nil];
     }
     [self.navigationController setToolbarHidden:YES animated:YES];		
 }
@@ -613,11 +612,19 @@
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     _rotating = YES;
     pageIndexBeforeRotation = currentPageIndex;
+    if (_barsHidden)
+    {
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    }
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     currentPageIndex = pageIndexBeforeRotation;
     [self performLayout];
+    if (_barsHidden)
+    {
+        [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    }
 	//[self hideControlsAfterDelay];
    // NSLog(@"scroll frame is %@ and bounds %@  and contentsize %@",NSStringFromCGRect(self.scrollView.frame),NSStringFromCGRect(self.scrollView.bounds),NSStringFromCGSize(self.scrollView.contentSize));
     
@@ -805,16 +812,9 @@
 
 #pragma mark -
 #pragma mark Bar Methods
-
-- (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated{
-    [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:UIStatusBarAnimationFade];
-}
-
 - (void)setBarsHidden:(BOOL)hidden animated:(BOOL)animated{
 	if (hidden&&_barsHidden) return;
-    [self setStatusBarHidden:hidden animated:animated];
-    //[self.navigationController setNavigationBarHidden:hidden animated:animated];
-   // [self.navigationController setToolbarHidden:hidden animated:animated];
+    [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:UIStatusBarAnimationFade];
     if (hidden) {
         [UIView animateWithDuration:0.4 animations:^{
             self.navigationController.navigationBar.alpha = 0;

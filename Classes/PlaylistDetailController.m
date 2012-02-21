@@ -64,7 +64,7 @@
     self.list=[[NSMutableArray alloc]init];;
     self.nameList=[[NSMutableArray alloc]init];;
     self.IdList=[[NSMutableArray alloc]init];;
-    dateList = [NSArray arrayWithObjects:@"Last Week",@"Last Two Weeks",@"Last Three Weeks",@"Last Month",@"Three Month Ago", @"Cancel Date Rule",nil];
+    dateList = [NSArray arrayWithObjects:@"Recent week",@"Recent two weeks",@"Recent month",@"Recent three months",@"Recent six months", @"Recent year",@"More than one year",nil];
     self.textField.autocapitalizationType =  UITextAutocapitalizationTypeWords;
     self.textField.placeholder=@"标题";
     sortSwc=NO;
@@ -749,15 +749,10 @@
 #pragma mark UIPickerView delegate method
 -(void)pickerView:(UIPickerView *)pickerViews didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
     NSString *selectDate = [NSString stringWithFormat:@"%@",[dateList objectAtIndex:[pickerViews selectedRowInComponent:0]]];
-    if ([selectDate isEqualToString:@"Cancel Date Rule"]) {
-        date.datePeriod = nil;
-    }else{
-        date.datePeriod = selectDate;
-        date.conAlbum=bum;
-        bum.conDateRule=date;
-    }
+    date.datePeriod = selectDate;
+    date.conAlbum=bum;
+    bum.conDateRule=date;
     [appDelegate.dataSource.coreData saveContext];
-        
 }
 
 #pragma mark - 
@@ -1035,6 +1030,8 @@
         [listTable insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:3],nil] withRowAnimation:UITableViewRowAnimationAutomatic];
         [listTable endUpdates];
     }else{
+        bum.conDateRule = nil;
+        date = nil;
         [listTable beginUpdates];
         [listTable deleteRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:3],nil] withRowAnimation:UITableViewRowAnimationAutomatic];
         [listTable endUpdates];

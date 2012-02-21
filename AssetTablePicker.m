@@ -33,6 +33,7 @@
      name= [UIButton buttonWithType:UIButtonTypeCustom];
     PhotoAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     dataSource = appDelegate.dataSource;
+    oritation = [UIApplication sharedApplication].statusBarOrientation;
     if(album==nil)
     {
         lock.enabled=NO;
@@ -89,7 +90,7 @@
     NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
     [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EditPhotoTag:)name:@"EditPhotoTag" object:nil];
-   // [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableData) name:@"reloadTableData" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableData) name:@"reloadTableData" object:nil];
 }
 
 //-(void)resetTableContentInset{
@@ -139,11 +140,11 @@
     [self.table reloadData];
 }
 
-/*-(void)reloadTableData{
+-(void)reloadTableData{
     oritation = [UIApplication sharedApplication].statusBarOrientation;
     //[self resetTableContentInset];
     [self.table reloadData];
-}*/
+}
 -(void)backButtonPressed
 {
     NSString *a=NSLocalizedString(@"Lock", @"title");
@@ -574,10 +575,8 @@
     Asset *asset = [self.crwAssets objectAtIndex:index];
     if(action==YES)
     {
-        NSLog(@"action");
         if([side isEqualToString:@"favorite"])
         {
-            NSLog(@"people");
             selectedRow = cell.rowNumber;
             NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                                         [NSNumber numberWithBool:lockMode],@"lock", self,@"pushPeopleThumbnailView",self.album.transitType,@"transition",nil];
@@ -662,17 +661,20 @@
     if ((UIInterfaceOrientationIsLandscape(oritation) && UIInterfaceOrientationIsLandscape(previousOrigaton))||(UIInterfaceOrientationIsPortrait(oritation)&&UIInterfaceOrientationIsPortrait(previousOrigaton))) {
         return;
     }
-    UIEdgeInsets insets = self.table.contentInset;
-    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-        [self.table setContentInset:UIEdgeInsetsMake(insets.top-12, insets.left, insets.bottom, insets.right)];
-    }else{
-        [self.table setContentInset:UIEdgeInsetsMake(insets.top+12, insets.left, insets.bottom, insets.right)];
-    }
+//    UIEdgeInsets insets = self.table.contentInset;
+//    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+//        [self.table setContentInset:UIEdgeInsetsMake(insets.top-12, insets.left, insets.bottom, insets.right)];
+//    }else{
+//        [self.table setContentInset:UIEdgeInsetsMake(insets.top+12, insets.left, insets.bottom, insets.right)];
+//    }
     previousOrigaton = toInterfaceOrientation;
    // [self resetTableContentInset];
     [self.table reloadData];
 }
 
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    
+}
 #pragma  mark -
 #pragma  mark Memory management
 -(void)viewDidUnload{
