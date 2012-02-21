@@ -26,8 +26,7 @@
             thumImageView.delegate = self;
             [self addSubview:thumImageView];
             frame.origin.x = frame.origin.x + frame.size.width + 4;
-        }
-        
+        }        
     }
 }
 
