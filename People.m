@@ -2,7 +2,7 @@
 //  People.m
 //  PhotoApp
 //
-//  Created by apple on 2/15/12.
+//  Created by apple on 2/21/12.
 //  Copyright (c) 2012 chinarewards. All rights reserved.
 //
 
@@ -19,7 +19,7 @@
 @dynamic firstName;
 @dynamic inAddressBook;
 @dynamic lastName;
-@dynamic listSeq;
+@dynamic listSort;
 @dynamic conPeopleRuleDetail;
 @dynamic conPeopleTag;
 

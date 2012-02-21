@@ -54,7 +54,7 @@
         <attribute name="firstName" optional="YES" attributeType="String"/>
         <attribute name="inAddressBook" optional="YES" attributeType="Boolean"/>
         <attribute name="lastName" optional="YES" attributeType="String"/>
-        <attribute name="listSeq" optional="YES" attributeType="Integer 32" defaultValueString="0"/>
+        <attribute name="listSort" optional="YES" attributeType="Integer 32" defaultValueString="0"/>
         <relationship name="conPeopleRuleDetail" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="PeopleRuleDetail" inverseName="conPeople" inverseEntity="PeopleRuleDetail" indexed="YES"/>
         <relationship name="conPeopleTag" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="PeopleTag" inverseName="conPeople" inverseEntity="PeopleTag" indexed="YES"/>
     </entity>

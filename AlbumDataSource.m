@@ -85,6 +85,7 @@
     favorate.firstName=@"NoBody";
     favorate.favorite=[NSNumber numberWithBool:YES];
     favorate.addressBookId=[NSNumber numberWithInt:-1];
+    favorate.listSort=[NSNumber numberWithInt:0];
    }
    
     NSArray *urlList =deviceAssets.urls;
@@ -135,16 +136,19 @@
         
         newAsset=[[Asset alloc]initWithEntity:entity insertIntoManagedObjectContext:[coreData managedObjectContext]];
         newAsset.url=[[[alAsset defaultRepresentation]url]description];
-      /*  NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
+       // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
+       // NSString * strDate=[[[alAsset defaultRepresentation]metadata]description];//valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
+      //NSLog(@"strdate:%@",strDate);
+      /*  NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
        // NSLog(@"strdate:%@",strDate);
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
         //[inputFormatter setLocale:[NSLocale currentLocale]];
         NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
        [inputFormatter setTimeZone:timeZone1];
         [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
-        newAsset.date = [inputFormatter dateFromString:strDate];
-      //  NSLog(@"date = %@", newAsset.date);
-       */
+        newAsset.date = [inputFormatter dateFromString:strDate];*/
+     //  NSLog(@"date = %@", newAsset.date);
+       
         if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
             newAsset.videoType = [NSNumber numberWithBool:YES];
         }else{
@@ -174,7 +178,7 @@
     AlbumAll=[[AmptsAlbum alloc]init];
     AlbumAll.name=@"ALL";
     AlbumAll.alblumId=nil;
-    NSMutableArray *coreDataAssets = [self simpleQuery:@"Asset" predicate:nil sortField:nil sortOrder:YES];
+    NSArray *coreDataAssets = [self simpleQuery:@"Asset" predicate:nil sortField:nil sortOrder:YES];
     
     for (NSString *u in deviceAssets.urls) {
         for (Asset *as in coreDataAssets) {
@@ -250,10 +254,11 @@
 {
     [favoriteList removeAllObjects];
     NSPredicate *favor=[NSPredicate predicateWithFormat:@"favorite==%@",[NSNumber numberWithBool:YES]];
-    NSArray *fa2 = [self simpleQuery:@"People" predicate:favor sortField:nil sortOrder:YES];
+    NSArray *fa2 = [self simpleQuery:@"People" predicate:favor sortField:@"listSort" sortOrder:YES];
     for(People *p in fa2)
     {
         NSPredicate *ptag=[NSPredicate predicateWithFormat:@"conPeople==%@",p];
+       // NSString *sort=[NSString stringWithFormat:@"%@",[p listSort]];
         NSArray *Pt=[self simpleQuery:@"PeopleTag" predicate:ptag sortField:nil sortOrder:YES];
         NSMutableArray *WE=[[NSMutableArray alloc]init];
         for(int i=0;i<[Pt count];i++)
@@ -274,7 +279,7 @@
 -(NSMutableArray *)addPeople:(People*)po
 {
     NSPredicate *ptag=[NSPredicate predicateWithFormat:@"conPeople==%@",po];
-    NSMutableArray *Pt=[self simpleQuery:@"PeopleTag" predicate:ptag sortField:nil sortOrder:YES];
+    NSArray *Pt=[self simpleQuery:@"PeopleTag" predicate:ptag sortField:nil sortOrder:YES];
     NSMutableArray *WE=[[NSMutableArray alloc]init];
     for(int i=0;i<[Pt count];i++)
     {
@@ -288,7 +293,6 @@
     pop.num=[WE count];
     pop.people=po;
     [favoriteList addObject:pop];
-    NSLog(@"favotite:%d",[favoriteList count]);
     return favoriteList;
 
 }
@@ -359,7 +363,6 @@
     NSPredicate * pre=nil;
     [assetsBook removeAllObjects];
     [assetsBook addObject:AlbumAll];
-    NSLog(@"all count:%d",[AlbumAll.assetsList count]);
     AmptsAlbum *tmpAlbum=nil;
     tmpAlbum=[[AmptsAlbum alloc]init]; 
     NSMutableArray *tem=[[NSMutableArray alloc]init];
@@ -367,7 +370,6 @@
     {
         [tem addObject:al];
     }
-    NSLog(@"al count %d",[tem count]);
     tmpAlbum.assetsList=tem;
     pre=[NSPredicate predicateWithFormat:@"numPeopleTag != 0"];
     NSMutableArray *TageAssets = [self simpleQuery:@"Asset" predicate:pre sortField:nil sortOrder:YES];
@@ -379,7 +381,6 @@
     AlbumUnTAG.num=[AlbumUnTAG.assetsList count];
     [UIApplication sharedApplication].applicationIconBadgeNumber = AlbumUnTAG.num;
     [assetsBook addObject:AlbumUnTAG];
-     NSLog(@"after all count:%d",[AlbumAll.assetsList count]);
     tmp=[self simpleQuery:@"Album" predicate:nil sortField:nil sortOrder:YES];
     for(Album* i in tmp ) {
         AmptsAlbum * album=[[AmptsAlbum alloc]init];

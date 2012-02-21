@@ -30,11 +30,11 @@
         self.thumbnailIndex = index;
         copyMenuShow = NO;
         if ([asset.videoType boolValue]) 
-        {
+       {
             //NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
                                                              //forKey:AVURLAssetPreferPreciseDurationAndTimingKey];           
             //AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:url options:opts]; 
-            AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:url];
+           AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:url];
             
             CMTime duration = playerItem.duration;
             int durationSeconds = (int)ceilf(CMTimeGetSeconds(duration));
@@ -44,9 +44,9 @@
 //                minute = index;
 //                second = second - index*60;                 
 //            }    
-            [self addSubview:[self addVideoOverlay:durationSeconds]];
+           [self addSubview:[self addVideoOverlay:durationSeconds]];
             
-        }
+       }
         if([asset.numPeopleTag intValue] != 0&&!act)
         {   
             NSString *numStr = [NSString stringWithFormat:@"%@",asset.numPeopleTag];
@@ -89,7 +89,7 @@
 }
 -(UIView *)addVideoOverlay:(int)second{
     int hours = second / (60 * 60);
-    int minutes = (second / 60) % 60;
+   int minutes = (second / 60) % 60;
     int seconds = second % 60;
     NSString *formattedTimeString = nil;
     if ( hours > 0 ) {
@@ -101,10 +101,10 @@
     UIView *video =[[UIView alloc]initWithFrame:CGRectMake(0, 54, 74, 16)];
     UILabel *length=[[UILabel alloc]initWithFrame:CGRectMake(40, 3, 44, 10)];
     UIImageView *tu=[[UIImageView alloc]initWithFrame:CGRectMake(6, 4,15, 8)];
-    UIImage *picture = [UIImage imageNamed:@"VED.png"];
-    // set the image for the button
+  UIImage *picture = [UIImage imageNamed:@"VED.png"];
+   // set the image for the button
     [tu setImage:picture];
-    [video addSubview:tu];
+  // [video addSubview:tu];
     
     
     [length setBackgroundColor:[UIColor clearColor]];

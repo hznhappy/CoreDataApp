@@ -301,6 +301,7 @@
     [self resetTags];
     [self.tagRow removeAllObjects];
     [self.UrlList removeAllObjects];
+    [tagSelector.peopleList removeAllObjects];
     tagSelector.mypeople=nil;
     [self.table reloadData];
     }
@@ -334,7 +335,6 @@
     NSString *c=NSLocalizedString(@"ok", @"title");
     if([self.lock.title isEqualToString:a])
     { 
-        NSLog(@"HUI:%@",dataSource.password);
         NSString *password=[NSString stringWithFormat:@"%@",dataSource.password];
         if(dataSource.password==nil||password==nil||password.length==0)
         { 
@@ -441,7 +441,6 @@
     [tagSelector selectTagNameFromContacts];
 }
 -(IBAction)playPhotos{
-    NSLog(@"play");
     if([side isEqualToString:@"favorite"])
     {
         NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:self.crwAssets, @"assets", self.album.transitType, @"transition",nil];
