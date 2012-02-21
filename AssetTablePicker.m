@@ -300,6 +300,7 @@
     [self resetTags];
     [self.tagRow removeAllObjects];
     [self.UrlList removeAllObjects];
+    [tagSelector.peopleList removeAllObjects];
     tagSelector.mypeople=nil;
     [self.table reloadData];
     }

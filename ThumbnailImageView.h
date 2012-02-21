@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import <AVFoundation/AVFoundation.h>
+#import <AVFoundation/AVAsset.h>
+#import <CoreMedia/CoreMedia.h>
 @class ThumbnailImageView;
 @class Asset;
 @protocol ThumbnailSelectionDelegate <NSObject>
@@ -18,8 +21,7 @@
     UIImageView *highlightView;
     UIMenuController *theMenu;
     NSUInteger thumbnailIndex;
-    int minute;
-    int second;
+  
     BOOL copyMenuShow;
     id<ThumbnailSelectionDelegate>__unsafe_unretained delegate;
 }
@@ -27,7 +29,7 @@
 @property(nonatomic,unsafe_unretained)id<ThumbnailSelectionDelegate>delegate;
 -(ThumbnailImageView *)initWithAsset:(Asset*)asset index:(NSUInteger)index action:(BOOL)act;
 -(UIView *)addTagnumberOverlay:(NSString *)numbe;
--(UIView *)addVideoOverlay;
+-(UIView *)addVideoOverlay:(int)second;
 -(void)setSelectedView;
 -(void)clearSelection;
 -(void)cancelCopyMenu;

@@ -29,21 +29,23 @@
         self.thumbnailIndex = index;
         copyMenuShow = NO;
         if ([asset.videoType boolValue]) 
-        {
-            NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
-                                                             forKey:AVURLAssetPreferPreciseDurationAndTimingKey];           
-            AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:url options:opts]; 
+       {
+            //NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
+                                                             //forKey:AVURLAssetPreferPreciseDurationAndTimingKey];           
+            //AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:url options:opts]; 
+           AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:url];
             
-            minute = 0, second = 0; 
-            second = urlAsset.duration.value / urlAsset.duration.timescale;
-            if (second >= 60) {
-                int index = second / 60;
-                minute = index;
-                second = second - index*60;                        
-            }    
-            [self addSubview:[self addVideoOverlay]];
+            CMTime duration = playerItem.duration;
+            int durationSeconds = (int)ceilf(CMTimeGetSeconds(duration));
+//            second = urlAsset.duration.value / urlAsset.duration.timescale;
+//            if (second >= 60) {
+//                int index = second / 60;
+//                minute = index;
+//                second = second - index*60;                   
+//            }    
+           [self addSubview:[self addVideoOverlay:durationSeconds]];
             
-        }
+       }
         if([asset.numPeopleTag intValue] != 0&&!act)
         {   
             NSString *numStr = [NSString stringWithFormat:@"%@",asset.numPeopleTag];
@@ -80,31 +82,41 @@
     return tagBg;
     
 }
--(UIView *)addVideoOverlay{
+-(UIView *)addVideoOverlay:(int)second{
+    int hours = second / (60 * 60);
+   int minutes = (second / 60) % 60;
+    int seconds = second % 60;
+    NSString *formattedTimeString = nil;
+    if ( hours > 0 ) {
+        formattedTimeString = [NSString stringWithFormat:@"%d:%02d:%02d", hours, minutes, seconds];
+    } else {
+        formattedTimeString = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
+    }
+
     UIView *video =[[UIView alloc]initWithFrame:CGRectMake(0, 54, 74, 16)];
     UILabel *length=[[UILabel alloc]initWithFrame:CGRectMake(40, 3, 44, 10)];
     UIImageView *tu=[[UIImageView alloc]initWithFrame:CGRectMake(6, 4,15, 8)];
-    //  tu= [UIButton buttonWithType:UIButtonTypeCustom]; 
-    UIImage *picture = [UIImage imageNamed:@"VED.png"];
-    // set the image for the button
+  UIImage *picture = [UIImage imageNamed:@"VED.png"];
+   // set the image for the button
     [tu setImage:picture];
-    [video addSubview:tu];
+  // [video addSubview:tu];
     
     
     [length setBackgroundColor:[UIColor clearColor]];
     length.alpha=0.8;
-    if (minute == 0 && second == 0) {
-        length.text = [NSString stringWithFormat:@"00:00"];
-    }else if(minute != 0 && second == 0){
-        NSString *a=[NSString stringWithFormat:@"%d",minute];
-        length.text = [NSString stringWithFormat:@"%@:00",a];
-    }else{
-        NSString *a=[NSString stringWithFormat:@"%d",minute];
-        NSString *b=[NSString stringWithFormat:@"%d",second];
-        length.text=a;
-        length.text=[length.text stringByAppendingString:@":"];
-        length.text=[length.text stringByAppendingString:b];
-    }
+//    if (minute == 0 && second == 0) {
+//        length.text = [NSString stringWithFormat:@"00:00"];
+//    }else if(minute != 0 && second == 0){
+//        NSString *a=[NSString stringWithFormat:@"%2d",minute];
+//        length.text = [NSString stringWithFormat:@"%@:00",a];
+//    }else{
+//        NSString *a=[NSString stringWithFormat:@"%2d",minute];
+//        NSString *b=[NSString stringWithFormat:@"%2d",second];
+//        length.text=a;
+//        length.text=[length.text stringByAppendingString:@":"];
+//        length.text=[length.text stringByAppendingString:b];
+//    }
+    length.text = formattedTimeString;
     length.textColor = [UIColor whiteColor];
     length.textAlignment = UITextAlignmentLeft;
     length.font = [UIFont boldSystemFontOfSize:12.0];

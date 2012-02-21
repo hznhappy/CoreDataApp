@@ -136,8 +136,9 @@
         
         newAsset=[[Asset alloc]initWithEntity:entity insertIntoManagedObjectContext:[coreData managedObjectContext]];
         newAsset.url=[[[alAsset defaultRepresentation]url]description];
-      // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
-       // NSLog(@"strdate:%@",strDate);
+       // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
+       // NSString * strDate=[[[alAsset defaultRepresentation]metadata]description];//valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
+      //NSLog(@"strdate:%@",strDate);
       /*  NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
        // NSLog(@"strdate:%@",strDate);
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
@@ -176,7 +177,7 @@
     AlbumAll=[[AmptsAlbum alloc]init];
     AlbumAll.name=@"ALL";
     AlbumAll.alblumId=nil;
-    NSMutableArray *coreDataAssets = [self simpleQuery:@"Asset" predicate:nil sortField:nil sortOrder:YES];
+    NSArray *coreDataAssets = [self simpleQuery:@"Asset" predicate:nil sortField:nil sortOrder:YES];
     
     for (NSString *u in deviceAssets.urls) {
         for (Asset *as in coreDataAssets) {

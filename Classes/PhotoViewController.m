@@ -386,8 +386,10 @@
 
 // Enable/disable control visiblity timer
 - (void)hideControlsAfterDelay {
+    NSLog(@"hide control");
 	[self cancelControlHiding];
 	if (![UIApplication sharedApplication].isStatusBarHidden) {
+        NSLog(@"hidding");
 		controlVisibilityTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(hideControls) userInfo:nil repeats:NO];
 	}
 }
@@ -770,20 +772,32 @@
 
 - (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated{
     [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:UIStatusBarAnimationFade];
-    
 }
 
 - (void)setBarsHidden:(BOOL)hidden animated:(BOOL)animated{
 	if (hidden&&_barsHidden) return;
     [self setStatusBarHidden:hidden animated:animated];
-    [self.navigationController setNavigationBarHidden:hidden animated:animated];
-    [self.navigationController setToolbarHidden:hidden animated:animated];
+    //[self.navigationController setNavigationBarHidden:hidden animated:animated];
+   // [self.navigationController setToolbarHidden:hidden animated:animated];
+    if (hidden) {
+        [UIView animateWithDuration:0.4 animations:^{
+            self.navigationController.navigationBar.alpha = 0;
+            self.navigationController.toolbar.alpha = 0;
+        }];
+    }else{
+        [UIView animateWithDuration:0.4 animations:^{
+            self.navigationController.navigationBar.alpha = 1;
+            self.navigationController.toolbar.alpha = 1;
+        }];
+    }
+    
     [self setPhotoInfoHidden:hidden];
     [self setLikeButtonHidden:hidden];
     if (!playingPhoto && !playingVideo &&!hidden && assetInfoView == nil && assetInfoView.superview == nil) {
         PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
         [self showPhotoInfo:page];
     }
+    [self cancelControlHiding];
     if (!hidden) {
         [self hideControlsAfterDelay];
     }
@@ -1051,7 +1065,7 @@
         if (timer) {
             [timer invalidate];
             timer = nil;
-            [self setBarsHidden:NO animated:NO];
+            [self setBarsHidden:NO animated:YES];
             if (!playingFromSelfPage) {
                 [self.navigationController popViewControllerAnimated:YES];
             }

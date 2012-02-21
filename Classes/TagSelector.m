@@ -244,6 +244,7 @@
         mypeople.firstName = firstName;
         mypeople.lastName = lastName;
         mypeople.addressBookId = [NSNumber numberWithInteger:recId];
+        mypeople.inAddressBook=[NSNumber numberWithBool:YES];
     }
     [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
     [viewController dismissModalViewControllerAnimated:YES];

@@ -39,7 +39,6 @@
 		18A9038714EB9AD5001CA960 /* EventRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9038614EB9AD5001CA960 /* EventRule.m */; };
 		18A9038A14EB9AD5001CA960 /* PeopleRuleDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9038914EB9AD5001CA960 /* PeopleRuleDetail.m */; };
 		18A9038D14EB9AD5001CA960 /* PeopleTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9038C14EB9AD5001CA960 /* PeopleTag.m */; };
-		18A9039014EB9AD6001CA960 /* People.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9038F14EB9AD5001CA960 /* People.m */; };
 		18A9039614EB9AD6001CA960 /* PeopleRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9039514EB9AD6001CA960 /* PeopleRule.m */; };
 		18A9039914EB9AD6001CA960 /* Album.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9039814EB9AD6001CA960 /* Album.m */; };
 		18A9039C14EB9AD6001CA960 /* AssetRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9039B14EB9AD6001CA960 /* AssetRule.m */; };
@@ -56,6 +55,8 @@
 		18DCEFEE14E39642001965EA /* PlaylistDetailController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18DCEFF014E39642001965EA /* PlaylistDetailController.xib */; };
 		18DD696514B6F045000062D1 /* VED.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DD696414B6F045000062D1 /* VED.png */; };
 		18DD696714B6F6F1000062D1 /* ji.png in Resources */ = {isa = PBXBuildFile; fileRef = 18DD696614B6F6F1000062D1 /* ji.png */; };
+		18DDA24B14ED0B23006C05C8 /* favorite.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DDA24A14ED0B23006C05C8 /* favorite.m */; };
+		18F42AD714F2268D00BBDD1A /* People.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F42AD614F2268C00BBDD1A /* People.m */; };
 		18F7B23114B43BB700566F66 /* ThumbnailHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 18F7B23014B43BB700566F66 /* ThumbnailHighlight.png */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -137,8 +138,6 @@
 		18A9038914EB9AD5001CA960 /* PeopleRuleDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeopleRuleDetail.m; sourceTree = "<group>"; };
 		18A9038B14EB9AD5001CA960 /* PeopleTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeopleTag.h; sourceTree = "<group>"; };
 		18A9038C14EB9AD5001CA960 /* PeopleTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeopleTag.m; sourceTree = "<group>"; };
-		18A9038E14EB9AD5001CA960 /* People.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = People.h; sourceTree = "<group>"; };
-		18A9038F14EB9AD5001CA960 /* People.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = People.m; sourceTree = "<group>"; };
 		18A9039414EB9AD6001CA960 /* PeopleRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeopleRule.h; sourceTree = "<group>"; };
 		18A9039514EB9AD6001CA960 /* PeopleRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeopleRule.m; sourceTree = "<group>"; };
 		18A9039714EB9AD6001CA960 /* Album.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Album.h; sourceTree = "<group>"; };
@@ -152,6 +151,8 @@
 		18C78B9014D6736500B57B4F /* TdCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TdCalendarView.m; sourceTree = "<group>"; };
 		18C78B9114D6736500B57B4F /* PlaylistDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistDetailController.h; sourceTree = "<group>"; };
 		18C78B9214D6736500B57B4F /* PlaylistDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistDetailController.m; sourceTree = "<group>"; };
+		18CE49AA14F1ECB900C2C681 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/PlaylistDetailController.xib"; sourceTree = "<group>"; };
+		18CE49AB14F1ECBD00C2C681 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/PlaylistDetailController.xib"; sourceTree = "<group>"; };
 		18D402831474E50000389097 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		18D402851474E50800389097 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		18D402911474E55900389097 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -169,10 +170,12 @@
 		18DBCA7D14DBB23000D43062 /* deletebutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deletebutton.png; sourceTree = "<group>"; };
 		18DBCA9814DBF9B900D43062 /* TagManagementController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagManagementController.xib; sourceTree = "<group>"; };
 		18DCEFEF14E39642001965EA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PlaylistDetailController.xib; sourceTree = "<group>"; };
-		18DCEFF214E3964C001965EA /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/PlaylistDetailController.xib"; sourceTree = "<group>"; };
-		18DCEFF314E39650001965EA /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/PlaylistDetailController.xib"; sourceTree = "<group>"; };
 		18DD696414B6F045000062D1 /* VED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = VED.png; sourceTree = "<group>"; };
 		18DD696614B6F6F1000062D1 /* ji.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ji.png; sourceTree = "<group>"; };
+		18DDA24914ED0B23006C05C8 /* favorite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = favorite.h; sourceTree = "<group>"; };
+		18DDA24A14ED0B23006C05C8 /* favorite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = favorite.m; sourceTree = "<group>"; };
+		18F42AD514F2268C00BBDD1A /* People.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = People.h; sourceTree = "<group>"; };
+		18F42AD614F2268C00BBDD1A /* People.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = People.m; sourceTree = "<group>"; };
 		18F7B23014B43BB700566F66 /* ThumbnailHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ThumbnailHighlight.png; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* PhotoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -242,6 +245,8 @@
 			isa = PBXGroup;
 			children = (
 				18DAD78314E21BD100BBE9B1 /* PhotoApp.xcdatamodel */,
+				18F42AD514F2268C00BBDD1A /* People.h */,
+				18F42AD614F2268C00BBDD1A /* People.m */,
 				187F8F0A14EE25B800C3FCCF /* DateRule.h */,
 				187F8F0B14EE25B800C3FCCF /* DateRule.m */,
 				18A9039A14EB9AD6001CA960 /* AssetRule.h */,
@@ -250,8 +255,6 @@
 				18A9039814EB9AD6001CA960 /* Album.m */,
 				18A9039414EB9AD6001CA960 /* PeopleRule.h */,
 				18A9039514EB9AD6001CA960 /* PeopleRule.m */,
-				18A9038E14EB9AD5001CA960 /* People.h */,
-				18A9038F14EB9AD5001CA960 /* People.m */,
 				18A9038B14EB9AD5001CA960 /* PeopleTag.h */,
 				18A9038C14EB9AD5001CA960 /* PeopleTag.m */,
 				18A9038814EB9AD5001CA960 /* PeopleRuleDetail.h */,
@@ -270,6 +273,8 @@
 				183DE2FF14C7F5D700BDC724 /* AmptsPhotoCoreData.m */,
 				183DE30014C7F5D700BDC724 /* OnDeviceAssets.h */,
 				183DE30114C7F5D700BDC724 /* OnDeviceAssets.m */,
+				18DDA24914ED0B23006C05C8 /* favorite.h */,
+				18DDA24A14ED0B23006C05C8 /* favorite.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -563,11 +568,12 @@
 				18A9038714EB9AD5001CA960 /* EventRule.m in Sources */,
 				18A9038A14EB9AD5001CA960 /* PeopleRuleDetail.m in Sources */,
 				18A9038D14EB9AD5001CA960 /* PeopleTag.m in Sources */,
-				18A9039014EB9AD6001CA960 /* People.m in Sources */,
 				18A9039614EB9AD6001CA960 /* PeopleRule.m in Sources */,
 				18A9039914EB9AD6001CA960 /* Album.m in Sources */,
 				18A9039C14EB9AD6001CA960 /* AssetRule.m in Sources */,
 				187F8F0C14EE25B900C3FCCF /* DateRule.m in Sources */,
+				18DDA24B14ED0B23006C05C8 /* favorite.m in Sources */,
+				18F42AD714F2268D00BBDD1A /* People.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -618,8 +624,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				18DCEFEF14E39642001965EA /* en */,
-				18DCEFF214E3964C001965EA /* zh-Hant */,
-				18DCEFF314E39650001965EA /* zh-Hans */,
+				18CE49AA14F1ECB900C2C681 /* zh-Hant */,
+				18CE49AB14F1ECBD00C2C681 /* zh-Hans */,
 			);
 			name = PlaylistDetailController.xib;
 			sourceTree = "<group>";

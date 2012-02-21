@@ -70,6 +70,7 @@ int j=1,count=0;
     ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc]init];
     picker.peoplePickerDelegate = self;
     [self presentModalViewController:picker animated:YES];
+    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
 } 
 -(BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person 
 {
@@ -98,18 +99,19 @@ int j=1,count=0;
     }
     else
     {
-       
-        NSPredicate *favor=[NSPredicate predicateWithFormat:@"some addressBookId==%@",fid]; 
+        NSPredicate *favor=[NSPredicate predicateWithFormat:@"addressBookId==%@",fid]; 
         NSArray *fa1 = [datasource simpleQuery:@"People" predicate:favor sortField:nil sortOrder:YES];
         if([fa1 count]==0)
         {
+            NSLog(@"whit out");
             NSEntityDescription *entity = [NSEntityDescription entityForName:@"People" inManagedObjectContext:[datasource.coreData managedObjectContext]]; 
             favorate=[[People alloc]initWithEntity:entity insertIntoManagedObjectContext:[datasource.coreData managedObjectContext]];
             favorate.firstName=personName;
             favorate.lastName=lastname;
             favorate.addressBookId=[NSNumber numberWithInt:[fid intValue]];
             favorate.favorite=[NSNumber numberWithBool:YES];
-            favorate.listSort=[NSNumber numberWithInt:[peopleList count]];
+            favorite *fe=[peopleList lastObject];
+            favorate.listSort=[NSNumber numberWithInt:[fe.people.listSort intValue]+1];
             [datasource.coreData saveContext];
             peopleList=[datasource addPeople:favorate];
             [self.result addObject:favorate];
@@ -117,15 +119,19 @@ int j=1,count=0;
             [self.tableView reloadData];
         }
         else
-        {
+        {NSLog(@"with");
             People *p=(People *)[fa1 objectAtIndex:0];
             p.favorite=[NSNumber numberWithBool:YES];
+            p.inAddressBook=[NSNumber numberWithBool:NO];
+            favorite *fe=[peopleList lastObject];
+            p.listSort=[NSNumber numberWithInt:[fe.people.listSort intValue]+1];
+            NSLog(@"FElistSort:%@",favorate.listSort);
             [datasource.coreData saveContext];
             [self table];
             
        }
     }
-    
+    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
     [self dismissModalViewControllerAnimated:YES];
     return NO;
     
@@ -224,8 +230,7 @@ int j=1,count=0;
     {
         [self.result addObject:a.people];
         [IdList addObject:a.people.addressBookId];
-        NSLog(@"listSort:%@",a.people.listSort);
-       //  NSLog(@"ID:%@",a.people.addressBookId);
+       // NSLog(@"listSort:%@",a.people.listSort);
     }
     [self.tableView reloadData];
 }
@@ -272,8 +277,8 @@ int j=1,count=0;
    // People *am = (People *)[result objectAtIndex:indexPath.row];
     
     favorite *fa=[peopleList objectAtIndex:indexPath.row];
-    People *pl=fa.people;
-    pl.listSort=[NSNumber numberWithInt:indexPath.row];
+    //People *pl=fa.people;
+    //pl.listSort=[NSNumber numberWithInt:indexPath.row];
     if(fa.num!=0)
     {
     if (fa.firstname == nil) {
@@ -431,6 +436,7 @@ int j=1,count=0;
 
 -(void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker
 {
+    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
 	[self dismissModalViewControllerAnimated:YES];
 }
 
@@ -453,7 +459,7 @@ int j=1,count=0;
                 favorite *p1=[self.peopleList objectAtIndex:i];
                 People *po1=p1.people;
                 
-                po1.listSort=[NSNumber numberWithInt:i+1];
+                po1.listSort=[NSNumber numberWithInt:[po1.listSort intValue]+1];
                 //[datasource.coreData saveContext];
             }
         }
@@ -463,7 +469,7 @@ int j=1,count=0;
             {
                 favorite *p1=[self.peopleList objectAtIndex:i];
                 People *po1=p1.people;
-                po1.listSort=[NSNumber numberWithInt:i-1];
+                po1.listSort=[NSNumber numberWithInt:[po1.listSort intValue]-1];
                 
             }
     }

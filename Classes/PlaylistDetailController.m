@@ -61,9 +61,9 @@
 - (void)viewDidLoad
 { 
     
-    self.list=[[NSMutableArray alloc]init];;
-    self.nameList=[[NSMutableArray alloc]init];;
-    self.IdList=[[NSMutableArray alloc]init];;
+    
+    self.nameList=[[NSMutableArray alloc]init];
+    self.IdList=[[NSMutableArray alloc]init];
     dateList = [NSArray arrayWithObjects:@"Last Week",@"Last Two Weeks",@"Last Three Weeks",@"Last Month",@"Three Month Ago", @"Cancel Date Rule",nil];
     self.textField.autocapitalizationType =  UITextAutocapitalizationTypeWords;
     self.textField.placeholder=@"标题";
@@ -141,21 +141,21 @@
     [super viewDidLoad];
 }
 -(void)table
-{   
+{   self.list=[[NSMutableArray alloc]init];
     [self.list removeAllObjects];
     [self.IdList removeAllObjects];
-  /*  NSManagedObjectContext *managedObjectContext=[appDelegate.dataSource.coreData managedObjectContext];
-    NSFetchRequest *request=[[NSFetchRequest alloc]init];
-    NSEntityDescription *entity=[NSEntityDescription entityForName:@"People" inManagedObjectContext:managedObjectContext];
-    [request setEntity:entity];
-    NSError *error;*/
-     list= [AL simpleQuery:@"People" predicate:nil sortField:@"listSort" sortOrder:YES];
-  //  list=[[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];  
+    NSPredicate *favor=[NSPredicate predicateWithFormat:@"favorite==%@",[NSNumber numberWithBool:YES]];
+    list= [AL simpleQuery:@"People" predicate:favor sortField:@"listSort" sortOrder:YES];
+    NSPredicate *ads=[NSPredicate predicateWithFormat:@"inAddressBook==%@",[NSNumber numberWithBool:YES]];
+    NSArray *adsList=[AL simpleQuery:@"People" predicate:ads sortField:nil sortOrder:YES];
+    [list addObjectsFromArray:adsList];
+    
     for(int i=0;i<[list count];i++)
     {
         People *po=(People *)[list objectAtIndex:i];
         [self.IdList addObject:po.addressBookId];
     }
+    [self.listTable reloadData];
 
 }
 -(void)album
@@ -208,22 +208,17 @@
 #pragma mark -
 #pragma mark UITableView  method
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 6;
+    return 7;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     switch (section) {
         case 0:
-            if (mySwc) {
-                return 4;
-            }
-            else{
-                return 3;
-            }
-            break;
-        case 1:
             return 1;
             break;
-        case 2:
+        case 1:
+            return [list count];
+            break;
+            case 2:
             return 2;
             break;
         case 3:
@@ -237,10 +232,16 @@
             }
             break;
         case 4:
-            return 2;
+            return 1;
             break;
         case 5:
-            return [list count];
+            return 2;
+            break;
+        case 6:
+            if(mySwc)
+            return 3;
+            else
+            return 2;
             break;
         default:
             break;
@@ -261,8 +262,8 @@
    
        if (indexPath.section == 0) {
         UITableViewCell *cell = nil;
-        switch (rowNum) {
-            case 0:
+       // switch (rowNum) {
+           // case 0:
                 cell = [tableView dequeueReusableCellWithIdentifier:@"textFieldCell"];
                 if (cell == nil) {
                     cell = self.textFieldCell;
@@ -274,7 +275,7 @@
                         self.textField.text = bum.name;
                     }
                 }
-                break;
+              /*  break;
             case 1:
                 cell = [tableView dequeueReusableCellWithIdentifier:@"transitionsCell"];
                 if (cell == nil) {
@@ -299,22 +300,17 @@
             default:
                 cell = nil;
                 break;
-        }
+        }*/
         return cell;
     }
-    else if(indexPath.section==1)
+    else if(indexPath.section==4)
     {
         UITableViewCell *cell=nil;
-        switch ((rowNum)) {
-            case 0:
+        
                 cell = [tableView dequeueReusableCellWithIdentifier:@"chooseCell"];
                 if (cell == nil) {
                     cell=self.chooseCell;
                 }
-                break;
-            default:
-                break;
-        }
         cell.accessoryView = [self chooseButton];
         if(bum!=nil&&![bum.chooseType isEqualToString:PhotoVideo])
         {
@@ -333,7 +329,7 @@
        
       return cell;
     }
-    else if(indexPath.section == 2)
+    else if(indexPath.section == 5)
     {
         UITableViewCell *cell = nil;
         switch (rowNum) {
@@ -341,6 +337,7 @@
                 cell = [tableView dequeueReusableCellWithIdentifier:@"SortCell"];
                 if (cell == nil) {
                     cell=self.SortCell;
+                     cell.accessoryView = [self chooseButton];
                 }
                 break;
             case 1:
@@ -433,7 +430,7 @@
         return cell;
         
     }
-    else if(indexPath.section == 4)
+    else if(indexPath.section == 2)
     {
         UITableViewCell *cell = nil;
         switch (rowNum) {
@@ -457,9 +454,42 @@
                return cell;
         
     }
+  else if(indexPath.section == 6) 
+  {
+      UITableViewCell *cell = nil;
+      switch (rowNum) {
+  case 0:
+      cell = [tableView dequeueReusableCellWithIdentifier:@"transitionsCell"];
+      if (cell == nil) {
+          cell = self.tranCell;
+      }
+      break;
+  case 1:
+      cell = [tableView dequeueReusableCellWithIdentifier:@"playMusicCell"];
+      if (cell == nil) {
+          cell = self.switchCell;
+      }
+      break;
+  case 2:
+      cell = [tableView dequeueReusableCellWithIdentifier:@"musicCell"];
+      if (cell == nil) {
+          cell = self.musicCell;
+      }
+      if (bum != nil && bum.music!=nil && bum.music.length != 0) {
+          self.musicLabel.text = bum.music;
+      }
+      break;
+  default:
+      cell = nil;
+      break;
 
-   else if(indexPath.section == 5) 
+  }
+      return cell;
+  }
+
+   else if(indexPath.section == 1) 
     {
+        
         static NSString *cellIdentifier = @"nameCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         if (cell == nil) {
@@ -468,7 +498,7 @@
             UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(45, 11, 126, 20)];
             name.tag = indexPath.row;
             name.backgroundColor = [UIColor clearColor];
-            People *am = (People *)[list objectAtIndex:indexPath.row];
+            People *am = (People *)[self.list objectAtIndex:indexPath.row];
             if (am.lastName.length == 0 || am.lastName == nil) {
                 name.text = am.firstName;
             }
@@ -528,15 +558,16 @@
             [cell.contentView addSubview:selectButton];
             
         }
+        
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        return cell;
+               return cell;
     }
     return nil;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self.textField resignFirstResponder];
-    if (indexPath.section ==0 && indexPath.row == 1 && self.textField.text != nil && self.textField.text.length != 0) {
+    if (indexPath.section ==6 && indexPath.row == 0 && self.textField.text != nil && self.textField.text.length != 0) {
         AnimaSelectController *animateController = [[AnimaSelectController alloc]init];
         animateController.tranStyle = self.tranLabel.text;
         animateController.Text=textField.text;
@@ -544,11 +575,11 @@
         [self.navigationController pushViewController:animateController animated:YES];
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
-    if (indexPath.section ==0 && indexPath.row == 2)
+    if (indexPath.section ==6 && indexPath.row == 1)
     {
         [textField resignFirstResponder];
     }
-    if (indexPath.section ==0 && indexPath.row == 3) {
+    if (indexPath.section ==6 && indexPath.row == 2) {
         MPMediaPickerController *mediaPicker = [[MPMediaPickerController alloc] initWithMediaTypes: MPMediaTypeMusic];
         
         mediaPicker.delegate = self;
@@ -558,7 +589,7 @@
         [self presentModalViewController:mediaPicker animated:YES];
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
-    if (indexPath.section == 5) {
+    if (indexPath.section == 1) {
         if(textField.text==nil||textField.text.length==0)
         { NSString *c=NSLocalizedString(@"note", @"title");
             NSString *b=NSLocalizedString(@"ok", @"title");
@@ -701,12 +732,13 @@
     }
     else
     {
-        NSEntityDescription *entity = [NSEntityDescription entityForName:@"People" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]]; 
-       People *favorate=[[People alloc]initWithEntity:entity insertIntoManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
-        favorate.firstName=personName;
-        favorate.lastName=lastname;
-        favorate.addressBookId=[NSNumber numberWithInt:[fid intValue]];
-        [appDelegate.dataSource.coreData saveContext];
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"People" inManagedObjectContext:[AL.coreData managedObjectContext]]; 
+       People *addressBook=[[People alloc]initWithEntity:entity insertIntoManagedObjectContext:[AL.coreData managedObjectContext]];
+        addressBook.firstName=personName;
+        addressBook.lastName=lastname;
+        addressBook.addressBookId=[NSNumber numberWithInt:[fid intValue]];
+        addressBook.inAddressBook=[NSNumber numberWithBool:YES];
+        [AL.coreData saveContext];
         [self table];
         [self.listTable reloadData];
     }
@@ -1017,11 +1049,11 @@
     mySwc = newSwitcn.on;
     if (newSwitcn.on) {
         [listTable beginUpdates];
-        [listTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
+        [listTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:2 inSection:6]] withRowAnimation:UITableViewRowAnimationTop];
         [listTable endUpdates];
     }else{
         [listTable beginUpdates];
-        [listTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
+        [listTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:2 inSection:6]] withRowAnimation:UITableViewRowAnimationTop];
         [listTable endUpdates];
     }
 }
