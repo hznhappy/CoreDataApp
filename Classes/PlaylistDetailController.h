@@ -75,6 +75,7 @@
     UIButton *sortButton;
     UIButton *orderButton;
     UIButton *peopleRuleButton;
+    NSString *playName;
     int key;
 }
 

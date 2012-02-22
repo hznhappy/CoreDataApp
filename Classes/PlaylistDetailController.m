@@ -64,7 +64,8 @@
     self.IdList=[[NSMutableArray alloc]init];
     dateList = [NSArray arrayWithObjects:@"Recent week",@"Recent two weeks",@"Recent month",@"Recent three months",@"Recent six months", @"Recent year",@"More than one year",nil];
     self.textField.autocapitalizationType =  UITextAutocapitalizationTypeWords;
-    self.textField.placeholder=@"标题";
+    playName=@"标题";
+    self.textField.placeholder=playName;
     sortSwc=NO;
     NSMutableArray *parry=[[NSMutableArray alloc]init];
     self.selectedIndexPaths=parry;
@@ -546,13 +547,14 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(bum==nil)
-    {
-        [self album];
-    }
+    
 
     [self.textField resignFirstResponder];
     if (indexPath.section ==6 && indexPath.row == 0) {
+        if(bum==nil)
+        {
+            [self album];
+        }
         AnimaSelectController *animateController = [[AnimaSelectController alloc]init];
         animateController.tranStyle = self.tranLabel.text;
         animateController.Text=textField.text;
@@ -565,6 +567,10 @@
         [textField resignFirstResponder];
     }
     if (indexPath.section ==6 && indexPath.row == 2) {
+        if(bum==nil)
+        {
+            [self album];
+        }
         MPMediaPickerController *mediaPicker = [[MPMediaPickerController alloc] initWithMediaTypes: MPMediaTypeMusic];
         
         mediaPicker.delegate = self;
@@ -575,6 +581,10 @@
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
     if (indexPath.section == 2) {
+        if(bum==nil)
+        {
+            [self album];
+        }
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             UIButton *button1 = [self getStateButton];
             if (cell.accessoryView==nil) {
@@ -1071,8 +1081,8 @@
   
     if(textField.text==nil||textField.text.length==0)
     {
-        textField.placeholder=@"标题";
-        NSString *c=NSLocalizedString(@"note", @"title");
+        textField.placeholder=playName;
+       /* NSString *c=NSLocalizedString(@"note", @"title");
         NSString *b=NSLocalizedString(@"ok", @"title");
         NSString *d=NSLocalizedString(@"Rule name can not be empty!", @"title");
         UIAlertView *alert = [[UIAlertView alloc]
@@ -1081,7 +1091,7 @@
                               delegate:self
                               cancelButtonTitle:nil
                               otherButtonTitles:b,nil];
-        [alert show];
+        [alert show];*/
         if(bum!=nil&&keybord==NO)
         {
 

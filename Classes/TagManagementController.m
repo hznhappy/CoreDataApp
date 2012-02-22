@@ -432,15 +432,7 @@ int j=1,count=0;
     else
     {
     People *favorate11=[[self.peopleList objectAtIndex:indexPath.row]people];
-    NSPredicate *pre=[NSPredicate predicateWithFormat:@"conPeople==%@",favorate11];
-    self.as=[appDelegate.dataSource simpleQuery:@"PeopleTag" predicate:pre sortField:nil sortOrder:YES];
-    NSMutableArray *WE=[[NSMutableArray alloc]init];
-    for(int i=0;i<[self.as count];i++)
-    {
-        PeopleTag *PT=[self.as objectAtIndex:i];
-        [WE addObject:PT.conAsset];
-    }
-    NSMutableDictionary *dic = nil;
+     NSMutableDictionary *dic = nil;
         NSString *a=nil;
         if (favorate11.firstName == nil) {
             a = [NSString stringWithFormat:@"%@",favorate11.lastName];
@@ -451,7 +443,7 @@ int j=1,count=0;
         } 
         else
             a = [NSString stringWithFormat:@"%@ %@",favorate11.lastName, favorate11.firstName];
-    dic =[NSMutableDictionary dictionaryWithObjectsAndKeys:WE, @"myAssets",a,@"title",nil];
+    dic =[NSMutableDictionary dictionaryWithObjectsAndKeys:[[self.peopleList objectAtIndex:indexPath.row]assetsList], @"myAssets",a,@"title",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"pushPeopleThumbnailView" object:nil userInfo:dic];
     }
         [table deselectRowAtIndexPath:indexPath animated:YES];

@@ -264,6 +264,7 @@
         for(int i=0;i<[Pt count];i++)
         {
             PeopleTag *PT=[Pt objectAtIndex:i];
+            if(![PT.conAsset.isprotected boolValue])
             [WE addObject:PT.conAsset];
         }
         favorite *pop=[[favorite alloc]init];
@@ -284,7 +285,9 @@
     for(int i=0;i<[Pt count];i++)
     {
         PeopleTag *PT=[Pt objectAtIndex:i];
+        if(![PT.conAsset.isprotected boolValue])
         [WE addObject:PT.conAsset];
+        
     }
     favorite *pop=[[favorite alloc]init];
     pop.firstname=po.firstName;
