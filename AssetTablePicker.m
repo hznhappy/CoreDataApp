@@ -26,6 +26,7 @@
 @synthesize AddAssertList;
 @synthesize action;
 @synthesize side;
+@synthesize lockMode;
 #pragma mark -
 #pragma mark UIViewController Methods
 
@@ -34,9 +35,16 @@
     PhotoAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     dataSource = appDelegate.dataSource;
     oritation = [UIApplication sharedApplication].statusBarOrientation;
+    [self setTableViewEdge:oritation];
     if(album==nil)
     {
+        NSString *timeTitle = NSLocalizedString(@"Time", @"title");
+        NSString *typeTitle = NSLocalizedString(@"Type", @"title");
         lock.enabled=NO;
+        UIBarButtonItem *flex = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
+        UIBarButtonItem *time = [[UIBarButtonItem alloc]initWithTitle:timeTitle style:UIBarButtonItemStyleBordered target:self action:@selector(showTimeSelections)];
+        UIBarButtonItem *type = [[UIBarButtonItem alloc]initWithTitle:typeTitle style:UIBarButtonItemStyleBordered target:self action:@selector(showTypeSelections)];
+        [viewBar setItems:[NSArray arrayWithObjects:time,flex,type, nil]];
         
     }
     lockMode = NO;
@@ -143,6 +151,7 @@
 -(void)reloadTableData{
     oritation = [UIApplication sharedApplication].statusBarOrientation;
     //[self resetTableContentInset];
+    [self setTableViewEdge:oritation];
     [self.table reloadData];
 }
 -(void)backButtonPressed
@@ -209,6 +218,8 @@
                     [defaults setObject:pass forKey:@"name_preference"];
                     self.lock.title=a;   
                     lockMode = NO;
+                    [[NSNotificationCenter defaultCenter]postNotificationName:@"changeLockModeInDetailView" object:nil];
+                    NSLog(@"pass the lock");
                 }
                 else
                 {
@@ -454,7 +465,13 @@
     }
 }
 
+-(void)showTimeSelections{
+    
+}
 
+-(void)showTypeSelections{
+    
+}
 
 #pragma mark -
 #pragma mark UITableViewDataSource and Delegate Methods
@@ -660,13 +677,8 @@
     if ((UIInterfaceOrientationIsLandscape(oritation) && UIInterfaceOrientationIsLandscape(previousOrigaton))||(UIInterfaceOrientationIsPortrait(oritation)&&UIInterfaceOrientationIsPortrait(previousOrigaton))) {
         return;
     }
-//    UIEdgeInsets insets = self.table.contentInset;
-//    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-//        [self.table setContentInset:UIEdgeInsetsMake(insets.top-12, insets.left, insets.bottom, insets.right)];
-//    }else{
-//        [self.table setContentInset:UIEdgeInsetsMake(insets.top+12, insets.left, insets.bottom, insets.right)];
-//    }
-    previousOrigaton = toInterfaceOrientation;
+    [self setTableViewEdge:toInterfaceOrientation];
+       previousOrigaton = toInterfaceOrientation;
    // [self resetTableContentInset];
     [self.table reloadData];
 }
@@ -674,6 +686,15 @@
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
     
 }
+-(void)setTableViewEdge:(UIInterfaceOrientation)orientation{
+    UIEdgeInsets insets = self.table.contentInset;
+    if (UIInterfaceOrientationIsLandscape(oritation)) {
+        [self.table setContentInset:UIEdgeInsetsMake(53, insets.left, insets.bottom, insets.right)];
+    }else{
+        [self.table setContentInset:UIEdgeInsetsMake(65, insets.left, insets.bottom, insets.right)];
+    }
+}
+
 #pragma  mark -
 #pragma  mark Memory management
 -(void)viewDidUnload{

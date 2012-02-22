@@ -28,4 +28,5 @@
 -(void)tabled:(NSNotification *)note;
 -(void)editTable;
 -(Album *)getAlbumInRow:(NSInteger)row;
+-(void)settableViewEdge:(UIInterfaceOrientation)oritation;
 @end

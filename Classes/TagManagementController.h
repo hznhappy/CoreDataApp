@@ -58,5 +58,5 @@
 -(void)creatButton1;
 -(void)table;
 -(void)deletePeople:(NSInteger)Index;
-
+-(void)setTableViewEdge:(UIInterfaceOrientation)orientation;
 @end

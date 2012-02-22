@@ -37,6 +37,7 @@ int j=1,count=0;
         [self creatButton1];
     }
     count = [list count];
+    [self setTableViewEdge:[UIApplication sharedApplication].statusBarOrientation];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(table) name:@"add" object:nil];
 	[super viewDidLoad];
    	
@@ -488,5 +489,22 @@ int j=1,count=0;
 - (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier
 {
     return 0;
+}
+
+-(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation{
+	return (UIInterfaceOrientationIsPortrait(toInterfaceOrientation) || toInterfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    [self setTableViewEdge:toInterfaceOrientation];
+    
+}
+-(void)setTableViewEdge:(UIInterfaceOrientation)orientation{
+    UIEdgeInsets insets = self.tableView.contentInset;
+    if (UIInterfaceOrientationIsLandscape(orientation)) {
+        [self.tableView setContentInset:UIEdgeInsetsMake(33, insets.left, insets.bottom, insets.right)];
+    }else{
+        [self.tableView setContentInset:UIEdgeInsetsMake(45, insets.left, insets.bottom, insets.right)];
+    }
 }
 @end
