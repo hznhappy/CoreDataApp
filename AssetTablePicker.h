@@ -52,6 +52,7 @@
     NSInteger photoCount;
     NSInteger videoCount;
     NSString *side;
+    NSString *ta;
     TagSelector *tagSelector;
     Album *album;
 }
@@ -70,6 +71,7 @@
 @property (nonatomic,strong)NSMutableArray *AddAssertList;
 @property (nonatomic,strong)NSMutableArray *assertList;
 @property (nonatomic,strong)NSString *side;
+@property (nonatomic,strong)NSString *ta;
 //@property (nonatomic,strong)NSNumber *val;
 @property (nonatomic,strong)Album *album;
 @property (nonatomic,assign)BOOL action;
@@ -80,6 +82,8 @@
 -(IBAction)resetTags;
 -(IBAction)selectFromFavoriteNames;
 -(IBAction)selectFromAllNames;
+-(IBAction)NoBodyButton;
+-(IBAction)protectButton;
 -(void)EditPhotoTag:(NSNotification *)note;
 //-(void)resetTableContentInset;
 @end

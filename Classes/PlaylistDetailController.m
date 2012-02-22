@@ -34,18 +34,17 @@
 @synthesize OrderCell;
 @synthesize SortCell;
 @synthesize AddPeopleCell;
-@synthesize PeopleSeg;
 @synthesize date;
 @synthesize dateRule;
-@synthesize sortSeg;
-@synthesize sortOrder;
 @synthesize IdList;
 @synthesize sortOrderCell;
 @synthesize sortSw;
 @synthesize chooseCell;
 @synthesize chooseButton;
 @synthesize pickerView;
-
+@synthesize sortButton;
+@synthesize orderButton;
+@synthesize peopleRuleButton;
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -126,7 +125,7 @@
     self.textField.delegate=self;
     self.textField.tag=1;
     
-    if(bum!=nil)
+    /*if(bum!=nil)
     {
        if([bum.conPeopleRule.allOrAny boolValue]==YES)
         {
@@ -135,7 +134,7 @@
         {
             PeopleSeg.selectedSegmentIndex=1;
         }
-    }
+    }*/
      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeTransitionAccessoryLabel:) name:@"changeTransitionLabel" object:nil];
      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeDate:) name:@"changeDate" object:nil];
     [super viewDidLoad];
@@ -161,16 +160,24 @@
 -(void)album
 {
     bum = [NSEntityDescription insertNewObjectForEntityForName:@"Album" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
+    if(textField.text==nil||[textField.text length]==0)
+    {
+        bum.name= textField.placeholder;
+    }
     bum.conPeopleRule=pr1;
     pr1.conAlbum=bum;
-    if(PeopleSeg.selectedSegmentIndex==0)
+    bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
+    bum.sortKey=@"date";
+    bum.sortOrder=[NSNumber numberWithBool:YES];
+    //[appDelegate.dataSource.coreData saveContext];
+   /* if(PeopleSeg.selectedSegmentIndex==0)
     {
         bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
     }
     else
     {
         bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:NO];
-    }
+    }*/
 }
 -(void)huyou
 {
@@ -185,12 +192,12 @@
         }
         [self setSort];
         [self setOrder];
-    bum.name=textField.text;
+    //bum.name=textField.text;
     [appDelegate.dataSource.coreData saveContext];
     }
     if(bum!=nil&&keybord==YES)
     {
-        if(textField.text==nil||textField.text.length==0)
+        if(bum.name==nil||bum.name.length==0)
         {
         [appDelegate.dataSource.coreData.managedObjectContext deleteObject:bum];
         [appDelegate.dataSource.coreData saveContext];
@@ -262,8 +269,6 @@
    
        if (indexPath.section == 0) {
         UITableViewCell *cell = nil;
-       // switch (rowNum) {
-           // case 0:
                 cell = [tableView dequeueReusableCellWithIdentifier:@"textFieldCell"];
                 if (cell == nil) {
                     cell = self.textFieldCell;
@@ -275,33 +280,7 @@
                         self.textField.text = bum.name;
                     }
                 }
-              /*  break;
-            case 1:
-                cell = [tableView dequeueReusableCellWithIdentifier:@"transitionsCell"];
-                if (cell == nil) {
-                    cell = self.tranCell;
-                }
-                break;
-            case 2:
-                cell = [tableView dequeueReusableCellWithIdentifier:@"playMusicCell"];
-                if (cell == nil) {
-                    cell = self.switchCell;
-                }
-                break;
-            case 3:
-                cell = [tableView dequeueReusableCellWithIdentifier:@"musicCell"];
-                if (cell == nil) {
-                    cell = self.musicCell;
-                }
-                if (bum != nil && bum.music!=nil && bum.music.length != 0) {
-                    self.musicLabel.text = bum.music;
-                }
-                break;
-            default:
-                cell = nil;
-                break;
-        }*/
-        return cell;
+            return cell;
     }
     else if(indexPath.section==4)
     {
@@ -337,13 +316,40 @@
                 cell = [tableView dequeueReusableCellWithIdentifier:@"SortCell"];
                 if (cell == nil) {
                     cell=self.SortCell;
-                     cell.accessoryView = [self chooseButton];
+                     cell.accessoryView = [self sortButton];
+                    if(bum!=nil&&![bum.sortKey isEqualToString:@"date"])
+                    {
+                                    
+                       if ([bum.sortKey isEqualToString:@"numOfLike"]) {
+                            sortButton.backgroundColor =[UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+                            [sortButton setTitle:@"numOfLike" forState:UIControlStateNormal];
+                            
+                            
+                        }
+                       else if ([bum.sortKey isEqualToString:@"numOfTag"]) {
+                        
+                           sortButton.backgroundColor = [UIColor colorWithRed:81/255.0 green:142/255.0 blue:72/255.0 alpha:1.0];
+                            [sortButton setTitle:@"numOfTag" forState:UIControlStateNormal];
+                            
+                        }
+
+                    }
                 }
+                
                 break;
             case 1:
                 cell = [tableView dequeueReusableCellWithIdentifier:@"OrderCell"];
                 if (cell == nil) {
                     cell=self.OrderCell;
+                     cell.accessoryView = [self orderButton];
+                    if(bum!=nil)
+                    {
+                        if (![bum.sortOrder boolValue]) {
+                            orderButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+                            [orderButton setTitle:@"DSC" forState:UIControlStateNormal];    
+                        }
+                    }
+
                 }
                 break;
                 
@@ -354,7 +360,7 @@
         }
         if(bum!=nil)
         {      
-            if([bum.sortKey isEqualToString:@"date"])
+            /*if([bum.sortKey isEqualToString:@"date"])
             {
                 self.sortSeg.selectedSegmentIndex=0;
             }
@@ -374,7 +380,7 @@
             else if([bum.sortOrder boolValue]==NO)
             {
                 self.sortOrder.selectedSegmentIndex=1;
-            }
+            }*/
         }
 
         return cell;
@@ -438,6 +444,16 @@
                 cell = [tableView dequeueReusableCellWithIdentifier:@"PeopleRuleCell"];
                 if (cell == nil) {
                     cell=self.PeopleRuleCell;
+                    cell.accessoryView=[self peopleRuleButton];
+                    if(bum!=nil)
+                    {
+                        if (![bum.conPeopleRule.allOrAny boolValue]) {
+                            NSLog(@"yes");
+                            peopleRuleButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+                            [peopleRuleButton setTitle:@"OR" forState:UIControlStateNormal];    
+                        }
+                    }
+                    
                 }
                 break;
             case 1:
@@ -566,8 +582,13 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(bum==nil)
+    {
+        [self album];
+    }
+
     [self.textField resignFirstResponder];
-    if (indexPath.section ==6 && indexPath.row == 0 && self.textField.text != nil && self.textField.text.length != 0) {
+    if (indexPath.section ==6 && indexPath.row == 0) {
         AnimaSelectController *animateController = [[AnimaSelectController alloc]init];
         animateController.tranStyle = self.tranLabel.text;
         animateController.Text=textField.text;
@@ -590,7 +611,7 @@
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
     if (indexPath.section == 1) {
-        if(textField.text==nil||textField.text.length==0)
+              /* if(textField.text==nil||textField.text.length==0)
         { NSString *c=NSLocalizedString(@"note", @"title");
             NSString *b=NSLocalizedString(@"ok", @"title");
             NSString *d=NSLocalizedString(@"Please fill out the rule name", @"title");
@@ -605,7 +626,7 @@
 
         }
         else
-        {
+        {*/
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             UIButton *button1 = [self getStateButton];
             if (cell.accessoryView==nil) {
@@ -641,13 +662,13 @@
                 }
             }
 
-           }
+           //}
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
   }
 -(IBAction)PeopleRuleButton
 {
-    if(PeopleSeg.selectedSegmentIndex==0)
+    /*if(PeopleSeg.selectedSegmentIndex==0)
     {
         bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
     }
@@ -655,20 +676,20 @@
     {
         bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:NO];
     }
-     [appDelegate.dataSource.coreData saveContext];
+     [appDelegate.dataSource.coreData saveContext];*/
 }
 
 
 -(IBAction)sortKeyButton
 {
-    [self setSort];
-    [appDelegate.dataSource.coreData saveContext];
+    /*[self setSort];
+    [appDelegate.dataSource.coreData saveContext];*/
      
 }
 -(void)setSort
 {
     
-    if(sortSeg.selectedSegmentIndex==0)
+   /* if(sortSeg.selectedSegmentIndex==0)
     {
         bum.sortKey=@"date";
     }
@@ -680,25 +701,25 @@
     {
         bum.sortKey=@"numOfLike";
         
-    }
+    }*/
 
 }
 -(IBAction)sortOrderButton
 {
-    [self setOrder];
-    [appDelegate.dataSource.coreData saveContext];
+   /* [self setOrder];
+    [appDelegate.dataSource.coreData saveContext];*/
   
 }
 -(void)setOrder
 {
-    if(sortOrder.selectedSegmentIndex==0)
+   /* if(sortOrder.selectedSegmentIndex==0)
     {
         bum.sortOrder=[NSNumber numberWithBool:YES];
     }
     else
     {
         bum.sortOrder=[NSNumber numberWithBool:NO];
-    }
+    }*/
 }
 -(IBAction)AddContacts
 {
@@ -867,6 +888,114 @@
     [chooseButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     return chooseButton;
 }
+-(UIButton *)sortButton{
+    sortButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    sortButton.frame = CGRectMake(0, 0, 105, 28);
+    [sortButton addTarget:self action:@selector(sort:) forControlEvents:UIControlEventTouchUpInside];
+    [sortButton setTitle:@"time" forState:UIControlStateNormal];
+    sortButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
+    [sortButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
+    return sortButton;
+}
+-(UIButton *)orderButton{
+    orderButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    orderButton.frame = CGRectMake(0, 0, 105, 28);
+    [orderButton addTarget:self action:@selector(order:) forControlEvents:UIControlEventTouchUpInside];
+    [orderButton setTitle:@"ASC" forState:UIControlStateNormal];
+    orderButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
+    [orderButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
+    return orderButton;
+}
+-(UIButton *)peopleRuleButton{
+    peopleRuleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    peopleRuleButton.frame = CGRectMake(0, 0, 105, 28);
+    [peopleRuleButton addTarget:self action:@selector(peopleRule:) forControlEvents:UIControlEventTouchUpInside];
+    [peopleRuleButton setTitle:@"AND" forState:UIControlStateNormal];
+    peopleRuleButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
+    [peopleRuleButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
+    return peopleRuleButton;
+}
+-(void)peopleRule:(id)sender
+{
+    if(bum==nil)
+    {
+        [self album];
+    }
+    UIButton *button = (UIButton *)sender;
+    [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
+    if ([button.titleLabel.text isEqualToString:@"AND"]) {
+        button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+        [button setTitle:@"OR" forState:UIControlStateNormal];
+        bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:NO];
+   
+        
+
+        
+    }
+    else if ([button.titleLabel.text isEqualToString:@"OR"]){
+        button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
+        [button setTitle:@"AND" forState:UIControlStateNormal];
+        bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
+        
+      
+        
+    }
+      [appDelegate.dataSource.coreData saveContext];
+
+    
+}
+-(void)order:(id)sender
+{
+    if(bum==nil)
+    {
+        [self album];
+    }
+    UIButton *button = (UIButton *)sender;
+    [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
+    if ([button.titleLabel.text isEqualToString:@"ASC"]) {
+        button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+        [button setTitle:@"DSC" forState:UIControlStateNormal];
+         bum.sortOrder=[NSNumber numberWithBool:NO];
+        
+    }
+    else if ([button.titleLabel.text isEqualToString:@"DSC"]){
+        button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
+        [button setTitle:@"ASC" forState:UIControlStateNormal];
+         bum.sortOrder=[NSNumber numberWithBool:YES];
+        
+    }
+    [appDelegate.dataSource.coreData saveContext];
+ 
+}
+-(void)sort:(id)sender
+{if(bum==nil)
+{
+    [self album];
+}
+    UIButton *button = (UIButton *)sender;
+    [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
+    if ([button.titleLabel.text isEqualToString:@"time"]) {
+        button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+        [button setTitle:@"numOfLike" forState:UIControlStateNormal];
+        bum.sortKey=@"numOfLike";
+
+        
+    }
+    else if ([button.titleLabel.text isEqualToString:@"numOfLike"]){
+        button.backgroundColor = [UIColor colorWithRed:81/255.0 green:142/255.0 blue:72/255.0 alpha:1.0];
+        [button setTitle:@"numOfTag" forState:UIControlStateNormal];
+        bum.sortKey=@"numPeopleTag";
+        
+    }
+    else
+    {
+        button.backgroundColor =[UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
+        [button setTitle:@"time" forState:UIControlStateNormal]; 
+          bum.sortKey=@"date";
+    }
+    [appDelegate.dataSource.coreData saveContext];
+
+}
 -(void)choose:(id)sender{
     if(bum==nil)
     {
@@ -893,7 +1022,7 @@
         [button setTitle:PhotoVideo forState:UIControlStateNormal]; 
         bum.chooseType=@"Photo&Video";
     }
-    bum.name=textField.text;
+   // bum.name=textField.text;
     [appDelegate.dataSource.coreData saveContext];
 }
 
@@ -979,9 +1108,7 @@
 }
 -(IBAction)text
 {
-    NSLog(@"TEXT");
-  
-       /* NSString *text = [self.textField text];
+          /* NSString *text = [self.textField text];
         NSString *caplitalized = [[[text substringToIndex:1] uppercaseString] stringByAppendingString:[text substringFromIndex:1]];
         NSLog(@"%@ uppercased is %@", text, caplitalized);
         if()
@@ -1025,7 +1152,6 @@
         NSString *caplitalized = [[[text substringToIndex:1] uppercaseString] stringByAppendingString:[text substringFromIndex:1]];
         NSLog(@"%@ uppercased is %@", text, caplitalized); 
         self.textField.text=caplitalized;
-
         [self addPlay];
     }   
     
@@ -1035,11 +1161,10 @@
 {
       keybord=YES;
       if(bum==nil)
-    {
-        [self album];  
+      {
+        [self album]; 
+       
     }
-    [self setSort];
-    [self setOrder];
     bum.name=textField.text;
     [appDelegate.dataSource.coreData saveContext];
 }

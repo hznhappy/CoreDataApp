@@ -12,6 +12,7 @@
 #import "PeopleTag.h"
 #import "PhotoAppDelegate.h"
 #import "People.h"
+#import "favorite.h"
 @implementation AssetTablePicker
 @synthesize crwAssets;
 @synthesize table;
@@ -26,6 +27,7 @@
 @synthesize AddAssertList;
 @synthesize action;
 @synthesize side;
+@synthesize ta;
 #pragma mark -
 #pragma mark UIViewController Methods
 
@@ -89,7 +91,7 @@
     NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
     [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EditPhotoTag:)name:@"EditPhotoTag" object:nil];
-   // [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableData) name:@"reloadTableData" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableData) name:@"reloadTableData" object:nil];
 }
 
 //-(void)resetTableContentInset{
@@ -124,26 +126,28 @@
     {
         people=[NSString stringWithFormat:@"%@ %@",po.firstName,po.lastName];
     }
+    
     if([a count]>1)
     {
-    [name setTitle:[NSString stringWithFormat:@"选%@等%d人",people,[a count]] forState:UIControlStateNormal];
+    [self.navigationItem setTitle:[NSString stringWithFormat:@"选%@等%d人",people,[a count]]];
     }
     else
     {
-        [name setTitle:[NSString stringWithFormat:@"选取%@",people] forState:UIControlStateNormal];
+        [self.navigationItem setTitle:[NSString stringWithFormat:@"选取%@",people]];
     }
-    name.frame = CGRectMake(0, 0,160, 40);
-    [tagBar addSubview:name];
+   // name.frame = CGRectMake(0, 0,160, 40);
+    //[tagBar addSubview:name];
     }
+    
     [self.tagRow removeAllObjects];
     [self.table reloadData];
 }
 
-/*-(void)reloadTableData{
+-(void)reloadTableData{
     oritation = [UIApplication sharedApplication].statusBarOrientation;
     //[self resetTableContentInset];
     [self.table reloadData];
-}*/
+}
 -(void)backButtonPressed
 {
     NSString *a=NSLocalizedString(@"Lock", @"title");
@@ -286,6 +290,7 @@
             
             [alert1 show];
         }
+        
 
     }
     else
@@ -302,6 +307,7 @@
     [self.UrlList removeAllObjects];
     [tagSelector.peopleList removeAllObjects];
     tagSelector.mypeople=nil;
+    [self.navigationItem setTitle:ta];
     [self.table reloadData];
     }
 }
@@ -417,6 +423,22 @@
     [self.UrlList removeAllObjects];
     [self.tagRow removeAllObjects];
       
+}
+-(IBAction)NoBodyButton
+{
+    as=YES;
+    [tagSelector.peopleList removeAllObjects];
+    favorite *fi=[dataSource.favoriteList objectAtIndex:0];
+    People *p1=fi.people;
+    [tagSelector.peopleList addObject:p1];
+    NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:tagSelector.peopleList,@"name",nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
+                                                       object:self 
+                                                     userInfo:dic1]; 
+}
+-(IBAction)protectButton
+{
+    
 }
 -(IBAction)resetTags{
     [self.tagRow removeAllObjects];
@@ -600,23 +622,20 @@
         {
             [self.UrlList removeObject:asset];
             [self.tagRow removeObject:row];
-            NSString *selectedIndex = [NSString stringWithFormat:@"%d",index];
-            [cell removeTag:selectedIndex];
+            [cell removeTag:row];
             [assertList addObject:asset];
             [tagSelector deleteTag:asset];
-            //[self.table reloadData];
                       
         }
         else
         {  
             [self.tagRow addObject:row];
-            NSString *selectedIndex = [NSString stringWithFormat:@"%d",index];
-            [cell checkTagSelection:selectedIndex];
+            [cell checkTagSelection:row];
             [tagSelector save:asset];
             [AddAssertList addObject:asset];
                    
                     
-                }
+        }
             
     }
        else

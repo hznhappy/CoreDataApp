@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="878" systemVersion="11C74" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="878" systemVersion="11D50b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Album" representedClassName="Album">
         <attribute name="byCondition" optional="YES" attributeType="String"/>
         <attribute name="chooseType" optional="YES" attributeType="String" syncable="YES"/>
@@ -16,8 +16,10 @@
     </entity>
     <entity name="Asset" representedClassName="Asset">
         <attribute name="date" optional="YES" attributeType="Date"/>
+        <attribute name="isprotected" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0"/>
+        <attribute name="nobody" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="numOfLike" optional="YES" attributeType="Integer 32" defaultValueString="0"/>
         <attribute name="numPeopleTag" optional="YES" attributeType="Integer 32" defaultValueString="0"/>
         <attribute name="url" optional="YES" attributeType="String"/>
@@ -76,7 +78,7 @@
     </entity>
     <elements>
         <element name="Album" positionX="63" positionY="36" width="128" height="225"/>
-        <element name="Asset" positionX="-243" positionY="-45" width="128" height="180"/>
+        <element name="Asset" positionX="-243" positionY="-45" width="128" height="225"/>
         <element name="AssetRule" positionX="-99" positionY="315" width="128" height="105"/>
         <element name="DateRule" positionX="351" positionY="444" width="128" height="75"/>
         <element name="Event" positionX="-333" positionY="360" width="128" height="90"/>

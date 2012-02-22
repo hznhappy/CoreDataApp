@@ -32,9 +32,12 @@
 -(People *)tagPeople;
 -(void)saveTagAsset:(Asset *)asset;
 -(void)save:(Asset *)asset;
+-(void)saveTag:(Asset *)asset people:(People *)pe;
 -(void)resetToolBar;
 -(void)addTagName;
 -(BOOL)tag:(Asset *)asset;
 -(void)deleteTag:(Asset *)asset;
+-(void)deleteNobody:(Asset *)asset;
 -(BOOL)deletePeople:(Asset *)asset people:(People *)pe;
+
 @end

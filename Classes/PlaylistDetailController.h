@@ -60,9 +60,6 @@
     UISwitch *mySwitch;
     UIImage *selectImg;
     UIImage *unselectImg;
-    UISegmentedControl *PeopleSeg;
-    UISegmentedControl *sortSeg;
-    UISegmentedControl *sortOrder;
     UISwitch *sortSw;
     
     NSMutableArray *userNames;
@@ -75,6 +72,9 @@
     NSMutableArray *playrules_idList;
     UIButton *stateButton;
     UIButton *chooseButton;
+    UIButton *sortButton;
+    UIButton *orderButton;
+    UIButton *peopleRuleButton;
     int key;
 }
 
@@ -104,22 +104,17 @@
 @property(nonatomic,strong)IBOutlet UITextField *textField;
 @property(nonatomic,strong)IBOutlet UISwitch *mySwitch;
 @property(nonatomic,strong)IBOutlet UILabel *state;
-@property(nonatomic,strong)IBOutlet UISegmentedControl *sortOrder;
-@property(nonatomic,strong)IBOutlet UISegmentedControl *sortSeg;
-@property(nonatomic,strong)IBOutlet UISegmentedControl *PeopleSeg;
 @property(nonatomic,strong)IBOutlet UIPickerView *pickerView;
 @property(nonatomic,strong)NSMutableArray *selectedIndexPaths;
 @property(nonatomic,strong)NSString *Transtion;
 @property(nonatomic,strong)UIButton *stateButton;
 @property(nonatomic,strong)UIButton *chooseButton;
-
+@property(nonatomic,strong)UIButton *sortButton;
+@property(nonatomic,strong)UIButton *orderButton;
+@property(nonatomic,strong)UIButton *peopleRuleButton;
 -(IBAction)hideKeyBoard:(id)sender;
 -(IBAction)updateTable:(id)sender;
 -(IBAction)resetAll;
--(IBAction)PeopleRuleButton;
--(IBAction)PeopleRuleButton;
--(IBAction)sortKeyButton;
--(IBAction)sortOrderButton;
 -(IBAction)AddContacts;
 -(IBAction)upSort:(id)sender;
 -(UIButton *)getStateButton;
@@ -127,7 +122,6 @@
 -(void)insert:(NSInteger)Row rule:(NSString *)rule;
 -(void)update:(NSInteger)Row rule:(NSString *)rule;
 -(void)addPlay;
-//-(void)changeDate:(NSNotification *)note;
 -(void)album;
 -(void)setSort;
 -(void)setOrder;

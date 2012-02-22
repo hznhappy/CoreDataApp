@@ -15,6 +15,7 @@
 #import "Asset.h"
 #import "PhotoViewController.h"
 #import "PeopleTag.h"
+#import "favorite.h"
 @implementation TagSelector
 //@dynamic mypeople;
 @synthesize mypeople;
@@ -181,8 +182,34 @@
 
      return NO;
 }
+-(void)deleteNobody:(Asset *)asset
+{
+    favorite *fi=[dataSource.favoriteList objectAtIndex:0];
+    People *p1=fi.people;
+    NSPredicate *pre = [NSPredicate predicateWithFormat:@"conPeople== %@",p1];
+    NSArray *list = [dataSource simpleQuery:@"PeopleTag" predicate:pre sortField:nil sortOrder:NO];
+    for(int i=0;i<[list count];i++)
+    {
+        PeopleTag *peopleTag =[list objectAtIndex:i];
+        if(peopleTag.conAsset==asset)
+        {
+        [p1 removeConPeopleTagObject:peopleTag];
+        [asset removeConPeopleTagObject:peopleTag];
+        asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]-1]; 
+        break;
+        }
+    }
+    
+
+}
 -(void)save:(Asset *)asset
 {
+    
+    if([asset.nobody boolValue])
+    {
+        NSLog(@"nobody");
+        [self deleteNobody:asset];
+    }
     if([peopleList count]>1)
     {
         for(People *pe in peopleList)
@@ -190,12 +217,7 @@
             BOOL add1=[self deletePeople:asset people:pe];
             if(add1==NO)
             {
-                asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]+1];
-                PeopleTag  *peopleTag= [NSEntityDescription insertNewObjectForEntityForName:@"PeopleTag" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
-                peopleTag.conAsset = asset;
-                [asset addConPeopleTagObject:peopleTag];
-                peopleTag.conPeople = pe;
-                [pe addConPeopleTagObject:peopleTag];
+                [self saveTag:asset people:pe];
             }
         }
     }
@@ -204,17 +226,27 @@
     {
     for(People *pe in peopleList)
     {
-        asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]+1];
-        PeopleTag  *peopleTag= [NSEntityDescription insertNewObjectForEntityForName:@"PeopleTag" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
-        peopleTag.conAsset = asset;
-        [asset addConPeopleTagObject:peopleTag];
-        peopleTag.conPeople = pe;
-        [pe addConPeopleTagObject:peopleTag];
-        
+      [self saveTag:asset people:pe];
     }
     }
     [dataSource.coreData saveContext];
 
+}
+-(void)saveTag:(Asset *)asset people:(People *)pe
+{
+
+    if(pe.addressBookId==[NSNumber numberWithInt:-1])
+    {
+        asset.nobody=[NSNumber numberWithBool: YES];
+    }
+    asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]+1];
+    PeopleTag  *peopleTag= [NSEntityDescription insertNewObjectForEntityForName:@"PeopleTag" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
+    peopleTag.conAsset = asset;
+    [asset addConPeopleTagObject:peopleTag];
+    peopleTag.conPeople = pe;
+    [pe addConPeopleTagObject:peopleTag];
+
+    
 }
 #pragma mark -
 #pragma mark People picker delegate

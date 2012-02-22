@@ -2,8 +2,8 @@
 //  Asset.m
 //  PhotoApp
 //
-//  Created by apple on 2/15/12.
-//  Copyright (c) 2012 chinarewards. All rights reserved.
+//  Created by  on 12-2-22.
+//  Copyright (c) 2012年 chinarewards. All rights reserved.
 //
 
 #import "Asset.h"
@@ -19,8 +19,10 @@
 @dynamic longitude;
 @dynamic numOfLike;
 @dynamic numPeopleTag;
+@dynamic isprotected;
 @dynamic url;
 @dynamic videoType;
+@dynamic nobody;
 @dynamic conAssetRule;
 @dynamic conEvent;
 @dynamic conPeopleTag;

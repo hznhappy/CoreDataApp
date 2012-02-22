@@ -139,16 +139,16 @@
        // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
        // NSString * strDate=[[[alAsset defaultRepresentation]metadata]description];//valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
       //NSLog(@"strdate:%@",strDate);
-      /*  NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
+     /* NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
        // NSLog(@"strdate:%@",strDate);
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
         //[inputFormatter setLocale:[NSLocale currentLocale]];
         NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
        [inputFormatter setTimeZone:timeZone1];
         [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
-        newAsset.date = [inputFormatter dateFromString:strDate];*/
-     //  NSLog(@"date = %@", newAsset.date);
-       
+        newAsset.date = [inputFormatter dateFromString:strDate];
+       NSLog(@"date = %@", newAsset.date);
+       */
         if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
             newAsset.videoType = [NSNumber numberWithBool:YES];
         }else{
