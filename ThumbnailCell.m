@@ -42,7 +42,6 @@
     for (UIView *view in self.subviews) {
         if ([view isKindOfClass:[ThumbnailImageView class]] && [selectedRow isEqualToString:[NSString stringWithFormat:@"%d",((ThumbnailImageView *)view).thumbnailIndex]]) {
             for (UIView *vi in view.subviews) {
-                NSLog(@"vi:%@",vi);
                 if ([vi isKindOfClass:[UIImageView class]] ) {
                     if ([((UIImageView *)vi).image isEqual:[UIImage imageNamed:@"selectOverlay.png"]]) {
                         [vi removeFromSuperview];

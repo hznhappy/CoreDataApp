@@ -54,6 +54,7 @@
     action=YES;
     as=NO;
     mode = NO;
+    protecteds=NO;
     tagBar.hidden = YES;
     photoCount = 0;
     videoCount = 0;
@@ -280,6 +281,7 @@
 #pragma mark -
 #pragma mark ButtonAction Methods
 -(void)cancelTag{
+    protecteds=NO;
     NSString *a=NSLocalizedString(@"Tag", @"title");
     NSString *b=NSLocalizedString(@"Done", @"title");
     if([cancel.title isEqualToString:a])
@@ -439,6 +441,7 @@
 -(IBAction)NoBodyButton
 {
     as=YES;
+    protecteds=NO;
     [tagSelector.peopleList removeAllObjects];
     favorite *fi=[dataSource.favoriteList objectAtIndex:0];
     People *p1=fi.people;
@@ -450,7 +453,13 @@
 }
 -(IBAction)protectButton
 {
-    
+ [tagSelector.peopleList removeAllObjects];
+ [self.tagRow removeAllObjects];
+ [self.UrlList removeAllObjects];
+ protecteds=YES;
+ as=NO;
+ self.navigationItem.title=@"给照片加密";   
+ [self.table reloadData];
 }
 -(IBAction)resetTags{
     [self.tagRow removeAllObjects];
@@ -462,7 +471,10 @@
     [self.tagRow removeAllObjects];
     tagSelector.add=@"NO";
     as=YES;
+    protecteds=NO;
     [assertList removeAllObjects];
+    [tagSelector.peopleList removeAllObjects];
+    [self.navigationItem setTitle:ta];
     [tagSelector selectTagNameFromFavorites];
 }
 -(IBAction)selectFromAllNames{
@@ -470,8 +482,12 @@
     [self.UrlList removeAllObjects];
     tagSelector.add=@"NO";
     as=YES;
+    protecteds=NO;
     [assertList removeAllObjects];
+    [tagSelector.peopleList removeAllObjects];
+    [self.navigationItem setTitle:ta];
     [tagSelector selectTagNameFromContacts];
+    [self.table reloadData];
 }
 -(IBAction)playPhotos{
     if([side isEqualToString:@"favorite"])
@@ -584,6 +600,14 @@
                     //[cell checkTagSelection:selectedIndex];
                 }
                 }
+                if(protecteds==YES)
+                {
+                     if([dbAsset.isprotected boolValue])
+                     {
+                          NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
+                         [tagRow addObject:selectedIndex];
+                     }
+                }
                 [assetsInRow addObject:dbAsset];
             }
         }
@@ -615,6 +639,7 @@
     {
         if([side isEqualToString:@"favorite"])
         {
+            self.navigationItem.title=ta;
             selectedRow = cell.rowNumber;
             NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                                         [NSNumber numberWithBool:lockMode],@"lock", self,@"pushPeopleThumbnailView",self.album.transitType,@"transition",nil];
@@ -622,6 +647,7 @@
         }
         else
         {
+        self.navigationItem.title=ta;
         selectedRow = cell.rowNumber;
         NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                                     [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];
@@ -644,16 +670,62 @@
                       
         }
         else
-        {  
-            [self.tagRow addObject:row];
-            [cell checkTagSelection:row];
-            [tagSelector save:asset];
-            [AddAssertList addObject:asset];
-                   
-                    
+        {   favorite *fi=[dataSource.favoriteList objectAtIndex:0];
+            People *p1=fi.people;
+            if([tagSelector.peopleList containsObject:p1])
+           {
+               BOOL b=[tagSelector selectAssert:asset];
+               if(b==YES)
+               {
+                                     
+               }
+               else
+               {    
+                   if([tagSelector.peopleList count]>1)
+                   {
+                   }
+                   else
+                   {
+                   [self.tagRow addObject:row];
+                   [cell checkTagSelection:row];
+                   [tagSelector save:asset];
+                   [AddAssertList addObject:asset];  
+                   }
+               }
+           }
+            else
+            {
+                [self.tagRow addObject:row];
+                [cell checkTagSelection:row];
+                [tagSelector save:asset];
+                [AddAssertList addObject:asset];
+            }
+
+
         }
             
     }
+        else if(protecteds==YES)
+        {
+         
+            if([self.tagRow containsObject:row])
+            {
+                [self.UrlList removeObject:asset];
+                [self.tagRow removeObject:row];
+                [cell removeTag:row];
+                asset.isprotected=[NSNumber numberWithBool:NO];
+                asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]-1];
+                
+            }
+            else
+            {   
+                [self.tagRow addObject:row];
+                [cell checkTagSelection:row];
+                asset.isprotected=[NSNumber numberWithBool:YES];
+                asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]+1];
+        }
+            [dataSource.coreData saveContext];
+        }
        else
        {
            NSString *b=NSLocalizedString(@"please select tag name", @"message");

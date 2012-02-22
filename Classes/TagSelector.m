@@ -148,6 +148,41 @@
 }
 
 -(void)saveTagAsset:(Asset *)asset{
+    
+    
+    favorite *fi=[dataSource.favoriteList objectAtIndex:0];
+    People *p1=fi.people;
+    if([peopleList containsObject:p1])
+    {
+        BOOL b=[self selectAssert:asset];
+        if(b==YES)
+        {
+            
+        }
+        else
+        {    
+            if([peopleList count]>1)
+            {
+            }
+            else
+            {
+                for(People *po in peopleList)
+                {
+                    BOOL b=[self deletePeople:asset people:po];
+                    if(b==NO)
+                    {
+                        
+                        [self save:asset];
+                        [(PhotoViewController *)viewController numtag];
+                    }
+                    
+                }
+
+            }
+        }
+    }
+    else
+    {
         for(People *po in peopleList)
         {
             BOOL b=[self deletePeople:asset people:po];
@@ -158,6 +193,7 @@
             [(PhotoViewController *)viewController numtag];
         }
   
+    }
     }
 }
 -(BOOL)deletePeople:(Asset *)asset people:(People *)pe
@@ -247,6 +283,16 @@
     [pe addConPeopleTagObject:peopleTag];
 
     
+}
+-(BOOL)selectAssert:(Asset *)asset
+{
+    NSPredicate *pre = [NSPredicate predicateWithFormat:@"conAsset == %@",asset];
+    NSArray *list = [dataSource simpleQuery:@"PeopleTag" predicate:pre sortField:nil sortOrder:NO];
+    if([list count]>0)
+    {
+        return YES;
+    }
+    return NO;
 }
 #pragma mark -
 #pragma mark People picker delegate

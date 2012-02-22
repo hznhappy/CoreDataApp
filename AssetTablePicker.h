@@ -37,6 +37,7 @@
     BOOL as;
     BOOL action;
     BOOL lockMode;
+    BOOL protecteds;
   
     UIButton *name;
   

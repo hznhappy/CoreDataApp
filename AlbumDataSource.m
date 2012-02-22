@@ -620,14 +620,14 @@
 -(NSPredicate*) ruleFormation:(Album *)i {
    
     NSPredicate *pre=nil;
-
+    pre=[NSPredicate predicateWithFormat:@"isprotected==%@||isprotected=nil",[NSNumber numberWithBool:NO]];
     /*
      People Rules or the Face Rules are parsed in here
-     
+    
      */
     if([i chooseType]!=nil&&![[i chooseType]isEqualToString:@"Photo&Video"] )
     {
-         pre=[self chooseRule:i];
+         pre=[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:pre,[self chooseRule:i],nil]];
     }
 
     if ([i conPeopleRule]!=nil) {
