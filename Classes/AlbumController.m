@@ -22,6 +22,7 @@
 #pragma mark UIViewController method
 -(void)viewWillAppear:(BOOL)animated
 {
+    [self settableViewEdge:[UIApplication sharedApplication].statusBarOrientation];
     //self.navigationController.navigationBar.barStyle=UIBarStyleBlack;
 }
 
@@ -38,7 +39,6 @@
     assets = dataSource.assetsBook; 
     [self setWantsFullScreenLayout:YES];
 	[self.navigationItem setTitle:@"PlayList"];
-    
     NSString *bu=NSLocalizedString(@"Edit", @"button");
     //self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     
@@ -56,6 +56,26 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(editTable) name:@"editplay" object:nil];
     
 }
+
+-(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation{
+	return (UIInterfaceOrientationIsPortrait(toInterfaceOrientation) || toInterfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    [self settableViewEdge:toInterfaceOrientation];
+    
+}
+
+-(void)settableViewEdge:(UIInterfaceOrientation)oritation{
+    UIEdgeInsets insets = self.tableView.contentInset;
+    if (UIInterfaceOrientationIsLandscape(oritation)) {
+        [self.tableView setContentInset:UIEdgeInsetsMake(53, insets.left, insets.bottom, insets.right)];
+    }else{
+        [self.tableView setContentInset:UIEdgeInsetsMake(63, insets.left, insets.bottom, insets.right)];
+    }
+    [self.tableView reloadData];
+}
+
 -(void)tabled:(NSNotification *)note{
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     UITableViewCell *cell1 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
@@ -187,7 +207,7 @@
         cell.textLabel.text = [NSString stringWithFormat:@"%@",am.name];
     }
     
-    cell.textLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:18];
+    cell.textLabel.font = [UIFont fontWithName:@"Arial-BoldMT" size:18];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;    
     return cell;
     

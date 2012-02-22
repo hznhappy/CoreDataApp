@@ -98,10 +98,10 @@
         formattedTimeString = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
     }
 
-    UIView *video =[[UIView alloc]initWithFrame:CGRectMake(0, 54, 74, 16)];
-    UILabel *length=[[UILabel alloc]initWithFrame:CGRectMake(40, 3, 44, 10)];
+    UIView *video =[[UIView alloc]initWithFrame:CGRectMake(0, 54, 75, 16)];
+    UILabel *length=[[UILabel alloc]initWithFrame:CGRectMake(40, 3, 45, 10)];
     UIImageView *tu=[[UIImageView alloc]initWithFrame:CGRectMake(6, 4,15, 8)];
-  UIImage *picture = [UIImage imageNamed:@"VED.png"];
+    UIImage *picture = [UIImage imageNamed:@"VED.png"];
    // set the image for the button
     [tu setImage:picture];
   // [video addSubview:tu];

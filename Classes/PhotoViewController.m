@@ -20,13 +20,13 @@
 @interface PhotoViewController (Private)
 
 - (void)setBarsHidden:(BOOL)hidden animated:(BOOL)animated;
-- (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated;
 -(void)setPhotoInfoHidden:(BOOL)hidden;
 -(void)setLikeButtonHidden:(BOOL)hidden;
 - (void)setupToolbar;
 - (void)setupEditToolbar;
 -(void)setNavigationBarItem;
 - (void)updateNavigation;
+-(void)updateToolBar;
 - (void)updateSubviewsWhenScroll;
 @end
 
@@ -212,9 +212,13 @@
     [self updatePages];
     [self hideControlsAfterDelay];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(resetCropView) name:@"resetCropView" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateToolBar) name:@"changeLockModeInDetailView" object:nil];
     
 }
 
+-(void)viewDidAppear:(BOOL)animated{
+    
+}
 
 #pragma mark -
 #pragma mark Pagging Methods
@@ -328,7 +332,7 @@
 #pragma mark -
 #pragma mark Frame Methods
 - (CGRect)frameForPagingScrollView{
-   // NSLog(@"view bounds is %@",NSStringFromCGRect(self.view.bounds));
+    //NSLog(@"view bounds is %@",NSStringFromCGRect(self.view.bounds));
     CGRect frame = self.view.bounds;// [[UIScreen mainScreen] bounds];
     frame.origin.x -= PADDING;
     frame.size.width += (2 * PADDING);
@@ -613,11 +617,19 @@
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     _rotating = YES;
     pageIndexBeforeRotation = currentPageIndex;
+    if (_barsHidden)
+    {
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    }
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     currentPageIndex = pageIndexBeforeRotation;
     [self performLayout];
+    if (_barsHidden)
+    {
+        [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    }
 	//[self hideControlsAfterDelay];
    // NSLog(@"scroll frame is %@ and bounds %@  and contentsize %@",NSStringFromCGRect(self.scrollView.frame),NSStringFromCGRect(self.scrollView.bounds),NSStringFromCGSize(self.scrollView.contentSize));
     
@@ -642,7 +654,6 @@
     NSString *cancelStr = NSLocalizedString(@"Done", @"title");
     if (!lockMode) {
         if (!tag) {
-            NSLog(@"tag");
             tag=[[UIBarButtonItem alloc]initWithTitle:tagStr style:UIBarButtonItemStyleBordered target:self action:@selector(markPhoto)];
             cancel=[[UIBarButtonItem alloc]initWithTitle:cancelStr style:UIBarButtonItemStyleDone target:self action:@selector(cancelEdit)];
         }
@@ -700,18 +711,21 @@
         [likeButton removeFromSuperview];
         likeButton = nil;
     }
-    UIBarButtonItem *bt = (UIBarButtonItem *)sender;
-    if ([bt.title isEqualToString:@"UnLock"]) {
-        [self.assetTablePicker lockButtonPressed];
-        lockMode = NO;
-        [self setupToolbar];
-        [self setNavigationBarItem];
-    }else{
-        [self.assetTablePicker lockButtonPressed];
-        lockMode = YES;
-        [self setupToolbar];
-        [self setNavigationBarItem];
+    [self.assetTablePicker lockButtonPressed];
+    if (!lockMode) {
+        [self updateToolBar];
     }
+   
+}
+
+-(void)updateToolBar{
+    if (self.assetTablePicker.lockMode) {
+        lockMode = YES;
+    }else{
+        lockMode = NO;
+    }
+    [self setupToolbar];
+    [self setNavigationBarItem];
 }
 #pragma mark -
 #pragma mark EditMethods
@@ -805,16 +819,9 @@
 
 #pragma mark -
 #pragma mark Bar Methods
-
-- (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated{
-    [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:UIStatusBarAnimationFade];
-}
-
 - (void)setBarsHidden:(BOOL)hidden animated:(BOOL)animated{
 	if (hidden&&_barsHidden) return;
-    [self setStatusBarHidden:hidden animated:animated];
-    //[self.navigationController setNavigationBarHidden:hidden animated:animated];
-   // [self.navigationController setToolbarHidden:hidden animated:animated];
+    [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:UIStatusBarAnimationFade];
     if (hidden) {
         [UIView animateWithDuration:0.4 animations:^{
             self.navigationController.navigationBar.alpha = 0;
@@ -902,7 +909,6 @@
         [self updateSubviewsWhenScroll];
         currentPageIndex = index;
         if (lockMode) {
-            NSLog(@"lock:");
             PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
             [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showLikeButton:) object:page];
             [self performSelector:@selector(showLikeButton:) withObject:page afterDelay:1.0];

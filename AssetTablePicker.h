@@ -75,6 +75,7 @@
 //@property (nonatomic,strong)NSNumber *val;
 @property (nonatomic,strong)Album *album;
 @property (nonatomic,assign)BOOL action;
+@property (nonatomic,assign)BOOL lockMode;
 -(IBAction)actionButtonPressed;
 -(IBAction)playPhotos;
 -(IBAction)lockButtonPressed;
@@ -85,5 +86,6 @@
 -(IBAction)NoBodyButton;
 -(IBAction)protectButton;
 -(void)EditPhotoTag:(NSNotification *)note;
+-(void)setTableViewEdge:(UIInterfaceOrientation)orientation;
 //-(void)resetTableContentInset;
 @end

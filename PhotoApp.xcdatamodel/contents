@@ -10,7 +10,7 @@
         <attribute name="sortOrder" attributeType="Boolean" defaultValueString="YES"/>
         <attribute name="transitType" optional="YES" attributeType="String"/>
         <relationship name="conAssetRule" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="AssetRule" inverseName="conAllbum" inverseEntity="AssetRule" indexed="YES"/>
-        <relationship name="conDateRule" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="DateRule" inverseName="conAlbum" inverseEntity="DateRule" indexed="YES"/>
+        <relationship name="conDateRule" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="DateRule" inverseName="conAlbum" inverseEntity="DateRule" indexed="YES"/>
         <relationship name="conEventRule" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="EventRule" inverseName="conAlbum" inverseEntity="EventRule" indexed="YES"/>
         <relationship name="conPeopleRule" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="PeopleRule" inverseName="conAlbum" inverseEntity="PeopleRule" indexed="YES"/>
     </entity>
@@ -36,7 +36,7 @@
     </entity>
     <entity name="DateRule" representedClassName="DateRule">
         <attribute name="datePeriod" optional="YES" attributeType="String"/>
-        <relationship name="conAlbum" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="Album" inverseName="conDateRule" inverseEntity="Album" indexed="YES"/>
+        <relationship name="conAlbum" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="Album" inverseName="conDateRule" inverseEntity="Album" indexed="YES"/>
     </entity>
     <entity name="Event" representedClassName="Event">
         <attribute name="name" optional="YES" attributeType="String"/>

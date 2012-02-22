@@ -169,7 +169,8 @@
     [self performSelectorOnMainThread:@selector(playlistAlbum) withObject:nil waitUntilDone:YES];
 }
 -(void) refresh
-{    assetsBook=[[NSMutableArray alloc]init]; 
+{    
+    assetsBook=[[NSMutableArray alloc]init]; 
     favoriteList=[[NSMutableArray alloc]init];
     NSMutableArray* tmp=nil;
     NSPredicate * pre=nil;
@@ -538,33 +539,40 @@
 }
 -(NSPredicate*) parseDateRule:(DateRule *)rule {
     if(rule.datePeriod != nil)
-    {
+    { 
         NSPredicate* result =nil;
         NSDate *date = [NSDate date];
         NSDateComponents *components = [[NSDateComponents alloc]init];
         NSCalendar *gregorian = [[NSCalendar alloc]initWithCalendarIdentifier:NSGregorianCalendar];
-        if ([rule.datePeriod isEqualToString:@"Last Week"]) {
+        if ([rule.datePeriod isEqualToString:@"Recent week"]) {
             [components setDay:-7];
             NSDate *lastWeek = [gregorian dateByAddingComponents:components toDate:date options:0];
-            NSLog(@"the date is %@ and %@",date,lastWeek);
             result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",lastWeek,date];
-        }else if ([rule.datePeriod isEqualToString:@"Last Two Weeks"]) {
+        }else if ([rule.datePeriod isEqualToString:@"Recent two weeks"]) {
             [components setDay:-14];
             NSDate *lastTwoWeek = [gregorian dateByAddingComponents:components toDate:date options:0];
             result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",lastTwoWeek,date];
             
-        }else if([rule.datePeriod isEqualToString:@"Last Three Weeks"]){
-            [components setDay:-21];
+        }else if([rule.datePeriod isEqualToString:@"Recent month"]){
+            [components setDay:-30];
             NSDate *lastThreeWeek = [gregorian dateByAddingComponents:components toDate:date options:0];
             result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",lastThreeWeek,date];
-        }else if([rule.datePeriod isEqualToString:@"Last Month"]){
-            [components setDay:-30];
-            NSDate *lastMonth = [gregorian dateByAddingComponents:components toDate:date options:0];
-            result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",lastMonth,date];
-        }else{
+        }else if([rule.datePeriod isEqualToString:@"Recent three months"]){
             [components setDay:-90];
+            NSDate *lastThreeMonth = [gregorian dateByAddingComponents:components toDate:date options:0];
+            result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",lastThreeMonth,date];
+        }else if([rule.datePeriod isEqualToString:@"Recent six months"]){
+            [components setDay:-180];
+            NSDate *lastSixMonth = [gregorian dateByAddingComponents:components toDate:date options:0];
+            result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",lastSixMonth,date];
+        }else if([rule.datePeriod isEqualToString:@"Recent year"]){
+            [components setDay:1];
+            NSDate *recentYear = [gregorian dateByAddingComponents:components toDate:date options:0];
+            result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",recentYear,date];
+        }else{
+            [components setYear:1];
             NSDate *lastMonth = [gregorian dateByAddingComponents:components toDate:date options:0];
-            result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",lastMonth,date];
+            result=[NSPredicate predicateWithFormat:@"some self.date<%@",lastMonth];
         }
     /*if ([[rule opCode] isEqualToString:@"INCLUDE"]) {
       result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",[rule startDate],[rule stopDate]];
