@@ -39,5 +39,6 @@
 -(void)deleteTag:(Asset *)asset;
 -(void)deleteNobody:(Asset *)asset;
 -(BOOL)deletePeople:(Asset *)asset people:(People *)pe;
+-(BOOL)selectAssert:(Asset *)asset;
 
 @end

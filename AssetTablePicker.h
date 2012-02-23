@@ -14,6 +14,7 @@
 
 @interface AssetTablePicker : UIViewController<ThumbnailCellSelectionDelegate,UITableViewDelegate,UITableViewDataSource>
 {
+    UIView *timeSelectionsView;
     UITableView *table;
     UIToolbar *viewBar;
     UIToolbar *tagBar;
@@ -30,6 +31,8 @@
     NSMutableArray *assertList;
     NSMutableArray *AddAssertList;
     NSMutableArray *inAssert;
+    NSMutableArray *photoArray;
+    NSMutableArray *videoArray;
   
     BOOL mode;
     BOOL load;
@@ -38,7 +41,10 @@
     BOOL action;
     BOOL lockMode;
     BOOL firstLoad;
-  
+    BOOL protecteds;
+    BOOL photoType;
+    BOOL videoType;
+    BOOL timeBtPressed;
     UIButton *name;
   
     AlbumDataSource *dataSource;
@@ -91,4 +97,5 @@
 -(IBAction)protectButton;
 -(void)EditPhotoTag:(NSNotification *)note;
 -(void)setTableViewEdge:(UIInterfaceOrientation)orientation;
+-(void)countPhotosAndVideosCounts;
 @end

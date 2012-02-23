@@ -42,11 +42,17 @@
     if(album==nil)
     {
         NSString *timeTitle = NSLocalizedString(@"Time", @"title");
-        NSString *typeTitle = NSLocalizedString(@"Type", @"title");
+       // NSString *typeTitle = NSLocalizedString(@"Type", @"title");
         lock.enabled=NO;
+        NSArray *array = [NSArray arrayWithObjects:@"All",@"Photos",@"Videos", nil];
+        UISegmentedControl *segControl = [[UISegmentedControl alloc]initWithItems:array];
+        [segControl addTarget:self action:@selector(showTypeSelections:) forControlEvents:UIControlEventValueChanged];
+        segControl.selectedSegmentIndex = 0;
+        segControl.segmentedControlStyle = UISegmentedControlStyleBar;
         UIBarButtonItem *flex = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
         UIBarButtonItem *time = [[UIBarButtonItem alloc]initWithTitle:timeTitle style:UIBarButtonItemStyleBordered target:self action:@selector(showTimeSelections)];
-        UIBarButtonItem *type = [[UIBarButtonItem alloc]initWithTitle:typeTitle style:UIBarButtonItemStyleBordered target:self action:@selector(showTypeSelections)];
+        UIBarButtonItem *type = [[UIBarButtonItem alloc]initWithCustomView:segControl];
+        //UIBarButtonItem *type = [[UIBarButtonItem alloc]initWithTitle:typeTitle style:UIBarButtonItemStyleBordered target:self action:@selector(showTypeSelections)];
         [viewBar setItems:[NSArray arrayWithObjects:time,flex,type, nil]];
         
     }
@@ -55,16 +61,11 @@
     action=YES;
     as=NO;
     mode = NO;
+    protecteds=NO;
+    photoType = NO;
+    videoType = NO;
+    timeBtPressed = NO;
     tagBar.hidden = YES;
-    photoCount = 0;
-    videoCount = 0;
-    for (Asset *ast in self.crwAssets) {
-        if ([ast.videoType boolValue]) {
-            videoCount += 1;
-        }else{
-            photoCount += 1;
-        }
-    }
     tagSelector = [[TagSelector alloc]initWithViewController:self];
     
     self.tagRow=[[NSMutableArray alloc]init];
@@ -72,6 +73,11 @@
     assertList=[[NSMutableArray alloc]init];
     AddAssertList=[[NSMutableArray alloc]init];
     inAssert=[[NSMutableArray alloc]init];
+    photoArray = [[NSMutableArray alloc]init];
+    videoArray = [[NSMutableArray alloc]init];
+    
+    [self countPhotosAndVideosCounts];
+    
     self.likeAssets = [[NSMutableArray alloc]init];
     NSString *b=NSLocalizedString(@"Back", @"title");
     UIButton* backButton = [UIButton buttonWithType:101]; // left-pointing shape!
@@ -104,6 +110,19 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableData) name:@"reloadTableData" object:nil];
 }
 
+-(void)countPhotosAndVideosCounts{
+    photoCount = 0;
+    videoCount = 0;
+    for (Asset *ast in self.crwAssets) {
+        if ([ast.videoType boolValue]) {
+            videoCount += 1;
+            [videoArray addObject:ast];
+        }else{
+            photoCount += 1;
+            [photoArray addObject:ast];
+        }
+    }
+}
 -(void)EditPhotoTag:(NSNotification *)note
 {
     NSDictionary *dic = [note userInfo];
@@ -282,6 +301,7 @@
 #pragma mark -
 #pragma mark ButtonAction Methods
 -(void)cancelTag{
+    protecteds=NO;
     NSString *a=NSLocalizedString(@"Tag", @"title");
     NSString *b=NSLocalizedString(@"Done", @"title");
     if([cancel.title isEqualToString:a])
@@ -441,6 +461,7 @@
 -(IBAction)NoBodyButton
 {
     as=YES;
+    protecteds=NO;
     [tagSelector.peopleList removeAllObjects];
     favorite *fi=[dataSource.favoriteList objectAtIndex:0];
     People *p1=fi.people;
@@ -452,7 +473,13 @@
 }
 -(IBAction)protectButton
 {
-    
+ [tagSelector.peopleList removeAllObjects];
+ [self.tagRow removeAllObjects];
+ [self.UrlList removeAllObjects];
+ protecteds=YES;
+ as=NO;
+ self.navigationItem.title=@"给照片加密";   
+ [self.table reloadData];
 }
 -(IBAction)resetTags{
     [self.tagRow removeAllObjects];
@@ -464,7 +491,10 @@
     [self.tagRow removeAllObjects];
     tagSelector.add=@"NO";
     as=YES;
+    protecteds=NO;
     [assertList removeAllObjects];
+    [tagSelector.peopleList removeAllObjects];
+    [self.navigationItem setTitle:ta];
     [tagSelector selectTagNameFromFavorites];
 }
 -(IBAction)selectFromAllNames{
@@ -472,8 +502,12 @@
     [self.UrlList removeAllObjects];
     tagSelector.add=@"NO";
     as=YES;
+    protecteds=NO;
     [assertList removeAllObjects];
+    [tagSelector.peopleList removeAllObjects];
+    [self.navigationItem setTitle:ta];
     [tagSelector selectTagNameFromContacts];
+    [self.table reloadData];
 }
 -(IBAction)playPhotos{
     if([side isEqualToString:@"favorite"])
@@ -490,11 +524,44 @@
 }
 
 -(void)showTimeSelections{
-    
+    if (!timeBtPressed) {
+        CGFloat height = 150;
+        CGFloat width = self.view.frame.size.width*1/3;
+        CGFloat x = self.view.frame.origin.x;
+        CGFloat y = CGRectGetMinY(viewBar.frame)-height;
+        if(timeSelectionsView){
+            timeSelectionsView = nil;
+        }
+        timeSelectionsView = [[UIView alloc]initWithFrame:CGRectMake(x, y, width, height)];
+        timeSelectionsView.backgroundColor = [UIColor colorWithRed:81/255.0 green:142/255.0 blue:72/255.0 alpha:1.0];
+        [timeSelectionsView.layer setCornerRadius:10.0];
+        [timeSelectionsView setClipsToBounds:YES];   
+        [self.view addSubview:timeSelectionsView];
+        
+    }else{
+        if (timeSelectionsView && timeSelectionsView.superview != nil) {
+            [timeSelectionsView removeFromSuperview];
+        }
+    }
+   
+    timeBtPressed = !timeBtPressed;
 }
 
--(void)showTypeSelections{
-    
+-(void)showTypeSelections:(id)sender{
+    UISegmentedControl *seg = (UISegmentedControl *)sender;
+    if (seg.selectedSegmentIndex == 0) {
+        photoType = NO;
+        videoType = NO;
+    }else if(seg.selectedSegmentIndex == 1){
+        photoType = YES;
+        videoType = NO;
+    }else{
+        photoType = NO;
+        videoType = YES;
+    }
+    [self.table reloadData];
+    NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
+    [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
 }
 
 #pragma mark -
@@ -503,9 +570,19 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     if (UIInterfaceOrientationIsLandscape(oritation)) {
-        lastRow = ceil([self.crwAssets count]/6.0)+1;
+        if (photoType) {
+            lastRow = ceil([photoArray count]/6.0)+1;
+        }else if(videoType){
+            lastRow = ceil([videoArray count]/6.0)+1;
+        }else
+            lastRow = ceil([self.crwAssets count]/6.0)+1;
     }else
-        lastRow = ceil([self.crwAssets count]/4.0)+1; 
+        if (photoType) {
+            lastRow = ceil([photoArray count]/4.0)+1;
+        }else if(videoType){
+            lastRow = ceil([videoArray count]/4.0)+1;
+        }else
+            lastRow = ceil([self.crwAssets count]/4.0)+1; 
     
     return lastRow;
 }
@@ -531,32 +608,50 @@
             label.font = [UIFont fontWithName:@"Arial" size:20];
             NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
             [formatter setNumberStyle:NSNumberFormatterDecimalStyle]; // this line is important!
-            if (photoCount == 0) {
-                NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:videoCount]];
-                if (videoCount == 1) {
-                    label.text = [NSString stringWithFormat:@"%@ Video",videoNumber];
-                }else{
-                    label.text = [NSString stringWithFormat:@"%@ Videos",videoNumber];
-                }
-            }else if(videoCount == 0){
+            if (photoType && photoCount != 0) {
                 NSString *photoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:photoCount]];
                 if (photoCount == 1) {
                     label.text = [NSString stringWithFormat:@"%@ Photo",photoNumber];
                 }else{
                     label.text = [NSString stringWithFormat:@"%@ Photos",photoNumber];
                 }
-            }else{
-                NSString *photoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:photoCount]];
+
+            }else if(videoType){
                 NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:videoCount]];
-                if (photoCount == 1 && videoCount == 1) {
-                    label.text = [NSString stringWithFormat:@"%@ Photo, %@ Video",photoNumber,videoNumber];
-                }else if(photoCount == 1 && videoCount != 1){
-                    label.text = [NSString stringWithFormat:@"%@ Photo, %@ Videos",photoNumber,videoNumber];
-                }else if(photoCount != 1 && videoCount == 1){
-                    label.text = [NSString stringWithFormat:@"%@ Photos, %@ Video",photoNumber,videoNumber];
+                if (videoCount == 1) {
+                    label.text = [NSString stringWithFormat:@"%@ Video",videoNumber];
+                }else{
+                    label.text = [NSString stringWithFormat:@"%@ Videos",videoNumber];
                 }
-                else{
-                    label.text = [NSString stringWithFormat:@"%@ Photos, %@ Videos",photoNumber,videoNumber];
+
+            }else{
+                if (photoCount == 0 ) {
+                    NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:videoCount]];
+                    if (videoCount == 1) {
+                        label.text = [NSString stringWithFormat:@"%@ Video",videoNumber];
+                    }else{
+                        label.text = [NSString stringWithFormat:@"%@ Videos",videoNumber];
+                    }
+                }else if(videoCount == 0){
+                    NSString *photoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:photoCount]];
+                    if (photoCount == 1) {
+                        label.text = [NSString stringWithFormat:@"%@ Photo",photoNumber];
+                    }else{
+                        label.text = [NSString stringWithFormat:@"%@ Photos",photoNumber];
+                    }
+                }else{
+                    NSString *photoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:photoCount]];
+                    NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:videoCount]];
+                    if (photoCount == 1 && videoCount == 1) {
+                        label.text = [NSString stringWithFormat:@"%@ Photo, %@ Video",photoNumber,videoNumber];
+                    }else if(photoCount == 1 && videoCount != 1){
+                        label.text = [NSString stringWithFormat:@"%@ Photo, %@ Videos",photoNumber,videoNumber];
+                    }else if(photoCount != 1 && videoCount == 1){
+                        label.text = [NSString stringWithFormat:@"%@ Photos, %@ Video",photoNumber,videoNumber];
+                    }
+                    else{
+                        label.text = [NSString stringWithFormat:@"%@ Photos, %@ Videos",photoNumber,videoNumber];
+                    }
                 }
             }
              [cell addSubview:label]; 
@@ -572,17 +667,39 @@
         
         for (NSInteger i = 0; i<loopCount; i++) {
             NSInteger row = (indexPath.row*loopCount)+i;
-            if (row<[self.crwAssets count]) {
+            
+            Asset *dbAsset = nil;
+            if (videoType) {
+                if (row < [videoArray count]) {
+                    dbAsset = [videoArray objectAtIndex:row];
+                }
+            }else if(photoType){
+                if (row < [photoArray count]) {
+                    dbAsset = [photoArray objectAtIndex:row];
+                }
                 
-                Asset *dbAsset = [self.crwAssets objectAtIndex:row];
+            }else{
+                if (row < [self.crwAssets count]) {
+                    dbAsset = [self.crwAssets objectAtIndex:row];
+                }
+            }
+            if (dbAsset != nil) {
                 if(as==YES)
                 {
-                if([tagSelector tag:dbAsset]==YES)
-                {
-                    NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
-                    [tagRow addObject:selectedIndex];
-                    //[cell checkTagSelection:selectedIndex];
+                    if([tagSelector tag:dbAsset]==YES)
+                    {
+                        NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
+                        [tagRow addObject:selectedIndex];
+                        //[cell checkTagSelection:selectedIndex];
+                    }
                 }
+                if(protecteds==YES)
+                {
+                    if([dbAsset.isprotected boolValue])
+                    {
+                        NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
+                        [tagRow addObject:selectedIndex];
+                    }
                 }
                 [assetsInRow addObject:dbAsset];
             }
@@ -615,6 +732,7 @@
     {
         if([side isEqualToString:@"favorite"])
         {
+            self.navigationItem.title=ta;
             selectedRow = cell.rowNumber;
             NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                                         [NSNumber numberWithBool:lockMode],@"lock", self,@"pushPeopleThumbnailView",self.album.transitType,@"transition",nil];
@@ -622,6 +740,7 @@
         }
         else
         {
+        self.navigationItem.title=ta;
         selectedRow = cell.rowNumber;
         NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                                     [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];
@@ -644,16 +763,62 @@
                       
         }
         else
-        {  
-            [self.tagRow addObject:row];
-            [cell checkTagSelection:row];
-            [tagSelector save:asset];
-            [AddAssertList addObject:asset];
-                   
-                    
+        {   favorite *fi=[dataSource.favoriteList objectAtIndex:0];
+            People *p1=fi.people;
+            if([tagSelector.peopleList containsObject:p1])
+           {
+               BOOL b=[tagSelector selectAssert:asset];
+               if(b==YES)
+               {
+                                     
+               }
+               else
+               {    
+                   if([tagSelector.peopleList count]>1)
+                   {
+                   }
+                   else
+                   {
+                   [self.tagRow addObject:row];
+                   [cell checkTagSelection:row];
+                   [tagSelector save:asset];
+                   [AddAssertList addObject:asset];  
+                   }
+               }
+           }
+            else
+            {
+                [self.tagRow addObject:row];
+                [cell checkTagSelection:row];
+                [tagSelector save:asset];
+                [AddAssertList addObject:asset];
+            }
+
+
         }
             
     }
+        else if(protecteds==YES)
+        {
+         
+            if([self.tagRow containsObject:row])
+            {
+                [self.UrlList removeObject:asset];
+                [self.tagRow removeObject:row];
+                [cell removeTag:row];
+                asset.isprotected=[NSNumber numberWithBool:NO];
+                asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]-1];
+                
+            }
+            else
+            {   
+                [self.tagRow addObject:row];
+                [cell checkTagSelection:row];
+                asset.isprotected=[NSNumber numberWithBool:YES];
+                asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]+1];
+        }
+            [dataSource.coreData saveContext];
+        }
        else
        {
            NSString *b=NSLocalizedString(@"please select tag name", @"message");

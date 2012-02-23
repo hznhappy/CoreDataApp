@@ -84,8 +84,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "729"
          endingLineNumber = "729"
-         landmarkName = "@implementation AlbumDataSource"
-         landmarkType = "3">
+         landmarkName = "-getAsset:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -105,12 +105,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AssetTablePicker.h"
-         timestampString = "351655460.114788"
+         timestampString = "351682681.727887"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "77"
-         endingLineNumber = "77"
-         landmarkName = "ta"
+         startingLineNumber = "82"
+         endingLineNumber = "82"
+         landmarkName = "side"
          landmarkType = "19">
       </FileBreakpoint>
    </FileBreakpoints>

@@ -64,7 +64,8 @@
     self.IdList=[[NSMutableArray alloc]init];
     dateList = [NSArray arrayWithObjects:@"Recent week",@"Recent two weeks",@"Recent month",@"Recent three months",@"Recent six months", @"Recent year",@"More than one year",nil];
     self.textField.autocapitalizationType =  UITextAutocapitalizationTypeWords;
-    self.textField.placeholder=@"标题";
+    playName=@"标题";
+    self.textField.placeholder=playName;
     sortSwc=NO;
     NSMutableArray *parry=[[NSMutableArray alloc]init];
     self.selectedIndexPaths=parry;
@@ -169,6 +170,9 @@
     {
         bum.name= textField.placeholder;
     }
+    else
+    {bum.name=textField.text;
+    }
     bum.conPeopleRule=pr1;
     pr1.conAlbum=bum;
     bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
@@ -225,15 +229,18 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     switch (section) {
         case 0:
-            return 1;
-            break;
-        case 1:
-            return [list count];
-            break;
-            case 2:
             return 2;
             break;
+        case 1:
+            return 1;
+            break;
+        case 2:
+            return [list count];
+            break;
         case 3:
+            return 1;
+            break;
+        case 4:
             if(sortSwc)
             {
                 return 2;
@@ -243,9 +250,9 @@
                 return 1;
             }
             break;
-        case 4:
+       /* case 4:
             return 1;
-            break;
+            break;*/
         case 5:
             return 2;
             break;
@@ -274,6 +281,8 @@
    
        if (indexPath.section == 0) {
         UITableViewCell *cell = nil;
+           switch (rowNum) {
+               case 0:
                 cell = [tableView dequeueReusableCellWithIdentifier:@"textFieldCell"];
                 if (cell == nil) {
                     cell = self.textFieldCell;
@@ -285,31 +294,54 @@
                         self.textField.text = bum.name;
                     }
                 }
+                   break;
+                   case 1:
+                   cell = [tableView dequeueReusableCellWithIdentifier:@"chooseCell"];
+                   if (cell == nil) {
+                       cell=self.chooseCell;
+                   }
+                   cell.accessoryView = [self chooseButton];
+                   if(bum!=nil&&![bum.chooseType isEqualToString:PhotoVideo])
+                   {
+                       if ([bum.chooseType isEqualToString:Photo]) {
+                           chooseButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+                           [chooseButton setTitle:Photo forState:UIControlStateNormal];
+                           
+                           
+                       }
+                       else if ([bum.chooseType isEqualToString:Video]){
+                           chooseButton.backgroundColor = [UIColor colorWithRed:81/255.0 green:142/255.0 blue:72/255.0 alpha:1.0];
+                           [chooseButton setTitle:Video forState:UIControlStateNormal];
+                           
+                       }
+                   }
+                   break;
+                   default:
+                   break;
+
+                   
+           }
             return cell;
     }
-    else if(indexPath.section==4)
+    else if(indexPath.section==1)
     {
         UITableViewCell *cell=nil;
         
-                cell = [tableView dequeueReusableCellWithIdentifier:@"chooseCell"];
-                if (cell == nil) {
-                    cell=self.chooseCell;
+   
+        cell = [tableView dequeueReusableCellWithIdentifier:@"PeopleRuleCell"];
+        if (cell == nil) {
+            cell=self.PeopleRuleCell;
+            cell.accessoryView=[self peopleRuleButton];
+            if(bum!=nil)
+            {
+                if (![bum.conPeopleRule.allOrAny boolValue]) {
+                    peopleRuleButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+                    [peopleRuleButton setTitle:@"OR" forState:UIControlStateNormal];    
                 }
-        cell.accessoryView = [self chooseButton];
-        if(bum!=nil&&![bum.chooseType isEqualToString:PhotoVideo])
-        {
-        if ([bum.chooseType isEqualToString:Photo]) {
-            chooseButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-            [chooseButton setTitle:Photo forState:UIControlStateNormal];
-            
+            }
             
         }
-        else if ([bum.chooseType isEqualToString:Video]){
-            chooseButton.backgroundColor = [UIColor colorWithRed:81/255.0 green:142/255.0 blue:72/255.0 alpha:1.0];
-            [chooseButton setTitle:Video forState:UIControlStateNormal];
-            
-        }
-    }
+       
        
       return cell;
     }
@@ -363,35 +395,10 @@
                 break;
                 
         }
-        if(bum!=nil)
-        {      
-            /*if([bum.sortKey isEqualToString:@"date"])
-            {
-                self.sortSeg.selectedSegmentIndex=0;
-            }
-            else if([bum.sortKey isEqualToString:@"numPeopleTag"])
-            {
-                self.sortSeg.selectedSegmentIndex=1;
-            }
-            else if([bum.sortKey isEqualToString:@"numOfLike"])
-            {
-                self.sortSeg.selectedSegmentIndex=2;
-            }
-            
-            if([bum.sortOrder boolValue]==YES)
-            {
-                self.sortOrder.selectedSegmentIndex=0;
-            }
-            else if([bum.sortOrder boolValue]==NO)
-            {
-                self.sortOrder.selectedSegmentIndex=1;
-            }*/
-        }
-
         return cell;
         
     }
-       else if(indexPath.section == 3)
+       else if(indexPath.section == 4)
     {
         
         UITableViewCell *cell = nil;
@@ -418,60 +425,19 @@
         {      
             [pickerView selectRow:[dateList indexOfObject:date.datePeriod] inComponent:0 animated:NO];
 
-//            if([bum.conDateRule.opCode isEqualToString:@"EXCLUDE"])
-//            {
-//                self.DateSeg.selectedSegmentIndex=1;
-//            }
-//            NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-//            
-//            [outputFormatter setDateFormat:@"yyyy:MM:dd"];
-//            if(bum.conDateRule.startDate!=nil)
-//            {
-//            NSString *startDateString= [outputFormatter stringFromDate:bum.conDateRule.startDate];
-//            self.startText.text=[NSString stringWithFormat:startDateString];
-//            }
-//            if(bum.conDateRule.stopDate!=nil)
-//            {
-//            NSString *stopDateString= [outputFormatter stringFromDate:bum.conDateRule.stopDate];
-//            self.stopText.text=[NSString stringWithFormat:stopDateString];
-//            }
         }
         
 
         return cell;
         
     }
-    else if(indexPath.section == 2)
+    else if(indexPath.section == 3)
     {
         UITableViewCell *cell = nil;
-        switch (rowNum) {
-            case 0:
-                cell = [tableView dequeueReusableCellWithIdentifier:@"PeopleRuleCell"];
-                if (cell == nil) {
-                    cell=self.PeopleRuleCell;
-                    cell.accessoryView=[self peopleRuleButton];
-                    if(bum!=nil)
-                    {
-                        if (![bum.conPeopleRule.allOrAny boolValue]) {
-                            NSLog(@"yes");
-                            peopleRuleButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-                            [peopleRuleButton setTitle:@"OR" forState:UIControlStateNormal];    
-                        }
-                    }
-                    
-                }
-                break;
-            case 1:
                 cell = [tableView dequeueReusableCellWithIdentifier:@"AddPeopleCell"];
                 if (cell == nil) {
                     cell=self.AddPeopleCell;
                 }
-                break;
-                
-            default:
-                break;
-        }
-
                return cell;
         
     }
@@ -508,7 +474,7 @@
       return cell;
   }
 
-   else if(indexPath.section == 1) 
+   else if(indexPath.section == 2) 
     {
         
         static NSString *cellIdentifier = @"nameCell";
@@ -587,13 +553,14 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(bum==nil)
-    {
-        [self album];
-    }
+    
 
     [self.textField resignFirstResponder];
     if (indexPath.section ==6 && indexPath.row == 0) {
+        if(bum==nil)
+        {
+            [self album];
+        }
         AnimaSelectController *animateController = [[AnimaSelectController alloc]init];
         animateController.tranStyle = self.tranLabel.text;
         animateController.Text=textField.text;
@@ -606,6 +573,10 @@
         [textField resignFirstResponder];
     }
     if (indexPath.section ==6 && indexPath.row == 2) {
+        if(bum==nil)
+        {
+            [self album];
+        }
         MPMediaPickerController *mediaPicker = [[MPMediaPickerController alloc] initWithMediaTypes: MPMediaTypeMusic];
         
         mediaPicker.delegate = self;
@@ -615,23 +586,11 @@
         [self presentModalViewController:mediaPicker animated:YES];
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
-    if (indexPath.section == 1) {
-              /* if(textField.text==nil||textField.text.length==0)
-        { NSString *c=NSLocalizedString(@"note", @"title");
-            NSString *b=NSLocalizedString(@"ok", @"title");
-            NSString *d=NSLocalizedString(@"Please fill out the rule name", @"title");
-            UIAlertView *alert = [[UIAlertView alloc]
-                                  initWithTitle:c
-                                  message:d
-                                  delegate:self
-                                  cancelButtonTitle:nil
-                                  otherButtonTitles:b,nil];
-            [alert show];
-            
-
+    if (indexPath.section == 2) {
+        if(bum==nil)
+        {
+            [self album];
         }
-        else
-        {*/
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             UIButton *button1 = [self getStateButton];
             if (cell.accessoryView==nil) {
@@ -640,6 +599,7 @@
                 cell.accessoryView = nil;
             }
             for (UIButton *button in cell.contentView.subviews) {
+            
                 if ([button isKindOfClass:[UIButton class]]) {
                     if ([button.currentImage isEqual:unselectImg]) {
                         [button setImage:selectImg forState:UIControlStateNormal]; 
@@ -667,7 +627,6 @@
                 }
             }
 
-           //}
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
   }
@@ -1047,6 +1006,10 @@
 }
 
 -(void)setSelectState:(id)sender{
+   if(bum==nil)
+   {
+       [self album];
+   }
     UIButton *button = (UIButton *)sender;
     UITableViewCell *cell = (UITableViewCell *)[[button superview] superview];
     NSIndexPath *index = [listTable indexPathForCell:cell];
@@ -1124,8 +1087,8 @@
   
     if(textField.text==nil||textField.text.length==0)
     {
-        textField.placeholder=@"标题";
-        NSString *c=NSLocalizedString(@"note", @"title");
+        textField.placeholder=playName;
+       /* NSString *c=NSLocalizedString(@"note", @"title");
         NSString *b=NSLocalizedString(@"ok", @"title");
         NSString *d=NSLocalizedString(@"Rule name can not be empty!", @"title");
         UIAlertView *alert = [[UIAlertView alloc]
@@ -1134,7 +1097,7 @@
                               delegate:self
                               cancelButtonTitle:nil
                               otherButtonTitles:b,nil];
-        [alert show];
+        [alert show];*/
         if(bum!=nil&&keybord==NO)
         {
 
@@ -1249,8 +1212,7 @@
         NSMutableArray* excludePeople=[appDelegate.dataSource simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:YES];
         if(excludePeople!=nil) {
             [assets removeObjectsInArray:excludePeople];
-            //NSLog(@"Exclude predicate : %d , %@",[excludePeople count],pre );
-        }
+            }
     }
     AmptsAlbum *ampAlbum = [appDelegate.dataSource.assetsBook objectAtIndex:0];
     NSPredicate *newPre = [NSPredicate predicateWithFormat:@"self in %@",assets];
@@ -1267,42 +1229,6 @@
     NSString *labelText = [dic objectForKey:@"tranStyle"];
     self.tranLabel.text = labelText;
 }
-/*
--(void)changeDate:(NSNotification *)note{
-     NSDictionary *dic = [note userInfo];
-    if(bu==YES)
-    {
-       // self.startText.text=[dic objectForKey:@"Date"];
-        NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
-        NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
-        [inputFormatter setTimeZone:timeZone1];
-        [inputFormatter setDateFormat:@"yyyy:MM:dd"];
-        date.startDate=[inputFormatter dateFromString:[dic objectForKey:@"Date"]];
-        NSDateFormatter *outFormatter=[[NSDateFormatter alloc]init];
-       [outFormatter setDateFormat:@"yyyy:MM:dd"];
-        NSString *startDateString= [outFormatter stringFromDate:date.startDate];
-        self.startText.text=[NSString stringWithFormat:startDateString];
-    }
-    else
-    {
-    //self.stopText.text=[dic objectForKey:@"Date"];
-        NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
-        NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
-        [inputFormatter setTimeZone:timeZone1];
-        [inputFormatter setDateFormat:@"yyyy:MM:dd"];
-        date.stopDate=[inputFormatter dateFromString:[dic objectForKey:@"Date"]];
-        NSDateFormatter *outFormatter=[[NSDateFormatter alloc]init];
-        [outFormatter setDateFormat:@"yyyy:MM:dd"];
-        NSString *stopDateString= [outFormatter stringFromDate:date.stopDate];
-        self.stopText.text=[NSString stringWithFormat:stopDateString];
-    }
-    [self setDate];
-    date.conAlbum=bum;
-    bum.conDateRule=date;
-    [appDelegate.dataSource.coreData saveContext];
-}
-*/
-
 - (void)viewDidUnload
 {
     [super viewDidUnload];

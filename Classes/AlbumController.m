@@ -33,7 +33,7 @@
 }
 
 -(void)viewDidLoad
-{  
+{ 
     PhotoAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     dataSource = appDelegate.dataSource;
     assets = dataSource.assetsBook; 
@@ -231,7 +231,6 @@
         AmptsAlbum *ampt = [assets objectAtIndex:indexPath.row];
         NSMutableArray *WE = ampt.assetsList;
         Album *album = [self getAlbumInRow:indexPath.row];
-        NSLog(@"album:%@",album.chooseType);
         NSMutableDictionary *dic = nil;
         if (album == nil) {
             dic  = [NSMutableDictionary dictionaryWithObjectsAndKeys:WE, @"myAssets", ampt.name,@"title", nil];
@@ -272,7 +271,6 @@
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {   
     AmptsAlbum *fa=[assets objectAtIndex:indexPath.row];
-    NSLog(@"asserts:%@",assets);
     
     if(editingStyle==UITableViewCellEditingStyleDelete)
     {

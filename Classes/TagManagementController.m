@@ -9,7 +9,7 @@
 @implementation TagManagementController
 @synthesize list;
 @synthesize button;
-@synthesize tableView,tools,bo;
+@synthesize tableView,bo;
 @synthesize coreData,favorate;
 @synthesize result,IdList;
 @synthesize favorate1;
@@ -18,7 +18,7 @@
 @synthesize peopleList;
 int j=1,count=0;
 -(void)viewDidLoad
-{  
+{   
     [self.navigationItem setTitle:@"Favorite"];
     NSMutableArray *parray1=[[NSMutableArray alloc]init];
     choosePeople=[[NSMutableArray alloc]init];
@@ -31,6 +31,8 @@ int j=1,count=0;
     if(bo!=nil)
     {  
         [self creatButton];
+        UIEdgeInsets insets = self.tableView.contentInset;
+        [self.tableView setContentInset:UIEdgeInsetsMake(0, insets.left, insets.bottom, insets.right)];
     }
     if(bo==nil)
     {
@@ -44,14 +46,25 @@ int j=1,count=0;
  }
 -(void)creatButton
 {
-    self.tableView.allowsMultipleSelectionDuringEditing=YES;
+    tools = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 110,45)];
+    tools.autoresizingMask=UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     NSString *a=NSLocalizedString(@"Back", @"button");
-    NSString *b=NSLocalizedString(@"choose", @"button");
+    NSString *b=NSLocalizedString(@"Edit", @"button");
+     NSString *c=NSLocalizedString(@"Mult", @"button");
     UIBarButtonItem *BackButton=[[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleBordered target:self action:@selector(toggleback)];
+    MultipleButton=[[UIBarButtonItem alloc] initWithTitle:c style:UIBarButtonItemStyleBordered target:self action:@selector(toggleMutiple:)];
     self.navigationItem.leftBarButtonItem=BackButton;
     editButton = [[UIBarButtonItem alloc] initWithTitle:b style:UIBarButtonItemStyleBordered target:self action:@selector(toggleEdit:)];
     editButton.style = UIBarButtonItemStyleBordered;
-    self.navigationItem.rightBarButtonItem = editButton;
+     NSMutableArray* buttons = [[NSMutableArray alloc] initWithCapacity:2];
+     [buttons addObject:MultipleButton];
+    [buttons addObject:editButton];
+   
+    
+    [tools setItems:buttons animated:NO];
+    UIBarButtonItem *myBtn = [[UIBarButtonItem alloc] initWithCustomView:tools];
+    
+    self.navigationItem.rightBarButtonItem = myBtn;
     
 }
 -(void)creatButton1
@@ -67,6 +80,7 @@ int j=1,count=0;
 }
 -(IBAction)toggleAdd:(id)sender
 {  
+    A=YES;
     bool1=YES;
     ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc]init];
     picker.peoplePickerDelegate = self;
@@ -138,57 +152,82 @@ int j=1,count=0;
     
 	
 }
-
--(IBAction)toggleEdit:(id)sender
-{ 
+-(IBAction)toggleMutiple:(id)sender
+{
+    self.tableView.allowsMultipleSelectionDuringEditing=YES; 
+    NSString *d=NSLocalizedString(@"Back", @"button");
     NSString *a=NSLocalizedString(@"Edit", @"title");
     NSString *b=NSLocalizedString(@"Done", @"title");
-     NSString *c=NSLocalizedString(@"choose", @"button");
-    if (self.tableView.editing) {
-        editButton.style=UIBarButtonItemStyleBordered;
-        if(bo==nil)
+    NSString *c=NSLocalizedString(@"Mult", @"button");
+    UIBarButtonItem *BackButton=[[UIBarButtonItem alloc]initWithTitle:d style:UIBarButtonItemStyleBordered target:self action:@selector(toggleback)];
+    self.navigationItem.leftBarButtonItem=BackButton;
+     editButton.style=UIBarButtonItemStyleBordered;
+    if([MultipleButton.title isEqualToString:c])
+    {
+        MultipleButton.title=b;
+         editButton.title=a;
+        self.tableView.editing=NO;
+        [choosePeople removeAllObjects];
+        MultipleButton.style=UIBarButtonItemStyleDone;
+        choose=YES;
+        
+    }
+    else
+    {
+        self.tableView.editing=YES;
+        MultipleButton.title=c;
+         editButton.title=a;
+        choose=NO;
+         MultipleButton.style=UIBarButtonItemStyleBordered;
+        if([choosePeople count]!=0)
         {
-            editButton.title = a;
-        }
-        else
-        {
-            editButton.title=c;
-        }
-
-        if(bo!=nil)
-        {
-            NSString *c=NSLocalizedString(@"Back", @"button");
-            UIBarButtonItem *BackButton=[[UIBarButtonItem alloc]initWithTitle:c style:UIBarButtonItemStyleBordered target:self action:@selector(toggleback)];
-            self.navigationItem.leftBarButtonItem=BackButton;
-            choose=NO;
-            if([choosePeople count]!=0)
-            {
             [self dismissModalViewControllerAnimated:YES];
-           NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:choosePeople,@"people",nil];
+            NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:choosePeople,@"people",nil];
             [[NSNotificationCenter defaultCenter]postNotificationName:@"addTagPeople" 
                                                                object:self 
                                                              userInfo:dic];
-            }
-           
- 
+        }
+
+    }
+     [self.tableView setEditing:!self.tableView.editing animated:YES];
+   
+}
+-(IBAction)toggleEdit:(id)sender
+{ 
+    self.tableView.allowsMultipleSelectionDuringEditing=NO;
+    MultipleButton.style=UIBarButtonItemStyleBordered;
+    NSString *a=NSLocalizedString(@"Edit", @"title");
+    NSString *b=NSLocalizedString(@"Done", @"title");
+    NSString *c=NSLocalizedString(@"Mult", @"button");
+    NSString *d=NSLocalizedString(@"Back", @"button");
+    if([editButton.title isEqualToString:a])
+    {
+        editButton.style=UIBarButtonItemStyleDone;         
+        editButton.title=b;
+        MultipleButton.title=c;
+        self.tableView.editing=NO;
+        UIBarButtonItem *addButon=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(toggleAdd:)];
+        addButon.style = UIBarButtonItemStyleBordered;
+        self.navigationItem.leftBarButtonItem = addButon;
+    }
+    else
+    {
+        editButton.style=UIBarButtonItemStyleBordered;
+
+        editButton.title=a;
+        MultipleButton.title=c;
+        self.tableView.editing=YES;
+        if(bo!=nil)
+        {
+
+        UIBarButtonItem *BackButton=[[UIBarButtonItem alloc]initWithTitle:d style:UIBarButtonItemStyleBordered target:self action:@selector(toggleback)];
+        self.navigationItem.leftBarButtonItem=BackButton;
         }
         else
         {
-            
-        self.navigationItem.leftBarButtonItem=nil;
+            self.navigationItem.leftBarButtonItem=nil;
         }
-    }else{
-        [choosePeople removeAllObjects];
-        editButton.style=UIBarButtonItemStyleDone;
        
-        editButton.title = b;
-              UIBarButtonItem *addButon=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(toggleAdd:)];
-        addButon.style = UIBarButtonItemStyleBordered;
-        self.navigationItem.leftBarButtonItem = addButon;
-        if(bo!=nil)
-        {
-        choose=YES;
-        }
     }
     [self.tableView setEditing:!self.tableView.editing animated:YES];
     
@@ -209,14 +248,33 @@ int j=1,count=0;
     bool1=NO;
     tools.alpha=1;
     tools.barStyle = UIBarStyleBlack;
-    self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
+   // self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
+    if(bo!=nil)
+    {
+    self.navigationController.navigationBar.barStyle=UIBarStyleBlack; 
+        UIEdgeInsets insets = self.tableView.contentInset;
+        [self.tableView setContentInset:UIEdgeInsetsMake(0, insets.left, insets.bottom, insets.right)];
+        
+    }
+    else
+    {
+         self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
+    }
 }
 -(void)viewWillDisappear:(BOOL)animated
-{   if(bool1==NO)
+{   /*if(bool1==NO)
 {
     tools.alpha=0;
-} 
+} */
+   
+    if(A==YES)
+    {}
+    else
+    {
+    self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
+    }
 }
+
 -(void)table
 {
    //favorate.favorite=[NSNumber numberWithBool:YES];
@@ -374,15 +432,7 @@ int j=1,count=0;
     else
     {
     People *favorate11=[[self.peopleList objectAtIndex:indexPath.row]people];
-    NSPredicate *pre=[NSPredicate predicateWithFormat:@"conPeople==%@",favorate11];
-    self.as=[appDelegate.dataSource simpleQuery:@"PeopleTag" predicate:pre sortField:nil sortOrder:YES];
-    NSMutableArray *WE=[[NSMutableArray alloc]init];
-    for(int i=0;i<[self.as count];i++)
-    {
-        PeopleTag *PT=[self.as objectAtIndex:i];
-        [WE addObject:PT.conAsset];
-    }
-    NSMutableDictionary *dic = nil;
+     NSMutableDictionary *dic = nil;
         NSString *a=nil;
         if (favorate11.firstName == nil) {
             a = [NSString stringWithFormat:@"%@",favorate11.lastName];
@@ -393,7 +443,7 @@ int j=1,count=0;
         } 
         else
             a = [NSString stringWithFormat:@"%@ %@",favorate11.lastName, favorate11.firstName];
-    dic =[NSMutableDictionary dictionaryWithObjectsAndKeys:WE, @"myAssets",a,@"title",nil];
+    dic =[NSMutableDictionary dictionaryWithObjectsAndKeys:[[self.peopleList objectAtIndex:indexPath.row]assetsList], @"myAssets",a,@"title",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"pushPeopleThumbnailView" object:nil userInfo:dic];
     }
         [table deselectRowAtIndexPath:indexPath animated:YES];
@@ -501,10 +551,17 @@ int j=1,count=0;
 }
 -(void)setTableViewEdge:(UIInterfaceOrientation)orientation{
     UIEdgeInsets insets = self.tableView.contentInset;
+    if(bo!=nil)
+    {
+       [self.tableView setContentInset:UIEdgeInsetsMake(0, insets.left, insets.bottom, insets.right)]; 
+    }
+    else
+    {
     if (UIInterfaceOrientationIsLandscape(orientation)) {
         [self.tableView setContentInset:UIEdgeInsetsMake(33, insets.left, insets.bottom, insets.right)];
     }else{
         [self.tableView setContentInset:UIEdgeInsetsMake(45, insets.left, insets.bottom, insets.right)];
+    }
     }
 }
 @end

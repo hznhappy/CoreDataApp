@@ -805,6 +805,7 @@
 }
 
 -(void)addTagPeople{
+    
     [tagSelector saveTagAsset:[self.playlist.storeAssets objectAtIndex:currentPageIndex]];
     [ppv Buttons];
 }

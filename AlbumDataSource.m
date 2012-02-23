@@ -264,6 +264,7 @@
         for(int i=0;i<[Pt count];i++)
         {
             PeopleTag *PT=[Pt objectAtIndex:i];
+            if(![PT.conAsset.isprotected boolValue])
             [WE addObject:PT.conAsset];
         }
         favorite *pop=[[favorite alloc]init];
@@ -284,7 +285,9 @@
     for(int i=0;i<[Pt count];i++)
     {
         PeopleTag *PT=[Pt objectAtIndex:i];
+        if(![PT.conAsset.isprotected boolValue])
         [WE addObject:PT.conAsset];
+        
     }
     favorite *pop=[[favorite alloc]init];
     pop.firstname=po.firstName;
@@ -620,14 +623,14 @@
 -(NSPredicate*) ruleFormation:(Album *)i {
    
     NSPredicate *pre=nil;
-
+    pre=[NSPredicate predicateWithFormat:@"isprotected==%@||isprotected=nil",[NSNumber numberWithBool:NO]];
     /*
      People Rules or the Face Rules are parsed in here
-     
+    
      */
     if([i chooseType]!=nil&&![[i chooseType]isEqualToString:@"Photo&Video"] )
     {
-         pre=[self chooseRule:i];
+         pre=[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:pre,[self chooseRule:i],nil]];
     }
 
     if ([i conPeopleRule]!=nil) {

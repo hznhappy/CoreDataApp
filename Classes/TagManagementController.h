@@ -34,7 +34,9 @@
     UITableView *tableView;
     BOOL bool1;
     BOOL choose;
+    BOOL A;
     UIBarButtonItem *editButton;
+    UIBarButtonItem *MultipleButton;
     NSString *bo;
     NSMutableArray *choosePeople;
     NSInteger index;
@@ -47,7 +49,6 @@
 @property(nonatomic,strong)NSMutableArray *as;
 @property(nonatomic,strong)NSMutableArray *result;
 @property(nonatomic,strong)NSMutableArray *peopleList;
-@property(nonatomic,strong)UIToolbar *tools;
 @property(nonatomic,strong)NSString *bo;
 @property(nonatomic,strong)People *favorate;
 @property(nonatomic,strong)People *favorate1;
