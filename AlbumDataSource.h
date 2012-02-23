@@ -16,10 +16,13 @@
 #import "EventRule.h"
 #import "AssetRule.h"
 #import <Assetslibrary/Assetslibrary.h>
+//#import "backgroundUpdate.h"
 @class Album;
 @interface AlbumDataSource : NSObject {
     AmptsPhotoCoreData * coreData;
     OnDeviceAssets * deviceAssets;
+    OnDeviceAssets *refreshAssets;
+   // backgroundUpdate *background;
      NSMutableArray* assetsBook;
     NSMutableArray *favoriteList;
     NSOperationQueue *opQueue;
@@ -27,6 +30,9 @@
     NSNumber *password;
     AmptsAlbum *AlbumAll;
     AmptsAlbum *AlbumUnTAG;
+    NSString *s;
+    NSMutableArray *Add;
+    NSMutableArray *Del;
     
 }
 @property (nonatomic,strong) AmptsPhotoCoreData * coreData;
@@ -36,6 +42,8 @@
 @property (nonatomic,strong) NSOperationQueue * opQueue;
 @property (nonatomic,strong)UINavigationController *nav;
 @property (nonatomic,strong)NSNumber *password;
+
+@property (nonatomic,strong)NSString *s;
 
 -(id) initWithAppName: (NSString*) app navigationController:(UINavigationController *)navigationController;
 -(NSMutableArray* ) getAlbumList;
@@ -56,8 +64,11 @@
 -(void) syncAssetwithDataSource;
 -(void) refreshDataSource;
 -(void) refresh;
+-(void)refreshback;
 -(void) refreshTag;
 -(void) syncDataSource;
+//-(void)background;
+-(void)update;
 //-(void) testDataSource;
 -(void)fresh:(Album *)al index:(int)index;
 -(NSMutableArray *)addPeople:(People*)po;

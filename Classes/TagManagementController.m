@@ -128,7 +128,8 @@ int j=1,count=0;
             favorite *fe=[peopleList lastObject];
             favorate.listSort=[NSNumber numberWithInt:[fe.people.listSort intValue]+1];
             [datasource.coreData saveContext];
-            peopleList=[datasource addPeople:favorate];
+           // peopleList=[datasource addPeople:favorate];
+            [peopleList addObjectsFromArray:[datasource addPeople:favorate]];
             [self.result addObject:favorate];
             [IdList addObject:fid];
             [self.tableView reloadData];
@@ -157,7 +158,7 @@ int j=1,count=0;
     self.tableView.allowsMultipleSelectionDuringEditing=YES; 
     NSString *d=NSLocalizedString(@"Back", @"button");
     NSString *a=NSLocalizedString(@"Edit", @"title");
-    NSString *b=NSLocalizedString(@"Done", @"title");
+    NSString *b=NSLocalizedString(@"Sing", @"title");
     NSString *c=NSLocalizedString(@"Mult", @"button");
     UIBarButtonItem *BackButton=[[UIBarButtonItem alloc]initWithTitle:d style:UIBarButtonItemStyleBordered target:self action:@selector(toggleback)];
     self.navigationItem.leftBarButtonItem=BackButton;
@@ -168,32 +169,25 @@ int j=1,count=0;
          editButton.title=a;
         self.tableView.editing=NO;
         [choosePeople removeAllObjects];
-        MultipleButton.style=UIBarButtonItemStyleDone;
+        //MultipleButton.style=UIBarButtonItemStyleDone;
         choose=YES;
         
     }
     else
-    {
+    { [choosePeople removeAllObjects];
         self.tableView.editing=YES;
         MultipleButton.title=c;
          editButton.title=a;
         choose=NO;
-         MultipleButton.style=UIBarButtonItemStyleBordered;
-        if([choosePeople count]!=0)
-        {
-            [self dismissModalViewControllerAnimated:YES];
-            NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:choosePeople,@"people",nil];
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"addTagPeople" 
-                                                               object:self 
-                                                             userInfo:dic];
-        }
-
+         //MultipleButton.style=UIBarButtonItemStyleBordered;
+       
     }
      [self.tableView setEditing:!self.tableView.editing animated:YES];
    
 }
 -(IBAction)toggleEdit:(id)sender
 { 
+    [choosePeople removeAllObjects];
     self.tableView.allowsMultipleSelectionDuringEditing=NO;
     MultipleButton.style=UIBarButtonItemStyleBordered;
     NSString *a=NSLocalizedString(@"Edit", @"title");
@@ -234,12 +228,26 @@ int j=1,count=0;
 }
 -(void)toggleback
 {
+    
     [self dismissModalViewControllerAnimated:YES];
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"resetToolBar" object:nil];
-    NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:nil];
+    if([choosePeople count]!=0)
+    {
+        [self dismissModalViewControllerAnimated:YES];
+        NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:choosePeople,@"people",nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"addTagPeople" 
+                                                           object:self 
+                                                         userInfo:dic];
+    }
+
+   // [[NSNotificationCenter defaultCenter]postNotificationName:@"resetToolBar" object:nil];
+    else
+    {
+   [[NSNotificationCenter defaultCenter]postNotificationName:@"resetToolBar" object:nil];
+   NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
                                                        object:self 
                                                      userInfo:dic1];
+    }
 
 }
 
@@ -284,7 +292,20 @@ int j=1,count=0;
     appDelegate = [[UIApplication sharedApplication] delegate];
     datasource=appDelegate.dataSource;
     [datasource refreshPeople];
-    peopleList=datasource.favoriteList;
+   if(bo!=nil)
+   {
+       for (int i=1;i<[datasource.favoriteList count];i++)
+       {
+           [peopleList addObject:[datasource.favoriteList objectAtIndex:i]];
+       }
+   }
+   
+    else
+    {
+    
+        peopleList=datasource.favoriteList;
+    }
+
       for(favorite *a  in peopleList)
     {
         [self.result addObject:a.people];
@@ -304,11 +325,11 @@ int j=1,count=0;
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
            editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return (indexPath.row == 0) ? UITableViewCellEditingStyleNone : UITableViewCellEditingStyleDelete;
+    return ([IdList objectAtIndex:indexPath.row]==[NSNumber numberWithInt:-1]) ? UITableViewCellEditingStyleNone : UITableViewCellEditingStyleDelete;
 }
 -(BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.row==0)
+   if([IdList objectAtIndex:indexPath.row]==[NSNumber numberWithInt:-1])
     {
         return NO;
     }
@@ -328,14 +349,19 @@ int j=1,count=0;
 	if (cell == nil) {
 		cell=[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
 	}
-    if(indexPath.row==0)
-    {
-       cell.textLabel.textColor=[UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
-        
-    }
-   // People *am = (People *)[result objectAtIndex:indexPath.row];
+      // People *am = (People *)[result objectAtIndex:indexPath.row];
     
     favorite *fa=[peopleList objectAtIndex:indexPath.row];
+    if([IdList objectAtIndex:indexPath.row]==[NSNumber numberWithInt:-1])
+    {
+        cell.textLabel.textColor=[UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
+        
+    }
+    else
+    {
+      cell.textLabel.textColor=[UIColor blackColor];   
+    }
+
     //People *pl=fa.people;
     //pl.listSort=[NSNumber numberWithInt:indexPath.row];
     if(fa.num!=0)
@@ -494,7 +520,7 @@ int j=1,count=0;
 
 -(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
-    if([toIndexPath row]>0)
+    if([IdList objectAtIndex:toIndexPath.row]!=[NSNumber numberWithInt:-1])
     {
       favorite *p=[self.peopleList objectAtIndex:fromIndexPath.row];
       People *po=p.people;

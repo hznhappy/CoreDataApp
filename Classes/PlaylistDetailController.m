@@ -59,7 +59,7 @@
 }
 - (void)viewDidLoad
 { 
-    
+    self.list=[[NSMutableArray alloc]init];
     self.nameList=[[NSMutableArray alloc]init];
     self.IdList=[[NSMutableArray alloc]init];
     dateList = [NSArray arrayWithObjects:@"Recent week",@"Recent two weeks",@"Recent month",@"Recent three months",@"Recent six months", @"Recent year",@"More than one year",nil];
@@ -146,8 +146,8 @@
 }
 
 -(void)table
-{   self.list=[[NSMutableArray alloc]init];
-    [self.list removeAllObjects];
+{   
+    //[self.list removeAllObjects];
     [self.IdList removeAllObjects];
     NSPredicate *favor=[NSPredicate predicateWithFormat:@"favorite==%@",[NSNumber numberWithBool:YES]];
     list= [AL simpleQuery:@"People" predicate:favor sortField:@"listSort" sortOrder:YES];
@@ -199,13 +199,18 @@
         {
             [self album];  
         }
-        [self setSort];
-        [self setOrder];
+        if(bum!=nil)
+        {
+            bum.name=self.textField.text;
+        }
+       // [self setSort];
+        //[self setOrder];
     //bum.name=textField.text;
     [appDelegate.dataSource.coreData saveContext];
     }
     if(bum!=nil&&keybord==YES)
     {
+        NSLog(@"1");
         if(bum.name==nil||bum.name.length==0)
         {
         [appDelegate.dataSource.coreData.managedObjectContext deleteObject:bum];
@@ -236,6 +241,7 @@
             break;
         case 2:
             return [list count];
+            
             break;
         case 3:
             return 1;
@@ -481,73 +487,76 @@
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         if (cell == nil) {
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-           
-            UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(45, 11, 126, 20)];
-            name.tag = indexPath.row;
-            name.backgroundColor = [UIColor clearColor];
-            People *am = (People *)[self.list objectAtIndex:indexPath.row];
-            if (am.lastName.length == 0 || am.lastName == nil) {
-                name.text = am.firstName;
-            }
-            else if(am.firstName.length == 0 || am.firstName == nil)
-            {
-                name.text = am.lastName;
-            }
-            else{
-                name.text = [NSString stringWithFormat:@"%@ %@",am.lastName,am.firstName];
-            }
-            [cell.contentView addSubview:name];
-
-            UIButton *selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            selectButton.tag = indexPath.row;
-            [selectButton addTarget:self action:@selector(setSelectState:) forControlEvents:UIControlEventTouchUpInside];
-            selectButton.frame = CGRectMake(10, 11, 30, 30);
-            [selectButton setImage:unselectImg forState:UIControlStateNormal];
-            if(bum!=nil)
-            {                
-                NSManagedObjectContext *managedObjectsContext = [appDelegate.dataSource.coreData managedObjectContext];
-                NSEntityDescription *entity = [NSEntityDescription entityForName:@"PeopleRuleDetail" inManagedObjectContext:managedObjectsContext];
-                NSFetchRequest *request = [[NSFetchRequest alloc]init];
-                [request setEntity:entity];
-                
-                NSPredicate *pre = [NSPredicate predicateWithFormat:@"conPeopleRule == %@",bum.conPeopleRule];
-                [request setPredicate:pre];
-                People *p1 = (People *)[list objectAtIndex:indexPath.row];
-                NSError *error = nil;
-                NSArray *A=[managedObjectsContext executeFetchRequest:request error:&error];
-                for(int i=0;i<[A count];i++)
-                {
-                PeopleRuleDetail *p=[A objectAtIndex:i];
-    
+        }
+        [cell.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+         cell.accessoryView=nil;
+        UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(45, 11, 126, 20)];
+        name.tag = indexPath.row;
+        name.backgroundColor = [UIColor clearColor];
+        People *am =[self.list objectAtIndex:indexPath.row];
+        if (am.lastName.length == 0 || am.lastName == nil) {
+            name.text = am.firstName;
+        }
+        else if(am.firstName.length == 0 || am.firstName == nil)
+        {
+            name.text = am.lastName;
+        }
+        else{
+            name.text = [NSString stringWithFormat:@"%@ %@",am.lastName,am.firstName];
+        }
+        [cell.contentView addSubview:name];
+        
+        UIButton *selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        selectButton.tag = indexPath.row;
+        [selectButton addTarget:self action:@selector(setSelectState:) forControlEvents:UIControlEventTouchUpInside];
+        selectButton.frame = CGRectMake(10, 11, 30, 30);
+        [selectButton setImage:unselectImg forState:UIControlStateNormal];
+        [cell.contentView addSubview:selectButton];
+        if(bum!=nil)
+        {                
+            NSManagedObjectContext *managedObjectsContext = [appDelegate.dataSource.coreData managedObjectContext];
+            NSEntityDescription *entity = [NSEntityDescription entityForName:@"PeopleRuleDetail" inManagedObjectContext:managedObjectsContext];
+            NSFetchRequest *request = [[NSFetchRequest alloc]init];
+            [request setEntity:entity];
             
-      
-            if([p.conPeople isEqual:p1])
+            NSPredicate *pre = [NSPredicate predicateWithFormat:@"conPeopleRule == %@",bum.conPeopleRule];
+            [request setPredicate:pre];
+            People *p1 = (People *)[list objectAtIndex:indexPath.row];
+            NSError *error = nil;
+            NSArray *A=[managedObjectsContext executeFetchRequest:request error:&error];
+            for(int i=0;i<[A count];i++)
             {
-                 cell.accessoryView = [self getStateButton];
-                [selectedIndexPaths addObject:indexPath];
-                [selectButton setImage:selectImg forState:UIControlStateNormal];
-                if([p.opcode isEqualToString:@"INCLUDE"])
-                {
-                    [stateButton setTitle:INCLUDE forState:UIControlStateNormal];
-                    stateButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
-                }
-                else if([p.opcode isEqualToString:@"EXCLUDE"])
-                {
-                    stateButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-                    [stateButton setTitle:EXCLUDE forState:UIControlStateNormal];
-                }
+                PeopleRuleDetail *p=[A objectAtIndex:i];
                 
+                
+                
+                if([p.conPeople isEqual:p1])
+                {
+                    cell.accessoryView = [self getStateButton];
+                    [selectedIndexPaths addObject:indexPath];
+                    [selectButton setImage:selectImg forState:UIControlStateNormal];
+                    if([p.opcode isEqualToString:@"INCLUDE"])
+                    {
+                        [stateButton setTitle:INCLUDE forState:UIControlStateNormal];
+                        stateButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
+                    }
+                    else if([p.opcode isEqualToString:@"EXCLUDE"])
+                    {
+                        stateButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+                        [stateButton setTitle:EXCLUDE forState:UIControlStateNormal];
+                    }
+                    
+                }
+                               
             }
-              
-            }
-            }
-
-            [cell.contentView addSubview:selectButton];
+            
+            
+           
             
         }
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-               return cell;
+        return cell;
     }
     return nil;
 }

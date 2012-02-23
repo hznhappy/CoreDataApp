@@ -33,7 +33,7 @@
 }
 
 -(void)viewDidLoad
-{ 
+{ NSLog(@"111");
     PhotoAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     dataSource = appDelegate.dataSource;
     assets = dataSource.assetsBook; 
@@ -54,6 +54,8 @@
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabled:) name:@"addplay" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(editTable) name:@"editplay" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refresh:) name:@"refresh" object:nil];
+
     
 }
 
@@ -97,6 +99,18 @@
         [tableView reloadData];
     }
     
+}
+-(void)refresh:(NSNotification *)note{
+    NSDictionary *dic = [note userInfo];
+
+    assets=[dic objectForKey:@"data"];
+    for(int i=0;i<[assets count];i++)
+    {
+     AmptsAlbum *am = (AmptsAlbum *)[assets objectAtIndex:i];
+    NSLog(@"assets:%d",am.num);
+    }
+    [self.tableView reloadData];
+    NSLog(@"refresh");
 }
 -(void)editTable
 {
@@ -155,8 +169,7 @@
 #pragma mark -
 #pragma mark TableView delegate method
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{ 
-    
+{  NSLog(@"222");
     return [assets count];
     
     
@@ -169,7 +182,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)table cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{  
+{  NSLog(@"relodata");
     static NSString *CellIdentifier = @"CellIdentifier";
 	UITableViewCell *cell = [table dequeueReusableCellWithIdentifier:CellIdentifier];
 	if (cell == nil) {
@@ -187,6 +200,10 @@
     if(indexPath.row==1)
     {
         cell.textLabel.textColor=[UIColor redColor];
+    }
+    else
+    {
+        cell.textLabel.textColor=[UIColor blackColor];
     }
     if (am.num != 0) {
         NSNumberFormatter *formatter = [NSNumberFormatter new];

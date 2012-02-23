@@ -108,6 +108,7 @@
     [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EditPhotoTag:)name:@"EditPhotoTag" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableData) name:@"reloadTableData" object:nil];
+     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refresh:) name:@"refresh" object:nil];
 }
 
 -(void)countPhotosAndVideosCounts{
@@ -123,6 +124,37 @@
         }
     }
 }
+//-(void)resetTableContentInset{
+//    UIEdgeInsets inset = self.table.contentInset;
+//    if (UIInterfaceOrientationIsPortrait(oritation)) {
+//        
+//        inset.top = 65;
+//    }else{
+//        inset.top = 65;
+//    }
+//    self.table.contentInset = inset;
+//}
+-(void)refresh:(NSNotification *)note{
+    NSDictionary *dic = [note userInfo];
+    
+    NSMutableArray *a=[dic objectForKey:@"data"];
+    //AmptsAlbum *ampt = [assets objectAtIndex:indexPath.row];
+    NSLog(@"assertcout:%d",[a count]);
+    for(int i=0;i<[a count];i++)
+    {
+        AmptsAlbum *am = (AmptsAlbum *)[a objectAtIndex:i];
+        if([am.name isEqualToString:ta])
+        {
+            crwAssets=am.assetsList;
+            [self.table reloadData];
+            break;
+        }
+       // NSLog(@"assets:%@",am.assetsList);
+    }
+    
+    NSLog(@"refresh");
+}
+
 -(void)EditPhotoTag:(NSNotification *)note
 {
     NSDictionary *dic = [note userInfo];
@@ -143,7 +175,7 @@
     }
     else
     {
-        people=[NSString stringWithFormat:@"%@ %@",po.firstName,po.lastName];
+        people=[NSString stringWithFormat:@"%@ %@",po.lastName,po.firstName];
     }
     
     if([a count]>1)
@@ -766,7 +798,7 @@
         {   favorite *fi=[dataSource.favoriteList objectAtIndex:0];
             People *p1=fi.people;
             if([tagSelector.peopleList containsObject:p1])
-           {
+            {NSLog(@"contain");
                BOOL b=[tagSelector selectAssert:asset];
                if(b==YES)
                {

@@ -8,14 +8,18 @@
 
 #import <UIKit/UIKit.h>
 #import "AlbumDataSource.h"
+#import "backgroundUpdate.h"
 @interface PhotoAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
     UITabBarController *rootViewController;
     AlbumDataSource *dataSource;
+    backgroundUpdate *refreshData;
 }
 @property (nonatomic, strong) IBOutlet UIWindow *window;
 @property (nonatomic, strong) IBOutlet UITabBarController *rootViewController;
 @property (nonatomic, strong) AlbumDataSource *dataSource;
+
+
 @end
 @interface UITabBarController (MyApp)
 @end
