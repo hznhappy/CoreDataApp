@@ -18,53 +18,57 @@
 -(ThumbnailImageView *)initWithAsset:(Asset*)asset index:(NSUInteger)index action:(BOOL)act{
     self = [super init];
     if (self) {
-        PhotoAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
         self.userInteractionEnabled = YES;
-        NSString *dbUrl = asset.url;
-        NSURL *url = [NSURL URLWithString:dbUrl];
-        ALAsset *as = [appDelegate.dataSource getAsset:dbUrl];
-        CGImageRef ref = [as thumbnail];
-        //UIImage *img = [UIImage imageWithCGImage:ref];
-        //[self setImage:img];
-        thumbnail = [UIImage imageWithCGImage:ref];
         self.thumbnailIndex = index;
         copyMenuShow = NO;
-        if ([asset.videoType boolValue]) 
-       {
-            //NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
-                                                             //forKey:AVURLAssetPreferPreciseDurationAndTimingKey];           
-            //AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:url options:opts]; 
-           AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:url];
-            
-            CMTime duration = playerItem.duration;
-            int durationSeconds = (int)ceilf(CMTimeGetSeconds(duration));
-//            second = urlAsset.duration.value / urlAsset.duration.timescale;
-//            if (second >= 60) {
-//                int index = second / 60;
-//                minute = index;
-//                second = second - index*60;                 
-//            }    
-           [self addSubview:[self addVideoOverlay:durationSeconds]];
-            
-       }
-        if([asset.numPeopleTag intValue] != 0&&!act)
-        {   
-            NSString *numStr = [NSString stringWithFormat:@"%@",asset.numPeopleTag];
-            [self addSubview:[self addTagnumberOverlay:numStr]];
-        }
-
-       // [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clearSelection) name:@"clearSelection" object:nil];
+        tagSign = act;
+        [self performSelectorInBackground:@selector(asynLoadThumbnailWithAsset:) withObject:asset];
     }
     return self;
 }
 
--(void)drawRect:(CGRect)rect{
-    [thumbnail drawInRect:rect];
+-(void)asynLoadThumbnailWithAsset:(Asset *)asset{
+    PhotoAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    NSString *dbUrl = asset.url;
+    NSURL *url = [NSURL URLWithString:dbUrl];
+    ALAsset *as = [appDelegate.dataSource getAsset:dbUrl];
+    CGImageRef ref = [as thumbnail];
+    UIImage *img = [UIImage imageWithCGImage:ref];
+    [self performSelectorOnMainThread:@selector(setImage:) withObject:img waitUntilDone:NO];
+    thumbnail = img;//[UIImage imageWithCGImage:ref];
+    if ([asset.videoType boolValue]) 
+    {
+        AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:url];
+        
+        CMTime duration = playerItem.duration;
+        int durationSeconds = (int)ceilf(CMTimeGetSeconds(duration));
+        int hours = durationSeconds / (60 * 60);
+        int minutes = (durationSeconds / 60) % 60;
+        int seconds = durationSeconds % 60;
+        NSString *formattedTimeString = nil;
+        if ( hours > 0 ) {
+            formattedTimeString = [NSString stringWithFormat:@"%d:%02d:%02d", hours, minutes, seconds];
+        } else {
+            formattedTimeString = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
+        }
+
+        //[self addSubview:[self addVideoOverlay:durationSeconds]];
+        [self performSelectorOnMainThread:@selector(addVideoOverlay:) withObject:formattedTimeString waitUntilDone:NO];
+        
+    }
+    if([asset.numPeopleTag intValue] != 0&&!tagSign)
+    {   
+        NSString *numStr = [NSString stringWithFormat:@"%@",asset.numPeopleTag];
+        //[self addSubview:[self addTagnumberOverlay:numStr]];
+        [self performSelectorOnMainThread:@selector(addTagnumberOverlay:) withObject:numStr waitUntilDone:NO];
+    }
     
+    // [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clearSelection) name:@"clearSelection" object:nil];
+
 }
 #pragma mark -
 #pragma mark OverLay method
--(UIView *)addTagnumberOverlay:(NSString *)number
+-(void)addTagnumberOverlay:(NSString *)number
 {
     UIView *tagBg =[[UIView alloc]initWithFrame:CGRectMake(3, 3, 25, 25)];
     CGPoint tagBgCenter = tagBg.center;
@@ -84,32 +88,22 @@
     count.text = number;
     [tagCount addSubview:count];
     [tagBg addSubview:tagCount];
-    return tagBg;
+    [self addSubview:tagBg];
+    //return tagBg;
     
 }
--(UIView *)addVideoOverlay:(int)second{
-    int hours = second / (60 * 60);
-   int minutes = (second / 60) % 60;
-    int seconds = second % 60;
-    NSString *formattedTimeString = nil;
-    if ( hours > 0 ) {
-        formattedTimeString = [NSString stringWithFormat:@"%d:%02d:%02d", hours, minutes, seconds];
-    } else {
-        formattedTimeString = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
-    }
-
+-(void)addVideoOverlay:(NSString *)second{
+   
     UIView *video =[[UIView alloc]initWithFrame:CGRectMake(0, 54, 75, 16)];
     UILabel *length=[[UILabel alloc]initWithFrame:CGRectMake(40, 3, 45, 10)];
     UIImageView *tu=[[UIImageView alloc]initWithFrame:CGRectMake(6, 4,15, 8)];
     UIImage *picture = [UIImage imageNamed:@"VED.png"];
-   // set the image for the button
     [tu setImage:picture];
-  // [video addSubview:tu];
-    
+    [video addSubview:tu];
     
     [length setBackgroundColor:[UIColor clearColor]];
     length.alpha=0.8;
-    length.text = formattedTimeString;
+    length.text = second;
     length.textColor = [UIColor whiteColor];
     length.textAlignment = UITextAlignmentLeft;
     length.font = [UIFont boldSystemFontOfSize:12.0];
@@ -119,7 +113,8 @@
     video.alpha=0.9;
     length.alpha = 1.0;
     tu.alpha = 1.0;
-    return video;
+    [self addSubview:video];
+    //return video;
     
 }
 
@@ -134,12 +129,10 @@
         theMenu = nil;
     }
     theMenu = [UIMenuController sharedMenuController];
-    // do i even need to show a selection? There's really no point for my implementation...
-    // doing it any way to see if it helps the "not showing up" problem...
     CGRect selectionRect = [self bounds];
     selectionRect.origin.y += 30;
     [theMenu setTargetRect:selectionRect inView:self];
-    [theMenu setMenuVisible:YES animated:YES]; // <-- doesn't show up...
+    [theMenu setMenuVisible:YES animated:YES]; 
 }
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender 

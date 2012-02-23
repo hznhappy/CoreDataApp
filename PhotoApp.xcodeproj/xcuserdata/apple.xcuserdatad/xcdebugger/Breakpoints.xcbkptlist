@@ -51,11 +51,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/PhotoViewController.m"
-         timestampString = "351594978.086467"
+         timestampString = "351585868.800339"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1560"
-         endingLineNumber = "1560"
+         startingLineNumber = "1552"
+         endingLineNumber = "1552"
          landmarkName = "@implementation PhotoViewController"
          landmarkType = "3">
       </FileBreakpoint>
@@ -105,12 +105,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AssetTablePicker.h"
-         timestampString = "351575862.28609"
+         timestampString = "351682681.727887"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "75"
-         endingLineNumber = "75"
-         landmarkName = "ta"
+         startingLineNumber = "82"
+         endingLineNumber = "82"
+         landmarkName = "side"
          landmarkType = "19">
       </FileBreakpoint>
    </FileBreakpoints>
