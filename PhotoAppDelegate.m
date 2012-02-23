@@ -66,9 +66,7 @@
 
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    NSLog(@"BACKGROUND");
    // UIApplication*    app = [UIApplication sharedApplication];
-    NSLog(@"Application enter in background");
   /* [NSTimer scheduledTimerWithTimeInterval:2.0f
                                      target:self
                                    selector:@selector(updateCounter)
@@ -80,16 +78,11 @@
      If your application supports background execution, called instead of applicationWillTerminate: when the user quits.
      */
 }
--(void)updateCounter
-{
-    NSLog(@"update");
-}
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     /*
      Called as part of  transition from the background to the inactive state: here you can undo many of the changes made on entering the background.
      */
-    NSLog(@"OK");
     //refreshData=[[backgroundUpdate alloc]init];
     [self.dataSource update];
     /*UIApplication sharedApplication].applicationIconBadgeNumber = 0;

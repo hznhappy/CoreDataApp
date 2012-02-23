@@ -176,13 +176,13 @@
         newAsset.numPeopleTag=[NSNumber numberWithInt:0];
     }
     [coreData saveContext];
+    
         
 }
 -(void)DataSource
 {
     
     NSArray *urlList =refreshAssets.urls;
-    NSLog(@"url:%d",[urlList count]);
     NSPredicate * pre= [NSPredicate predicateWithFormat:@"NONE url  IN %@",urlList];
     NSMutableArray *assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil
                                        sortOrder:YES];
@@ -227,16 +227,16 @@
         [Add addObject:newAsset];
     }
     [coreData saveContext];
-    NSLog(@"background");
-
+    [self performSelectorOnMainThread:@selector(aDataSource) withObject:nil waitUntilDone:NO];
 }
 -(void)aDataSource
+{   if([Add count]>0||[Del count]>0)
 {
     [self refreshback];
-    NSLog(@"assertBook:%d",[assetsBook count]);
     deviceAssets=refreshAssets;
     NSMutableDictionary *dic =[NSMutableDictionary dictionaryWithObjectsAndKeys:assetsBook, @"data",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"refresh" object:nil userInfo:dic];
+}
     //[[NSNotificationCenter defaultCenter]postNotificationName:@"refresh" object:nil];
 }
 -(void)refreshback
@@ -316,24 +316,25 @@
         [assetsBook addObject:album];
         
     }
-    NSLog(@"over");
+  
 
 }
 -(void)backgrounddata
 {
-    NSLog(@"bac");
-    [opQueue cancelAllOperations];   
+    
+   [opQueue cancelAllOperations];   
     
     // [self testDataSource];
     NSInvocationOperation * syncData1=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(DataSource) object:nil];
     
-    NSInvocationOperation * refreshData1=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(aDataSource) object:nil];
-    [refreshData1 addDependency:syncData1];
+  //  NSInvocationOperation * refreshData1=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(aDataSource) object:nil];
+    //[refreshData1 addDependency:syncData1];
    [opQueue addOperation:syncData1];
-    [opQueue addOperation:refreshData1];
+    //[opQueue addOperation:refreshData1];
 
     }
 -(void) refreshDataSource {
+    
     [self refresh];
    // NSLog(@"finished prepare data");
     [self performSelectorOnMainThread:@selector(playlistAlbum) withObject:nil waitUntilDone:YES];

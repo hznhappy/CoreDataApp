@@ -120,9 +120,9 @@
     
     NSMutableArray *a=[dic objectForKey:@"data"];
     //AmptsAlbum *ampt = [assets objectAtIndex:indexPath.row];
-    NSLog(@"assertcout:%d",[a count]);
     for(int i=0;i<[a count];i++)
     {
+        NSLog(@"%d",i);
         AmptsAlbum *am = (AmptsAlbum *)[a objectAtIndex:i];
         if([am.name isEqualToString:ta])
         {
@@ -130,10 +130,9 @@
             [self.table reloadData];
             break;
         }
+        
        // NSLog(@"assets:%@",am.assetsList);
     }
-    
-    NSLog(@"refresh");
 }
 
 -(void)EditPhotoTag:(NSNotification *)note
