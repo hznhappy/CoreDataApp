@@ -10,6 +10,7 @@
 #import "AlbumController.h"
 #import "AssetTablePicker.h"
 #import "AlbumDataSource.h"
+#import "backgroundUpdate.h"
 @implementation PhotoAppDelegate
 
 @synthesize window;
@@ -17,8 +18,6 @@
 @synthesize dataSource;
 #pragma mark -
 #pragma mark Application lifecycle
-
-
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     // Override point for customization after application launch.
@@ -67,19 +66,42 @@
 
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
+    NSLog(@"BACKGROUND");
+   // UIApplication*    app = [UIApplication sharedApplication];
+    NSLog(@"Application enter in background");
+  /* [NSTimer scheduledTimerWithTimeInterval:2.0f
+                                     target:self
+                                   selector:@selector(updateCounter)
+                                   userInfo:nil
+                                    repeats:YES]; */
+   
     /*
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
      If your application supports background execution, called instead of applicationWillTerminate: when the user quits.
      */
 }
-
+-(void)updateCounter
+{
+    NSLog(@"update");
+}
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     /*
      Called as part of  transition from the background to the inactive state: here you can undo many of the changes made on entering the background.
      */
+    NSLog(@"OK");
+    //refreshData=[[backgroundUpdate alloc]init];
+    [self.dataSource update];
+    /*UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
+    NSArray *viewControllers = rootViewController.viewControllers;
+    AlbumDataSource *_dataSource = [[AlbumDataSource alloc] initWithAppName:@"PhotoApp" navigationController:(UINavigationController *)[viewControllers objectAtIndex:0]];
+    
+    self.dataSource = _dataSource;*/
+     
+    //[window addSubview:rootViewController.view];
+    //[window makeKeyAndVisible];}
 }
-
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     /*

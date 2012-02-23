@@ -15,12 +15,14 @@
     NSMutableDictionary *devicePeopleList;
     
     ALAssetsLibrary * library;
+    NSString *re;
     
 }
 @property (nonatomic,strong)NSMutableDictionary *  deviceAssetsList;
 @property (nonatomic,strong)NSMutableDictionary *  devicePeopleList;
-@property (nonatomic,strong) ALAssetsLibrary * library;
+@property (nonatomic,strong)ALAssetsLibrary * library;
 @property (nonatomic,strong)NSMutableArray *urls;
+@property (nonatomic,strong)NSString *re;
 
 -(ALAsset *) getAsset:(NSString *) l;
 -(void) refreshData;

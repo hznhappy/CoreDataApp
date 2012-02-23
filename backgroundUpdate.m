@@ -1,20 +1,21 @@
 //
-//  OnDeviceAssets.m
-//  AmptsPhoto
+//  backgroundUpdate.m
+//  PhotoApp
 //
-//  Created by Leung Po Chuen on 18/12/2011.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//  Created by  on 12-2-23.
+//  Copyright (c) 2012年 chinarewards. All rights reserved.
 //
 
-#import "OnDeviceAssets.h"
+#import "backgroundUpdate.h"
 #import "AddressBook/AddressBook.h"
 #import "AddressBookUI/AddressBookUI.h"
+//#import "Asset.h"
 
-@implementation OnDeviceAssets
+
+@implementation backgroundUpdate
 @synthesize deviceAssetsList,library;
 @synthesize devicePeopleList;
 @synthesize urls;
-@synthesize re;
 
 -(id)init {
     self=[super init];
@@ -35,39 +36,13 @@
 }
 
 -(void) refreshData {
-   /* ABAddressBookRef addressBook = ABAddressBookCreate();
-    
-    CFArrayRef results = ABAddressBookCopyArrayOfAllPeople(addressBook);
-    for(int i = 0; i < CFArrayGetCount(results); i++)
+       void (^assetGroupEnumerator)(ALAssetsGroup *, BOOL *) = ^(ALAssetsGroup *group, BOOL *stop) 
     {
-        ABRecordRef person = CFArrayGetValueAtIndex(results, i);
-        ABRecordID recId = ABRecordGetRecordID(person);
-        NSString *personName = (__bridge_transfer NSString*)ABRecordCopyValue(person, kABPersonFirstNameProperty);
-        NSString *lastname = (__bridge_transfer NSString*)ABRecordCopyValue(person, kABPersonLastNameProperty);
-        //NSNumber *fid=[NSNumber numberWithInt:recId];
-        NSString *fid1=[NSString stringWithFormat:@"%d",recId];
-        NSLog(@"FID:%@",fid1);
-        NSMutableArray *A=[[NSMutableArray alloc]initWithObjects:personName,lastname,nil];
-        [self.devicePeopleList setObject:A forKey:fid1];
         
-        
-    }
-
-   */
-    void (^assetGroupEnumerator)(ALAssetsGroup *, BOOL *) = ^(ALAssetsGroup *group, BOOL *stop) 
-    {
-       
         if (group == nil) 
-        { if(re!=nil)
         {
-             [[NSNotificationCenter defaultCenter]postNotificationName:@"fetchAssets" object:nil];
-        }
-            else
-            {
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"fetchAssetsFinished" object:nil];
-            }
-           
-            
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"fetchAssets" object:nil];
+            NSLog(@"COUT:%d",[deviceAssetsList count]);
             return;
         }
         [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) 
@@ -81,7 +56,7 @@
              [urls addObject:u];
              // XXX fixme
              [self.deviceAssetsList setObject:result forKey:u];
-            // NSLog(@"%@", [[result defaultRepresentation]metadata]);   
+             // NSLog(@"%@", [[result defaultRepresentation]metadata]);   
          }];
         //NSLog(@"asssetUrl:%@",self.assetsUrlOrdering);
         //[self.assetGroups addObject:group];
@@ -93,7 +68,7 @@
         
         NSLog(@"error happen when enumberatoring group,error: %@ ",[error description]);                 
     };	
-
+    
     [library enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
                            usingBlock:assetGroupEnumerator 
                          failureBlock:assetGroupEnumberatorFailure];

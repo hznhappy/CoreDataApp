@@ -48,6 +48,7 @@
 		18CEB0FA14F490A000DEF938 /* People.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CEB0F914F490A000DEF938 /* People.m */; };
 		18CEB0FE14F490B700DEF938 /* DateRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CEB0FD14F490B700DEF938 /* DateRule.m */; };
 		18CEB10114F490C800DEF938 /* Album.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CEB10014F490C800DEF938 /* Album.m */; };
+		18D1BB0B14F5D98400DE0967 /* backgroundUpdate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D1BB0A14F5D98400DE0967 /* backgroundUpdate.m */; };
 		18D402821474E50000389097 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18D402841474E50000389097 /* Localizable.strings */; };
 		18D402901474E55900389097 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18D402921474E55900389097 /* InfoPlist.strings */; };
 		18DAD78414E21BD100BBE9B1 /* PhotoApp.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 18DAD78314E21BD100BBE9B1 /* PhotoApp.xcdatamodel */; };
@@ -155,6 +156,8 @@
 		18CEB0FD14F490B700DEF938 /* DateRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateRule.m; sourceTree = "<group>"; };
 		18CEB0FF14F490C800DEF938 /* Album.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Album.h; sourceTree = "<group>"; };
 		18CEB10014F490C800DEF938 /* Album.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Album.m; sourceTree = "<group>"; };
+		18D1BB0914F5D98400DE0967 /* backgroundUpdate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = backgroundUpdate.h; sourceTree = "<group>"; };
+		18D1BB0A14F5D98400DE0967 /* backgroundUpdate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = backgroundUpdate.m; sourceTree = "<group>"; };
 		18D402831474E50000389097 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		18D402851474E50800389097 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		18D402911474E55900389097 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -278,6 +281,8 @@
 				183DE30114C7F5D700BDC724 /* OnDeviceAssets.m */,
 				18DDA24914ED0B23006C05C8 /* favorite.h */,
 				18DDA24A14ED0B23006C05C8 /* favorite.m */,
+				18D1BB0914F5D98400DE0967 /* backgroundUpdate.h */,
+				18D1BB0A14F5D98400DE0967 /* backgroundUpdate.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -578,6 +583,7 @@
 				18CEB0FA14F490A000DEF938 /* People.m in Sources */,
 				18CEB0FE14F490B700DEF938 /* DateRule.m in Sources */,
 				18CEB10114F490C800DEF938 /* Album.m in Sources */,
+				18D1BB0B14F5D98400DE0967 /* backgroundUpdate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
