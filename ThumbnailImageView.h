@@ -17,19 +17,20 @@
 -(void)thumbnailImageViewSelected:(ThumbnailImageView *)thumbnailImageView;
 @end
 
-@interface ThumbnailImageView : UIView{
+@interface ThumbnailImageView : UIImageView{
     UIImageView *highlightView;
     UIMenuController *theMenu;
     NSUInteger thumbnailIndex;
     UIImage *thumbnail;
     BOOL copyMenuShow;
+    BOOL tagSign;
     id<ThumbnailSelectionDelegate>__unsafe_unretained delegate;
 }
 @property(nonatomic,assign)NSUInteger thumbnailIndex;
 @property(nonatomic,unsafe_unretained)id<ThumbnailSelectionDelegate>delegate;
 -(ThumbnailImageView *)initWithAsset:(Asset*)asset index:(NSUInteger)index action:(BOOL)act;
--(UIView *)addTagnumberOverlay:(NSString *)numbe;
--(UIView *)addVideoOverlay:(int)second;
+-(void)addTagnumberOverlay:(NSString *)numbe;
+-(void)addVideoOverlay:(NSString *)second;
 -(void)setSelectedView;
 -(void)clearSelection;
 -(void)cancelCopyMenu;

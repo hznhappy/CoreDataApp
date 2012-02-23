@@ -29,11 +29,12 @@
 @synthesize side;
 @synthesize ta;
 @synthesize lockMode;
+@synthesize firstLoad;
 #pragma mark -
 #pragma mark UIViewController Methods
 
 -(void)viewDidLoad {
-     name= [UIButton buttonWithType:UIButtonTypeCustom];
+    name= [UIButton buttonWithType:UIButtonTypeCustom];
     PhotoAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     dataSource = appDelegate.dataSource;
     oritation = [UIApplication sharedApplication].statusBarOrientation;
@@ -103,16 +104,6 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableData) name:@"reloadTableData" object:nil];
 }
 
-//-(void)resetTableContentInset{
-//    UIEdgeInsets inset = self.table.contentInset;
-//    if (UIInterfaceOrientationIsPortrait(oritation)) {
-//        
-//        inset.top = 65;
-//    }else{
-//        inset.top = 65;
-//    }
-//    self.table.contentInset = inset;
-//}
 -(void)EditPhotoTag:(NSNotification *)note
 {
     NSDictionary *dic = [note userInfo];
@@ -154,7 +145,6 @@
 
 -(void)reloadTableData{
     oritation = [UIApplication sharedApplication].statusBarOrientation;
-    //[self resetTableContentInset];
     [self setTableViewEdge:oritation];
     [self.table reloadData];
 }
@@ -163,6 +153,7 @@
     NSString *a=NSLocalizedString(@"Lock", @"title");
     if([self.lock.title isEqualToString:a])
     {
+        [[NSNotificationCenter defaultCenter]removeObserver:self];
         [self.navigationController popViewControllerAnimated:YES];
         NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"editplay" 
@@ -252,11 +243,22 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
-    
+    if (firstLoad) {
+        firstLoad = NO;
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    
+    if (firstLoad) {
+        [table reloadData];    
+        NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
+        [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    }
+//    ThumbnailCell *cell = (ThumbnailCell *)[[self.table visibleCells]objectAtIndex:0];
+//    NSInteger index = cell.rowNumber;
+//    NSLog(@"the first %d and %@",index,[self.table visibleCells]);
+    CGPoint offset = self.table.contentOffset;
+    NSLog(@"the previous is %@",NSStringFromCGPoint(offset));
     selectedRow = NSNotFound;
 }
 -(void)viewWillDisappear:(BOOL)animated{
@@ -518,7 +520,8 @@
         cell = [[ThumbnailCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         
     }
-    
+    cell.selectionDelegate = self;
+    cell.rowNumber = indexPath.row;
     [cell.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     if (indexPath.row == lastRow - 1) {
         if (photoCount != 0 || videoCount != 0) {
@@ -560,9 +563,6 @@
         }
         
     }else{
-        cell.selectionDelegate = self;
-        cell.rowNumber = indexPath.row;
-        
         NSInteger loopCount = 0;
         if (UIInterfaceOrientationIsLandscape(oritation)) {
             loopCount = 6;
@@ -688,7 +688,7 @@
 }
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation{
     oritation = toInterfaceOrientation;
-	return (UIInterfaceOrientationIsPortrait(toInterfaceOrientation) || toInterfaceOrientation == UIInterfaceOrientationPortrait);
+	return (UIInterfaceOrientationIsLandscape(toInterfaceOrientation) || toInterfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
@@ -697,13 +697,53 @@
         return;
     }
     [self setTableViewEdge:toInterfaceOrientation];
+   /* if (previousOrigaton != toInterfaceOrientation) {
+        ThumbnailCell *cell1 = (ThumbnailCell *)[[self.table visibleCells]objectAtIndex:0];
+        ThumbnailCell *cell2 = (ThumbnailCell *)[[self.table visibleCells]lastObject];
+        NSInteger index = 0;
+        NSInteger row = 0;
+        [self.table reloadData];
+        NSLog(@"%d  %d",cell1.rowNumber,cell2.rowNumber);
+//        if (UIInterfaceOrientationIsLandscape(previousOrigaton)) {
+//            landscapeIndex = index;
+//            [self.table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:portraitIndex inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+//        }else{
+//            portraitIndex = index;
+//            [self.table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:landscapeIndex inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+//        }
+//        CGPoint offect = self.table.contentOffset;
+//        CGPoint newOffset = CGPointMake(offect.y, offect.x);
+//        [self.table reloadData];
+//        [self.table setContentOffset:newOffset];
+        //[self.view convertRect:self.view.frame toView:self.view];
+        /if (UIInterfaceOrientationIsLandscape(previousOrigaton)) {
+            index = cell1.rowNumber * 6 + ((cell2.rowNumber * 6 + 5)- cell1.rowNumber * 6)/2;
+            row  = index /4;
+            
+        }else{
+            index = cell1.rowNumber * 4 + ((cell2.rowNumber * 4 + 3)- cell1.rowNumber * 4)/2;
+            row  = index /6;
+        }
+        NSLog(@"the index is %d and row is %d",index,row);
+        if (row>=lastRow) {
+            row = lastRow - 1;
+        }
+        if (row<0) {
+            row = 0;
+        }
+        [self.table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];/
+    }*/
+        [self.table reloadData];
        previousOrigaton = toInterfaceOrientation;
-   // [self resetTableContentInset];
-    [self.table reloadData];
+    
 }
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
-    
+  
+}
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+
+
 }
 -(void)setTableViewEdge:(UIInterfaceOrientation)orientation{
     UIEdgeInsets insets = self.table.contentInset;
@@ -722,12 +762,6 @@
     self.viewBar = nil;
     self.tagBar = nil;
     [super viewDidUnload];
-}
-
-
-- (void)dealloc
-{   
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
 

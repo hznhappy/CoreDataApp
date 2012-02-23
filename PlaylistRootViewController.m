@@ -67,6 +67,7 @@
     ap.hidesBottomBarWhenPushed = YES;
     ap.crwAssets=assets;
     ap.album = receivedAlbum;
+    ap.firstLoad = YES;
     ap.navigationItem.title = [dic objectForKey:@"title"];
     ap.ta=[dic objectForKey:@"title"];
     [self pushViewController:ap animated:YES];
@@ -118,7 +119,7 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return (UIInterfaceOrientationIsLandscape(interfaceOrientation) || interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 @end

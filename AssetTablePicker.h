@@ -37,6 +37,7 @@
     BOOL as;
     BOOL action;
     BOOL lockMode;
+    BOOL firstLoad;
   
     UIButton *name;
   
@@ -51,6 +52,8 @@
     NSUInteger selectedRow;
     NSInteger photoCount;
     NSInteger videoCount;
+    NSInteger portraitIndex;
+    NSInteger landscapeIndex;
     NSString *side;
     NSString *ta;
     TagSelector *tagSelector;
@@ -76,6 +79,7 @@
 @property (nonatomic,strong)Album *album;
 @property (nonatomic,assign)BOOL action;
 @property (nonatomic,assign)BOOL lockMode;
+@property (nonatomic,assign)BOOL firstLoad;
 -(IBAction)actionButtonPressed;
 -(IBAction)playPhotos;
 -(IBAction)lockButtonPressed;
@@ -87,5 +91,4 @@
 -(IBAction)protectButton;
 -(void)EditPhotoTag:(NSNotification *)note;
 -(void)setTableViewEdge:(UIInterfaceOrientation)orientation;
-//-(void)resetTableContentInset;
 @end

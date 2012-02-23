@@ -148,14 +148,12 @@
 - (void)viewWillAppear:(BOOL)animated{
 	[super viewWillAppear:animated];
     [self.navigationController setToolbarHidden:NO animated:YES];
+    [self performLayout];
 	[self setupToolbar];
-    [self updateNavigation];
-	
-    
+    [self updateNavigation];    
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
-
 	[super viewWillDisappear:animated];
     [theMovie stop];
     [self cancelPlayPhotoTimer];
@@ -215,11 +213,6 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateToolBar) name:@"changeLockModeInDetailView" object:nil];
     
 }
-
--(void)viewDidAppear:(BOOL)animated{
-    
-}
-
 #pragma mark -
 #pragma mark Pagging Methods
 
