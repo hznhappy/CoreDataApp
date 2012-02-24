@@ -33,7 +33,7 @@
 }
 
 -(void)viewDidLoad
-{ NSLog(@"111");
+{ 
     PhotoAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     dataSource = appDelegate.dataSource;
     assets = dataSource.assetsBook; 
@@ -192,7 +192,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)table cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{  NSLog(@"relodata");
+{
     static NSString *CellIdentifier = @"CellIdentifier";
 	UITableViewCell *cell = [table dequeueReusableCellWithIdentifier:CellIdentifier];
 	if (cell == nil) {

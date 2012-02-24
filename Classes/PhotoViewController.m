@@ -151,9 +151,12 @@
     [self.navigationController setToolbarHidden:NO animated:YES];
     [self performLayout];
 	[self setupToolbar];
-    [self updateNavigation];    
+    [self updateNavigation];
 }
 
+-(void)viewDidAppear:(BOOL)animated{
+
+}
 - (void)viewWillDisappear:(BOOL)animated{
 	[super viewWillDisappear:animated];
     [theMovie stop];
@@ -829,8 +832,11 @@
             self.navigationController.navigationBar.alpha = 1;
             self.navigationController.toolbar.alpha = 1;
         }];
+        CGRect statusBarFrame = [[UIApplication sharedApplication] statusBarFrame];
+        CGRect frame = self.navigationController.navigationBar.frame;
+        frame.origin.y = MIN(statusBarFrame.size.height, statusBarFrame.size.width);
+        self.navigationController.navigationBar.frame = frame;
     }
-    
     [self setPhotoInfoHidden:hidden];
     [self setLikeButtonHidden:hidden];
     if (!playingPhoto && !playingVideo &&!hidden && assetInfoView == nil && assetInfoView.superview == nil) {
