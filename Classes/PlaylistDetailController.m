@@ -1161,13 +1161,13 @@
     sortSwc = newSwitcn.on;
     if (newSwitcn.on) {
         [listTable beginUpdates];
-        [listTable insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:3],nil] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [listTable insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:4],nil] withRowAnimation:UITableViewRowAnimationAutomatic];
         [listTable endUpdates];
     }else{
         bum.conDateRule = nil;
         date = nil;
         [listTable beginUpdates];
-        [listTable deleteRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:3],nil] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [listTable deleteRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:1 inSection:4],nil] withRowAnimation:UITableViewRowAnimationAutomatic];
         [listTable endUpdates];
     }
     
