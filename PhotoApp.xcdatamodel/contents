@@ -16,6 +16,7 @@
     </entity>
     <entity name="Asset" representedClassName="Asset">
         <attribute name="date" optional="YES" attributeType="Date"/>
+        <attribute name="duration" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isprotected" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0"/>
@@ -78,7 +79,7 @@
     </entity>
     <elements>
         <element name="Album" positionX="63" positionY="36" width="128" height="225"/>
-        <element name="Asset" positionX="-243" positionY="-45" width="128" height="225"/>
+        <element name="Asset" positionX="-243" positionY="-45" width="128" height="240"/>
         <element name="AssetRule" positionX="-99" positionY="315" width="128" height="105"/>
         <element name="DateRule" positionX="351" positionY="444" width="128" height="75"/>
         <element name="Event" positionX="-333" positionY="360" width="128" height="90"/>

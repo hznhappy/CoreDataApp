@@ -79,13 +79,13 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AlbumDataSource.m"
-         timestampString = "351685058.418715"
+         timestampString = "351756057.477765"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "904"
-         endingLineNumber = "904"
-         landmarkName = "@implementation AlbumDataSource"
-         landmarkType = "3">
+         startingLineNumber = "745"
+         endingLineNumber = "745"
+         landmarkName = "-parseDateRule:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"

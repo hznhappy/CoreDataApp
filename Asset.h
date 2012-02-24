@@ -2,8 +2,8 @@
 //  Asset.h
 //  PhotoApp
 //
-//  Created by  on 12-2-22.
-//  Copyright (c) 2012年 chinarewards. All rights reserved.
+//  Created by apple on 2/24/12.
+//  Copyright (c) 2012 chinarewards. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -14,14 +14,15 @@
 @interface Asset : NSManagedObject
 
 @property (nonatomic, retain) NSDate * date;
+@property (nonatomic, retain) NSNumber * isprotected;
 @property (nonatomic, retain) NSNumber * latitude;
 @property (nonatomic, retain) NSNumber * longitude;
+@property (nonatomic, retain) NSNumber * nobody;
 @property (nonatomic, retain) NSNumber * numOfLike;
 @property (nonatomic, retain) NSNumber * numPeopleTag;
-@property (nonatomic, retain) NSNumber * isprotected;
 @property (nonatomic, retain) NSString * url;
 @property (nonatomic, retain) NSNumber * videoType;
-@property (nonatomic, retain) NSNumber * nobody;
+@property (nonatomic, retain) NSString * duration;
 @property (nonatomic, retain) NSSet *conAssetRule;
 @property (nonatomic, retain) Event *conEvent;
 @property (nonatomic, retain) NSSet *conPeopleTag;

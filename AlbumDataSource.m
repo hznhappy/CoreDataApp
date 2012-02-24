@@ -151,7 +151,8 @@
         ALAsset * alAsset=[[deviceAssets deviceAssetsList]objectForKey:str];
         
         newAsset=[[Asset alloc]initWithEntity:entity insertIntoManagedObjectContext:[coreData managedObjectContext]];
-        newAsset.url=[[[alAsset defaultRepresentation]url]description];
+        NSURL *asUrl = [[alAsset defaultRepresentation]url];
+        newAsset.url=[asUrl description];
        // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
        // NSString * strDate=[[[alAsset defaultRepresentation]metadata]description];//valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
       //NSLog(@"strdate:%@",strDate);
@@ -167,6 +168,21 @@
        */
         if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
             newAsset.videoType = [NSNumber numberWithBool:YES];
+            AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:asUrl];
+            
+            CMTime duration = playerItem.duration;
+            int durationSeconds = (int)ceilf(CMTimeGetSeconds(duration));
+            int hours = durationSeconds / (60 * 60);
+            int minutes = (durationSeconds / 60) % 60;
+            int seconds = durationSeconds % 60;
+            NSString *formattedTimeString = nil;
+            if ( hours > 0 ) {
+                formattedTimeString = [NSString stringWithFormat:@"%d:%02d:%02d", hours, minutes, seconds];
+            } else {
+                formattedTimeString = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
+            }
+            newAsset.duration = formattedTimeString;
+            
         }else{
             newAsset.videoType = [NSNumber numberWithBool:NO];;
         }

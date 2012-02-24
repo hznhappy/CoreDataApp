@@ -30,7 +30,6 @@
 -(void)LoadThumbnailWithAsset:(Asset *)asset{
     PhotoAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     NSString *dbUrl = asset.url;
-    NSURL *url = [NSURL URLWithString:dbUrl];
     ALAsset *as = [appDelegate.dataSource getAsset:dbUrl];
     CGImageRef ref = [as thumbnail];
     UIImage *img = [UIImage imageWithCGImage:ref];
@@ -38,7 +37,7 @@
     thumbnail = img;//[UIImage imageWithCGImage:ref];
     if ([asset.videoType boolValue]) 
     {
-        AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:url];
+       /* AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:url];
         
         CMTime duration = playerItem.duration;
         int durationSeconds = (int)ceilf(CMTimeGetSeconds(duration));
@@ -50,9 +49,9 @@
             formattedTimeString = [NSString stringWithFormat:@"%d:%02d:%02d", hours, minutes, seconds];
         } else {
             formattedTimeString = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
-        }
+        }*/
 
-        [self addVideoOverlay:formattedTimeString];
+        [self addVideoOverlay:asset.duration];
         
     }
     if([asset.numPeopleTag intValue] != 0&&!tagSign)

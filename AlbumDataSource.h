@@ -16,6 +16,9 @@
 #import "EventRule.h"
 #import "AssetRule.h"
 #import <Assetslibrary/Assetslibrary.h>
+#import <CoreMedia/CoreMedia.h>
+#import <AVFoundation/AVFoundation.h>
+#import <AVFoundation/AVAsset.h>
 //#import "backgroundUpdate.h"
 @class Album;
 @interface AlbumDataSource : NSObject {

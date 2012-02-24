@@ -8,9 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import <AssetsLibrary/AssetsLibrary.h>
-#import <AVFoundation/AVFoundation.h>
-#import <AVFoundation/AVAsset.h>
-#import <CoreMedia/CoreMedia.h>
 @class ThumbnailImageView;
 @class Asset;
 @protocol ThumbnailSelectionDelegate <NSObject>
