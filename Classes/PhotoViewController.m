@@ -47,6 +47,7 @@
 	if ((self = [super init])) {
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleBarsNotification:) name:@"PhotoViewToggleBars" object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refresh:) name:@"refresh" object:nil];
 		self.hidesBottomBarWhenPushed = YES;
 		self.wantsFullScreenLayout = YES;		
         recycledPages = [[NSMutableSet alloc] init];
@@ -427,10 +428,12 @@
         [assetInfoView addSubview:likeCount];
         [assetInfoView addSubview:tagCount];
     }
-    UILabel *date = [[UILabel alloc]initWithFrame:CGRectMake(10, 64, 160, 25)];
+    UILabel *date = [[UILabel alloc]initWithFrame:CGRectMake(10, 64, 150, 25)];
     
     date.backgroundColor = [UIColor clearColor];
-    NSString *dateStr = [asset.date description];
+    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+    [outputFormatter setDateFormat:@"yyyy:MM:dd"];
+    NSString *dateStr = [outputFormatter stringFromDate:asset.date];
     if (dateStr.length == 0 || dateStr == nil) {
         date.text = [NSString stringWithFormat:@"DATE: "];
         date.textColor = [UIColor colorWithRed:254/255.0 green:202/255.0 blue:24/255.0 alpha:1.0];

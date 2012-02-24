@@ -26,6 +26,7 @@
      NSMutableArray* assetsBook;
     NSMutableArray *favoriteList;
     NSOperationQueue *opQueue;
+    NSOperationQueue *dateQueue;
     UINavigationController *nav;
     NSNumber *password;
     AmptsAlbum *AlbumAll;
@@ -73,4 +74,5 @@
 -(void)fresh:(Album *)al index:(int)index;
 -(NSMutableArray *)addPeople:(People*)po;
 -(void)refreshPeople;
+-(void)reloadTimeData:(NSNotification *)note;
 @end

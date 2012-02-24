@@ -50,6 +50,7 @@
      
      */
     opQueue=[[NSOperationQueue alloc]init];
+    dateQueue=[[NSOperationQueue alloc]init];
  
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(syncAssetwithDataSource) name:@"fetchAssetsFinished" object:nil];
@@ -146,6 +147,8 @@
     
   
    // NSLog(@"%@",[toBeAdded count]);
+    NSMutableArray *a=[[NSMutableArray alloc]init];
+    NSMutableArray *b=[[NSMutableArray alloc]init];
     Asset * newAsset=nil;
     for (NSString * str in toBeAdded) {
         ALAsset * alAsset=[[deviceAssets deviceAssetsList]objectForKey:str];
@@ -165,6 +168,7 @@
         newAsset.date = [inputFormatter dateFromString:strDate];
        NSLog(@"date = %@", newAsset.date);
        */
+       // [self reloadTimeData:alAsset asset:newAsset];
         if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
             newAsset.videoType = [NSNumber numberWithBool:YES];
         }else{
@@ -174,10 +178,40 @@
         newAsset.longitude=[NSNumber numberWithDouble:0.0];
         newAsset.numOfLike=[NSNumber numberWithInt:0];
         newAsset.numPeopleTag=[NSNumber numberWithInt:0];
+        [a addObject:alAsset];
+        [b addObject:newAsset];
     }
     [coreData saveContext];
+    [dateQueue cancelAllOperations];
+    //NSDictionary *result = [NSDictionary dictionaryWithObjectsAndKeys:a,@"AL",b,@"as",nil];
+    NSMutableDictionary *result=[NSMutableDictionary dictionaryWithObjectsAndKeys:a,@"AL",b,@"as", nil];
+    NSInvocationOperation * syncData2=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(reloadTimeData:) object:result];
+    //  NSInvocationOperation * refreshData1=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(aDataSource) object:nil];
+    //[refreshData1 addDependency:syncData1];
+    [dateQueue addOperation:syncData2];
+     
+    
     
         
+}
+-(void)reloadTimeData:(NSMutableDictionary *)result
+{
+    NSMutableArray *A=[result objectForKey:@"AL"];
+    NSMutableArray *B=[result objectForKey:@"as"];
+    for(int i=0;i<[A count];i++)
+     {
+     ALAsset *A1=[A objectAtIndex:i];
+     NSString * strDate=[[[[A1 defaultRepresentation]metadata]valueForKey: @"{Exif}"]objectForKey:@"DateTimeOriginal"];
+     // NSLog(@"strdate:%@",strDate);
+     NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
+     [inputFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+     [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
+     Asset *B1=[B objectAtIndex:i];
+     B1.date = [inputFormatter dateFromString:strDate];
+     //NSLog(@"date = %@", B1.date);
+     }
+    [coreData saveContext];
+
 }
 -(void)DataSource
 {
