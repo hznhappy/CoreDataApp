@@ -38,11 +38,11 @@
     thumbnail = img;//[UIImage imageWithCGImage:ref];
     if ([asset.videoType boolValue]) 
     {
-        AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:url];
+        //AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:url];
         
-        CMTime duration = playerItem.duration;
-        int durationSeconds = (int)ceilf(CMTimeGetSeconds(duration));
-        int hours = durationSeconds / (60 * 60);
+       // CMTime duration = playerItem.duration;
+       // int durationSeconds = (int)ceilf(CMTimeGetSeconds(duration));
+        /*int hours = durationSeconds / (60 * 60);
         int minutes = (durationSeconds / 60) % 60;
         int seconds = durationSeconds % 60;
         NSString *formattedTimeString = nil;
@@ -50,9 +50,9 @@
             formattedTimeString = [NSString stringWithFormat:@"%d:%02d:%02d", hours, minutes, seconds];
         } else {
             formattedTimeString = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
-        }
+        }*/
 
-        [self addVideoOverlay:formattedTimeString];
+        [self addVideoOverlay:nil];
         
     }
     if([asset.numPeopleTag intValue] != 0&&!tagSign)

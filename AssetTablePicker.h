@@ -15,6 +15,7 @@
 @interface AssetTablePicker : UIViewController<ThumbnailCellSelectionDelegate,UITableViewDelegate,UITableViewDataSource>
 {
     UIView *timeSelectionsView;
+    UIView *personView;
     UITableView *table;
     UIToolbar *viewBar;
     UIToolbar *tagBar;
@@ -24,6 +25,7 @@
     UIBarButtonItem *lock;
 	UIAlertView *alert1;
     UITextField *passWord;
+    UIButton *personButton;
     
 	NSMutableArray *crwAssets;
     NSMutableArray *tagRow;
