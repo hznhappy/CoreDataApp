@@ -101,16 +101,26 @@
     
 }
 -(void)refresh:(NSNotification *)note{
+    NSLog(@"NOTI");
     NSDictionary *dic = [note userInfo];
 
     assets=[dic objectForKey:@"data"];
-    for(int i=0;i<[assets count];i++)
+  /*for(int i=0;i<[assets count];i++)
     {
      AmptsAlbum *am = (AmptsAlbum *)[assets objectAtIndex:i];
     NSLog(@"assets:%d",am.num);
-    }
+    }*/
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle:@"提示"
+                          message:@"照片库有更新"
+                          delegate:self
+                          cancelButtonTitle:nil
+                          otherButtonTitles:@"确定",nil];
+    alert.tag=10;
+    [alert show];
+
     [self.tableView reloadData];
-    NSLog(@"refresh");
+   // NSLog(@"refresh");
 }
 -(void)editTable
 {
