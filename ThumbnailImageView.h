@@ -29,6 +29,7 @@
 @property(nonatomic,assign)NSUInteger thumbnailIndex;
 @property(nonatomic,unsafe_unretained)id<ThumbnailSelectionDelegate>delegate;
 -(ThumbnailImageView *)initWithAsset:(Asset*)asset index:(NSUInteger)index action:(BOOL)act;
+-(void)LoadThumbnailWithAsset:(Asset *)asset;
 -(void)addTagnumberOverlay:(NSString *)numbe;
 -(void)addVideoOverlay:(NSString *)second;
 -(void)setSelectedView;

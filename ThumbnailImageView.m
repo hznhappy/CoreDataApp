@@ -22,19 +22,19 @@
         self.thumbnailIndex = index;
         copyMenuShow = NO;
         tagSign = act;
-        [self performSelectorInBackground:@selector(asynLoadThumbnailWithAsset:) withObject:asset];
+        [self LoadThumbnailWithAsset:asset];
     }
     return self;
 }
 
--(void)asynLoadThumbnailWithAsset:(Asset *)asset{
+-(void)LoadThumbnailWithAsset:(Asset *)asset{
     PhotoAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     NSString *dbUrl = asset.url;
     NSURL *url = [NSURL URLWithString:dbUrl];
     ALAsset *as = [appDelegate.dataSource getAsset:dbUrl];
     CGImageRef ref = [as thumbnail];
     UIImage *img = [UIImage imageWithCGImage:ref];
-    [self performSelectorOnMainThread:@selector(setImage:) withObject:img waitUntilDone:NO];
+    [self performSelectorOnMainThread:@selector(setImage:) withObject:img waitUntilDone:YES];
     thumbnail = img;//[UIImage imageWithCGImage:ref];
     if ([asset.videoType boolValue]) 
     {
@@ -52,19 +52,14 @@
             formattedTimeString = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
         }
 
-        //[self addSubview:[self addVideoOverlay:durationSeconds]];
-        [self performSelectorOnMainThread:@selector(addVideoOverlay:) withObject:formattedTimeString waitUntilDone:NO];
+        [self addVideoOverlay:formattedTimeString];
         
     }
     if([asset.numPeopleTag intValue] != 0&&!tagSign)
     {   
         NSString *numStr = [NSString stringWithFormat:@"%@",asset.numPeopleTag];
-        //[self addSubview:[self addTagnumberOverlay:numStr]];
-        [self performSelectorOnMainThread:@selector(addTagnumberOverlay:) withObject:numStr waitUntilDone:NO];
+        [self addTagnumberOverlay:numStr];
     }
-    
-    // [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clearSelection) name:@"clearSelection" object:nil];
-
 }
 #pragma mark -
 #pragma mark OverLay method
@@ -102,7 +97,6 @@
     [video addSubview:tu];
     
     [length setBackgroundColor:[UIColor clearColor]];
-    length.alpha=0.8;
     length.text = second;
     length.textColor = [UIColor whiteColor];
     length.textAlignment = UITextAlignmentLeft;
@@ -111,8 +105,6 @@
     
     [video setBackgroundColor:[UIColor grayColor]];
     video.alpha=0.9;
-    length.alpha = 1.0;
-    tu.alpha = 1.0;
     [self addSubview:video];
     //return video;
     

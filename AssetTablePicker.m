@@ -894,26 +894,26 @@
         return;
     }
     [self setTableViewEdge:toInterfaceOrientation];
-   /* if (previousOrigaton != toInterfaceOrientation) {
-        ThumbnailCell *cell1 = (ThumbnailCell *)[[self.table visibleCells]objectAtIndex:0];
-        ThumbnailCell *cell2 = (ThumbnailCell *)[[self.table visibleCells]lastObject];
+    if (previousOrigaton != toInterfaceOrientation) {
+        ThumbnailCell *cell = (ThumbnailCell *)[[self.table visibleCells]objectAtIndex:0];
         NSInteger index = 0;
         NSInteger row = 0;
         [self.table reloadData];
-        NSLog(@"%d  %d",cell1.rowNumber,cell2.rowNumber);
-//        if (UIInterfaceOrientationIsLandscape(previousOrigaton)) {
-//            landscapeIndex = index;
-//            [self.table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:portraitIndex inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-//        }else{
-//            portraitIndex = index;
-//            [self.table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:landscapeIndex inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-//        }
-//        CGPoint offect = self.table.contentOffset;
-//        CGPoint newOffset = CGPointMake(offect.y, offect.x);
-//        [self.table reloadData];
-//        [self.table setContentOffset:newOffset];
-        //[self.view convertRect:self.view.frame toView:self.view];
-        /if (UIInterfaceOrientationIsLandscape(previousOrigaton)) {
+        NSLog(@"the contentOffset is %@",NSStringFromCGPoint(self.table.contentOffset));
+      if (UIInterfaceOrientationIsLandscape(previousOrigaton)) {
+          index = cell.rowNumber * 6;
+          row = index / 4;
+      }else{
+          index = cell.rowNumber * 4;
+          row = index / 6;
+      }
+//        NSInteger abs = row - cell.rowNumber;
+//        CGPoint contetOffset = self.table.contentOffset;
+//        CGPoint newPoint = CGPointMake(0, contetOffset.y + cell.frame.size.height *abs);
+//        [self.table setContentOffset:newPoint];
+        
+
+        /*if (UIInterfaceOrientationIsLandscape(previousOrigaton)) {
             index = cell1.rowNumber * 6 + ((cell2.rowNumber * 6 + 5)- cell1.rowNumber * 6)/2;
             row  = index /4;
             
@@ -927,21 +927,13 @@
         }
         if (row<0) {
             row = 0;
-        }
-        [self.table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];/
-    }*/
-        [self.table reloadData];
+        }*/
+        [self.table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
        previousOrigaton = toInterfaceOrientation;
     
 }
 
--(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
-  
-}
--(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-
-
-}
 -(void)setTableViewEdge:(UIInterfaceOrientation)orientation{
     UIEdgeInsets insets = self.table.contentInset;
     if (UIInterfaceOrientationIsLandscape(oritation)) {
