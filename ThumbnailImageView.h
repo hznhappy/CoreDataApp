@@ -8,9 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import <AssetsLibrary/AssetsLibrary.h>
-#import <AVFoundation/AVFoundation.h>
-#import <AVFoundation/AVAsset.h>
-#import <CoreMedia/CoreMedia.h>
 @class ThumbnailImageView;
 @class Asset;
 @protocol ThumbnailSelectionDelegate <NSObject>
@@ -31,6 +28,7 @@
 -(ThumbnailImageView *)initWithAsset:(Asset*)asset index:(NSUInteger)index action:(BOOL)act;
 -(void)LoadThumbnailWithAsset:(Asset *)asset;
 -(void)addTagnumberOverlay:(NSString *)numbe;
+-(void)addEventOverlay;
 -(void)addVideoOverlay:(NSString *)second;
 -(void)setSelectedView;
 -(void)clearSelection;

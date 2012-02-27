@@ -79,11 +79,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AlbumDataSource.m"
-         timestampString = "351747308.056222"
+         timestampString = "352027777.946423"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "938"
-         endingLineNumber = "938"
+         startingLineNumber = "947"
+         endingLineNumber = "947"
          landmarkName = "@implementation AlbumDataSource"
          landmarkType = "3">
       </FileBreakpoint>
@@ -105,12 +105,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AssetTablePicker.h"
-         timestampString = "351682681.727887"
+         timestampString = "352025905.050775"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "82"
-         endingLineNumber = "82"
-         landmarkName = "assertList"
+         startingLineNumber = "87"
+         endingLineNumber = "87"
+         landmarkName = "AddAssertList"
          landmarkType = "19">
       </FileBreakpoint>
    </FileBreakpoints>

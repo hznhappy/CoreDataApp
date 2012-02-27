@@ -2,7 +2,7 @@
 //  Asset.m
 //  PhotoApp
 //
-//  Created by  on 12-2-22.
+//  Created by  on 12-2-27.
 //  Copyright (c) 2012年 chinarewards. All rights reserved.
 //
 
@@ -15,14 +15,16 @@
 @implementation Asset
 
 @dynamic date;
+@dynamic duration;
+@dynamic isprotected;
 @dynamic latitude;
 @dynamic longitude;
+@dynamic nobody;
 @dynamic numOfLike;
 @dynamic numPeopleTag;
-@dynamic isprotected;
 @dynamic url;
 @dynamic videoType;
-@dynamic nobody;
+@dynamic isFavorite;
 @dynamic conAssetRule;
 @dynamic conEvent;
 @dynamic conPeopleTag;

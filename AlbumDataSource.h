@@ -16,6 +16,9 @@
 #import "EventRule.h"
 #import "AssetRule.h"
 #import <Assetslibrary/Assetslibrary.h>
+#import <CoreMedia/CoreMedia.h>
+#import <AVFoundation/AVFoundation.h>
+#import <AVFoundation/AVAsset.h>
 //#import "backgroundUpdate.h"
 @class Album;
 @interface AlbumDataSource : NSObject {
@@ -62,6 +65,7 @@
 -(NSPredicate *) ruleFormation:(Album*) i; 
 -(NSPredicate *) excludeRuleFormation:(Album*) i; 
 -(NSPredicate *) chooseRule:(Album*) i;
+-(NSPredicate *)chooseFavorite:(Album *)i;
 -(void) syncAssetwithDataSource;
 -(void) refreshDataSource;
 -(void) refresh;

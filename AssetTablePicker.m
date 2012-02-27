@@ -13,6 +13,8 @@
 #import "PhotoAppDelegate.h"
 #import "People.h"
 #import "favorite.h"
+#import "EventTableView.h"
+#import "EventRule.h"
 @implementation AssetTablePicker
 @synthesize crwAssets;
 @synthesize table;
@@ -30,9 +32,9 @@
 @synthesize ta;
 @synthesize lockMode;
 @synthesize firstLoad;
+@synthesize personButton;
 #pragma mark -
 #pragma mark UIViewController Methods
-
 -(void)viewDidLoad {
     name= [UIButton buttonWithType:UIButtonTypeCustom];
     PhotoAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
@@ -42,7 +44,6 @@
     if(album==nil)
     {
         NSString *timeTitle = NSLocalizedString(@"Time", @"title");
-       // NSString *typeTitle = NSLocalizedString(@"Type", @"title");
         lock.enabled=NO;
         NSArray *array = [NSArray arrayWithObjects:@"All",@"Photos",@"Videos", nil];
         UISegmentedControl *segControl = [[UISegmentedControl alloc]initWithItems:array];
@@ -56,6 +57,7 @@
         [viewBar setItems:[NSArray arrayWithObjects:time,flex,type, nil]];
         
     }
+    isEvent=NO;
     lockMode = NO;
     done = YES;
     action=YES;
@@ -66,6 +68,8 @@
     videoType = NO;
     timeBtPressed = NO;
     tagBar.hidden = YES;
+    personPt=NO;
+    isFavorite=NO;
     tagSelector = [[TagSelector alloc]initWithViewController:self];
     
     self.tagRow=[[NSMutableArray alloc]init];
@@ -158,6 +162,14 @@
 {
     NSDictionary *dic = [note userInfo];
    // tagSelector.mypeople.f
+    if(isEvent)
+    {
+        [self.navigationItem setTitle:[NSString stringWithFormat:@"事件:%@",[dic objectForKey:@"name"]]];
+        event=[dic objectForKey:@"event"];
+        NSLog(@"eventname:%@",event.name);
+    }
+    else
+    {
     NSMutableArray *a=[dic objectForKey:@"name"];
     if([a count]!=0)
     {
@@ -188,7 +200,7 @@
    // name.frame = CGRectMake(0, 0,160, 40);
     //[tagBar addSubview:name];
     }
-    
+    }
     [self.tagRow removeAllObjects];
     [self.table reloadData];
 }
@@ -333,6 +345,8 @@
 #pragma mark ButtonAction Methods
 -(void)cancelTag{
     protecteds=NO;
+    isEvent=NO;
+    isFavorite=NO;
     NSString *a=NSLocalizedString(@"Tag", @"title");
     NSString *b=NSLocalizedString(@"Done", @"title");
     if([cancel.title isEqualToString:a])
@@ -356,25 +370,38 @@
             [alert1 show];
         }
         
-
+        
     }
     else
     {
-  [name removeFromSuperview];
-    cancel.style=UIBarButtonItemStyleBordered;
-    cancel.title=a;
-    tagBar.hidden = YES;
-    viewBar.hidden = NO;
-    mode = NO;
-    action=YES;
-    [self resetTags];
-    [self.tagRow removeAllObjects];
-    [self.UrlList removeAllObjects];
-    [tagSelector.peopleList removeAllObjects];
-    tagSelector.mypeople=nil;
-    [self.navigationItem setTitle:ta];
-    [self.table reloadData];
+        [name removeFromSuperview];
+        cancel.style=UIBarButtonItemStyleBordered;
+        cancel.title=a;
+        tagBar.hidden = YES;
+        viewBar.hidden = NO;
+        mode = NO;
+        action=YES;
+        [self resetTags];
+        [self.tagRow removeAllObjects];
+        [self.UrlList removeAllObjects];
+        [tagSelector.peopleList removeAllObjects];
+        tagSelector.mypeople=nil;
+        [self.navigationItem setTitle:ta];
+        [self releasePersonPt];
+        [self.table reloadData];
     }
+}
+-(void)releasePersonPt
+{
+    if(personPt)
+    {
+        if (personView && personView.superview != nil) {
+            [personView removeFromSuperview];
+        }
+        personPt=!personPt;
+        
+    }
+
 }
 
 -(IBAction)actionButtonPressed{
@@ -429,7 +456,20 @@
         [alert1 show];
     }
 }
-
+-(IBAction)myfavorite
+{
+    [self releasePersonPt];
+    NSLog(@"favorite");
+    [tagSelector.peopleList removeAllObjects];
+    [self.tagRow removeAllObjects];
+    [self.UrlList removeAllObjects];
+    protecteds=NO;
+    as=NO;
+    isEvent=NO;
+    isFavorite=YES;
+    self.navigationItem.title=@"标记My favorite";   
+    [self.table reloadData];
+}
 -(IBAction)saveTags{
     NSString *b=NSLocalizedString(@"please select tag name", @"message");
     NSString *a=NSLocalizedString(@"note", @"button");
@@ -490,10 +530,13 @@
       
 }
 -(IBAction)NoBodyButton
-{
+{[self releasePersonPt];
     as=YES;
     protecteds=NO;
+    isEvent=NO;
+    isFavorite=NO;
     [tagSelector.peopleList removeAllObjects];
+     [self.tagRow removeAllObjects];
     favorite *fi=[dataSource.favoriteList objectAtIndex:0];
     People *p1=fi.people;
     [tagSelector.peopleList addObject:p1];
@@ -504,11 +547,14 @@
 }
 -(IBAction)protectButton
 {
+ [self releasePersonPt];
  [tagSelector.peopleList removeAllObjects];
  [self.tagRow removeAllObjects];
  [self.UrlList removeAllObjects];
  protecteds=YES;
  as=NO;
+ isEvent=NO;
+ isFavorite=NO;
  self.navigationItem.title=@"给照片加密";   
  [self.table reloadData];
 }
@@ -517,7 +563,7 @@
     [self.UrlList removeAllObjects];
     [self.table reloadData];
 }
--(IBAction)selectFromFavoriteNames{
+-(void)selectFromFavoriteNames{
     [self.UrlList removeAllObjects];
     [self.tagRow removeAllObjects];
     tagSelector.add=@"NO";
@@ -527,8 +573,16 @@
     [tagSelector.peopleList removeAllObjects];
     [self.navigationItem setTitle:ta];
     [tagSelector selectTagNameFromFavorites];
+    if(personPt)
+    {
+        if (personView && personView.superview != nil) {
+            [personView removeFromSuperview];
+        }
+        personPt=!personPt;
+
+    }
 }
--(IBAction)selectFromAllNames{
+-(void)selectFromAllNames{
     [self.tagRow removeAllObjects];
     [self.UrlList removeAllObjects];
     tagSelector.add=@"NO";
@@ -538,6 +592,14 @@
     [tagSelector.peopleList removeAllObjects];
     [self.navigationItem setTitle:ta];
     [tagSelector selectTagNameFromContacts];
+    if(personPt)
+    {
+        if (personView && personView.superview != nil) {
+            [personView removeFromSuperview];
+        }
+        personPt=!personPt;
+        
+    }
     [self.table reloadData];
 }
 -(IBAction)playPhotos{
@@ -577,7 +639,64 @@
    
     timeBtPressed = !timeBtPressed;
 }
-
+-(IBAction)personpressed
+{isEvent=NO;
+    isFavorite=NO;
+    [tagSelector.peopleList removeAllObjects];
+    [self.tagRow removeAllObjects];
+    if (!personPt) {
+        CGFloat height = 80;
+        CGFloat width =120;
+        CGFloat x = CGRectGetMaxX(viewBar.frame)-width-5;
+        CGFloat y = CGRectGetMinY(viewBar.frame)-height;
+        if(personView){
+            personView = nil;
+        }
+        personView = [[UIView alloc]initWithFrame:CGRectMake(x, y, width, height)];
+        personView.backgroundColor = [UIColor blackColor];
+        personView.alpha=0.7;
+        UIButton *button1 = [UIButton buttonWithType:UIButtonTypeCustom]; 
+        button1.frame = CGRectMake(10, 5, 100, 30);
+        [button1 setBackgroundColor:[UIColor clearColor]]; 
+        [button1 setTitle:@"Favorite" forState:UIControlStateNormal];
+        [button1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom]; 
+        button2.frame = CGRectMake(10, 40, 100, 30);
+        [button2 setBackgroundColor:[UIColor clearColor]]; 
+        [button2 setTitle:@"Phonebook" forState:UIControlStateNormal];
+        //-(void)selectFromFavoriteNames;
+        //-(void)selectFromAllNames;
+        [button1 addTarget:self action:@selector(selectFromFavoriteNames) forControlEvents:UIControlEventTouchDown];
+        [button2 addTarget:self action:@selector(selectFromAllNames) forControlEvents:UIControlEventTouchDown];
+       
+                //[personView.layer setCornerRadius:10.0];
+       // [personView setClipsToBounds:YES]; 
+        [personView addSubview:button1];
+        [personView addSubview:button2];
+        [self.view addSubview:personView];
+        
+        
+        
+    }else{
+        if (personView && personView.superview != nil) {
+            [personView removeFromSuperview];
+        }
+    }
+    
+    personPt = !personPt;
+}
+-(IBAction)Eventpressed
+{  
+    [self releasePersonPt];
+    NSLog(@"event");
+    [tagSelector.peopleList removeAllObjects];
+    [self.tagRow removeAllObjects];
+    isEvent=YES;
+    isFavorite=NO;
+    EventTableView *evn=[[EventTableView alloc]init];
+    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:evn];
+    [self.navigationController presentModalViewController:navController animated:YES];
+}
 -(void)showTypeSelections:(id)sender{
     UISegmentedControl *seg = (UISegmentedControl *)sender;
     if (seg.selectedSegmentIndex == 0) {
@@ -732,6 +851,23 @@
                         [tagRow addObject:selectedIndex];
                     }
                 }
+                if(isEvent&&event!=nil)
+                {
+                    if(dbAsset.conEvent==event)
+                    {
+                        NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
+                        [tagRow addObject:selectedIndex];
+                    }
+                }
+                if(isFavorite)
+                {
+                    if(dbAsset.isFavorite)
+                    {
+                        NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
+                        [tagRow addObject:selectedIndex];
+
+                    }
+                }
                 [assetsInRow addObject:dbAsset];
             }
         }
@@ -797,7 +933,7 @@
         {   favorite *fi=[dataSource.favoriteList objectAtIndex:0];
             People *p1=fi.people;
             if([tagSelector.peopleList containsObject:p1])
-            {NSLog(@"contain");
+            {
                BOOL b=[tagSelector selectAssert:asset];
                if(b==YES)
                {
@@ -849,6 +985,47 @@
                 asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]+1];
         }
             [dataSource.coreData saveContext];
+        }
+        else if(isEvent)
+        {
+            //EventRule  *eventRule= [NSEntityDescription insertNewObjectForEntityForName:@"EventRule" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
+           // eventRule.conEvent=event;
+            if([self.tagRow containsObject:row])
+            {
+                [self.tagRow removeObject:row];
+                [cell removeTag:row];
+                //[asset re]
+                asset.conEvent=nil;
+            }
+            else
+            {
+            asset.conEvent=event;
+            [dataSource.coreData saveContext];
+            NSLog(@"assert.name:%@",asset.conEvent.name);
+            [self.tagRow addObject:row];
+            [cell checkTagSelection:row];
+            }
+            
+        }
+        else if(isFavorite)
+        {
+            if([self.tagRow containsObject:row])
+            {
+                [self.tagRow removeObject:row];
+                [cell removeTag:row];
+                asset.isFavorite=nil;
+                //[asset re]
+               
+            }
+            else
+            {
+                asset.isFavorite=[NSNumber numberWithBool:YES];
+                [dataSource.coreData saveContext];
+                NSLog(@"assert.name:%@",asset.conEvent.name);
+                [self.tagRow addObject:row];
+                [cell checkTagSelection:row];
+            }
+
         }
        else
        {

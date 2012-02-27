@@ -45,6 +45,7 @@
 @synthesize sortButton;
 @synthesize orderButton;
 @synthesize peopleRuleButton;
+@synthesize myFavoriteCell;
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -229,7 +230,7 @@
 #pragma mark -
 #pragma mark UITableView  method
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 7;
+    return 8;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     switch (section) {
@@ -260,14 +261,18 @@
             return 1;
             break;*/
         case 5:
-            return 2;
+            return 1;
             break;
         case 6:
+            return 2;
+            break;
+        case 7:
             if(mySwc)
             return 3;
             else
             return 2;
             break;
+        
         default:
             break;
         
@@ -327,6 +332,7 @@
 
                    
            }
+           cell.selectionStyle=UITableViewCellSelectionStyleNone;
             return cell;
     }
     else if(indexPath.section==1)
@@ -347,140 +353,11 @@
             }
             
         }
-       
+       cell.selectionStyle=UITableViewCellSelectionStyleNone;
        
       return cell;
     }
-    else if(indexPath.section == 5)
-    {
-        UITableViewCell *cell = nil;
-        switch (rowNum) {
-            case 0:
-                cell = [tableView dequeueReusableCellWithIdentifier:@"SortCell"];
-                if (cell == nil) {
-                    cell=self.SortCell;
-                     cell.accessoryView = [self sortButton];
-                    if(bum!=nil&&![bum.sortKey isEqualToString:@"date"])
-                    {
-                                    
-                       if ([bum.sortKey isEqualToString:@"numOfLike"]) {
-                            sortButton.backgroundColor =[UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-                            [sortButton setTitle:@"numOfLike" forState:UIControlStateNormal];
-                            
-                            
-                        }
-                       else if ([bum.sortKey isEqualToString:@"numOfTag"]) {
-                        
-                           sortButton.backgroundColor = [UIColor colorWithRed:81/255.0 green:142/255.0 blue:72/255.0 alpha:1.0];
-                            [sortButton setTitle:@"numOfTag" forState:UIControlStateNormal];
-                            
-                        }
-
-                    }
-                }
-                
-                break;
-            case 1:
-                cell = [tableView dequeueReusableCellWithIdentifier:@"OrderCell"];
-                if (cell == nil) {
-                    cell=self.OrderCell;
-                     cell.accessoryView = [self orderButton];
-                    if(bum!=nil)
-                    {
-                        if (![bum.sortOrder boolValue]) {
-                            orderButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-                            [orderButton setTitle:@"DSC" forState:UIControlStateNormal];    
-                        }
-                    }
-
-                }
-                break;
-                
-            default:
-                cell=nil;
-                break;
-                
-        }
-        return cell;
-        
-    }
-       else if(indexPath.section == 4)
-    {
-        
-        UITableViewCell *cell = nil;
-        switch (rowNum) {
-                case 0:
-                cell = [tableView dequeueReusableCellWithIdentifier:@"sortOrderCell"];
-                if (cell == nil) {
-                    cell=self.sortOrderCell;
-                }
-                break;
-
-            case 1:
-                cell = [tableView dequeueReusableCellWithIdentifier:@"daterule"];
-                if (cell == nil) {
-                    cell = self.dateRule;
-                }
-                break;
-            default:
-                cell=nil;
-                break;
-        
-        }
-        if(bum!=nil)
-        {      
-            [pickerView selectRow:[dateList indexOfObject:date.datePeriod] inComponent:0 animated:NO];
-
-        }
-        
-
-        return cell;
-        
-    }
-    else if(indexPath.section == 3)
-    {
-        UITableViewCell *cell = nil;
-                cell = [tableView dequeueReusableCellWithIdentifier:@"AddPeopleCell"];
-                if (cell == nil) {
-                    cell=self.AddPeopleCell;
-                }
-               return cell;
-        
-    }
-  else if(indexPath.section == 6) 
-  {
-      UITableViewCell *cell = nil;
-      switch (rowNum) {
-  case 0:
-      cell = [tableView dequeueReusableCellWithIdentifier:@"transitionsCell"];
-      if (cell == nil) {
-          cell = self.tranCell;
-      }
-      break;
-  case 1:
-      cell = [tableView dequeueReusableCellWithIdentifier:@"playMusicCell"];
-      if (cell == nil) {
-          cell = self.switchCell;
-      }
-      break;
-  case 2:
-      cell = [tableView dequeueReusableCellWithIdentifier:@"musicCell"];
-      if (cell == nil) {
-          cell = self.musicCell;
-      }
-      if (bum != nil && bum.music!=nil && bum.music.length != 0) {
-          self.musicLabel.text = bum.music;
-      }
-      break;
-  default:
-      cell = nil;
-      break;
-
-  }
-      return cell;
-  }
-
-   else if(indexPath.section == 2) 
+    else if(indexPath.section == 2) 
     {
         
         static NSString *cellIdentifier = @"nameCell";
@@ -489,7 +366,7 @@
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
         }
         [cell.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-         cell.accessoryView=nil;
+        cell.accessoryView=nil;
         UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(45, 11, 126, 20)];
         name.tag = indexPath.row;
         name.backgroundColor = [UIColor clearColor];
@@ -547,17 +424,174 @@
                     }
                     
                 }
-                               
+                
             }
             
             
-           
+            
             
         }
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
     }
+    else if(indexPath.section == 3)
+    {
+        UITableViewCell *cell = nil;
+        cell = [tableView dequeueReusableCellWithIdentifier:@"AddPeopleCell"];
+        if (cell == nil) {
+            cell=self.AddPeopleCell;
+        }
+        cell.selectionStyle=UITableViewCellSelectionStyleNone;
+        return cell;
+        
+    }
+    
+    else if(indexPath.section == 4)
+    {
+        
+        UITableViewCell *cell = nil;
+        switch (rowNum) {
+            case 0:
+                cell = [tableView dequeueReusableCellWithIdentifier:@"sortOrderCell"];
+                if (cell == nil) {
+                    cell=self.sortOrderCell;
+                }
+                break;
+                
+            case 1:
+                cell = [tableView dequeueReusableCellWithIdentifier:@"daterule"];
+                if (cell == nil) {
+                    cell = self.dateRule;
+                }
+                break;
+            default:
+                cell=nil;
+                break;
+                
+        }
+        if(bum!=nil)
+        {      
+            [pickerView selectRow:[dateList indexOfObject:date.datePeriod] inComponent:0 animated:NO];
+            
+        }
+        
+        cell.selectionStyle=UITableViewCellSelectionStyleNone;
+        return cell;
+        
+    }
+    else if(indexPath.section == 6)
+    {
+        UITableViewCell *cell = nil;
+        switch (rowNum) {
+            case 0:
+                cell = [tableView dequeueReusableCellWithIdentifier:@"SortCell"];
+                if (cell == nil) {
+                    cell=self.SortCell;
+                     cell.accessoryView = [self sortButton];
+                    if(bum!=nil&&![bum.sortKey isEqualToString:@"date"])
+                    {
+                                    
+                       if ([bum.sortKey isEqualToString:@"numOfLike"]) {
+                            sortButton.backgroundColor =[UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+                            [sortButton setTitle:@"numOfLike" forState:UIControlStateNormal];
+                            
+                            
+                        }
+                       else if ([bum.sortKey isEqualToString:@"numOfTag"]) {
+                        
+                           sortButton.backgroundColor = [UIColor colorWithRed:81/255.0 green:142/255.0 blue:72/255.0 alpha:1.0];
+                            [sortButton setTitle:@"numOfTag" forState:UIControlStateNormal];
+                            
+                        }
+
+                    }
+                }
+                
+                break;
+            case 1:
+                cell = [tableView dequeueReusableCellWithIdentifier:@"OrderCell"];
+                if (cell == nil) {
+                    cell=self.OrderCell;
+                     cell.accessoryView = [self orderButton];
+                    if(bum!=nil)
+                    {
+                        if (![bum.sortOrder boolValue]) {
+                            orderButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+                            [orderButton setTitle:@"DSC" forState:UIControlStateNormal];    
+                        }
+                    }
+
+                }
+                break;
+                
+            default:
+                cell=nil;
+                break;
+                
+        }
+        cell.selectionStyle=UITableViewCellSelectionStyleNone;
+        return cell;
+        
+    }
+       else if(indexPath.section == 7) 
+  {
+      UITableViewCell *cell = nil;
+      switch (rowNum) {
+  case 0:
+      cell = [tableView dequeueReusableCellWithIdentifier:@"transitionsCell"];
+      if (cell == nil) {
+          cell = self.tranCell;
+      }
+      break;
+  case 1:
+      cell = [tableView dequeueReusableCellWithIdentifier:@"playMusicCell"];
+      if (cell == nil) {
+          cell = self.switchCell;
+      }
+      break;
+  case 2:
+      cell = [tableView dequeueReusableCellWithIdentifier:@"musicCell"];
+      if (cell == nil) {
+          cell = self.musicCell;
+      }
+      if (bum != nil && bum.music!=nil && bum.music.length != 0) {
+          self.musicLabel.text = bum.music;
+      }
+      break;
+  default:
+      cell = nil;
+      break;
+
+  }
+      cell.selectionStyle=UITableViewCellSelectionStyleNone;
+      return cell;
+  }
+else if(indexPath.section==5)
+{
+    UITableViewCell *cell = nil;
+            cell = [tableView dequeueReusableCellWithIdentifier:@"myFavoriteCell"];
+            if (cell == nil) {
+                cell = self.myFavoriteCell;
+                UIButton *selectButton7 = [UIButton buttonWithType:UIButtonTypeCustom];
+                selectButton7.tag = indexPath.row;
+                [selectButton7 addTarget:self action:@selector(setSelect7:) forControlEvents:UIControlEventTouchUpInside];
+                selectButton7.frame = CGRectMake(10, 11, 30, 30);
+                [selectButton7 setImage:unselectImg forState:UIControlStateNormal];
+                [cell.contentView addSubview:selectButton7];
+                NSLog(@"fa:%@",bum.isFavorite);
+                if([bum.isFavorite boolValue]==YES)
+                {
+                    
+                    [selectButton7 setImage:selectImg forState:UIControlStateNormal];
+                }
+
+            }
+    cell.selectionStyle=UITableViewCellSelectionStyleNone;
+    return cell;
+   
+}
+
     return nil;
 }
 
@@ -636,6 +670,31 @@
                 }
             }
 
+    }
+    if(indexPath.section==5)
+    {  
+        if(bum==nil)
+        {
+            [self album];
+        }
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        for (UIButton *button in cell.contentView.subviews) {
+            
+            if ([button isKindOfClass:[UIButton class]]) {
+                if ([button.currentImage isEqual:unselectImg]) {
+                    [button setImage:selectImg forState:UIControlStateNormal]; 
+                    bum.isFavorite=[NSNumber numberWithBool:YES];
+                }
+                else
+                {
+                    [button setImage:unselectImg forState:UIControlStateNormal];
+                    bum.isFavorite=nil;
+                    [appDelegate.dataSource.coreData saveContext];
+                    
+                }
+            }
+        }
+   
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
   }
@@ -1013,7 +1072,28 @@
         [self update:Row rule:rule];
     }
 }
-
+-(void)setSelect7:(id)sender{
+    NSLog(@"7");
+    if(bum==nil)
+    {
+        [self album];
+    }
+    UIButton *button = (UIButton *)sender;
+    if ([button.currentImage isEqual:selectImg]) {
+        [button setImage:unselectImg forState:UIControlStateNormal];
+        NSLog(@"2");
+        bum.isFavorite=nil;
+        
+    }
+    else
+    {
+        [button setImage:selectImg forState:UIControlStateNormal];
+        NSLog(@"1");
+        bum.isFavorite=[NSNumber numberWithBool:YES];
+       
+    }
+    [appDelegate.dataSource.coreData saveContext];
+}
 -(void)setSelectState:(id)sender{
    if(bum==nil)
    {
@@ -1146,11 +1226,11 @@
     mySwc = newSwitcn.on;
     if (newSwitcn.on) {
         [listTable beginUpdates];
-        [listTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:2 inSection:6]] withRowAnimation:UITableViewRowAnimationTop];
+        [listTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:2 inSection:7]] withRowAnimation:UITableViewRowAnimationTop];
         [listTable endUpdates];
     }else{
         [listTable beginUpdates];
-        [listTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:2 inSection:6]] withRowAnimation:UITableViewRowAnimationTop];
+        [listTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:2 inSection:7]] withRowAnimation:UITableViewRowAnimationTop];
         [listTable endUpdates];
     }
 }
