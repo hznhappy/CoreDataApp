@@ -28,6 +28,7 @@
 -(ThumbnailImageView *)initWithAsset:(Asset*)asset index:(NSUInteger)index action:(BOOL)act;
 -(void)LoadThumbnailWithAsset:(Asset *)asset;
 -(void)addTagnumberOverlay:(NSString *)numbe;
+-(void)addEventOverlay;
 -(void)addVideoOverlay:(NSString *)second;
 -(void)setSelectedView;
 -(void)clearSelection;

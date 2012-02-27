@@ -39,8 +39,8 @@
     {
        /* AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:url];
         
-        CMTime duration = playerItem.duration;
-        int durationSeconds = (int)ceilf(CMTimeGetSeconds(duration));
+       // CMTime duration = playerItem.duration;
+       // int durationSeconds = (int)ceilf(CMTimeGetSeconds(duration));
         int hours = durationSeconds / (60 * 60);
         int minutes = (durationSeconds / 60) % 60;
         int seconds = durationSeconds % 60;
@@ -59,9 +59,35 @@
         NSString *numStr = [NSString stringWithFormat:@"%@",asset.numPeopleTag];
         [self addTagnumberOverlay:numStr];
     }
+    if(asset.conEvent!=nil&&!tagSign)
+    {
+        [self addEventOverlay];
+        
+    }
 }
 #pragma mark -
 #pragma mark OverLay method
+-(void)addEventOverlay
+{
+    UIView *tagBg1 =[[UIView alloc]initWithFrame:CGRectMake(26, 3, 25, 25)];
+    CGPoint tagBgCenter1 = tagBg1.center;
+    tagBg1.layer.cornerRadius = 25 / 2.0;
+    tagBg1.center = tagBgCenter1;
+    UIView *tagCount1 = [[UIView alloc]initWithFrame:CGRectMake(25, 2.2, 20, 20)];
+    tagCount1.backgroundColor = [UIColor colorWithRed:182/255.0 green:0 blue:0 alpha:1];
+    CGPoint saveCenter1 = tagCount1.center;
+    tagCount1.layer.cornerRadius = 20 / 2.0;
+    tagCount1.center = saveCenter1;
+    UILabel *count1= [[UILabel alloc]initWithFrame:CGRectMake(5, 4, 13, 12)];
+    count1.backgroundColor = [UIColor colorWithRed:182/255.0 green:0 blue:0 alpha:1];
+    count1.textColor = [UIColor whiteColor];
+    count1.textAlignment = UITextAlignmentLeft;
+    count1.font = [UIFont boldSystemFontOfSize:11];
+    count1.text =@"E";
+    [tagCount1 addSubview:count1];
+    [tagBg1 addSubview:tagCount1];
+    [self addSubview:tagBg1];
+}
 -(void)addTagnumberOverlay:(NSString *)number
 {
     UIView *tagBg =[[UIView alloc]initWithFrame:CGRectMake(3, 3, 25, 25)];

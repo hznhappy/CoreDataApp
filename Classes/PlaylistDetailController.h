@@ -52,6 +52,7 @@
     UITableViewCell *AddPeopleCell;
     UITableViewCell *sortOrderCell;
     UITableViewCell *chooseCell;
+    UITableViewCell *myFavoriteCell;
     UIPickerView *pickerView;
     
     UILabel *tranLabel;
@@ -106,6 +107,9 @@
 @property(nonatomic,strong)IBOutlet UISwitch *mySwitch;
 @property(nonatomic,strong)IBOutlet UILabel *state;
 @property(nonatomic,strong)IBOutlet UIPickerView *pickerView;
+@property(nonatomic,strong)IBOutlet UITableViewCell *myFavoriteCell;
+
+
 @property(nonatomic,strong)NSMutableArray *selectedIndexPaths;
 @property(nonatomic,strong)NSString *Transtion;
 @property(nonatomic,strong)UIButton *stateButton;

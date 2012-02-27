@@ -65,6 +65,7 @@
 -(NSPredicate *) ruleFormation:(Album*) i; 
 -(NSPredicate *) excludeRuleFormation:(Album*) i; 
 -(NSPredicate *) chooseRule:(Album*) i;
+-(NSPredicate *)chooseFavorite:(Album *)i;
 -(void) syncAssetwithDataSource;
 -(void) refreshDataSource;
 -(void) refresh;

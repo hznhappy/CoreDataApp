@@ -79,12 +79,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AlbumDataSource.m"
-         timestampString = "352030837.037593"
+         timestampString = "352032694.28498"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "741"
-         endingLineNumber = "741"
-         landmarkName = "-parseExcludePeopleRule:"
+         startingLineNumber = "979"
+         endingLineNumber = "979"
+         landmarkName = "-getAlbum:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -105,12 +105,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AssetTablePicker.h"
-         timestampString = "352030154.462659"
+         timestampString = "352025905.050775"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "88"
-         endingLineNumber = "88"
-         landmarkName = "side"
+         startingLineNumber = "87"
+         endingLineNumber = "87"
+         landmarkName = "tagBar"
          landmarkType = "19">
       </FileBreakpoint>
    </FileBreakpoints>

@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ThumbnailCell.h"
+#import "Event.h"
 
 @class TagSelector;
 @class Album;
@@ -15,6 +16,7 @@
 @interface AssetTablePicker : UIViewController<ThumbnailCellSelectionDelegate,UITableViewDelegate,UITableViewDataSource>
 {
     UIView *timeSelectionsView;
+    UIView *personView;
     UITableView *table;
     UIToolbar *viewBar;
     UIToolbar *tagBar;
@@ -24,6 +26,7 @@
     UIBarButtonItem *lock;
 	UIAlertView *alert1;
     UITextField *passWord;
+    UIBarButtonItem *personButton;
     
 	NSMutableArray *crwAssets;
     NSMutableArray *tagRow;
@@ -33,6 +36,7 @@
     NSMutableArray *inAssert;
     NSMutableArray *photoArray;
     NSMutableArray *videoArray;
+    BOOL personPt;
     NSArray *allTableData;
     NSArray *photoTableData;
     NSArray *videoTableData;
@@ -48,6 +52,9 @@
     BOOL photoType;
     BOOL videoType;
     BOOL timeBtPressed;
+    BOOL isEvent;
+    BOOL isFavorite;
+    
     UIButton *name;
     UIImage *green;
     UIImage *red;
@@ -70,6 +77,7 @@
     NSString *ta;
     TagSelector *tagSelector;
     Album *album;
+    Event *event;
 }
 @property (nonatomic,strong)IBOutlet UITableView *table;
 @property (nonatomic,strong)IBOutlet UIToolbar *viewBar;
@@ -77,7 +85,7 @@
 //@property (nonatomic,strong)IBOutlet UIBarButtonItem *save;
 //@property (nonatomic,strong)IBOutlet UIBarButtonItem *reset;
 @property (nonatomic,strong)IBOutlet UIBarButtonItem *lock;
-
+@property (nonatomic,strong)IBOutlet UIBarButtonItem *personButton;
 @property (nonatomic,strong)NSMutableArray *tagRow;
 @property (nonatomic,strong)NSMutableArray *operations;
 @property (nonatomic,strong) NSMutableArray *crwAssets;
@@ -97,13 +105,17 @@
 -(IBAction)lockButtonPressed;
 -(IBAction)saveTags;
 -(IBAction)resetTags;
--(IBAction)selectFromFavoriteNames;
--(IBAction)selectFromAllNames;
+-(void)selectFromFavoriteNames;
+-(void)selectFromAllNames;
 -(IBAction)NoBodyButton;
 -(IBAction)protectButton;
+-(IBAction)personpressed;
+-(IBAction)Eventpressed;
+-(IBAction)myfavorite;
 -(void)EditPhotoTag:(NSNotification *)note;
 -(void)setTableViewEdge:(UIInterfaceOrientation)orientation;
 -(void)countPhotosAndVideosCounts;
+-(void)releasePersonPt;
 -(CGRect)setTheTimeSelectionsViewFrame:(CGFloat)y;
 -(void)configureTimeSelectionView;
 -(NSString *)configurateLastRowPhotoCount:(NSInteger)pCount VideoCount:(NSInteger)vCount;
