@@ -168,7 +168,6 @@
        [inputFormatter setTimeZone:timeZone1];
         [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
         newAsset.date = [inputFormatter dateFromString:strDate];
-            NSLog(@"the time is %@",strDate);
         }
        // [self reloadTimeData:alAsset asset:newAsset];
         if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
