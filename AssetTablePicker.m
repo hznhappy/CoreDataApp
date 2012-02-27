@@ -50,11 +50,13 @@
         [segControl addTarget:self action:@selector(showTypeSelections:) forControlEvents:UIControlEventValueChanged];
         segControl.selectedSegmentIndex = 0;
         segControl.segmentedControlStyle = UISegmentedControlStyleBar;
+        UIBarButtonItem *fix = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+        fix.width = 40;
         UIBarButtonItem *flex = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
         UIBarButtonItem *time = [[UIBarButtonItem alloc]initWithTitle:timeTitle style:UIBarButtonItemStyleBordered target:self action:@selector(showTimeSelections)];
         UIBarButtonItem *type = [[UIBarButtonItem alloc]initWithCustomView:segControl];
         //UIBarButtonItem *type = [[UIBarButtonItem alloc]initWithTitle:typeTitle style:UIBarButtonItemStyleBordered target:self action:@selector(showTypeSelections)];
-        [viewBar setItems:[NSArray arrayWithObjects:time,flex,type, nil]];
+        [viewBar setItems:[NSArray arrayWithObjects:fix,time,flex,type, nil]];
         
     }
     isEvent=NO;
@@ -79,9 +81,16 @@
     inAssert=[[NSMutableArray alloc]init];
     photoArray = [[NSMutableArray alloc]init];
     videoArray = [[NSMutableArray alloc]init];
-    
+    green = [UIImage imageNamed:@"dot-green.png"];
+    red = [UIImage imageNamed:@"dot-red.png"];
+    greenImageView = [[UIImageView alloc]initWithImage:green];
+    greenImageView.frame = CGRectZero;
+    redImagView = [[UIImageView alloc]initWithImage:red];
+    redImagView.frame = CGRectMake(10, 190, 10, 10);
     [self countPhotosAndVideosCounts];
-    
+    allTableData = self.crwAssets;
+    photoTableData = photoArray;
+    videoTableData = videoArray;
     self.likeAssets = [[NSMutableArray alloc]init];
     NSString *b=NSLocalizedString(@"Back", @"title");
     UIButton* backButton = [UIButton buttonWithType:101]; // left-pointing shape!
@@ -110,11 +119,162 @@
     [table reloadData];    
     NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
     [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    [self configureTimeSelectionView];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EditPhotoTag:)name:@"EditPhotoTag" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableData) name:@"reloadTableData" object:nil];
      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refresh:) name:@"refresh" object:nil];
 }
 
+-(void)configureTimeSelectionView{
+    UIButton *button1 = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *button3 = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *button4 = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *button5 = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *button6 = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *button7 = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *button8 = [UIButton buttonWithType:UIButtonTypeCustom];
+
+    button1.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    button2.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    button3.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    button4.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    button5.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    button6.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    button7.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    button8.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    
+    [button1 setTitle:@"Recent week" forState:UIControlStateNormal];
+    [button2 setTitle:@"Recent 2 weeks" forState:UIControlStateNormal];
+    [button3 setTitle:@"Recent month" forState:UIControlStateNormal];
+    [button4 setTitle:@"Recent 3 mohths" forState:UIControlStateNormal];
+    [button5 setTitle:@"Recent 6 months" forState:UIControlStateNormal];
+    [button6 setTitle:@"Recent year" forState:UIControlStateNormal];
+    [button7 setTitle:@"More than 1 year" forState:UIControlStateNormal];
+    [button8 setTitle:@"All" forState:UIControlStateNormal];
+    
+    button1.frame = CGRectMake(25, 10, 150, 20);
+    button2.frame = CGRectMake(25, 35, 150, 20);
+    button3.frame = CGRectMake(25, 60, 150, 20);
+    button4.frame = CGRectMake(25, 85, 150, 20);
+    button5.frame = CGRectMake(25, 110, 150, 20);
+    button6.frame = CGRectMake(25, 135, 150, 20);
+    button7.frame = CGRectMake(25, 160, 150, 20);
+    button8.frame = CGRectMake(25, 185, 150, 20);
+    
+    button1.tag = 1;
+    button2.tag = 2;
+    button3.tag = 3;
+    button4.tag = 4;
+    button5.tag = 5;
+    button6.tag = 6;
+    button7.tag = 7;
+    button8.tag = 8;
+    
+    [button1 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
+    [button2 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
+    [button3 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
+    [button4 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
+    [button5 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
+    [button6 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
+    [button7 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
+    [button8 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
+    
+    timeSelectionsView = [[UIView alloc]initWithFrame:[self setTheTimeSelectionsViewFrame:CGRectGetMaxY(self.view.frame)]];
+    timeSelectionsView.backgroundColor = [UIColor grayColor];
+    [timeSelectionsView.layer setCornerRadius:8.0];
+    [timeSelectionsView addSubview:button1];
+    [timeSelectionsView addSubview:button2];
+    [timeSelectionsView addSubview:button3];
+    [timeSelectionsView addSubview:button4];
+    [timeSelectionsView addSubview:button5];
+    [timeSelectionsView addSubview:button6];
+    [timeSelectionsView addSubview:button7];
+    [timeSelectionsView addSubview:button8];
+    [timeSelectionsView addSubview:redImagView];
+    [timeSelectionsView addSubview:greenImageView];
+    
+    [self.view addSubview:timeSelectionsView];
+
+}
+
+-(void)selectTimeRange:(id)sender{
+    UIButton *bt = (UIButton *)sender;
+    redImagView.frame = CGRectZero;
+    NSPredicate* result =nil;
+    NSDate *date = [NSDate date];
+    NSDateComponents *components = [[NSDateComponents alloc]init];
+    NSCalendar *gregorian = [[NSCalendar alloc]initWithCalendarIdentifier:NSGregorianCalendar];
+    switch (bt.tag) {
+        case 1:
+            greenImageView.frame = CGRectMake(10, 15, 10, 10);
+            [components setDay:-7];
+            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+            break;
+        case 2:
+            greenImageView.frame = CGRectMake(10, 40, 10, 10);
+            [components setDay:-14];
+            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+            break;
+        case 3:
+            greenImageView.frame = CGRectMake(10, 65, 10, 10);
+            [components setDay:-30];
+            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+            break;
+        case 4:
+            greenImageView.frame = CGRectMake(10, 90, 10, 10);
+            [components setDay:-90];
+            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+            break;
+        case 5:
+            [components setDay:-180];
+            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+            greenImageView.frame = CGRectMake(10, 115, 10, 10);
+            break;
+        case 6:
+            greenImageView.frame = CGRectMake(10, 140, 10, 10);
+            [components setYear:1];
+            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+            break;
+        case 7:
+            greenImageView.frame = CGRectMake(10, 165, 10, 10);
+            [components setYear:1];
+            result=[NSPredicate predicateWithFormat:@"self.date<%@",[gregorian dateByAddingComponents:components toDate:date options:0]];
+            break;
+        default:
+            greenImageView.frame = CGRectZero;
+            redImagView.frame = CGRectMake(10, 190, 10, 10);
+            break;
+    }
+    if (result) {
+        if (photoType) {
+            photoTableData = [photoArray filteredArrayUsingPredicate:result];
+        }else if(videoType){
+            videoTableData = [videoArray filteredArrayUsingPredicate:result];
+        }else{
+            allTableData = [self.crwAssets filteredArrayUsingPredicate:result];
+        }
+
+    }else{
+        if (photoType) {
+            if (![photoTableData isEqualToArray:photoArray]) {
+                photoTableData = photoArray;
+            }
+        }else if(videoType){
+            if (![videoTableData isEqualToArray:videoTableData]) {
+                videoTableData = videoArray;
+            }
+            
+        }else{
+            if (![allTableData isEqualToArray:self.crwAssets]) {
+                allTableData = self.crwAssets;
+            }
+        }
+    }
+    [self.table reloadData];
+    NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
+    [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+}
 -(void)countPhotosAndVideosCounts{
     photoCount = 0;
     videoCount = 0;
@@ -128,16 +288,7 @@
         }
     }
 }
-//-(void)resetTableContentInset{
-//    UIEdgeInsets inset = self.table.contentInset;
-//    if (UIInterfaceOrientationIsPortrait(oritation)) {
-//        
-//        inset.top = 65;
-//    }else{
-//        inset.top = 65;
-//    }
-//    self.table.contentInset = inset;
-//}
+
 -(void)refresh:(NSNotification *)note{
     NSDictionary *dic = [note userInfo];
     
@@ -316,9 +467,9 @@
         NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
         [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     }
-//    ThumbnailCell *cell = (ThumbnailCell *)[[self.table visibleCells]objectAtIndex:0];
-//    NSInteger index = cell.rowNumber;
-//    NSLog(@"the first %d and %@",index,[self.table visibleCells]);
+    ThumbnailCell *cell = (ThumbnailCell *)[[self.table visibleCells]objectAtIndex:0];
+    NSInteger index = cell.rowNumber;
+    NSLog(@"the first %d",index);
     CGPoint offset = self.table.contentOffset;
     NSLog(@"the previous is %@",NSStringFromCGPoint(offset));
     selectedRow = NSNotFound;
@@ -339,7 +490,6 @@
         selectedRow = NSNotFound;
     }
 }
-
 
 #pragma mark -
 #pragma mark ButtonAction Methods
@@ -618,22 +768,19 @@
 
 -(void)showTimeSelections{
     if (!timeBtPressed) {
-        CGFloat height = 150;
-        CGFloat width = self.view.frame.size.width*1/3;
-        CGFloat x = self.view.frame.origin.x;
-        CGFloat y = CGRectGetMinY(viewBar.frame)-height;
-        if(timeSelectionsView){
-            timeSelectionsView = nil;
-        }
-        timeSelectionsView = [[UIView alloc]initWithFrame:CGRectMake(x, y, width, height)];
-        timeSelectionsView.backgroundColor = [UIColor colorWithRed:81/255.0 green:142/255.0 blue:72/255.0 alpha:1.0];
-        [timeSelectionsView.layer setCornerRadius:10.0];
-        [timeSelectionsView setClipsToBounds:YES];   
-        [self.view addSubview:timeSelectionsView];
+        CGFloat y = CGRectGetMinY(viewBar.frame)-210;
+        [UIView animateWithDuration:0.4 animations:^{
+          timeSelectionsView.frame = [self setTheTimeSelectionsViewFrame:y];
+        }];
+        [timeSelectionsView.layer setOpaque:NO];
+        timeSelectionsView.opaque = NO;
         
     }else{
         if (timeSelectionsView && timeSelectionsView.superview != nil) {
-            [timeSelectionsView removeFromSuperview];
+            [UIView animateWithDuration:0.4 animations:^{
+                timeSelectionsView.frame = [self setTheTimeSelectionsViewFrame:CGRectGetMaxY(self.view.frame)];
+                //[timeSelectionsView removeFromSuperview];
+            }];
         }
     }
    
@@ -697,6 +844,12 @@
     UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:evn];
     [self.navigationController presentModalViewController:navController animated:YES];
 }
+-(CGRect)setTheTimeSelectionsViewFrame:(CGFloat)y{
+    CGFloat height = 210;
+    CGFloat width = 180;
+    CGFloat x = self.view.frame.origin.x + 20;
+    return CGRectMake(x, y, width, height);
+}
 -(void)showTypeSelections:(id)sender{
     UISegmentedControl *seg = (UISegmentedControl *)sender;
     if (seg.selectedSegmentIndex == 0) {
@@ -709,11 +862,51 @@
         photoType = NO;
         videoType = YES;
     }
+    if (timeBtPressed) {
+        [self showTimeSelections];
+    }
     [self.table reloadData];
     NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
     [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
 }
 
+-(NSString *)configurateLastRowPhotoCount:(NSInteger)pCount VideoCount:(NSInteger)vCount{
+    NSString *result = @"";
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
+    [formatter setNumberStyle:NSNumberFormatterDecimalStyle]; // this line is important!
+    if (pCount == 0 && vCount == 0) {
+        return result;
+    }else if(pCount != 0 && vCount == 0){
+        NSString *photoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:pCount]];
+        if (pCount == 1) {
+            result = [NSString stringWithFormat:@"%@ Photo",photoNumber];
+        }else{
+            result = [NSString stringWithFormat:@"%@ Photos",photoNumber];
+        }
+    }else if(pCount == 0 && vCount != 0){
+        NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:vCount]];
+        if (vCount == 1) {
+            result = [NSString stringWithFormat:@"%@ Video",videoNumber];
+        }else{
+            result = [NSString stringWithFormat:@"%@ Videos",videoNumber];
+        }
+    }else if(pCount != 0 && vCount != 0){
+        NSString *photoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:pCount]];
+        NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:vCount]];
+        if (pCount == 1 && vCount == 1) {
+            result = [NSString stringWithFormat:@"%@ Photo, %@ Video",photoNumber,videoNumber];
+        }else if(pCount == 1 && vCount != 1){
+            result = [NSString stringWithFormat:@"%@ Photo, %@ Videos",photoNumber,videoNumber];
+        }else if(pCount != 1 && vCount == 1){
+            result = [NSString stringWithFormat:@"%@ Photos, %@ Video",photoNumber,videoNumber];
+        }
+        else{
+            result = [NSString stringWithFormat:@"%@ Photos, %@ Videos",photoNumber,videoNumber];
+        }
+
+    }
+    return result;
+}
 #pragma mark -
 #pragma mark UITableViewDataSource and Delegate Methods
 
@@ -721,18 +914,18 @@
     
     if (UIInterfaceOrientationIsLandscape(oritation)) {
         if (photoType) {
-            lastRow = ceil([photoArray count]/6.0)+1;
+            lastRow = ceil([photoTableData count]/6.0)+1;
         }else if(videoType){
-            lastRow = ceil([videoArray count]/6.0)+1;
+            lastRow = ceil([videoTableData count]/6.0)+1;
         }else
-            lastRow = ceil([self.crwAssets count]/6.0)+1;
+            lastRow = ceil([allTableData count]/6.0)+1;
     }else
         if (photoType) {
-            lastRow = ceil([photoArray count]/4.0)+1;
+            lastRow = ceil([photoTableData count]/4.0)+1;
         }else if(videoType){
-            lastRow = ceil([videoArray count]/4.0)+1;
+            lastRow = ceil([videoTableData count]/4.0)+1;
         }else
-            lastRow = ceil([self.crwAssets count]/4.0)+1; 
+            lastRow = ceil([allTableData count]/4.0)+1; 
     
     return lastRow;
 }
@@ -751,62 +944,42 @@
     cell.rowNumber = indexPath.row;
     [cell.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     if (indexPath.row == lastRow - 1) {
-        if (photoCount != 0 || videoCount != 0) {
-            UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(cell.frame.origin.x, 10, cell.frame.size.width, cell.frame.size.height-20)];
-            label.textAlignment = UITextAlignmentCenter;
-            label.textColor = [UIColor grayColor];
-            label.font = [UIFont fontWithName:@"Arial" size:20];
-            NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
-            [formatter setNumberStyle:NSNumberFormatterDecimalStyle]; // this line is important!
-            if (photoType && photoCount != 0) {
-                NSString *photoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:photoCount]];
-                if (photoCount == 1) {
-                    label.text = [NSString stringWithFormat:@"%@ Photo",photoNumber];
+        NSInteger vcount = 0;
+        NSInteger pcount = 0;
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(cell.frame.origin.x, 10, cell.frame.size.width, cell.frame.size.height-20)];
+        label.textAlignment = UITextAlignmentCenter;
+        label.textColor = [UIColor grayColor];
+        label.font = [UIFont fontWithName:@"Arial" size:20];
+        if (photoType) {
+            for (Asset *ast in photoTableData) {
+                if (ast.videoType.boolValue) {
+                    vcount += 1;
                 }else{
-                    label.text = [NSString stringWithFormat:@"%@ Photos",photoNumber];
-                }
-
-            }else if(videoType){
-                NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:videoCount]];
-                if (videoCount == 1) {
-                    label.text = [NSString stringWithFormat:@"%@ Video",videoNumber];
-                }else{
-                    label.text = [NSString stringWithFormat:@"%@ Videos",videoNumber];
-                }
-
-            }else{
-                if (photoCount == 0 ) {
-                    NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:videoCount]];
-                    if (videoCount == 1) {
-                        label.text = [NSString stringWithFormat:@"%@ Video",videoNumber];
-                    }else{
-                        label.text = [NSString stringWithFormat:@"%@ Videos",videoNumber];
-                    }
-                }else if(videoCount == 0){
-                    NSString *photoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:photoCount]];
-                    if (photoCount == 1) {
-                        label.text = [NSString stringWithFormat:@"%@ Photo",photoNumber];
-                    }else{
-                        label.text = [NSString stringWithFormat:@"%@ Photos",photoNumber];
-                    }
-                }else{
-                    NSString *photoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:photoCount]];
-                    NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:videoCount]];
-                    if (photoCount == 1 && videoCount == 1) {
-                        label.text = [NSString stringWithFormat:@"%@ Photo, %@ Video",photoNumber,videoNumber];
-                    }else if(photoCount == 1 && videoCount != 1){
-                        label.text = [NSString stringWithFormat:@"%@ Photo, %@ Videos",photoNumber,videoNumber];
-                    }else if(photoCount != 1 && videoCount == 1){
-                        label.text = [NSString stringWithFormat:@"%@ Photos, %@ Video",photoNumber,videoNumber];
-                    }
-                    else{
-                        label.text = [NSString stringWithFormat:@"%@ Photos, %@ Videos",photoNumber,videoNumber];
-                    }
+                    pcount += 1;
                 }
             }
-             [cell addSubview:label]; 
+            
+        }else if(videoType){
+            for (Asset *ast in videoTableData) {
+                if (ast.videoType.boolValue) {
+                    vcount += 1;
+                }else{
+                    pcount += 1;
+                }
+            }
+        }else{
+            for (Asset *ast in allTableData) {
+                if (ast.videoType.boolValue) {
+                    vcount += 1;
+                }else{
+                    pcount += 1;
+                }
+            }
         }
         
+        label.text = [self configurateLastRowPhotoCount:pcount VideoCount:vcount];
+        
+        [cell addSubview:label];        
     }else{
         NSInteger loopCount = 0;
         if (UIInterfaceOrientationIsLandscape(oritation)) {
@@ -819,18 +992,18 @@
             NSInteger row = (indexPath.row*loopCount)+i;
             
             Asset *dbAsset = nil;
-            if (videoType) {
-                if (row < [videoArray count]) {
-                    dbAsset = [videoArray objectAtIndex:row];
+           if (videoType) {
+                if (row < [videoTableData count]) {
+                    dbAsset = [videoTableData objectAtIndex:row];
                 }
             }else if(photoType){
-                if (row < [photoArray count]) {
-                    dbAsset = [photoArray objectAtIndex:row];
+                if (row < [photoTableData count]) {
+                    dbAsset = [photoTableData objectAtIndex:row];
                 }
                 
             }else{
-                if (row < [self.crwAssets count]) {
-                    dbAsset = [self.crwAssets objectAtIndex:row];
+                if (row < [allTableData count]) {
+                    dbAsset = [allTableData objectAtIndex:row];
                 }
             }
             if (dbAsset != nil) {
@@ -897,20 +1070,26 @@
     Asset *asset = [self.crwAssets objectAtIndex:index];
     if(action==YES)
     {
+        self.navigationItem.title=ta;
+        selectedRow = cell.rowNumber;
+        NSMutableDictionary *dic = nil;
+        if (photoType) {
+            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:photoArray,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
+                   [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];
+        }else if(videoType){
+            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:videoArray,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
+                   [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];
+        }else{
+            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
+                                    [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];
+        }
         if([side isEqualToString:@"favorite"])
         {
-            self.navigationItem.title=ta;
-            selectedRow = cell.rowNumber;
-            NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
-                                        [NSNumber numberWithBool:lockMode],@"lock", self,@"pushPeopleThumbnailView",self.album.transitType,@"transition",nil];
             [[NSNotificationCenter defaultCenter]postNotificationName:@"PeopleviewPhotos" object:nil userInfo:dic]; 
         }
         else
         {
-        self.navigationItem.title=ta;
-        selectedRow = cell.rowNumber;
-        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
-                                    [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];
+       
         [[NSNotificationCenter defaultCenter]postNotificationName:@"viewPhotos" object:nil userInfo:dic]; 
         }
       
@@ -1075,17 +1254,20 @@
         NSInteger index = 0;
         NSInteger row = 0;
         [self.table reloadData];
-        NSLog(@"the contentOffset is %@",NSStringFromCGPoint(self.table.contentOffset));
+       // NSLog(@"the row is %d",cell.rowNumber);
+        //NSLog(@"the contentOffset is %@",NSStringFromCGPoint(self.table.contentOffset));;
       if (UIInterfaceOrientationIsLandscape(previousOrigaton)) {
-          index = cell.rowNumber * 6;
-          row = index / 4;
+         index = cell.rowNumber * 6;
+         row = index / 4;
       }else{
-          index = cell.rowNumber * 4;
-          row = index / 6;
+         index = cell.rowNumber * 4;
+         row = index / 6;
       }
-//        NSInteger abs = row - cell.rowNumber;
+       // NSLog(@" after row is %d",row);
+//       NSInteger abs = row - cell.rowNumber;
+//        NSLog(@"the different is %d",row);
 //        CGPoint contetOffset = self.table.contentOffset;
-//        CGPoint newPoint = CGPointMake(0, contetOffset.y + cell.frame.size.height *abs);
+//        CGPoint newPoint = CGPointMake(0, contetOffset.y + cell.frame.size.height *abs); 
 //        [self.table setContentOffset:newPoint];
         
 
@@ -1104,12 +1286,17 @@
         if (row<0) {
             row = 0;
         }*/
-        [self.table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+       // [self.table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
     }
        previousOrigaton = toInterfaceOrientation;
+    if (timeSelectionsView.frame.origin.y != 480) {
+        timeSelectionsView.frame =[self setTheTimeSelectionsViewFrame:CGRectGetMinY(self.viewBar.frame)-210];
+    }    
     
 }
 
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+}
 -(void)setTableViewEdge:(UIInterfaceOrientation)orientation{
     UIEdgeInsets insets = self.table.contentInset;
     if (UIInterfaceOrientationIsLandscape(oritation)) {

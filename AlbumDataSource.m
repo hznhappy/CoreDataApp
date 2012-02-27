@@ -156,10 +156,11 @@
         newAsset=[[Asset alloc]initWithEntity:entity insertIntoManagedObjectContext:[coreData managedObjectContext]];
         NSURL *asUrl = [[alAsset defaultRepresentation]url];
         newAsset.url=[asUrl description];
+        @autoreleasepool {
        // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
-       // NSString * strDate=[[[alAsset defaultRepresentation]metadata]description];//valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
+        NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
       //NSLog(@"strdate:%@",strDate);
-     /* NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
+        //NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
        // NSLog(@"strdate:%@",strDate);
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
         //[inputFormatter setLocale:[NSLocale currentLocale]];
@@ -167,8 +168,7 @@
        [inputFormatter setTimeZone:timeZone1];
         [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
         newAsset.date = [inputFormatter dateFromString:strDate];
-       NSLog(@"date = %@", newAsset.date);
-       */
+        }
        // [self reloadTimeData:alAsset asset:newAsset];
         if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
             newAsset.videoType = [NSNumber numberWithBool:YES];
@@ -199,16 +199,11 @@
     }
     [coreData saveContext];
    /* [dateQueue cancelAllOperations];
-    //NSDictionary *result = [NSDictionary dictionaryWithObjectsAndKeys:a,@"AL",b,@"as",nil];
     NSMutableDictionary *result=[NSMutableDictionary dictionaryWithObjectsAndKeys:a,@"AL",b,@"as", nil];
     NSInvocationOperation * syncData2=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(reloadTimeData:) object:result];
     //  NSInvocationOperation * refreshData1=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(aDataSource) object:nil];
     //[refreshData1 addDependency:syncData1];
-    [dateQueue addOperation:syncData2];
-     */
-    
-    
-        
+    [dateQueue addOperation:syncData2];*/
 }
 -(void)reloadTimeData:(NSMutableDictionary *)result
 {
@@ -241,6 +236,8 @@
         [Del addObject:tmpAsset];
     }
     [coreData saveContext];
+    
+    
     assetsList=[self simpleQuery:@"Asset" predicate:nil sortField:nil
                 
                        sortOrder:YES];
@@ -265,8 +262,38 @@
         
         newAsset=[[Asset alloc]initWithEntity:entity insertIntoManagedObjectContext:[coreData managedObjectContext]];
         newAsset.url=[[[alAsset defaultRepresentation]url]description];
+         NSURL *asUrl = [[alAsset defaultRepresentation]url];
+        @autoreleasepool {
+            // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
+            NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
+            //NSLog(@"strdate:%@",strDate);
+            //NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
+            // NSLog(@"strdate:%@",strDate);
+            NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
+            //[inputFormatter setLocale:[NSLocale currentLocale]];
+            NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
+            [inputFormatter setTimeZone:timeZone1];
+            [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
+            newAsset.date = [inputFormatter dateFromString:strDate];
+        }
+
         if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
             newAsset.videoType = [NSNumber numberWithBool:YES];
+            AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:asUrl];
+            
+            CMTime duration = playerItem.duration;
+            int durationSeconds = (int)ceilf(CMTimeGetSeconds(duration));
+            int hours = durationSeconds / (60 * 60);
+            int minutes = (durationSeconds / 60) % 60;
+            int seconds = durationSeconds % 60;
+            NSString *formattedTimeString = nil;
+            if ( hours > 0 ) {
+                formattedTimeString = [NSString stringWithFormat:@"%d:%02d:%02d", hours, minutes, seconds];
+            } else {
+                formattedTimeString = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
+            }
+            newAsset.duration = formattedTimeString;
+            
         }else{
             newAsset.videoType = [NSNumber numberWithBool:NO];;
         }
@@ -791,7 +818,7 @@
             NSDate *lastSixMonth = [gregorian dateByAddingComponents:components toDate:date options:0];
             result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",lastSixMonth,date];
         }else if([rule.datePeriod isEqualToString:@"Recent year"]){
-            [components setDay:1];
+            [components setYear:1];
             NSDate *recentYear = [gregorian dateByAddingComponents:components toDate:date options:0];
             result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",recentYear,date];
         }else{

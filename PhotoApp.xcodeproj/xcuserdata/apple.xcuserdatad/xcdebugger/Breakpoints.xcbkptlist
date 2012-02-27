@@ -79,13 +79,13 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AlbumDataSource.m"
-         timestampString = "352027777.946423"
+         timestampString = "352032694.28498"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "947"
-         endingLineNumber = "947"
-         landmarkName = "@implementation AlbumDataSource"
-         landmarkType = "3">
+         startingLineNumber = "979"
+         endingLineNumber = "979"
+         landmarkName = "-getAlbum:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -110,7 +110,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "87"
          endingLineNumber = "87"
-         landmarkName = "AddAssertList"
+         landmarkName = "tagBar"
          landmarkType = "19">
       </FileBreakpoint>
    </FileBreakpoints>

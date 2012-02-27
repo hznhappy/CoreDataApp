@@ -39,6 +39,8 @@
 		18A9038D14EB9AD5001CA960 /* PeopleTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9038C14EB9AD5001CA960 /* PeopleTag.m */; };
 		18A9039614EB9AD6001CA960 /* PeopleRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9039514EB9AD6001CA960 /* PeopleRule.m */; };
 		18A9039C14EB9AD6001CA960 /* AssetRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9039B14EB9AD6001CA960 /* AssetRule.m */; };
+		18C0ACD714F7959B00ACF5CE /* dot-green.png in Resources */ = {isa = PBXBuildFile; fileRef = 18C0ACD514F7959B00ACF5CE /* dot-green.png */; };
+		18C0ACD814F7959B00ACF5CE /* dot-red.png in Resources */ = {isa = PBXBuildFile; fileRef = 18C0ACD614F7959B00ACF5CE /* dot-red.png */; };
 		18C78B9414D6736500B57B4F /* TestiPhoneCalViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18C78B8E14D6736500B57B4F /* TestiPhoneCalViewController.xib */; };
 		18C78B9614D6736500B57B4F /* PlaylistDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C78B9214D6736500B57B4F /* PlaylistDetailController.m */; };
 		18CE49B114F23C4700C2C681 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18CE49B014F23C4700C2C681 /* CoreMedia.framework */; };
@@ -142,6 +144,8 @@
 		18A9039514EB9AD6001CA960 /* PeopleRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeopleRule.m; sourceTree = "<group>"; };
 		18A9039A14EB9AD6001CA960 /* AssetRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetRule.h; sourceTree = "<group>"; };
 		18A9039B14EB9AD6001CA960 /* AssetRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssetRule.m; sourceTree = "<group>"; };
+		18C0ACD514F7959B00ACF5CE /* dot-green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dot-green.png"; sourceTree = "<group>"; };
+		18C0ACD614F7959B00ACF5CE /* dot-red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dot-red.png"; sourceTree = "<group>"; };
 		18C78B8E14D6736500B57B4F /* TestiPhoneCalViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TestiPhoneCalViewController.xib; path = Classes/TestiPhoneCalViewController.xib; sourceTree = "<group>"; };
 		18C78B9114D6736500B57B4F /* PlaylistDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistDetailController.h; sourceTree = "<group>"; };
 		18C78B9214D6736500B57B4F /* PlaylistDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistDetailController.m; sourceTree = "<group>"; };
@@ -295,6 +299,8 @@
 			children = (
 				18D163FC14F78AD400682EF0 /* xin.png */,
 				18D163FA14F783E800682EF0 /* lock 2.png */,
+				18C0ACD514F7959B00ACF5CE /* dot-green.png */,
+				18C0ACD614F7959B00ACF5CE /* dot-red.png */,
 				18DBCA7D14DBB23000D43062 /* deletebutton.png */,
 				1885976214D7D31F005EB0EB /* like.png */,
 				18DD696414B6F045000062D1 /* VED.png */,
@@ -544,6 +550,8 @@
 				18DBCA9914DBF9B900D43062 /* TagManagementController.xib in Resources */,
 				18D163FB14F783E800682EF0 /* lock 2.png in Resources */,
 				18D163FD14F78AD400682EF0 /* xin.png in Resources */,
+				18C0ACD714F7959B00ACF5CE /* dot-green.png in Resources */,
+				18C0ACD814F7959B00ACF5CE /* dot-red.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
