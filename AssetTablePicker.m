@@ -937,13 +937,13 @@
         selectedRow = cell.rowNumber;
         NSMutableDictionary *dic = nil;
         if (photoType) {
-            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:photoArray,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
+            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:photoTableData,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                    [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];
         }else if(videoType){
-            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:videoArray,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
+            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:videoTableData,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                    [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];
         }else{
-            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
+            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:allTableData,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                                     [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];
         }
         if([side isEqualToString:@"favorite"])
