@@ -33,6 +33,9 @@
     NSMutableArray *inAssert;
     NSMutableArray *photoArray;
     NSMutableArray *videoArray;
+    NSArray *allTableData;
+    NSArray *photoTableData;
+    NSArray *videoTableData;
   
     BOOL mode;
     BOOL load;
@@ -46,7 +49,10 @@
     BOOL videoType;
     BOOL timeBtPressed;
     UIButton *name;
-  
+    UIImage *green;
+    UIImage *red;
+    UIImageView *greenImageView;
+    UIImageView *redImagView;
     AlbumDataSource *dataSource;
     UITextField *passWord2;
   
@@ -98,4 +104,7 @@
 -(void)EditPhotoTag:(NSNotification *)note;
 -(void)setTableViewEdge:(UIInterfaceOrientation)orientation;
 -(void)countPhotosAndVideosCounts;
+-(CGRect)setTheTimeSelectionsViewFrame:(CGFloat)y;
+-(void)configureTimeSelectionView;
+-(NSString *)configurateLastRowPhotoCount:(NSInteger)pCount VideoCount:(NSInteger)vCount;
 @end

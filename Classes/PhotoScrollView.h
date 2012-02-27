@@ -6,7 +6,7 @@
 //  Copyright 2011 chinarewards. All rights reserved.
 //
 
-#define PV_ZOOM_SCALE 2.5
+#define PV_ZOOM_SCALE 2.0
 @interface PhotoScrollView : UIScrollView <UIScrollViewDelegate>{
     UIMenuController *theMenu;
 }

@@ -17,7 +17,7 @@
 		self.scrollEnabled = NO;
 		self.pagingEnabled = NO;
 		self.clipsToBounds = NO;
-		self.maximumZoomScale = 3.0f;
+		self.maximumZoomScale = 2.0f;
 		self.minimumZoomScale = 1.0f;
 		self.showsVerticalScrollIndicator = NO;
 		self.showsHorizontalScrollIndicator = NO;

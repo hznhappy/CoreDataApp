@@ -156,10 +156,11 @@
         newAsset=[[Asset alloc]initWithEntity:entity insertIntoManagedObjectContext:[coreData managedObjectContext]];
         NSURL *asUrl = [[alAsset defaultRepresentation]url];
         newAsset.url=[asUrl description];
+        @autoreleasepool {
        // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
-       // NSString * strDate=[[[alAsset defaultRepresentation]metadata]description];//valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
+        NSString * strDate=[[[alAsset defaultRepresentation]metadata]description];//valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
       //NSLog(@"strdate:%@",strDate);
-     /* NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
+        //NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
        // NSLog(@"strdate:%@",strDate);
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
         //[inputFormatter setLocale:[NSLocale currentLocale]];
@@ -167,8 +168,7 @@
        [inputFormatter setTimeZone:timeZone1];
         [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
         newAsset.date = [inputFormatter dateFromString:strDate];
-       NSLog(@"date = %@", newAsset.date);
-       */
+        }
        // [self reloadTimeData:alAsset asset:newAsset];
         if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
             newAsset.videoType = [NSNumber numberWithBool:YES];
@@ -198,17 +198,12 @@
         [b addObject:newAsset];
     }
     [coreData saveContext];
-    [dateQueue cancelAllOperations];
-    //NSDictionary *result = [NSDictionary dictionaryWithObjectsAndKeys:a,@"AL",b,@"as",nil];
+   /* [dateQueue cancelAllOperations];
     NSMutableDictionary *result=[NSMutableDictionary dictionaryWithObjectsAndKeys:a,@"AL",b,@"as", nil];
     NSInvocationOperation * syncData2=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(reloadTimeData:) object:result];
     //  NSInvocationOperation * refreshData1=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(aDataSource) object:nil];
     //[refreshData1 addDependency:syncData1];
-    [dateQueue addOperation:syncData2];
-     
-    
-    
-        
+    [dateQueue addOperation:syncData2];*/
 }
 -(void)reloadTimeData:(NSMutableDictionary *)result
 {
@@ -791,7 +786,7 @@
             NSDate *lastSixMonth = [gregorian dateByAddingComponents:components toDate:date options:0];
             result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",lastSixMonth,date];
         }else if([rule.datePeriod isEqualToString:@"Recent year"]){
-            [components setDay:1];
+            [components setYear:1];
             NSDate *recentYear = [gregorian dateByAddingComponents:components toDate:date options:0];
             result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",recentYear,date];
         }else{
