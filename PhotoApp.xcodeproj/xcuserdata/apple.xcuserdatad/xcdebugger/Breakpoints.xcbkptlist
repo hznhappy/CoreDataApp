@@ -79,11 +79,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AlbumDataSource.m"
-         timestampString = "352032694.28498"
+         timestampString = "352108811.340293"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "979"
-         endingLineNumber = "979"
+         startingLineNumber = "984"
+         endingLineNumber = "984"
          landmarkName = "-getAlbum:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -112,6 +112,20 @@
          endingLineNumber = "87"
          landmarkName = "tagBar"
          landmarkType = "19">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "Classes/AlbumController.m"
+         timestampString = "352109318.456362"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "109"
+         endingLineNumber = "109"
+         landmarkName = "-refresh:"
+         landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

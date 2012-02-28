@@ -33,7 +33,6 @@
 		1885976314D7D31F005EB0EB /* unlike.png in Resources */ = {isa = PBXBuildFile; fileRef = 1885976114D7D31F005EB0EB /* unlike.png */; };
 		1885976414D7D31F005EB0EB /* like.png in Resources */ = {isa = PBXBuildFile; fileRef = 1885976214D7D31F005EB0EB /* like.png */; };
 		1885E70B14C8F9D700B2B5B5 /* TagSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1885E70A14C8F9D700B2B5B5 /* TagSelector.m */; };
-		18A9038114EB9AD5001CA960 /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9038014EB9AD5001CA960 /* Event.m */; };
 		18A9038714EB9AD5001CA960 /* EventRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9038614EB9AD5001CA960 /* EventRule.m */; };
 		18A9038A14EB9AD5001CA960 /* PeopleRuleDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9038914EB9AD5001CA960 /* PeopleRuleDetail.m */; };
 		18A9038D14EB9AD5001CA960 /* PeopleTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9038C14EB9AD5001CA960 /* PeopleTag.m */; };
@@ -53,6 +52,7 @@
 		18D3198B14FB1828001D3ACC /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D3198A14FB1828001D3ACC /* EventKit.framework */; };
 		18D3199414FB7BBD001D3ACC /* Asset.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D3199314FB7BBD001D3ACC /* Asset.m */; };
 		18D3199714FB7F4A001D3ACC /* Album.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D3199614FB7F4A001D3ACC /* Album.m */; };
+		18D32D6A14FCC465002F75C6 /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D32D6914FCC465002F75C6 /* Event.m */; };
 		18D402821474E50000389097 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18D402841474E50000389097 /* Localizable.strings */; };
 		18D402901474E55900389097 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18D402921474E55900389097 /* InfoPlist.strings */; };
 		18DAD78414E21BD100BBE9B1 /* PhotoApp.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 18DAD78314E21BD100BBE9B1 /* PhotoApp.xcdatamodel */; };
@@ -132,8 +132,6 @@
 		1885976214D7D31F005EB0EB /* like.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = like.png; sourceTree = "<group>"; };
 		1885E70914C8F9D700B2B5B5 /* TagSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = TagSelector.h; path = Classes/TagSelector.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1885E70A14C8F9D700B2B5B5 /* TagSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = TagSelector.m; path = Classes/TagSelector.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		18A9037F14EB9AD5001CA960 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
-		18A9038014EB9AD5001CA960 /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
 		18A9038514EB9AD5001CA960 /* EventRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventRule.h; sourceTree = "<group>"; };
 		18A9038614EB9AD5001CA960 /* EventRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventRule.m; sourceTree = "<group>"; };
 		18A9038814EB9AD5001CA960 /* PeopleRuleDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeopleRuleDetail.h; sourceTree = "<group>"; };
@@ -164,6 +162,8 @@
 		18D3199314FB7BBD001D3ACC /* Asset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Asset.m; sourceTree = "<group>"; };
 		18D3199514FB7F4A001D3ACC /* Album.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Album.h; sourceTree = "<group>"; };
 		18D3199614FB7F4A001D3ACC /* Album.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Album.m; sourceTree = "<group>"; };
+		18D32D6814FCC465002F75C6 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		18D32D6914FCC465002F75C6 /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
 		18D402831474E50000389097 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		18D402851474E50800389097 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		18D402911474E55900389097 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -262,12 +262,13 @@
 				18D3199314FB7BBD001D3ACC /* Asset.m */,
 				18D3199514FB7F4A001D3ACC /* Album.h */,
 				18D3199614FB7F4A001D3ACC /* Album.m */,
+				18D32D6814FCC465002F75C6 /* Event.h */,
+				18D32D6914FCC465002F75C6 /* Event.m */,
 				18DAD78314E21BD100BBE9B1 /* PhotoApp.xcdatamodel */,
 				18CEB0FC14F490B700DEF938 /* DateRule.h */,
 				18CEB0FD14F490B700DEF938 /* DateRule.m */,
 				18CEB0F814F490A000DEF938 /* People.h */,
 				18CEB0F914F490A000DEF938 /* People.m */,
-				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				18A9039A14EB9AD6001CA960 /* AssetRule.h */,
 				18A9039B14EB9AD6001CA960 /* AssetRule.m */,
 				18A9039414EB9AD6001CA960 /* PeopleRule.h */,
@@ -278,8 +279,6 @@
 				18A9038914EB9AD5001CA960 /* PeopleRuleDetail.m */,
 				18A9038514EB9AD5001CA960 /* EventRule.h */,
 				18A9038614EB9AD5001CA960 /* EventRule.m */,
-				18A9037F14EB9AD5001CA960 /* Event.h */,
-				18A9038014EB9AD5001CA960 /* Event.m */,
 				183DE35414C7F92300BDC724 /* AlbumDataSource.h */,
 				183DE35514C7F92300BDC724 /* AlbumDataSource.m */,
 				183DE2FC14C7F5D700BDC724 /* AmptsAlbum.h */,
@@ -398,6 +397,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				183DE35814C7FA2F00BDC724 /* Views */,
 				183DE35714C7FA2600BDC724 /* Images */,
 				18D402971474E5F500389097 /* PhotoApp-Info.plist */,
@@ -584,7 +584,6 @@
 				1885E70B14C8F9D700B2B5B5 /* TagSelector.m in Sources */,
 				18C78B9614D6736500B57B4F /* PlaylistDetailController.m in Sources */,
 				18DAD78414E21BD100BBE9B1 /* PhotoApp.xcdatamodel in Sources */,
-				18A9038114EB9AD5001CA960 /* Event.m in Sources */,
 				18A9038714EB9AD5001CA960 /* EventRule.m in Sources */,
 				18A9038A14EB9AD5001CA960 /* PeopleRuleDetail.m in Sources */,
 				18A9038D14EB9AD5001CA960 /* PeopleTag.m in Sources */,
@@ -596,6 +595,7 @@
 				18D163EE14F7772D00682EF0 /* EventTableView.m in Sources */,
 				18D3199414FB7BBD001D3ACC /* Asset.m in Sources */,
 				18D3199714FB7F4A001D3ACC /* Album.m in Sources */,
+				18D32D6A14FCC465002F75C6 /* Event.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

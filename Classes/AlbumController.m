@@ -101,10 +101,12 @@
     
 }
 -(void)refresh:(NSNotification *)note{
-    NSLog(@"NOTI");
     NSDictionary *dic = [note userInfo];
 
     assets=[dic objectForKey:@"data"];
+     // =[dic objectForKey:@"num"];
+    NSString *num=[NSString stringWithFormat:@"有%@张照片更新",[dic objectForKey:@"num"]];
+   
   /*for(int i=0;i<[assets count];i++)
     {
      AmptsAlbum *am = (AmptsAlbum *)[assets objectAtIndex:i];
@@ -112,7 +114,7 @@
     }*/
     UIAlertView *alert = [[UIAlertView alloc]
                           initWithTitle:@"提示"
-                          message:@"照片库有更新"
+                          message:num
                           delegate:self
                           cancelButtonTitle:nil
                           otherButtonTitles:@"确定",nil];

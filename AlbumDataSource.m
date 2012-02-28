@@ -311,7 +311,10 @@
 {
     [self refreshback];
     deviceAssets=refreshAssets;
-    NSMutableDictionary *dic =[NSMutableDictionary dictionaryWithObjectsAndKeys:assetsBook, @"data",nil];
+   int num=[Add count]+[Del count];
+    NSNumber *Num=[NSNumber numberWithInt:num];
+    NSLog(@"how much:%@",Num);
+    NSMutableDictionary *dic =[NSMutableDictionary dictionaryWithObjectsAndKeys:assetsBook, @"data",Num,@"num",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"refresh" object:nil userInfo:dic];
 }
     //[[NSNotificationCenter defaultCenter]postNotificationName:@"refresh" object:nil];
@@ -355,7 +358,7 @@
         [tem addObject:al];
     }
     tmpAlbum.assetsList=tem;
-    pre=[NSPredicate predicateWithFormat:@"numPeopleTag != 0"];
+    pre=[NSPredicate predicateWithFormat:@"numPeopleTag != 0 or conEvent!=nil"];
     NSMutableArray *TageAssets = [self simpleQuery:@"Asset" predicate:pre sortField:nil sortOrder:YES];
     for (Asset *as in TageAssets)
     {
@@ -373,9 +376,9 @@
         album.object=[i chooseType];
         pre=[self ruleFormation:i];
         if([i.sortOrder boolValue]==YES){
-            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:YES];
+            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:[i sortKey]  sortOrder:YES];
         }else {
-            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:NO];
+            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:[i sortKey]  sortOrder:NO];
             
         }
         
@@ -387,9 +390,9 @@
             }
         }
         album.num=[album.assetsList count];
-        NSPredicate *newPre = [NSPredicate predicateWithFormat:@"self in %@",album.assetsList];
-        NSArray *array = [((AmptsAlbum*)[assetsBook objectAtIndex:0]).assetsList filteredArrayUsingPredicate:newPre];
-        album.assetsList = [NSMutableArray arrayWithArray:array];
+//        NSPredicate *newPre = [NSPredicate predicateWithFormat:@"self in %@",album.assetsList];
+//        NSArray *array = [((AmptsAlbum*)[assetsBook objectAtIndex:0]).assetsList filteredArrayUsingPredicate:newPre];
+//        album.assetsList = [NSMutableArray arrayWithArray:array];
         [assetsBook addObject:album];
         
     }
@@ -449,8 +452,9 @@
     AlbumUnTAG=[[AmptsAlbum alloc]init];
     AlbumUnTAG.name=@"Untag";
     AlbumUnTAG.alblumId=nil;
-    pre=[NSPredicate predicateWithFormat:@"numPeopleTag!=0"];
+    pre=[NSPredicate predicateWithFormat:@"numPeopleTag != 0 or conEvent!=nil"];
     NSMutableArray *TageAssets = [self simpleQuery:@"Asset" predicate:pre sortField:nil sortOrder:YES];
+    NSLog(@"isfavorite:%d",[TageAssets count]);
     /*for (NSString *u in deviceAssets.urls) {
         for (Asset *as in unTageAssets) {
             if ([as.url isEqualToString:u]) {
@@ -458,6 +462,7 @@
             }
         }
     }*/
+   
     for (Asset *as in TageAssets)
     {
         [tmpAlbum.assetsList removeObject:as];
@@ -476,9 +481,9 @@
         album.object=[i chooseType];
         pre=[self ruleFormation:i];
         if([i.sortOrder boolValue]==YES){
-            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:YES];//[i sortkey]
+            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:[i sortKey]  sortOrder:YES];//[i sortkey]
         }else {
-            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:NO];
+            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:[i sortKey]  sortOrder:NO];
             
         }
         
@@ -490,9 +495,9 @@
             }
         }
         album.num=[album.assetsList count];
-        NSPredicate *newPre = [NSPredicate predicateWithFormat:@"self in %@",album.assetsList];
-        NSArray *array = [((AmptsAlbum*)[assetsBook objectAtIndex:0]).assetsList filteredArrayUsingPredicate:newPre];
-        album.assetsList = [NSMutableArray arrayWithArray:array];
+       // NSPredicate *newPre = [NSPredicate predicateWithFormat:@"self in %@",album.assetsList];
+        //NSArray *array = [((AmptsAlbum*)[assetsBook objectAtIndex:0]).assetsList filteredArrayUsingPredicate:newPre];
+       // album.assetsList = [NSMutableArray arrayWithArray:array];
         [assetsBook addObject:album];
         
     }
@@ -568,9 +573,9 @@
         album.object=[i chooseType];
         pre=[self ruleFormation:i];
         if([i.sortOrder boolValue]==YES){
-            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:YES];
+            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:[i sortKey] sortOrder:YES];
         }else {
-            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:NO];
+            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:[i sortKey]  sortOrder:NO];
             
         }
         
@@ -582,9 +587,9 @@
             }
         }
     album.num=[album.assetsList count];
-    NSPredicate *newPre = [NSPredicate predicateWithFormat:@"self in %@",album.assetsList];
-    NSArray *array = [((AmptsAlbum*)[assetsBook objectAtIndex:0]).assetsList filteredArrayUsingPredicate:newPre];
-    album.assetsList = [NSMutableArray arrayWithArray:array];
+    //NSPredicate *newPre = [NSPredicate predicateWithFormat:@"self in %@",album.assetsList];
+    //NSArray *array = [((AmptsAlbum*)[assetsBook objectAtIndex:0]).assetsList filteredArrayUsingPredicate:newPre];
+   // album.assetsList = [NSMutableArray arrayWithArray:array];
     
     if(index==-1)
     {
@@ -623,7 +628,7 @@
         [tem addObject:al];
     }
     tmpAlbum.assetsList=tem;
-    pre=[NSPredicate predicateWithFormat:@"numPeopleTag != 0"];
+    pre=[NSPredicate predicateWithFormat:@"numPeopleTag != 0 or conEvent!=nil"];
     NSMutableArray *TageAssets = [self simpleQuery:@"Asset" predicate:pre sortField:nil sortOrder:YES];
     for (Asset *as in TageAssets)
     {
@@ -641,9 +646,9 @@
         album.object=[i chooseType];
         pre=[self ruleFormation:i];
         if([i.sortOrder boolValue]==YES){
-            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:YES];
+            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:[i sortKey]  sortOrder:YES];
         }else {
-            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil  sortOrder:NO];
+            album.assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:[i sortKey]  sortOrder:NO];
             
         }
         
@@ -655,9 +660,9 @@
             }
         }
         album.num=[album.assetsList count];
-        NSPredicate *newPre = [NSPredicate predicateWithFormat:@"self in %@",album.assetsList];
-        NSArray *array = [((AmptsAlbum*)[assetsBook objectAtIndex:0]).assetsList filteredArrayUsingPredicate:newPre];
-        album.assetsList = [NSMutableArray arrayWithArray:array];
+//        NSPredicate *newPre = [NSPredicate predicateWithFormat:@"self in %@",album.assetsList];
+//        NSArray *array = [((AmptsAlbum*)[assetsBook objectAtIndex:0]).assetsList filteredArrayUsingPredicate:newPre];
+//        album.assetsList = [NSMutableArray arrayWithArray:array];
         [assetsBook addObject:album];
         
     }

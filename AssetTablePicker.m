@@ -789,6 +789,7 @@
 -(IBAction)personpressed
 {isEvent=NO;
     isFavorite=NO;
+    protecteds=NO;
     [tagSelector.peopleList removeAllObjects];
     [self.tagRow removeAllObjects];
     if (!personPt) {
@@ -840,6 +841,7 @@
     [self.tagRow removeAllObjects];
     isEvent=YES;
     isFavorite=NO;
+    protecteds=NO;
     EventTableView *evn=[[EventTableView alloc]init];
     UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:evn];
     [self.navigationController presentModalViewController:navController animated:YES];
@@ -1179,12 +1181,12 @@
             else
             {
             asset.conEvent=event;
-            [dataSource.coreData saveContext];
+            
             NSLog(@"assert.name:%@",asset.conEvent.name);
             [self.tagRow addObject:row];
             [cell checkTagSelection:row];
             }
-            
+            [dataSource.coreData saveContext];
         }
         else if(isFavorite)
         {
@@ -1199,12 +1201,12 @@
             else
             {
                 asset.isFavorite=[NSNumber numberWithBool:YES];
-                [dataSource.coreData saveContext];
+                
                 NSLog(@"assert.name:%@",asset.conEvent.name);
                 [self.tagRow addObject:row];
                 [cell checkTagSelection:row];
             }
-
+           [dataSource.coreData saveContext];
         }
        else
        {

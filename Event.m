@@ -2,8 +2,8 @@
 //  Event.m
 //  PhotoApp
 //
-//  Created by apple on 2/15/12.
-//  Copyright (c) 2012 chinarewards. All rights reserved.
+//  Created by  on 12-2-28.
+//  Copyright (c) 2012年 chinarewards. All rights reserved.
 //
 
 #import "Event.h"
@@ -14,6 +14,9 @@
 @implementation Event
 
 @dynamic name;
+@dynamic startDate;
+@dynamic endDate;
+@dynamic identify;
 @dynamic conAsset;
 @dynamic conEventRule;
 
