@@ -32,13 +32,15 @@
 	BOOL _barsHidden;
 	BOOL performingLayout;
     BOOL lockMode;
-
+    
+    UIView *personView;
 	UIBarButtonItem *_actionButton;
     UIBarButtonItem *playPhotoButton;
     UIBarButtonItem *tag;
     UIBarButtonItem *cancel;
     UILabel *tagCount;
-
+    
+    BOOL personPt;
     BOOL editing;
     BOOL tagShow;
     BOOL playingPhoto;
@@ -105,5 +107,7 @@
 -(void)setTagToolBar;
 
 -(void)numtag;
+//Edit
+-(void)releasePersonPt;
 @end
 

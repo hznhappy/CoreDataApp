@@ -14,6 +14,7 @@
 @implementation EventTableView
 @synthesize eventsList, eventStore, defaultCalendar, detailViewController;
 @synthesize eventsName;
+@synthesize detailPage;
 -(void)viewDidLoad
 {
     app = [[UIApplication sharedApplication] delegate];
@@ -43,7 +44,9 @@
 }
 -(void)toggleback
 {
-    
+    if (detailPage) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"setTagToolBar" object:nil];
+    }
     [self dismissModalViewControllerAnimated:YES];
 }
 -(IBAction)toggleEdit:(id)sender
@@ -143,10 +146,17 @@
     else
     {
         Event *e=[eventsName objectAtIndex:indexPath.row];
-        NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:e.name,@"name",e,@"event",nil];
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
+        if (detailPage) {
+            NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:e,@"event",nil];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"addEvent" 
+                                                               object:self 
+                                                             userInfo:dic1]; 
+        }else{
+            NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:e.name,@"name",e,@"event",nil];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
                                                            object:self 
                                                          userInfo:dic1]; 
+        }
         
       [self dismissModalViewControllerAnimated:YES];
     }

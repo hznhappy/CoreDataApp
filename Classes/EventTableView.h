@@ -24,12 +24,14 @@ EKEventEditViewDelegate, UINavigationControllerDelegate, UIActionSheetDelegate>
     Event *event;
     PhotoAppDelegate *app;
     AlbumDataSource *dataSource;
+    BOOL detailPage;
 }
 @property (nonatomic, strong) EKEventStore *eventStore;
 @property (nonatomic, strong) EKCalendar *defaultCalendar;
 @property (nonatomic, strong) NSMutableArray *eventsList;
 @property (nonatomic, strong) EKEventViewController *detailViewController;
 @property (nonatomic, strong) NSMutableArray *eventsName;
+@property (nonatomic, assign) BOOL detailPage;
 
 - (NSArray *) fetchEventsForToday;
 - (IBAction) addEvent:(id)sender;

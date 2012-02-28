@@ -125,156 +125,111 @@
      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refresh:) name:@"refresh" object:nil];
 }
 
--(void)configureTimeSelectionView{
-    UIButton *button1 = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIButton *button3 = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIButton *button4 = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIButton *button5 = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIButton *button6 = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIButton *button7 = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIButton *button8 = [UIButton buttonWithType:UIButtonTypeCustom];
-
-    button1.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    button2.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    button3.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    button4.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    button5.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    button6.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    button7.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    button8.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    
-    [button1 setTitle:@"Recent week" forState:UIControlStateNormal];
-    [button2 setTitle:@"Recent 2 weeks" forState:UIControlStateNormal];
-    [button3 setTitle:@"Recent month" forState:UIControlStateNormal];
-    [button4 setTitle:@"Recent 3 mohths" forState:UIControlStateNormal];
-    [button5 setTitle:@"Recent 6 months" forState:UIControlStateNormal];
-    [button6 setTitle:@"Recent year" forState:UIControlStateNormal];
-    [button7 setTitle:@"More than 1 year" forState:UIControlStateNormal];
-    [button8 setTitle:@"All" forState:UIControlStateNormal];
-    
-    button1.frame = CGRectMake(25, 10, 150, 20);
-    button2.frame = CGRectMake(25, 35, 150, 20);
-    button3.frame = CGRectMake(25, 60, 150, 20);
-    button4.frame = CGRectMake(25, 85, 150, 20);
-    button5.frame = CGRectMake(25, 110, 150, 20);
-    button6.frame = CGRectMake(25, 135, 150, 20);
-    button7.frame = CGRectMake(25, 160, 150, 20);
-    button8.frame = CGRectMake(25, 185, 150, 20);
-    
-    button1.tag = 1;
-    button2.tag = 2;
-    button3.tag = 3;
-    button4.tag = 4;
-    button5.tag = 5;
-    button6.tag = 6;
-    button7.tag = 7;
-    button8.tag = 8;
-    
-    [button1 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
-    [button2 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
-    [button3 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
-    [button4 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
-    [button5 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
-    [button6 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
-    [button7 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
-    [button8 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
-    
-    timeSelectionsView = [[UIView alloc]initWithFrame:[self setTheTimeSelectionsViewFrame:CGRectGetMaxY(self.view.frame)]];
-    timeSelectionsView.backgroundColor = [UIColor grayColor];
-    [timeSelectionsView.layer setCornerRadius:8.0];
-    [timeSelectionsView addSubview:button1];
-    [timeSelectionsView addSubview:button2];
-    [timeSelectionsView addSubview:button3];
-    [timeSelectionsView addSubview:button4];
-    [timeSelectionsView addSubview:button5];
-    [timeSelectionsView addSubview:button6];
-    [timeSelectionsView addSubview:button7];
-    [timeSelectionsView addSubview:button8];
-    [timeSelectionsView addSubview:redImagView];
-    [timeSelectionsView addSubview:greenImageView];
-    
-    [self.view addSubview:timeSelectionsView];
-
+-(void)viewDidAppear:(BOOL)animated{
+    self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
+    if (firstLoad) {
+        firstLoad = NO;
+    }
 }
 
--(void)selectTimeRange:(id)sender{
-    UIButton *bt = (UIButton *)sender;
-    redImagView.frame = CGRectZero;
-    NSPredicate* result =nil;
-    NSDate *date = [NSDate date];
-    NSDateComponents *components = [[NSDateComponents alloc]init];
-    NSCalendar *gregorian = [[NSCalendar alloc]initWithCalendarIdentifier:NSGregorianCalendar];
-    switch (bt.tag) {
-        case 1:
-            greenImageView.frame = CGRectMake(10, 15, 10, 10);
-            [components setDay:-7];
-            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
-            break;
-        case 2:
-            greenImageView.frame = CGRectMake(10, 40, 10, 10);
-            [components setDay:-14];
-            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
-            break;
-        case 3:
-            greenImageView.frame = CGRectMake(10, 65, 10, 10);
-            [components setDay:-30];
-            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
-            break;
-        case 4:
-            greenImageView.frame = CGRectMake(10, 90, 10, 10);
-            [components setDay:-90];
-            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
-            break;
-        case 5:
-            [components setDay:-180];
-            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
-            greenImageView.frame = CGRectMake(10, 115, 10, 10);
-            break;
-        case 6:
-            greenImageView.frame = CGRectMake(10, 140, 10, 10);
-            [components setYear:1];
-            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
-            break;
-        case 7:
-            greenImageView.frame = CGRectMake(10, 165, 10, 10);
-            [components setYear:1];
-            result=[NSPredicate predicateWithFormat:@"self.date<%@",[gregorian dateByAddingComponents:components toDate:date options:0]];
-            break;
-        default:
-            greenImageView.frame = CGRectZero;
-            redImagView.frame = CGRectMake(10, 190, 10, 10);
-            break;
+-(void)viewWillAppear:(BOOL)animated{
+    if (firstLoad) {
+        [table reloadData];    
+        NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
+        [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     }
-    if (result) {
-        if (photoType) {
-            photoTableData = [photoArray filteredArrayUsingPredicate:result];
-        }else if(videoType){
-            videoTableData = [videoArray filteredArrayUsingPredicate:result];
-        }else{
-            allTableData = [self.crwAssets filteredArrayUsingPredicate:result];
-        }
+//    ThumbnailCell *cell = (ThumbnailCell *)[[self.table visibleCells]objectAtIndex:0];
+//    NSInteger index = cell.rowNumber;
+//    NSLog(@"the first %d",index);
+//    CGPoint offset = self.table.contentOffset;
+//    NSLog(@"the previous is %@",NSStringFromCGPoint(offset));
+    selectedRow = NSNotFound;
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
+        tagSelector=nil;
+        [[NSNotificationCenter defaultCenter] removeObserver:tagSelector];
+        [[NSNotificationCenter defaultCenter]removeObserver:self];
+    }
+    
+}
+-(void)viewDidDisappear:(BOOL)animated{
+    if (selectedRow != NSNotFound) {
+        ThumbnailCell *cell = (ThumbnailCell*)[self.table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:selectedRow inSection:0]];
+        [cell clearSelection];
+        selectedRow = NSNotFound;
+    }
+}
 
+-(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation{
+    oritation = toInterfaceOrientation;
+	return (UIInterfaceOrientationIsLandscape(toInterfaceOrientation) || toInterfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    oritation = toInterfaceOrientation;
+    if ((UIInterfaceOrientationIsLandscape(oritation) && UIInterfaceOrientationIsLandscape(previousOrigaton))||(UIInterfaceOrientationIsPortrait(oritation)&&UIInterfaceOrientationIsPortrait(previousOrigaton))) {
+        return;
+    }
+    [self setTableViewEdge:toInterfaceOrientation];
+    if (previousOrigaton != toInterfaceOrientation) {
+        ThumbnailCell *cell = (ThumbnailCell *)[[self.table visibleCells]objectAtIndex:0];
+        NSInteger index = 0;
+        NSInteger row = 0;
+        [self.table reloadData];
+        // NSLog(@"the row is %d",cell.rowNumber);
+        //NSLog(@"the contentOffset is %@",NSStringFromCGPoint(self.table.contentOffset));;
+        if (UIInterfaceOrientationIsLandscape(previousOrigaton)) {
+            index = cell.rowNumber * 6;
+            row = index / 4;
+        }else{
+            index = cell.rowNumber * 4;
+            row = index / 6;
+        }
+        // NSLog(@" after row is %d",row);
+        //       NSInteger abs = row - cell.rowNumber;
+        //        NSLog(@"the different is %d",row);
+        //        CGPoint contetOffset = self.table.contentOffset;
+        //        CGPoint newPoint = CGPointMake(0, contetOffset.y + cell.frame.size.height *abs); 
+        //        [self.table setContentOffset:newPoint];
+        
+        
+        /*if (UIInterfaceOrientationIsLandscape(previousOrigaton)) {
+         index = cell1.rowNumber * 6 + ((cell2.rowNumber * 6 + 5)- cell1.rowNumber * 6)/2;
+         row  = index /4;
+         
+         }else{
+         index = cell1.rowNumber * 4 + ((cell2.rowNumber * 4 + 3)- cell1.rowNumber * 4)/2;
+         row  = index /6;
+         }
+         NSLog(@"the index is %d and row is %d",index,row);
+         if (row>=lastRow) {
+         row = lastRow - 1;
+         }
+         if (row<0) {
+         row = 0;
+         }*/
+        // [self.table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
+    previousOrigaton = toInterfaceOrientation;
+    if (timeSelectionsView.frame.origin.y != 480) {
+        timeSelectionsView.frame =[self setTheTimeSelectionsViewFrame:CGRectGetMinY(self.viewBar.frame)-210];
+    }    
+    
+}
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+}
+-(void)setTableViewEdge:(UIInterfaceOrientation)orientation{
+    UIEdgeInsets insets = self.table.contentInset;
+    if (UIInterfaceOrientationIsLandscape(oritation)) {
+        [self.table setContentInset:UIEdgeInsetsMake(53, insets.left, insets.bottom, insets.right)];
     }else{
-        if (photoType) {
-            if (![photoTableData isEqualToArray:photoArray]) {
-                photoTableData = photoArray;
-            }
-        }else if(videoType){
-            if (![videoTableData isEqualToArray:videoTableData]) {
-                videoTableData = videoArray;
-            }
-            
-        }else{
-            if (![allTableData isEqualToArray:self.crwAssets]) {
-                allTableData = self.crwAssets;
-            }
-        }
+        [self.table setContentInset:UIEdgeInsetsMake(65, insets.left, insets.bottom, insets.right)];
     }
-    [self.table reloadData];
-    NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
-    [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
 }
+
 -(void)countPhotosAndVideosCounts{
     photoCount = 0;
     videoCount = 0;
@@ -305,55 +260,8 @@
             break;
         }
         
-       // NSLog(@"assets:%@",am.assetsList);
+        // NSLog(@"assets:%@",am.assetsList);
     }
-}
-
--(void)EditPhotoTag:(NSNotification *)note
-{
-    NSDictionary *dic = [note userInfo];
-   // tagSelector.mypeople.f
-    if(isEvent)
-    {
-        [self.navigationItem setTitle:[NSString stringWithFormat:@"事件:%@",[dic objectForKey:@"name"]]];
-        event=[dic objectForKey:@"event"];
-        NSLog(@"eventname:%@",event.name);
-    }
-    else
-    {
-    NSMutableArray *a=[dic objectForKey:@"name"];
-    if([a count]!=0)
-    {
-    NSString *people=nil;
-    People *po=[a objectAtIndex:0];
-    if( po.firstName==nil)
-    {
-        people=[NSString stringWithFormat:@"%@",po.lastName];
-    }
-    else if(po.lastName==nil)
-    {
-        people=[NSString stringWithFormat:@"%@",po.firstName];
-        
-    }
-    else
-    {
-        people=[NSString stringWithFormat:@"%@ %@",po.lastName,po.firstName];
-    }
-    
-    if([a count]>1)
-    {
-    [self.navigationItem setTitle:[NSString stringWithFormat:@"选%@等%d人",people,[a count]]];
-    }
-    else
-    {
-        [self.navigationItem setTitle:[NSString stringWithFormat:@"选取%@",people]];
-    }
-   // name.frame = CGRectMake(0, 0,160, 40);
-    //[tagBar addSubview:name];
-    }
-    }
-    [self.tagRow removeAllObjects];
-    [self.table reloadData];
 }
 
 -(void)reloadTableData{
@@ -361,138 +269,9 @@
     [self setTableViewEdge:oritation];
     [self.table reloadData];
 }
--(void)backButtonPressed
-{
-    NSString *a=NSLocalizedString(@"Lock", @"title");
-    if([self.lock.title isEqualToString:a])
-    {
-        [[NSNotificationCenter defaultCenter]removeObserver:self];
-        [self.navigationController popViewControllerAnimated:YES];
-        NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"editplay" 
-                                                           object:self 
-                                                         userInfo:dic1];
-        NSDictionary *dic2 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"add" 
-                                                           object:self 
-                                                         userInfo:dic2];
-
-        
-
-    }
-    else
-    {  
-        [alert1 show];
-    }
-}
--(void)alertView:(UIAlertView *)alert11 didDismissWithButtonIndex:(NSInteger)buttonIndex{
-    NSString *pass=[NSString stringWithFormat:@"%@",dataSource.password];
-    NSString *a=NSLocalizedString(@"Lock", @"title");
-    NSString *b=NSLocalizedString(@"note", @"title");
-    NSString *c=NSLocalizedString(@"ok", @"title");
-    NSString *d=NSLocalizedString(@"The password is wrong", @"title");
-    NSString *e=NSLocalizedString(@"UnLock", @"title");
-    if(alert11.tag==2)
-    {
-        switch (buttonIndex) {
-            case 0:
-                if(passWord2.text==nil||passWord2.text.length==0)
-                {
-                }
-                else
-                {
-                    NSUserDefaults *defaults1=[NSUserDefaults standardUserDefaults]; 
-                    [defaults1 setObject:passWord2.text forKey:@"name_preference"]; 
-                    self.lock.title=e;
-                    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults]; 
-                    dataSource.password=[defaults objectForKey:@"name_preference"];
-                    lockMode = YES;
-                }
-                break;
-            case 1:
-                break;
-            default:
-                break;
-        }
-    }
-    else if(alert11.tag==1)
-    {
-        switch (buttonIndex) {
-            case 0:
-                if([passWord.text isEqualToString:pass])
-                { 
-                    
-                    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults]; 
-                    [defaults setObject:pass forKey:@"name_preference"];
-                    self.lock.title=a;   
-                    lockMode = NO;
-                    [[NSNotificationCenter defaultCenter]postNotificationName:@"changeLockModeInDetailView" object:nil];
-                    NSLog(@"pass the lock");
-                }
-                else
-                {
-                    UIAlertView *alert = [[UIAlertView alloc]
-                                          initWithTitle:b
-                                          message:d
-                                          delegate:self
-                                          cancelButtonTitle:nil
-                                          otherButtonTitles:c,nil];
-                    [alert show];
-                    
-                    
-                    break;
-                }
-            case 1:
-                break;
-            default:
-                break;
-        }
-        
-
-  
-    }
-    passWord.text=nil;
-}
-
--(void)viewDidAppear:(BOOL)animated{
-    self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
-    if (firstLoad) {
-        firstLoad = NO;
-    }
-}
-
--(void)viewWillAppear:(BOOL)animated{
-    if (firstLoad) {
-        [table reloadData];    
-        NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
-        [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
-    }
-    ThumbnailCell *cell = (ThumbnailCell *)[[self.table visibleCells]objectAtIndex:0];
-    NSInteger index = cell.rowNumber;
-    NSLog(@"the first %d",index);
-    CGPoint offset = self.table.contentOffset;
-    NSLog(@"the previous is %@",NSStringFromCGPoint(offset));
-    selectedRow = NSNotFound;
-}
--(void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
-    if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
-        tagSelector=nil;
-        [[NSNotificationCenter defaultCenter] removeObserver:tagSelector];
-        [[NSNotificationCenter defaultCenter]removeObserver:self];
-    }
-    
-}
--(void)viewDidDisappear:(BOOL)animated{
-    if (selectedRow != NSNotFound) {
-        ThumbnailCell *cell = (ThumbnailCell*)[self.table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:selectedRow inSection:0]];
-        [cell clearSelection];
-        selectedRow = NSNotFound;
-    }
-}
 
 #pragma mark -
-#pragma mark ButtonAction Methods
+#pragma mark Tagmode ButtonAction Methods
 -(void)cancelTag{
     protecteds=NO;
     isEvent=NO;
@@ -541,85 +320,7 @@
         [self.table reloadData];
     }
 }
--(void)releasePersonPt
-{
-    if(personPt)
-    {
-        if (personView && personView.superview != nil) {
-            [personView removeFromSuperview];
-        }
-        personPt=!personPt;
-        
-    }
 
-}
-
--(IBAction)actionButtonPressed{
-    NSString *a=NSLocalizedString(@"Lock", @"title");
-    if([self.lock.title isEqualToString:a])
-    {
-        mode = YES;
-       // save.enabled=YES;
-        //reset.enabled=YES;
-        self.navigationItem.hidesBackButton = YES;
-        self.navigationItem.rightBarButtonItem = cancel;
-        viewBar.hidden = YES;
-        tagBar.hidden = NO;
-        action=NO;
-       [self.table reloadData];
-    }
-    else
-    {
-       
-        [alert1 show];
-    }
-}
--(IBAction)lockButtonPressed{
-    NSString *a=NSLocalizedString(@"Lock", @"button");
-    NSString *b=NSLocalizedString(@"UnLock", @"button");
-    NSString *e=NSLocalizedString(@"Cancel", @"title");
-    NSString *d=NSLocalizedString(@"The password is blank, set the password", @"title");
-    NSString *c=NSLocalizedString(@"ok", @"title");
-    if([self.lock.title isEqualToString:a])
-    { 
-        NSString *password=[NSString stringWithFormat:@"%@",dataSource.password];
-        if(dataSource.password==nil||password==nil||password.length==0)
-        { 
-            UIAlertView *alert2 = [[UIAlertView alloc]initWithTitle:d  message:@"\n" delegate:self cancelButtonTitle:c otherButtonTitles:e,nil]; 
-            passWord2= [[UITextField alloc] initWithFrame:CGRectMake(12, 40, 260, 30)];  
-            passWord2.backgroundColor = [UIColor whiteColor];  
-            passWord2.secureTextEntry = YES;
-            alert2.tag=2;
-            [alert2 addSubview:passWord2];  
-            [alert2 show];
-        }
-        else{
-            if(self.likeAssets.count != 0){
-                [self.likeAssets removeAllObjects];
-            }
-            lockMode = YES;
-            [lock setTitle:b];
-        }
-    }
-    else
-    {   
-        [alert1 show];
-    }
-}
--(IBAction)myfavorite
-{
-    [self releasePersonPt];
-    NSLog(@"favorite");
-    [tagSelector.peopleList removeAllObjects];
-    [self.tagRow removeAllObjects];
-    [self.UrlList removeAllObjects];
-    protecteds=NO;
-    as=NO;
-    isEvent=NO;
-    isFavorite=YES;
-    self.navigationItem.title=@"标记My favorite";   
-    [self.table reloadData];
-}
 -(IBAction)saveTags{
     NSString *b=NSLocalizedString(@"please select tag name", @"message");
     NSString *a=NSLocalizedString(@"note", @"button");
@@ -631,9 +332,9 @@
                           cancelButtonTitle:nil
                           otherButtonTitles:c,nil];
     [alert show]; 
-
+    
     NSString *d=NSLocalizedString(@"please select tag photo" ,@"message");
-
+    
     if([tagSelector tagPeople]==nil)
     {
         UIAlertView *alert = [[UIAlertView alloc]
@@ -672,12 +373,12 @@
             Asset *asset = [self.UrlList objectAtIndex:i];
             [tagSelector saveTagAsset:asset];
         }
-         [self cancelTag];
+        [self cancelTag];
         
     }
     [self.UrlList removeAllObjects];
     [self.tagRow removeAllObjects];
-      
+    
 }
 -(IBAction)NoBodyButton
 {[self releasePersonPt];
@@ -686,7 +387,7 @@
     isEvent=NO;
     isFavorite=NO;
     [tagSelector.peopleList removeAllObjects];
-     [self.tagRow removeAllObjects];
+    [self.tagRow removeAllObjects];
     favorite *fi=[dataSource.favoriteList objectAtIndex:0];
     People *p1=fi.people;
     [tagSelector.peopleList addObject:p1];
@@ -697,99 +398,68 @@
 }
 -(IBAction)protectButton
 {
- [self releasePersonPt];
- [tagSelector.peopleList removeAllObjects];
- [self.tagRow removeAllObjects];
- [self.UrlList removeAllObjects];
- protecteds=YES;
- as=NO;
- isEvent=NO;
- isFavorite=NO;
- self.navigationItem.title=@"给照片加密";   
- [self.table reloadData];
-}
--(IBAction)resetTags{
+    [self releasePersonPt];
+    [tagSelector.peopleList removeAllObjects];
     [self.tagRow removeAllObjects];
     [self.UrlList removeAllObjects];
+    protecteds=YES;
+    as=NO;
+    isEvent=NO;
+    isFavorite=NO;
+    self.navigationItem.title=@"给照片加密";   
     [self.table reloadData];
 }
--(void)selectFromFavoriteNames{
-    [self.UrlList removeAllObjects];
-    [self.tagRow removeAllObjects];
-    tagSelector.add=@"NO";
-    as=YES;
-    protecteds=NO;
-    [assertList removeAllObjects];
-    [tagSelector.peopleList removeAllObjects];
-    [self.navigationItem setTitle:ta];
-    [tagSelector selectTagNameFromFavorites];
-    if(personPt)
-    {
-        if (personView && personView.superview != nil) {
-            [personView removeFromSuperview];
-        }
-        personPt=!personPt;
 
-    }
-}
--(void)selectFromAllNames{
-    [self.tagRow removeAllObjects];
-    [self.UrlList removeAllObjects];
-    tagSelector.add=@"NO";
-    as=YES;
-    protecteds=NO;
-    [assertList removeAllObjects];
-    [tagSelector.peopleList removeAllObjects];
-    [self.navigationItem setTitle:ta];
-    [tagSelector selectTagNameFromContacts];
-    if(personPt)
+-(void)EditPhotoTag:(NSNotification *)note
+{
+    NSDictionary *dic = [note userInfo];
+    // tagSelector.mypeople.f
+    if(isEvent)
     {
-        if (personView && personView.superview != nil) {
-            [personView removeFromSuperview];
-        }
-        personPt=!personPt;
-        
-    }
-    [self.table reloadData];
-}
--(IBAction)playPhotos{
-    if([side isEqualToString:@"favorite"])
-    {
-        NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:self.crwAssets, @"assets", self.album.transitType, @"transition",nil];
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"PeoplePlayPhoto" object:nil userInfo:dic]; 
-
+        [self.navigationItem setTitle:[NSString stringWithFormat:@"事件:%@",[dic objectForKey:@"name"]]];
+        event=[dic objectForKey:@"event"];
+        NSLog(@"eventname:%@",event.name);
     }
     else
     {
-    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:self.crwAssets, @"assets", self.album.transitType, @"transition",nil];
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"PlayPhoto" object:nil userInfo:dic]; 
-    }
-}
-
--(void)showTimeSelections{
-    if (!timeBtPressed) {
-        CGFloat y = CGRectGetMinY(viewBar.frame)-210;
-        [UIView animateWithDuration:0.4 animations:^{
-          timeSelectionsView.frame = [self setTheTimeSelectionsViewFrame:y];
-        }];
-        [timeSelectionsView.layer setOpaque:NO];
-        timeSelectionsView.opaque = NO;
-        
-    }else{
-        if (timeSelectionsView && timeSelectionsView.superview != nil) {
-            [UIView animateWithDuration:0.4 animations:^{
-                timeSelectionsView.frame = [self setTheTimeSelectionsViewFrame:CGRectGetMaxY(self.view.frame)];
-                //[timeSelectionsView removeFromSuperview];
-            }];
+        NSMutableArray *a=[dic objectForKey:@"name"];
+        if([a count]!=0)
+        {
+            NSString *people=nil;
+            People *po=[a objectAtIndex:0];
+            if( po.firstName==nil)
+            {
+                people=[NSString stringWithFormat:@"%@",po.lastName];
+            }
+            else if(po.lastName==nil)
+            {
+                people=[NSString stringWithFormat:@"%@",po.firstName];
+                
+            }
+            else
+            {
+                people=[NSString stringWithFormat:@"%@ %@",po.lastName,po.firstName];
+            }
+            
+            if([a count]>1)
+            {
+                [self.navigationItem setTitle:[NSString stringWithFormat:@"选%@等%d人",people,[a count]]];
+            }
+            else
+            {
+                [self.navigationItem setTitle:[NSString stringWithFormat:@"选取%@",people]];
+            }
+            // name.frame = CGRectMake(0, 0,160, 40);
+            //[tagBar addSubview:name];
         }
     }
-   
-    timeBtPressed = !timeBtPressed;
+    [self.tagRow removeAllObjects];
+    [self.table reloadData];
 }
+
 -(IBAction)personpressed
 {isEvent=NO;
     isFavorite=NO;
-    protecteds=NO;
     [tagSelector.peopleList removeAllObjects];
     [self.tagRow removeAllObjects];
     if (!personPt) {
@@ -816,9 +486,9 @@
         //-(void)selectFromAllNames;
         [button1 addTarget:self action:@selector(selectFromFavoriteNames) forControlEvents:UIControlEventTouchDown];
         [button2 addTarget:self action:@selector(selectFromAllNames) forControlEvents:UIControlEventTouchDown];
-       
-                //[personView.layer setCornerRadius:10.0];
-       // [personView setClipsToBounds:YES]; 
+        
+        //[personView.layer setCornerRadius:10.0];
+        // [personView setClipsToBounds:YES]; 
         [personView addSubview:button1];
         [personView addSubview:button2];
         [self.view addSubview:personView];
@@ -836,15 +506,356 @@
 -(IBAction)Eventpressed
 {  
     [self releasePersonPt];
-    NSLog(@"event");
     [tagSelector.peopleList removeAllObjects];
     [self.tagRow removeAllObjects];
     isEvent=YES;
     isFavorite=NO;
-    protecteds=NO;
     EventTableView *evn=[[EventTableView alloc]init];
     UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:evn];
     [self.navigationController presentModalViewController:navController animated:YES];
+}
+
+-(IBAction)myfavorite
+{
+    [self releasePersonPt];
+    NSLog(@"favorite");
+    [tagSelector.peopleList removeAllObjects];
+    [self.tagRow removeAllObjects];
+    [self.UrlList removeAllObjects];
+    protecteds=NO;
+    as=NO;
+    isEvent=NO;
+    isFavorite=YES;
+    self.navigationItem.title=@"标记My favorite";   
+    [self.table reloadData];
+}
+
+-(void)selectFromFavoriteNames{
+    [self.UrlList removeAllObjects];
+    [self.tagRow removeAllObjects];
+    tagSelector.add=@"NO";
+    as=YES;
+    protecteds=NO;
+    [assertList removeAllObjects];
+    [tagSelector.peopleList removeAllObjects];
+    [self.navigationItem setTitle:ta];
+    [tagSelector selectTagNameFromFavorites];
+    if(personPt)
+    {
+        if (personView && personView.superview != nil) {
+            [personView removeFromSuperview];
+        }
+        personPt=!personPt;
+        
+    }
+}
+-(void)selectFromAllNames{
+    [self.tagRow removeAllObjects];
+    [self.UrlList removeAllObjects];
+    tagSelector.add=@"NO";
+    as=YES;
+    protecteds=NO;
+    [assertList removeAllObjects];
+    [tagSelector.peopleList removeAllObjects];
+    [self.navigationItem setTitle:ta];
+    [tagSelector selectTagNameFromContacts];
+    if(personPt)
+    {
+        if (personView && personView.superview != nil) {
+            [personView removeFromSuperview];
+        }
+        personPt=!personPt;
+        
+    }
+    [self.table reloadData];
+}
+
+-(void)releasePersonPt
+{
+    if(personPt)
+    {
+        if (personView && personView.superview != nil) {
+            [personView removeFromSuperview];
+        }
+        personPt=!personPt;
+        
+    }
+    
+}
+
+-(IBAction)resetTags{
+    [self.tagRow removeAllObjects];
+    [self.UrlList removeAllObjects];
+    [self.table reloadData];
+}
+#pragma mark -
+#pragma mark Viewmode button methods
+-(void)backButtonPressed
+{
+    NSString *a=NSLocalizedString(@"Lock", @"title");
+    if([self.lock.title isEqualToString:a])
+    {
+        [[NSNotificationCenter defaultCenter]removeObserver:self];
+        [self.navigationController popViewControllerAnimated:YES];
+        NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"editplay" 
+                                                           object:self 
+                                                         userInfo:dic1];
+        NSDictionary *dic2 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"add" 
+                                                           object:self 
+                                                         userInfo:dic2];
+        
+        
+        
+    }
+    else
+    {  
+        [alert1 show];
+    }
+}
+
+-(IBAction)lockButtonPressed{
+    NSString *a=NSLocalizedString(@"Lock", @"button");
+    NSString *b=NSLocalizedString(@"UnLock", @"button");
+    NSString *e=NSLocalizedString(@"Cancel", @"title");
+    NSString *d=NSLocalizedString(@"The password is blank, set the password", @"title");
+    NSString *c=NSLocalizedString(@"ok", @"title");
+    if([self.lock.title isEqualToString:a])
+    { 
+        NSString *password=[NSString stringWithFormat:@"%@",dataSource.password];
+        if(dataSource.password==nil||password==nil||password.length==0)
+        { 
+            UIAlertView *alert2 = [[UIAlertView alloc]initWithTitle:d  message:@"\n" delegate:self cancelButtonTitle:c otherButtonTitles:e,nil]; 
+            passWord2= [[UITextField alloc] initWithFrame:CGRectMake(12, 40, 260, 30)];  
+            passWord2.backgroundColor = [UIColor whiteColor];  
+            passWord2.secureTextEntry = YES;
+            alert2.tag=2;
+            [alert2 addSubview:passWord2];  
+            [alert2 show];
+        }
+        else{
+            if(self.likeAssets.count != 0){
+                [self.likeAssets removeAllObjects];
+            }
+            lockMode = YES;
+            [lock setTitle:b];
+        }
+    }
+    else
+    {   
+        [alert1 show];
+    }
+}
+
+
+-(IBAction)playPhotos{
+    if([side isEqualToString:@"favorite"])
+    {
+        NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:self.crwAssets, @"assets", self.album.transitType, @"transition",nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"PeoplePlayPhoto" object:nil userInfo:dic]; 
+        
+    }
+    else
+    {
+        NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:self.crwAssets, @"assets", self.album.transitType, @"transition",nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"PlayPhoto" object:nil userInfo:dic]; 
+    }
+}
+
+-(void)configureTimeSelectionView{
+    UIButton *button1 = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *button3 = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *button4 = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *button5 = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *button6 = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *button7 = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *button8 = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    button1.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    button2.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    button3.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    button4.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    button5.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    button6.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    button7.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    button8.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    
+    [button1 setTitle:@"Recent week" forState:UIControlStateNormal];
+    [button2 setTitle:@"Recent 2 weeks" forState:UIControlStateNormal];
+    [button3 setTitle:@"Recent month" forState:UIControlStateNormal];
+    [button4 setTitle:@"Recent 3 mohths" forState:UIControlStateNormal];
+    [button5 setTitle:@"Recent 6 months" forState:UIControlStateNormal];
+    [button6 setTitle:@"Recent year" forState:UIControlStateNormal];
+    [button7 setTitle:@"More than 1 year" forState:UIControlStateNormal];
+    [button8 setTitle:@"All" forState:UIControlStateNormal];
+    
+    button1.frame = CGRectMake(25, 10, 150, 20);
+    button2.frame = CGRectMake(25, 35, 150, 20);
+    button3.frame = CGRectMake(25, 60, 150, 20);
+    button4.frame = CGRectMake(25, 85, 150, 20);
+    button5.frame = CGRectMake(25, 110, 150, 20);
+    button6.frame = CGRectMake(25, 135, 150, 20);
+    button7.frame = CGRectMake(25, 160, 150, 20);
+    button8.frame = CGRectMake(25, 185, 150, 20);
+    
+    button1.tag = 1;
+    button2.tag = 2;
+    button3.tag = 3;
+    button4.tag = 4;
+    button5.tag = 5;
+    button6.tag = 6;
+    button7.tag = 7;
+    button8.tag = 8;
+    
+    [button1 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
+    [button2 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
+    [button3 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
+    [button4 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
+    [button5 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
+    [button6 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
+    [button7 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
+    [button8 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
+    
+    CGFloat y = CGRectGetMinY(viewBar.frame)-210;
+    timeSelectionsView = [[UIView alloc]initWithFrame:[self setTheTimeSelectionsViewFrame:y]];
+    timeSelectionsView.alpha = 0;
+    timeSelectionsView.backgroundColor = [UIColor grayColor];
+    [timeSelectionsView.layer setCornerRadius:8.0];
+    [timeSelectionsView addSubview:button1];
+    [timeSelectionsView addSubview:button2];
+    [timeSelectionsView addSubview:button3];
+    [timeSelectionsView addSubview:button4];
+    [timeSelectionsView addSubview:button5];
+    [timeSelectionsView addSubview:button6];
+    [timeSelectionsView addSubview:button7];
+    [timeSelectionsView addSubview:button8];
+    [timeSelectionsView addSubview:redImagView];
+    [timeSelectionsView addSubview:greenImageView];
+    
+    [self.view addSubview:timeSelectionsView];
+    
+}
+
+-(void)selectTimeRange:(id)sender{
+    UIButton *bt = (UIButton *)sender;
+    redImagView.frame = CGRectZero;
+    NSPredicate* result =nil;
+    NSDate *date = [NSDate date];
+    NSDateComponents *components = [[NSDateComponents alloc]init];
+    NSCalendar *gregorian = [[NSCalendar alloc]initWithCalendarIdentifier:NSGregorianCalendar];
+    switch (bt.tag) {
+        case 1:
+            greenImageView.frame = CGRectMake(10, 15, 10, 10);
+            [components setDay:-7];
+            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+            break;
+        case 2:
+            greenImageView.frame = CGRectMake(10, 40, 10, 10);
+            [components setDay:-14];
+            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+            break;
+        case 3:
+            greenImageView.frame = CGRectMake(10, 65, 10, 10);
+            [components setDay:-30];
+            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+            break;
+        case 4:
+            greenImageView.frame = CGRectMake(10, 90, 10, 10);
+            [components setDay:-90];
+            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+            break;
+        case 5:
+            [components setDay:-180];
+            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+            greenImageView.frame = CGRectMake(10, 115, 10, 10);
+            break;
+        case 6:
+            greenImageView.frame = CGRectMake(10, 140, 10, 10);
+            [components setYear:-1];
+            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+            break;
+        case 7:
+            greenImageView.frame = CGRectMake(10, 165, 10, 10);
+            [components setYear:-1];
+            result=[NSPredicate predicateWithFormat:@"self.date<%@",[gregorian dateByAddingComponents:components toDate:date options:0]];
+            break;
+        default:
+            greenImageView.frame = CGRectZero;
+            redImagView.frame = CGRectMake(10, 190, 10, 10);
+            break;
+    }
+    if (result) {
+        if (photoType) {
+            photoTableData = [photoArray filteredArrayUsingPredicate:result];
+            timeSelectionPhoto = bt.tag;
+        }else if(videoType){
+            videoTableData = [videoArray filteredArrayUsingPredicate:result];
+            timeSelectionVideo = bt.tag;
+        }else{
+            allTableData = [self.crwAssets filteredArrayUsingPredicate:result];
+            timeSelectionAll = bt.tag;
+        }
+        
+    }else{
+        if (photoType) {
+            if (![photoTableData isEqualToArray:photoArray]) {
+                photoTableData = photoArray;
+                timeSelectionPhoto = 0;
+            }
+        }else if(videoType){
+            if (![videoTableData isEqualToArray:videoArray]) {
+                videoTableData = videoArray;
+                timeSelectionVideo = 0;
+            }
+            
+        }else{
+            if (![allTableData isEqualToArray:self.crwAssets]) {
+                allTableData = self.crwAssets;
+                timeSelectionAll = 0;
+            }
+        }
+    }
+    [self showTimeSelections];
+    [self.table reloadData];
+    NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
+    [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+}
+
+
+
+
+-(void)showTimeSelections{
+    if (!timeBtPressed) {
+        
+        [UIView animateWithDuration:0.4 animations:^{
+          timeSelectionsView.alpha = 1.0;
+        }];
+//        if (photoType) {
+//            [self setTimeSelectionWithIndex:timeSelectionPhoto];
+//
+//        }else if(videoType){
+//            [self setTimeSelectionWithIndex:timeSelectionVideo];
+//      
+//        }else{
+//            [self setTimeSelectionWithIndex:timeSelectionAll];
+//                  
+//        }
+
+        [timeSelectionsView.layer setOpaque:NO];
+        timeSelectionsView.opaque = NO;
+        
+    }else{
+        if (timeSelectionsView && timeSelectionsView.superview != nil) {
+            [UIView animateWithDuration:0.4 animations:^{
+                timeSelectionsView.alpha = 0;//frame = [self setTheTimeSelectionsViewFrame:CGRectGetMaxY(self.view.frame)];
+                //[timeSelectionsView removeFromSuperview];
+            }];
+        }
+    }
+   
+    timeBtPressed = !timeBtPressed;
 }
 -(CGRect)setTheTimeSelectionsViewFrame:(CGFloat)y{
     CGFloat height = 210;
@@ -857,57 +868,51 @@
     if (seg.selectedSegmentIndex == 0) {
         photoType = NO;
         videoType = NO;
+        [self setTimeSelectionWithIndex:timeSelectionAll];
     }else if(seg.selectedSegmentIndex == 1){
         photoType = YES;
         videoType = NO;
+        [self setTimeSelectionWithIndex:timeSelectionPhoto];
     }else{
         photoType = NO;
         videoType = YES;
-    }
-    if (timeBtPressed) {
-        [self showTimeSelections];
+        [self setTimeSelectionWithIndex:timeSelectionVideo];
     }
     [self.table reloadData];
     NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
     [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
 }
 
--(NSString *)configurateLastRowPhotoCount:(NSInteger)pCount VideoCount:(NSInteger)vCount{
-    NSString *result = @"";
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
-    [formatter setNumberStyle:NSNumberFormatterDecimalStyle]; // this line is important!
-    if (pCount == 0 && vCount == 0) {
-        return result;
-    }else if(pCount != 0 && vCount == 0){
-        NSString *photoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:pCount]];
-        if (pCount == 1) {
-            result = [NSString stringWithFormat:@"%@ Photo",photoNumber];
-        }else{
-            result = [NSString stringWithFormat:@"%@ Photos",photoNumber];
-        }
-    }else if(pCount == 0 && vCount != 0){
-        NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:vCount]];
-        if (vCount == 1) {
-            result = [NSString stringWithFormat:@"%@ Video",videoNumber];
-        }else{
-            result = [NSString stringWithFormat:@"%@ Videos",videoNumber];
-        }
-    }else if(pCount != 0 && vCount != 0){
-        NSString *photoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:pCount]];
-        NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:vCount]];
-        if (pCount == 1 && vCount == 1) {
-            result = [NSString stringWithFormat:@"%@ Photo, %@ Video",photoNumber,videoNumber];
-        }else if(pCount == 1 && vCount != 1){
-            result = [NSString stringWithFormat:@"%@ Photo, %@ Videos",photoNumber,videoNumber];
-        }else if(pCount != 1 && vCount == 1){
-            result = [NSString stringWithFormat:@"%@ Photos, %@ Video",photoNumber,videoNumber];
-        }
-        else{
-            result = [NSString stringWithFormat:@"%@ Photos, %@ Videos",photoNumber,videoNumber];
-        }
-
+-(void)setTimeSelectionWithIndex:(NSInteger)index{
+    redImagView.frame = CGRectZero;
+    switch (index) {
+        case 1:
+            greenImageView.frame = CGRectMake(10, 15, 10, 10);
+            break;
+        case 2:
+            greenImageView.frame = CGRectMake(10, 40, 10, 10);
+            break;
+        case 3:
+            greenImageView.frame = CGRectMake(10, 65, 10, 10);
+            break;
+        case 4:
+            greenImageView.frame = CGRectMake(10, 90, 10, 10);
+            break;
+        case 5:
+            greenImageView.frame = CGRectMake(10, 115, 10, 10);
+            break;
+        case 6:
+            greenImageView.frame = CGRectMake(10, 140, 10, 10);
+            break;
+        case 7:
+            greenImageView.frame = CGRectMake(10, 165, 10, 10);
+            break;
+        default:
+            greenImageView.frame = CGRectZero;
+            redImagView.frame = CGRectMake(10, 190, 10, 10);
+            break;
+            
     }
-    return result;
 }
 #pragma mark -
 #pragma mark UITableViewDataSource and Delegate Methods
@@ -1067,22 +1072,68 @@
     return cell;
 }
 
+-(NSString *)configurateLastRowPhotoCount:(NSInteger)pCount VideoCount:(NSInteger)vCount{
+    NSString *result = @"";
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
+    [formatter setNumberStyle:NSNumberFormatterDecimalStyle]; // this line is important!
+    if (pCount == 0 && vCount == 0) {
+        return result;
+    }else if(pCount != 0 && vCount == 0){
+        NSString *photoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:pCount]];
+        if (pCount == 1) {
+            result = [NSString stringWithFormat:@"%@ Photo",photoNumber];
+        }else{
+            result = [NSString stringWithFormat:@"%@ Photos",photoNumber];
+        }
+    }else if(pCount == 0 && vCount != 0){
+        NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:vCount]];
+        if (vCount == 1) {
+            result = [NSString stringWithFormat:@"%@ Video",videoNumber];
+        }else{
+            result = [NSString stringWithFormat:@"%@ Videos",videoNumber];
+        }
+    }else if(pCount != 0 && vCount != 0){
+        NSString *photoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:pCount]];
+        NSString *videoNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:vCount]];
+        if (pCount == 1 && vCount == 1) {
+            result = [NSString stringWithFormat:@"%@ Photo, %@ Video",photoNumber,videoNumber];
+        }else if(pCount == 1 && vCount != 1){
+            result = [NSString stringWithFormat:@"%@ Photo, %@ Videos",photoNumber,videoNumber];
+        }else if(pCount != 1 && vCount == 1){
+            result = [NSString stringWithFormat:@"%@ Photos, %@ Video",photoNumber,videoNumber];
+        }
+        else{
+            result = [NSString stringWithFormat:@"%@ Photos, %@ Videos",photoNumber,videoNumber];
+        }
+        
+    }
+    return result;
+}
+
 -(void)selectedThumbnailCell:(ThumbnailCell *)cell selectedAtIndex:(NSUInteger)index{
     NSString *row=[NSString stringWithFormat:@"%d",index];
-    Asset *asset = [self.crwAssets objectAtIndex:index];
+    Asset *asset = nil;
+    if (photoType) {
+        asset = [photoTableData objectAtIndex:index];
+    }else if(videoType){
+        asset = [videoTableData objectAtIndex:index];
+    }else{
+        asset = [allTableData objectAtIndex:index];
+    }
+     
     if(action==YES)
     {
         self.navigationItem.title=ta;
         selectedRow = cell.rowNumber;
         NSMutableDictionary *dic = nil;
         if (photoType) {
-            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:photoArray,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
+            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:photoTableData,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                    [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];
         }else if(videoType){
-            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:videoArray,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
+            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:videoTableData,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                    [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];
         }else{
-            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.crwAssets,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
+            dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:allTableData,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                                     [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];
         }
         if([side isEqualToString:@"favorite"])
@@ -1240,74 +1291,76 @@
         [cell clearSelection];
     }
 }
--(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation{
-    oritation = toInterfaceOrientation;
-	return (UIInterfaceOrientationIsLandscape(toInterfaceOrientation) || toInterfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
-    oritation = toInterfaceOrientation;
-    if ((UIInterfaceOrientationIsLandscape(oritation) && UIInterfaceOrientationIsLandscape(previousOrigaton))||(UIInterfaceOrientationIsPortrait(oritation)&&UIInterfaceOrientationIsPortrait(previousOrigaton))) {
-        return;
+#pragma  mark -
+#pragma  mark AlerView delegate method
+-(void)alertView:(UIAlertView *)alert11 didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    NSString *pass=[NSString stringWithFormat:@"%@",dataSource.password];
+    NSString *a=NSLocalizedString(@"Lock", @"title");
+    NSString *b=NSLocalizedString(@"note", @"title");
+    NSString *c=NSLocalizedString(@"ok", @"title");
+    NSString *d=NSLocalizedString(@"The password is wrong", @"title");
+    NSString *e=NSLocalizedString(@"UnLock", @"title");
+    if(alert11.tag==2)
+    {
+        switch (buttonIndex) {
+            case 0:
+                if(passWord2.text==nil||passWord2.text.length==0)
+                {
+                }
+                else
+                {
+                    NSUserDefaults *defaults1=[NSUserDefaults standardUserDefaults]; 
+                    [defaults1 setObject:passWord2.text forKey:@"name_preference"]; 
+                    self.lock.title=e;
+                    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults]; 
+                    dataSource.password=[defaults objectForKey:@"name_preference"];
+                    lockMode = YES;
+                }
+                break;
+            case 1:
+                break;
+            default:
+                break;
+        }
     }
-    [self setTableViewEdge:toInterfaceOrientation];
-    if (previousOrigaton != toInterfaceOrientation) {
-        ThumbnailCell *cell = (ThumbnailCell *)[[self.table visibleCells]objectAtIndex:0];
-        NSInteger index = 0;
-        NSInteger row = 0;
-        [self.table reloadData];
-       // NSLog(@"the row is %d",cell.rowNumber);
-        //NSLog(@"the contentOffset is %@",NSStringFromCGPoint(self.table.contentOffset));;
-      if (UIInterfaceOrientationIsLandscape(previousOrigaton)) {
-         index = cell.rowNumber * 6;
-         row = index / 4;
-      }else{
-         index = cell.rowNumber * 4;
-         row = index / 6;
-      }
-       // NSLog(@" after row is %d",row);
-//       NSInteger abs = row - cell.rowNumber;
-//        NSLog(@"the different is %d",row);
-//        CGPoint contetOffset = self.table.contentOffset;
-//        CGPoint newPoint = CGPointMake(0, contetOffset.y + cell.frame.size.height *abs); 
-//        [self.table setContentOffset:newPoint];
+    else if(alert11.tag==1)
+    {
+        switch (buttonIndex) {
+            case 0:
+                if([passWord.text isEqualToString:pass])
+                { 
+                    
+                    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults]; 
+                    [defaults setObject:pass forKey:@"name_preference"];
+                    self.lock.title=a;   
+                    lockMode = NO;
+                    [[NSNotificationCenter defaultCenter]postNotificationName:@"changeLockModeInDetailView" object:nil];
+                    NSLog(@"pass the lock");
+                }
+                else
+                {
+                    UIAlertView *alert = [[UIAlertView alloc]
+                                          initWithTitle:b
+                                          message:d
+                                          delegate:self
+                                          cancelButtonTitle:nil
+                                          otherButtonTitles:c,nil];
+                    [alert show];
+                    
+                    
+                    break;
+                }
+            case 1:
+                break;
+            default:
+                break;
+        }
         
-
-        /*if (UIInterfaceOrientationIsLandscape(previousOrigaton)) {
-            index = cell1.rowNumber * 6 + ((cell2.rowNumber * 6 + 5)- cell1.rowNumber * 6)/2;
-            row  = index /4;
-            
-        }else{
-            index = cell1.rowNumber * 4 + ((cell2.rowNumber * 4 + 3)- cell1.rowNumber * 4)/2;
-            row  = index /6;
-        }
-        NSLog(@"the index is %d and row is %d",index,row);
-        if (row>=lastRow) {
-            row = lastRow - 1;
-        }
-        if (row<0) {
-            row = 0;
-        }*/
-       // [self.table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        
+        
     }
-       previousOrigaton = toInterfaceOrientation;
-    if (timeSelectionsView.frame.origin.y != 480) {
-        timeSelectionsView.frame =[self setTheTimeSelectionsViewFrame:CGRectGetMinY(self.viewBar.frame)-210];
-    }    
-    
+    passWord.text=nil;
 }
-
--(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
-}
--(void)setTableViewEdge:(UIInterfaceOrientation)orientation{
-    UIEdgeInsets insets = self.table.contentInset;
-    if (UIInterfaceOrientationIsLandscape(oritation)) {
-        [self.table setContentInset:UIEdgeInsetsMake(53, insets.left, insets.bottom, insets.right)];
-    }else{
-        [self.table setContentInset:UIEdgeInsetsMake(65, insets.left, insets.bottom, insets.right)];
-    }
-}
-
 #pragma  mark -
 #pragma  mark Memory management
 -(void)viewDidUnload{

@@ -159,7 +159,7 @@
         @autoreleasepool {
        // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
         NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
-      //NSLog(@"strdate:%@",strDate);
+      //NSLog(@"metadata:%@",[[alAsset defaultRepresentation]metadata]);
         //NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
        // NSLog(@"strdate:%@",strDate);
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
@@ -823,11 +823,11 @@
             NSDate *lastSixMonth = [gregorian dateByAddingComponents:components toDate:date options:0];
             result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",lastSixMonth,date];
         }else if([rule.datePeriod isEqualToString:@"Recent year"]){
-            [components setYear:1];
+            [components setYear:-1];
             NSDate *recentYear = [gregorian dateByAddingComponents:components toDate:date options:0];
             result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",recentYear,date];
         }else{
-            [components setYear:1];
+            [components setYear:-1];
             NSDate *lastMonth = [gregorian dateByAddingComponents:components toDate:date options:0];
             result=[NSPredicate predicateWithFormat:@"some self.date<%@",lastMonth];
         }

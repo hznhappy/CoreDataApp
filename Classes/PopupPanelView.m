@@ -25,7 +25,6 @@
 		isOpen = NO;
 		rectForOpen = self.frame;
 		rectForClose = CGRectMake(0 ,440, rectForOpen.size.width, 0);
-		
 		[self setBackgroundColor:[UIColor whiteColor]];
         self.alpha=0.4;
 		[self.layer setCornerRadius:10.0];
@@ -58,6 +57,9 @@
         [button removeFromSuperview];
     }
     [self selectTagPeople];
+    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation )) {
+        [myscroll setContentSize:CGSizeMake(320, 45*[self.list count])];
+    }
     [myscroll setContentSize:CGSizeMake(320, 45*[self.list count])];
     NSString *buttonName = nil;
 	UIButton *button = nil;
@@ -82,6 +84,7 @@
             buttonName = [NSString stringWithFormat:@"%@ %@",lastName,firstName];
         }
 		button.frame = CGRectMake(btx, bty, btwidth, byheight);
+        button.contentHorizontalAlignment  = UIControlContentHorizontalAlignmentRight;
 		[button setTitle:buttonName forState:UIControlStateNormal];
 		button.tag = i;
 		[button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchDown];

@@ -33,6 +33,8 @@
 		1885976314D7D31F005EB0EB /* unlike.png in Resources */ = {isa = PBXBuildFile; fileRef = 1885976114D7D31F005EB0EB /* unlike.png */; };
 		1885976414D7D31F005EB0EB /* like.png in Resources */ = {isa = PBXBuildFile; fileRef = 1885976214D7D31F005EB0EB /* like.png */; };
 		1885E70B14C8F9D700B2B5B5 /* TagSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1885E70A14C8F9D700B2B5B5 /* TagSelector.m */; };
+		18873BC214FCBA42007A2F12 /* unlock.png in Resources */ = {isa = PBXBuildFile; fileRef = 18873BC114FCBA42007A2F12 /* unlock.png */; };
+		18A9038114EB9AD5001CA960 /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9038014EB9AD5001CA960 /* Event.m */; };
 		18A9038714EB9AD5001CA960 /* EventRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9038614EB9AD5001CA960 /* EventRule.m */; };
 		18A9038A14EB9AD5001CA960 /* PeopleRuleDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9038914EB9AD5001CA960 /* PeopleRuleDetail.m */; };
 		18A9038D14EB9AD5001CA960 /* PeopleTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A9038C14EB9AD5001CA960 /* PeopleTag.m */; };
@@ -132,6 +134,9 @@
 		1885976214D7D31F005EB0EB /* like.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = like.png; sourceTree = "<group>"; };
 		1885E70914C8F9D700B2B5B5 /* TagSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = TagSelector.h; path = Classes/TagSelector.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1885E70A14C8F9D700B2B5B5 /* TagSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = TagSelector.m; path = Classes/TagSelector.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		18873BC114FCBA42007A2F12 /* unlock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unlock.png; sourceTree = "<group>"; };
+		18A9037F14EB9AD5001CA960 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		18A9038014EB9AD5001CA960 /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
 		18A9038514EB9AD5001CA960 /* EventRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventRule.h; sourceTree = "<group>"; };
 		18A9038614EB9AD5001CA960 /* EventRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventRule.m; sourceTree = "<group>"; };
 		18A9038814EB9AD5001CA960 /* PeopleRuleDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeopleRuleDetail.h; sourceTree = "<group>"; };
@@ -258,6 +263,7 @@
 		183DE33114C7F76000BDC724 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				18DAD78314E21BD100BBE9B1 /* PhotoApp.xcdatamodel */,
 				18D3199214FB7BBD001D3ACC /* Asset.h */,
 				18D3199314FB7BBD001D3ACC /* Asset.m */,
 				18D3199514FB7F4A001D3ACC /* Album.h */,
@@ -296,6 +302,7 @@
 		183DE35714C7FA2600BDC724 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				18873BC114FCBA42007A2F12 /* unlock.png */,
 				18D163FC14F78AD400682EF0 /* xin.png */,
 				18D163FA14F783E800682EF0 /* lock 2.png */,
 				18C0ACD514F7959B00ACF5CE /* dot-green.png */,
@@ -372,6 +379,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				183DE2F914C7F5B800BDC724 /* PhotoAppDelegate.h */,
 				183DE2FA14C7F5B800BDC724 /* PhotoAppDelegate.m */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -552,6 +560,7 @@
 				18D163FD14F78AD400682EF0 /* xin.png in Resources */,
 				18C0ACD714F7959B00ACF5CE /* dot-green.png in Resources */,
 				18C0ACD814F7959B00ACF5CE /* dot-red.png in Resources */,
+				18873BC214FCBA42007A2F12 /* unlock.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
