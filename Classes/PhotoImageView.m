@@ -335,7 +335,6 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 #pragma mark UIScrollView Delegate Methods
 
 - (void)killZoomAnimationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context{
-	NSLog(@"my scal is %.1f",self.scrollView.zoomScale);
 	if([finished boolValue]){
 		
 		[self.scrollView setZoomScale:1.0f animated:NO];

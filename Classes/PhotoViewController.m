@@ -16,7 +16,9 @@
 #import "TagSelector.h"
 #import "PhotoAppDelegate.h"
 #import "AssetTablePicker.h"
-
+#import "EventTableView.h"
+#import "favorite.h"
+#import "Event.h"
 @interface PhotoViewController (Private)
 
 - (void)setBarsHidden:(BOOL)hidden animated:(BOOL)animated;
@@ -41,7 +43,7 @@
 @synthesize assetTablePicker;
 @synthesize playPhotoTransition;
 #pragma mark -
-#pragma mark init method
+#pragma mark Init method
 
 - (id)init{
 	if ((self = [super init])) {
@@ -207,14 +209,16 @@
     
     [self setNavigationBarItem];
     
-    if (lockMode) {
+    //if (lockMode) {
         PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
         [self performSelector:@selector(showLikeButton:) withObject:page afterDelay:1.0];
-    }
+   // }
     [self updatePages];
     [self hideControlsAfterDelay];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(resetCropView) name:@"resetCropView" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateToolBar) name:@"changeLockModeInDetailView" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setupToolbar) name:@"setTagToolBar" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventForAsset:) name:@"addEvent" object:nil];
     
 }
 #pragma mark -
@@ -403,10 +407,10 @@
         assetInfoView = nil;
     }
     [self performSelector:@selector(addPhotoInfoView:) withObject:page];
-    if (lockMode) {
+   // if (lockMode) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showLikeButton:) object:page];
         [self performSelector:@selector(showLikeButton:) withObject:page];
-    }
+    //}
     
 }
 
@@ -467,12 +471,21 @@
     likeButton.frame = CGRectMake(mainScreen.size.width*4/5, mainScreen.size.height*3/4, 50, 50);
     
     Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
-    if ([self.assetTablePicker.likeAssets containsObject:asset]) {
-        [likeButton setImage:[UIImage imageNamed:@"like.png"] forState:UIControlStateNormal];
+    if (lockMode) {
+        if ([self.assetTablePicker.likeAssets containsObject:asset]) {
+            [likeButton setImage:[UIImage imageNamed:@"like.png"] forState:UIControlStateNormal];
+        }else{
+            [likeButton setImage:[UIImage imageNamed:@"unlike.png"] forState:UIControlStateNormal];
+        }
+
     }else{
-        [likeButton setImage:[UIImage imageNamed:@"unlike.png"] forState:UIControlStateNormal];
+        if (asset.isFavorite.boolValue) {
+            [likeButton setImage:[UIImage imageNamed:@"like.png"] forState:UIControlStateNormal];
+        }else{
+            [likeButton setImage:[UIImage imageNamed:@"unlike.png"] forState:UIControlStateNormal];
+        }
     }
-    
+        
     [likeButton addTarget:self action:@selector(likeButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [page addSubview:likeButton];
 }
@@ -481,14 +494,25 @@
 {
     UIButton *like = (UIButton *)sender;
      Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
-    if ([like.imageView.image isEqual:[UIImage imageNamed:@"unlike.png"]]) {
-        [likeButton setImage:[UIImage imageNamed:@"like.png"] forState:UIControlStateNormal];
-        [self.assetTablePicker.likeAssets addObject:asset];
-        asset.numOfLike = [NSNumber numberWithInt:[asset.numOfLike intValue]+1];
+    if (lockMode) {
+        if ([like.imageView.image isEqual:[UIImage imageNamed:@"unlike.png"]]) {
+            [likeButton setImage:[UIImage imageNamed:@"like.png"] forState:UIControlStateNormal];
+            [self.assetTablePicker.likeAssets addObject:asset];
+            asset.numOfLike = [NSNumber numberWithInt:[asset.numOfLike intValue]+1];
+        }else{
+            [like setImage:[UIImage imageNamed:@"unlike.png"] forState:UIControlStateNormal];
+            [self.assetTablePicker.likeAssets removeObject:asset];
+            asset.numOfLike = [NSNumber numberWithInt:[asset.numOfLike intValue]-1];
+        }
     }else{
-        [like setImage:[UIImage imageNamed:@"unlike.png"] forState:UIControlStateNormal];
-        [self.assetTablePicker.likeAssets removeObject:asset];
-        asset.numOfLike = [NSNumber numberWithInt:[asset.numOfLike intValue]-1];
+        if ([like.imageView.image isEqual:[UIImage imageNamed:@"unlike.png"]]) {
+            [likeButton setImage:[UIImage imageNamed:@"like.png"] forState:UIControlStateNormal];
+            asset.isFavorite = [NSNumber numberWithBool:YES];
+        }else{
+            [like setImage:[UIImage imageNamed:@"unlike.png"] forState:UIControlStateNormal];
+            asset.isFavorite = [NSNumber numberWithBool:NO];
+        }
+
     }
     PhotoAppDelegate *delegate = [UIApplication sharedApplication].delegate;
     [delegate.dataSource.coreData saveContext];
@@ -518,9 +542,13 @@
 
 -(void)playVideo:(id)sender
 {
+    PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showLikeButton:) object:page];
     UIButton *button = (UIButton *)sender;
     [self cancelControlHiding];
     [self setBarsHidden:YES animated:YES];
+    [self setLikeButtonHidden:YES];
+    [self setPhotoInfoHidden:YES];
     button.hidden = YES;
     playButton = button;
     [self playVideo];
@@ -646,7 +674,7 @@
 }
 
 #pragma mark -
-#pragma mark setUp ToolBar Methods
+#pragma mark Setup ToolBar Methods
 -(void)setNavigationBarItem{
     NSString *tagStr=NSLocalizedString(@"Tag", @"title");
     // NSString *u=NSLocalizedString(@"Edit", @"title");
@@ -661,7 +689,8 @@
         self.navigationItem.rightBarButtonItem = nil;
 
 }
-- (void)setupToolbar {
+- (void)setupToolbar{
+    NSLog(@"come here");
     [self setToolbarItems:nil];
 	UIBarButtonItem *action = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(actionButtonHit:)];
 	UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -690,15 +719,22 @@
     [self setToolbarItems:nil];
     self.navigationItem.rightBarButtonItem = nil;
     self.navigationItem.rightBarButtonItem = cancel;
-     NSString *a=NSLocalizedString(@"Contacts", @"title");
-     NSString *b=NSLocalizedString(@"Favourites", @"title");
-    // NSString *c=NSLocalizedString(@"Events", @"title");
-    UIBarButtonItem *contacts = [[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleBordered target:self action:@selector(callContactsView)];
-    UIBarButtonItem *favorites = [[UIBarButtonItem alloc]initWithTitle:b style:UIBarButtonItemStyleBordered target:self action:@selector(callFavouriteView)];
-   // UIBarButtonItem *events = [[UIBarButtonItem alloc]initWithTitle:c style:UIBarButtonItemStyleBordered target:self action:@selector(callEventsView)];
-    UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
-    [self setToolbarItems:[NSArray arrayWithObjects:contacts,flex,favorites, nil]];
+    NSString *c=NSLocalizedString(@"Events", @"title");
+    NSString *d = NSLocalizedString(@"Person", @"title");
+    Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
+    UIBarButtonItem *protect = nil;
+    if (asset.isprotected.boolValue) {
+        protect = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"lock 2.png"] style:UIBarButtonItemStylePlain target:self action:@selector(setProtectedProperty:)];
+    }else{
+        protect = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"unlock.png"] style:UIBarButtonItemStylePlain target:self action:@selector(setProtectedProperty:)];
+    }
+    protect.width = 40;
+    UIBarButtonItem *nobody = [[UIBarButtonItem alloc]initWithTitle:@"NoBody" style:UIBarButtonItemStyleBordered target:self action:@selector(tagNobody)];
+    UIBarButtonItem *person = [[UIBarButtonItem alloc]initWithTitle:d style:UIBarButtonItemStyleBordered target:self action:@selector(personpressed)];
+    UIBarButtonItem *events = [[UIBarButtonItem alloc]initWithTitle:c style:UIBarButtonItemStyleBordered target:self action:@selector(callEventsView)];
+    UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    [self setToolbarItems:[NSArray arrayWithObjects:protect,flex,nobody,flex,events,flex,person, nil]];
 }
 
 -(void)lockButtonPressed:(id)sender{
@@ -774,6 +810,77 @@
     }
     [self hideControlsAfterDelay];
 }
+-(void)setProtectedProperty:(id)sender{
+    [self releasePersonPt];
+    Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
+    UIBarButtonItem *item = (UIBarButtonItem *)sender;
+    if ([item.image isEqual:[UIImage imageNamed:@"unlock.png"]]) {
+        item.image = [UIImage imageNamed:@"lock 2.png"];
+        asset.isprotected = [NSNumber numberWithBool:YES];
+    }else{
+        item.image = [UIImage imageNamed:@"unlock.png"];
+        asset.isprotected = [NSNumber numberWithBool:NO];
+        NSLog(@"jiesuo");
+    }
+    PhotoAppDelegate *delegate = [UIApplication sharedApplication].delegate;
+    [delegate.dataSource.coreData saveContext];
+}
+-(void)personpressed
+{
+    if (!personPt) {
+        CGFloat height = 80;
+        CGFloat width =120;
+        CGFloat x = CGRectGetMaxX(self.navigationController.toolbar.frame)-width-5;
+        CGFloat y = CGRectGetMinY(self.navigationController.toolbar.frame)-height;
+        if(personView){
+            personView = nil;
+        }
+        personView = [[UIView alloc]initWithFrame:CGRectMake(x, y, width, height)];
+        personView.backgroundColor = [UIColor blackColor];
+        personView.alpha=0.7;
+        UIButton *button1 = [UIButton buttonWithType:UIButtonTypeCustom]; 
+        button1.frame = CGRectMake(10, 5, 100, 30);
+        [button1 setBackgroundColor:[UIColor clearColor]]; 
+        [button1 setTitle:@"Favorite" forState:UIControlStateNormal];
+        [button1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom]; 
+        button2.frame = CGRectMake(10, 40, 100, 30);
+        [button2 setBackgroundColor:[UIColor clearColor]]; 
+        [button2 setTitle:@"Phonebook" forState:UIControlStateNormal];
+        //-(void)selectFromFavoriteNames;
+        //-(void)selectFromAllNames;
+        [button1 addTarget:self action:@selector(callFavouriteView) forControlEvents:UIControlEventTouchDown];
+        [button2 addTarget:self action:@selector(callContactsView) forControlEvents:UIControlEventTouchDown];
+        
+        //[personView.layer setCornerRadius:10.0];
+        // [personView setClipsToBounds:YES]; 
+        [personView addSubview:button1];
+        [personView addSubview:button2];
+        [self.view addSubview:personView];
+        
+        
+        
+    }else{
+        if (personView && personView.superview != nil) {
+            [personView removeFromSuperview];
+        }
+    }
+    
+    personPt = !personPt;
+}
+
+-(void)releasePersonPt
+{
+    if(personPt)
+    {
+        if (personView && personView.superview != nil) {
+            [personView removeFromSuperview];
+        }
+        personPt=!personPt;
+        
+    }
+    
+}
 -(void)callContactsView{
     tagSelector.add=@"YES";
     [tagSelector selectTagNameFromContacts];
@@ -783,7 +890,37 @@
     tagSelector.add=@"YES";
     [tagSelector selectTagNameFromFavorites];
 }
-                                  
+
+-(void)callEventsView{
+    [self releasePersonPt];
+    EventTableView *evn=[[EventTableView alloc]init];
+    evn.detailPage = YES;
+    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:evn];
+    [self.navigationController presentModalViewController:navController animated:YES];
+
+}
+
+-(void)addEventForAsset:(NSNotification*)note{
+    PhotoAppDelegate *app = [UIApplication sharedApplication].delegate;
+    Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
+    Event *event = [[note userInfo] valueForKey:@"event"];
+    asset.conEvent = event;
+    [app.dataSource.coreData saveContext];
+    [self setTagToolBar];
+}
+
+-(void)tagNobody{
+    [self releasePersonPt];
+     PhotoAppDelegate *app = [UIApplication sharedApplication].delegate;
+    [tagSelector.peopleList removeAllObjects];
+    favorite *fi=[app.dataSource.favoriteList objectAtIndex:0];
+    People *p1=fi.people;
+    [tagSelector.peopleList addObject:p1];
+    Asset *asset = [self.playlist.storeAssets objectAtIndex: currentPageIndex];
+    if (![tagSelector selectAssert:asset]) {
+        [tagSelector save:asset];
+    }
+}
 - (void)markPhoto{
     editing = YES;
     [self setTagToolBar];
@@ -873,7 +1010,6 @@
             likeButton.hidden = NO;
         }];
     }
-
 }
 
 - (void)toggleBarsNotification:(NSNotification*)notification{
@@ -911,11 +1047,11 @@
     if (index != currentPageIndex) {
         [self updateSubviewsWhenScroll];
         currentPageIndex = index;
-        if (lockMode) {
+        //if (lockMode) {
             PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
             [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showLikeButton:) object:page];
             [self performSelector:@selector(showLikeButton:) withObject:page afterDelay:1.0];
-        }
+        //}
 
     }
 
@@ -1083,7 +1219,7 @@
 }
 
 #pragma mark -
-#pragma mark timer method
+#pragma mark Timer method
 -(void)cancelPlayPhotoTimer{
     if (timer) {
 		[timer invalidate];

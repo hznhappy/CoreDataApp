@@ -40,6 +40,9 @@
     NSArray *allTableData;
     NSArray *photoTableData;
     NSArray *videoTableData;
+    NSInteger timeSelectionAll;
+    NSInteger timeSelectionPhoto;
+    NSInteger timeSelectionVideo;
   
     BOOL mode;
     BOOL load;
@@ -100,7 +103,6 @@
 @property (nonatomic,assign)BOOL action;
 @property (nonatomic,assign)BOOL lockMode;
 @property (nonatomic,assign)BOOL firstLoad;
--(IBAction)actionButtonPressed;
 -(IBAction)playPhotos;
 -(IBAction)lockButtonPressed;
 -(IBAction)saveTags;
@@ -118,5 +120,7 @@
 -(void)releasePersonPt;
 -(CGRect)setTheTimeSelectionsViewFrame:(CGFloat)y;
 -(void)configureTimeSelectionView;
+-(void)showTimeSelections;
 -(NSString *)configurateLastRowPhotoCount:(NSInteger)pCount VideoCount:(NSInteger)vCount;
+-(void)setTimeSelectionWithIndex:(NSInteger)index;
 @end
