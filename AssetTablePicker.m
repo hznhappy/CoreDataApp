@@ -929,7 +929,8 @@
 #pragma mark UITableViewDataSource and Delegate Methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
+    if(section==0)
+    {
     if (UIInterfaceOrientationIsLandscape(oritation)) {
         if (photoType) {
             lastRow = ceil([photoTableData count]/6.0)+1;
@@ -946,6 +947,9 @@
             lastRow = ceil([allTableData count]/4.0)+1; 
     
     return lastRow;
+    }
+    else
+        return 0;
 }
 
 // Customize the appearance of table view cells.

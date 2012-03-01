@@ -19,6 +19,9 @@
 		181A36C014FF14A8002A9684 /* DatefilterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 181A36BE14FF14A8002A9684 /* DatefilterView.xib */; };
 		181A36C414FF1828002A9684 /* EffectsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 181A36C214FF1827002A9684 /* EffectsView.m */; };
 		181A36C514FF1828002A9684 /* EffectsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 181A36C314FF1828002A9684 /* EffectsView.xib */; };
+		181A36D514FF8345002A9684 /* SettingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 181A36D314FF8345002A9684 /* SettingController.m */; };
+		181A36D614FF8345002A9684 /* SettingController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 181A36D414FF8345002A9684 /* SettingController.xib */; };
+		181A36D914FF8AB9002A9684 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 181A36D814FF8AB9002A9684 /* settings.png */; };
 		183DE2F714C7F58A00BDC724 /* PersonRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE2F414C7F58A00BDC724 /* PersonRootViewController.m */; };
 		183DE2F814C7F58A00BDC724 /* PlaylistRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE2F614C7F58A00BDC724 /* PlaylistRootViewController.m */; };
 		183DE2FB14C7F5B800BDC724 /* PhotoAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 183DE2FA14C7F5B800BDC724 /* PhotoAppDelegate.m */; };
@@ -120,6 +123,10 @@
 		181A36C114FF1827002A9684 /* EffectsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffectsView.h; sourceTree = "<group>"; };
 		181A36C214FF1827002A9684 /* EffectsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EffectsView.m; sourceTree = "<group>"; };
 		181A36C314FF1828002A9684 /* EffectsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EffectsView.xib; sourceTree = "<group>"; };
+		181A36D214FF8345002A9684 /* SettingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingController.h; sourceTree = "<group>"; };
+		181A36D314FF8345002A9684 /* SettingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingController.m; sourceTree = "<group>"; };
+		181A36D414FF8345002A9684 /* SettingController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingController.xib; sourceTree = "<group>"; };
+		181A36D814FF8AB9002A9684 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
 		183DE2F314C7F58A00BDC724 /* PersonRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PersonRootViewController.h; path = ../PersonRootViewController.h; sourceTree = "<group>"; };
 		183DE2F414C7F58A00BDC724 /* PersonRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PersonRootViewController.m; path = ../PersonRootViewController.m; sourceTree = "<group>"; };
 		183DE2F514C7F58A00BDC724 /* PlaylistRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlaylistRootViewController.h; path = ../PlaylistRootViewController.h; sourceTree = "<group>"; };
@@ -330,6 +337,7 @@
 		183DE35714C7FA2600BDC724 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				181A36D814FF8AB9002A9684 /* settings.png */,
 				18873BC114FCBA42007A2F12 /* unlock.png */,
 				18D163FC14F78AD400682EF0 /* xin.png */,
 				18D163FA14F783E800682EF0 /* lock 2.png */,
@@ -417,6 +425,9 @@
 				181A36C114FF1827002A9684 /* EffectsView.h */,
 				181A36C214FF1827002A9684 /* EffectsView.m */,
 				181A36C314FF1828002A9684 /* EffectsView.xib */,
+				181A36D214FF8345002A9684 /* SettingController.h */,
+				181A36D314FF8345002A9684 /* SettingController.m */,
+				181A36D414FF8345002A9684 /* SettingController.xib */,
 			);
 			name = playdetail;
 			sourceTree = "<group>";
@@ -620,6 +631,8 @@
 				181A36BB14FF13D5002A9684 /* eventView.xib in Resources */,
 				181A36C014FF14A8002A9684 /* DatefilterView.xib in Resources */,
 				181A36C514FF1828002A9684 /* EffectsView.xib in Resources */,
+				181A36D614FF8345002A9684 /* SettingController.xib in Resources */,
+				181A36D914FF8AB9002A9684 /* settings.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -670,6 +683,7 @@
 				181A36BA14FF13D5002A9684 /* eventView.m in Sources */,
 				181A36BF14FF14A8002A9684 /* DatefilterView.m in Sources */,
 				181A36C414FF1828002A9684 /* EffectsView.m in Sources */,
+				181A36D514FF8345002A9684 /* SettingController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
