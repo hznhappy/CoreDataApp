@@ -203,7 +203,9 @@
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCopyMenu) object:nil];
     if (!copyMenuShow) {
         [self cancelCopyMenu];
-        [delegate thumbnailImageViewSelected:self];
+        if ([delegate respondsToSelector:@selector(thumbnailImageViewSelected:)]) {
+            [delegate thumbnailImageViewSelected:self];
+        }
     }else{
         copyMenuShow = NO;
     }

@@ -19,10 +19,8 @@
 @synthesize crwAssets;
 @synthesize table;
 @synthesize viewBar,tagBar;
-@synthesize UrlList;
 @synthesize lock;
 @synthesize operations;
-@synthesize tagRow;
 @synthesize album;
 @synthesize likeAssets;
 @synthesize assertList;
@@ -51,13 +49,13 @@
         [segControl addTarget:self action:@selector(showTypeSelections:) forControlEvents:UIControlEventValueChanged];
         segControl.selectedSegmentIndex = 0;
         segControl.segmentedControlStyle = UISegmentedControlStyleBar;
-        UIBarButtonItem *fix = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
-        fix.width = 40;
+      //  UIBarButtonItem *fix = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+       // fix.width = 40;
         UIBarButtonItem *flex = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
         UIBarButtonItem *time = [[UIBarButtonItem alloc]initWithTitle:timeTitle style:UIBarButtonItemStyleBordered target:self action:@selector(showTimeSelections)];
         UIBarButtonItem *type = [[UIBarButtonItem alloc]initWithCustomView:segControl];
         //UIBarButtonItem *type = [[UIBarButtonItem alloc]initWithTitle:typeTitle style:UIBarButtonItemStyleBordered target:self action:@selector(showTypeSelections)];
-        [viewBar setItems:[NSArray arrayWithObjects:fix,time,flex,type, nil]];
+        [viewBar setItems:[NSArray arrayWithObjects:time,flex,type, nil]];
         
     }
     isEvent=NO;
@@ -75,8 +73,8 @@
     isFavorite=NO;
     tagSelector = [[TagSelector alloc]initWithViewController:self];
     
-    self.tagRow=[[NSMutableArray alloc]init];
-    self.UrlList=[[NSMutableArray alloc] init];
+    tagRow=[[NSMutableArray alloc]init];
+    UrlList=[[NSMutableArray alloc] init];
     assertList=[[NSMutableArray alloc]init];
     AddAssertList=[[NSMutableArray alloc]init];
     inAssert=[[NSMutableArray alloc]init];
@@ -87,7 +85,7 @@
     greenImageView = [[UIImageView alloc]initWithImage:green];
     greenImageView.frame = CGRectZero;
     redImagView = [[UIImageView alloc]initWithImage:red];
-    redImagView.frame = CGRectMake(10, 190, 10, 10);
+    redImagView.frame = CGRectMake(10, 165, 10, 10);
     [self countPhotosAndVideosCounts];
     allTableData = self.crwAssets;
     photoTableData = photoArray;
@@ -152,6 +150,8 @@
         tagSelector=nil;
         [[NSNotificationCenter defaultCenter] removeObserver:tagSelector];
         [[NSNotificationCenter defaultCenter]removeObserver:self];
+        self.crwAssets = nil;
+        self.album = nil;
     }
     
 }
@@ -214,10 +214,7 @@
         // [self.table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
     }
     previousOrigaton = toInterfaceOrientation;
-    if (timeSelectionsView.frame.origin.y != 480) {
-        timeSelectionsView.frame =[self setTheTimeSelectionsViewFrame:CGRectGetMinY(self.viewBar.frame)-210];
-    }    
-    
+    timeSelectionsView.frame =[self setTheTimeSelectionsViewFrame:CGRectGetMinY(self.viewBar.frame)-185];
 }
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
@@ -312,8 +309,8 @@
         mode = NO;
         action=YES;
         [self resetTags];
-        [self.tagRow removeAllObjects];
-        [self.UrlList removeAllObjects];
+        [tagRow removeAllObjects];
+        [UrlList removeAllObjects];
         [tagSelector.peopleList removeAllObjects];
         tagSelector.mypeople=nil;
         [self.navigationItem setTitle:ta];
@@ -369,16 +366,16 @@
             }
         }
         
-        for(int i=0;i<[self.UrlList count];i++)
+        for(int i=0;i<[UrlList count];i++)
         {   
-            Asset *asset = [self.UrlList objectAtIndex:i];
+            Asset *asset = [UrlList objectAtIndex:i];
             [tagSelector saveTagAsset:asset];
         }
         [self cancelTag];
         
     }
-    [self.UrlList removeAllObjects];
-    [self.tagRow removeAllObjects];
+    [UrlList removeAllObjects];
+    [tagRow removeAllObjects];
     
 }
 -(IBAction)NoBodyButton
@@ -388,7 +385,7 @@
     isEvent=NO;
     isFavorite=NO;
     [tagSelector.peopleList removeAllObjects];
-    [self.tagRow removeAllObjects];
+    [tagRow removeAllObjects];
     favorite *fi=[dataSource.favoriteList objectAtIndex:0];
     People *p1=fi.people;
     [tagSelector.peopleList addObject:p1];
@@ -401,8 +398,8 @@
 {
     [self releasePersonPt];
     [tagSelector.peopleList removeAllObjects];
-    [self.tagRow removeAllObjects];
-    [self.UrlList removeAllObjects];
+    [tagRow removeAllObjects];
+    [UrlList removeAllObjects];
     protecteds=YES;
     as=NO;
     isEvent=NO;
@@ -454,7 +451,7 @@
             //[tagBar addSubview:name];
         }
     }
-    [self.tagRow removeAllObjects];
+    [tagRow removeAllObjects];
     [self.table reloadData];
 }
 
@@ -462,7 +459,7 @@
 {isEvent=NO;
     isFavorite=NO;
     [tagSelector.peopleList removeAllObjects];
-    [self.tagRow removeAllObjects];
+    [tagRow removeAllObjects];
     if (!personPt) {
         CGFloat height = 80;
         CGFloat width =120;
@@ -508,7 +505,7 @@
 {  
     [self releasePersonPt];
     [tagSelector.peopleList removeAllObjects];
-    [self.tagRow removeAllObjects];
+    [tagRow removeAllObjects];
     isEvent=YES;
     isFavorite=NO;
     EventTableView *evn=[[EventTableView alloc]init];
@@ -521,8 +518,8 @@
     [self releasePersonPt];
     NSLog(@"favorite");
     [tagSelector.peopleList removeAllObjects];
-    [self.tagRow removeAllObjects];
-    [self.UrlList removeAllObjects];
+    [tagRow removeAllObjects];
+    [UrlList removeAllObjects];
     protecteds=NO;
     as=NO;
     isEvent=NO;
@@ -532,8 +529,8 @@
 }
 
 -(void)selectFromFavoriteNames{
-    [self.UrlList removeAllObjects];
-    [self.tagRow removeAllObjects];
+    [UrlList removeAllObjects];
+    [tagRow removeAllObjects];
     tagSelector.add=@"NO";
     as=YES;
     protecteds=NO;
@@ -551,8 +548,8 @@
     }
 }
 -(void)selectFromAllNames{
-    [self.tagRow removeAllObjects];
-    [self.UrlList removeAllObjects];
+    [tagRow removeAllObjects];
+    [UrlList removeAllObjects];
     tagSelector.add=@"NO";
     as=YES;
     protecteds=NO;
@@ -585,8 +582,8 @@
 }
 
 -(IBAction)resetTags{
-    [self.tagRow removeAllObjects];
-    [self.UrlList removeAllObjects];
+    [tagRow removeAllObjects];
+    [UrlList removeAllObjects];
     [self.table reloadData];
 }
 #pragma mark -
@@ -682,7 +679,7 @@
     UIButton *button5 = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *button6 = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *button7 = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIButton *button8 = [UIButton buttonWithType:UIButtonTypeCustom];
+   // UIButton *button8 = [UIButton buttonWithType:UIButtonTypeCustom];
     
     button1.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     button2.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
@@ -691,25 +688,25 @@
     button5.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     button6.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     button7.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    button8.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+   // button8.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     
-    [button1 setTitle:@"Recent week" forState:UIControlStateNormal];
-    [button2 setTitle:@"Recent 2 weeks" forState:UIControlStateNormal];
-    [button3 setTitle:@"Recent month" forState:UIControlStateNormal];
-    [button4 setTitle:@"Recent 3 mohths" forState:UIControlStateNormal];
-    [button5 setTitle:@"Recent 6 months" forState:UIControlStateNormal];
-    [button6 setTitle:@"Recent year" forState:UIControlStateNormal];
-    [button7 setTitle:@"More than 1 year" forState:UIControlStateNormal];
-    [button8 setTitle:@"All" forState:UIControlStateNormal];
+    [button1 setTitle:@"Recent 2 week" forState:UIControlStateNormal];
+    [button2 setTitle:@"Recent month" forState:UIControlStateNormal];
+    [button3 setTitle:@"Recent 3 months" forState:UIControlStateNormal];
+    [button4 setTitle:@"Recent 6 mohths" forState:UIControlStateNormal];
+    [button5 setTitle:@"More than 6 months" forState:UIControlStateNormal];
+    //[button6 setTitle:@"All" forState:UIControlStateNormal];
+    [button6 setTitle:@"More than 1 year" forState:UIControlStateNormal];
+    [button7 setTitle:@"All" forState:UIControlStateNormal];
     
     button1.frame = CGRectMake(25, 10, 150, 20);
     button2.frame = CGRectMake(25, 35, 150, 20);
     button3.frame = CGRectMake(25, 60, 150, 20);
     button4.frame = CGRectMake(25, 85, 150, 20);
-    button5.frame = CGRectMake(25, 110, 150, 20);
+    button5.frame = CGRectMake(25, 110, 170, 20);
     button6.frame = CGRectMake(25, 135, 150, 20);
     button7.frame = CGRectMake(25, 160, 150, 20);
-    button8.frame = CGRectMake(25, 185, 150, 20);
+    //button8.frame = CGRectMake(25, 185, 150, 20);
     
     button1.tag = 1;
     button2.tag = 2;
@@ -718,7 +715,7 @@
     button5.tag = 5;
     button6.tag = 6;
     button7.tag = 7;
-    button8.tag = 8;
+    //button8.tag = 8;
     
     [button1 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
     [button2 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
@@ -727,9 +724,9 @@
     [button5 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
     [button6 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
     [button7 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
-    [button8 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
+   // [button8 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
     
-    CGFloat y = CGRectGetMinY(viewBar.frame)-210;
+    CGFloat y = CGRectGetMinY(viewBar.frame)-185;
     timeSelectionsView = [[UIView alloc]initWithFrame:[self setTheTimeSelectionsViewFrame:y]];
     timeSelectionsView.alpha = 0;
     timeSelectionsView.backgroundColor = [UIColor grayColor];
@@ -741,7 +738,7 @@
     [timeSelectionsView addSubview:button5];
     [timeSelectionsView addSubview:button6];
     [timeSelectionsView addSubview:button7];
-    [timeSelectionsView addSubview:button8];
+   // [timeSelectionsView addSubview:button8];
     [timeSelectionsView addSubview:redImagView];
     [timeSelectionsView addSubview:greenImageView];
     
@@ -759,42 +756,42 @@
     switch (bt.tag) {
         case 1:
             greenImageView.frame = CGRectMake(10, 15, 10, 10);
-            [components setDay:-7];
+            [components setDay:-14];
             result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
             break;
         case 2:
             greenImageView.frame = CGRectMake(10, 40, 10, 10);
-            [components setDay:-14];
+            [components setDay:-30];
             result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
             break;
         case 3:
             greenImageView.frame = CGRectMake(10, 65, 10, 10);
-            [components setDay:-30];
+            [components setDay:-90];
             result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
             break;
         case 4:
             greenImageView.frame = CGRectMake(10, 90, 10, 10);
-            [components setDay:-90];
-            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
-            break;
-        case 5:
             [components setDay:-180];
             result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+            break;
+//        case 5:
+//            [components setDay:-180];
+//            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+//            greenImageView.frame = CGRectMake(10, 115, 10, 10);
+//            break;
+        case 5:
             greenImageView.frame = CGRectMake(10, 115, 10, 10);
+            [components setDay:-180];
+            result=[NSPredicate predicateWithFormat:@"self.date<%@",[gregorian dateByAddingComponents:components toDate:date options:0]];
             break;
         case 6:
             greenImageView.frame = CGRectMake(10, 140, 10, 10);
-            [components setYear:-1];
-            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
-            break;
-        case 7:
-            greenImageView.frame = CGRectMake(10, 165, 10, 10);
             [components setYear:-1];
             result=[NSPredicate predicateWithFormat:@"self.date<%@",[gregorian dateByAddingComponents:components toDate:date options:0]];
             break;
         default:
             greenImageView.frame = CGRectZero;
-            redImagView.frame = CGRectMake(10, 190, 10, 10);
+            redImagView.frame = CGRectMake(10, 165, 10, 10);
             break;
     }
     if (result) {
@@ -867,11 +864,12 @@
     }
    
     timeBtPressed = !timeBtPressed;
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"test" object:nil];
 }
 -(CGRect)setTheTimeSelectionsViewFrame:(CGFloat)y{
-    CGFloat height = 210;
-    CGFloat width = 180;
-    CGFloat x = self.view.frame.origin.x + 20;
+    CGFloat height = 185;
+    CGFloat width = 190;
+    CGFloat x = self.view.frame.origin.x;
     return CGRectMake(x, y, width, height);
 }
 -(void)showTypeSelections:(id)sender{
@@ -915,12 +913,12 @@
         case 6:
             greenImageView.frame = CGRectMake(10, 140, 10, 10);
             break;
-        case 7:
-            greenImageView.frame = CGRectMake(10, 165, 10, 10);
-            break;
+//        case 7:
+//            greenImageView.frame = CGRectMake(10, 165, 10, 10);
+//            break;
         default:
             greenImageView.frame = CGRectZero;
-            redImagView.frame = CGRectMake(10, 190, 10, 10);
+            redImagView.frame = CGRectMake(10, 165, 10, 10);
             break;
             
     }
@@ -1074,7 +1072,7 @@
                 if (row<[self.crwAssets count]) {
                     
                     NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
-                    if([self.tagRow containsObject:selectedIndex])
+                    if([tagRow containsObject:selectedIndex])
                     { 
                         [cell checkTagSelection:selectedIndex];
                         
@@ -1167,10 +1165,10 @@
        if([tagSelector.peopleList count]!=0)
        {
         as=NO;
-        if([self.tagRow containsObject:row])
+        if([tagRow containsObject:row])
         {
-            [self.UrlList removeObject:asset];
-            [self.tagRow removeObject:row];
+            [UrlList removeObject:asset];
+            [tagRow removeObject:row];
             [cell removeTag:row];
             [assertList addObject:asset];
             [tagSelector deleteTag:asset];
@@ -1193,7 +1191,7 @@
                    }
                    else
                    {
-                   [self.tagRow addObject:row];
+                   [tagRow addObject:row];
                    [cell checkTagSelection:row];
                    [tagSelector save:asset];
                    [AddAssertList addObject:asset];  
@@ -1202,7 +1200,7 @@
            }
             else
             {
-                [self.tagRow addObject:row];
+                [tagRow addObject:row];
                 [cell checkTagSelection:row];
                 [tagSelector save:asset];
                 [AddAssertList addObject:asset];
@@ -1215,10 +1213,10 @@
         else if(protecteds==YES)
         {
          
-            if([self.tagRow containsObject:row])
+            if([tagRow containsObject:row])
             {
-                [self.UrlList removeObject:asset];
-                [self.tagRow removeObject:row];
+                [UrlList removeObject:asset];
+                [tagRow removeObject:row];
                 [cell removeTag:row];
                 asset.isprotected=[NSNumber numberWithBool:NO];
                 asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]-1];
@@ -1226,7 +1224,7 @@
             }
             else
             {   
-                [self.tagRow addObject:row];
+                [tagRow addObject:row];
                 [cell checkTagSelection:row];
                 asset.isprotected=[NSNumber numberWithBool:YES];
                 asset.numPeopleTag=[NSNumber numberWithInt:[asset.numPeopleTag intValue]+1];
@@ -1237,9 +1235,9 @@
         {
             //EventRule  *eventRule= [NSEntityDescription insertNewObjectForEntityForName:@"EventRule" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
            // eventRule.conEvent=event;
-            if([self.tagRow containsObject:row])
+            if([tagRow containsObject:row])
             {
-                [self.tagRow removeObject:row];
+                [tagRow removeObject:row];
                 [cell removeTag:row];
                 //[asset re]
                 asset.conEvent=nil;
@@ -1249,16 +1247,16 @@
             asset.conEvent=event;
             
             NSLog(@"assert.name:%@",asset.conEvent.name);
-            [self.tagRow addObject:row];
+            [tagRow addObject:row];
             [cell checkTagSelection:row];
             }
             [dataSource.coreData saveContext];
         }
         else if(isFavorite)
         {
-            if([self.tagRow containsObject:row])
+            if([tagRow containsObject:row])
             {
-                [self.tagRow removeObject:row];
+                [tagRow removeObject:row];
                 [cell removeTag:row];
                 asset.isFavorite=nil;
                 //[asset re]
@@ -1269,7 +1267,7 @@
                 asset.isFavorite=[NSNumber numberWithBool:YES];
                 
                 NSLog(@"assert.name:%@",asset.conEvent.name);
-                [self.tagRow addObject:row];
+                [tagRow addObject:row];
                 [cell checkTagSelection:row];
             }
            [dataSource.coreData saveContext];
