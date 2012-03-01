@@ -28,7 +28,7 @@
     UITextField *passWord;
     UIBarButtonItem *personButton;
     
-	NSMutableArray *crwAssets;
+	NSMutableArray *__unsafe_unretained crwAssets;
     NSMutableArray *tagRow;
     NSMutableArray *UrlList;
     NSMutableArray *assertList;
@@ -77,9 +77,9 @@
     NSInteger portraitIndex;
     NSInteger landscapeIndex;
     NSString *side;
-    NSString *ta;
+    NSString *__unsafe_unretained ta;
     TagSelector *tagSelector;
-    Album *album;
+    Album *__unsafe_unretained album;
     Event *event;
 }
 @property (nonatomic,strong)IBOutlet UITableView *table;
@@ -89,17 +89,15 @@
 //@property (nonatomic,strong)IBOutlet UIBarButtonItem *reset;
 @property (nonatomic,strong)IBOutlet UIBarButtonItem *lock;
 @property (nonatomic,strong)IBOutlet UIBarButtonItem *personButton;
-@property (nonatomic,strong)NSMutableArray *tagRow;
 @property (nonatomic,strong)NSMutableArray *operations;
-@property (nonatomic,strong) NSMutableArray *crwAssets;
-@property (nonatomic,strong) NSMutableArray *UrlList;
+@property (nonatomic,assign) NSMutableArray *crwAssets;
 @property (nonatomic,strong)NSMutableArray *likeAssets;
 @property (nonatomic,strong)NSMutableArray *AddAssertList;
 @property (nonatomic,strong)NSMutableArray *assertList;
 @property (nonatomic,strong)NSString *side;
-@property (nonatomic,strong)NSString *ta;
+@property (nonatomic,assign)NSString *ta;
 //@property (nonatomic,strong)NSNumber *val;
-@property (nonatomic,strong)Album *album;
+@property (nonatomic,assign)Album *album;
 @property (nonatomic,assign)BOOL action;
 @property (nonatomic,assign)BOOL lockMode;
 @property (nonatomic,assign)BOOL firstLoad;

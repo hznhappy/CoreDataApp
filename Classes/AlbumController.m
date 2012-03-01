@@ -266,8 +266,6 @@
         }
         [[NSNotificationCenter defaultCenter]postNotificationName:@"pushThumbnailView" object:nil userInfo:dic];
         
-        
-        
     }
      [table deselectRowAtIndexPath:indexPath animated:YES];
 }

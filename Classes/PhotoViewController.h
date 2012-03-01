@@ -48,7 +48,7 @@
     BOOL playingFromSelfPage;
     PopupPanelView *ppv;
     TagSelector *tagSelector;
-    AssetTablePicker *assetTablePicker;
+    AssetTablePicker *__unsafe_unretained assetTablePicker;
                                                         
     NSTimer *controlVisibilityTimer;
     NSTimer *timer;	
@@ -60,8 +60,7 @@
     NSString *playPhotoTransition;
 }
 @property (nonatomic,strong) Playlist *playlist;
-@property(nonatomic,strong)PopupPanelView *ppv;
-@property(nonatomic,strong)AssetTablePicker *assetTablePicker;
+@property(nonatomic,assign) AssetTablePicker *assetTablePicker;
 @property(nonatomic,strong) UIScrollView *scrollView;
 @property(nonatomic,assign) NSUInteger currentPageIndex;
 @property(nonatomic,strong)NSString *playPhotoTransition;

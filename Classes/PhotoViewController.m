@@ -35,7 +35,6 @@
 @implementation PhotoViewController
 
 
-@synthesize ppv;
 @synthesize scrollView=_scrollView;
 @synthesize currentPageIndex;
 @synthesize playlist;
@@ -137,8 +136,13 @@
         
         assetInfoView.frame =CGRectMake(photoView.frame.origin.x, photoView.frame.size.height *1/2, 130, 120);
     }
+    if (likeButton != nil && likeButton.superview != nil) {
+        CGRect mainScreen = photoView.frame;
+        likeButton.frame = CGRectMake(mainScreen.size.width*4/5, mainScreen.size.height*3/4, 50, 50);
+    }
     if (ppv.isOpen) {
         ppv.frame = [self frameForTagOverlay];
+        [ppv Buttons];
     }
 	performingLayout = NO;
     
@@ -217,9 +221,13 @@
     [self hideControlsAfterDelay];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(resetCropView) name:@"resetCropView" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateToolBar) name:@"changeLockModeInDetailView" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setupToolbar) name:@"setTagToolBar" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setTagToolBar) name:@"setTagToolBar" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventForAsset:) name:@"addEvent" object:nil];
-    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(testMemory) name:@"test" object:nil];
+}
+
+-(void)testMemory{
+    NSLog(@"test ");
 }
 #pragma mark -
 #pragma mark Pagging Methods
@@ -690,7 +698,6 @@
 
 }
 - (void)setupToolbar{
-    NSLog(@"come here");
     [self setToolbarItems:nil];
 	UIBarButtonItem *action = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(actionButtonHit:)];
 	UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -820,7 +827,6 @@
     }else{
         item.image = [UIImage imageNamed:@"unlock.png"];
         asset.isprotected = [NSNumber numberWithBool:NO];
-        NSLog(@"jiesuo");
     }
     PhotoAppDelegate *delegate = [UIApplication sharedApplication].delegate;
     [delegate.dataSource.coreData saveContext];
@@ -943,7 +949,7 @@
 -(CGRect)frameForTagOverlay{
     CGFloat originY = CGRectGetMaxY(self.navigationController.navigationBar.frame);
     CGFloat ppvHeigh = CGRectGetMinY(self.navigationController.toolbar.frame) - CGRectGetMaxY(self.navigationController.navigationBar.frame);
-    CGRect rect = CGRectMake(0, originY, self.view.bounds.size.width, ppvHeigh);
+    CGRect rect = CGRectMake(0, originY, self.view.frame.size.width, ppvHeigh);
     return rect;
 }
 
@@ -1296,5 +1302,15 @@
 	timer = nil;
 	_scrollView=nil;
 	
+}
+
+-(void)dealloc{
+    assetTablePicker = nil;
+    playPhotoTransition = nil;
+    playlist = nil;
+    controlVisibilityTimer = nil;
+    timer = nil;
+	_scrollView=nil;
+    NSLog(@"dealloc run");
 }
 @end

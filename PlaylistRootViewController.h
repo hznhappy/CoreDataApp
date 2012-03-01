@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@class AssetTablePicker;
 
 @interface PlaylistRootViewController : UINavigationController {
     UIActivityIndicatorView *activityView;

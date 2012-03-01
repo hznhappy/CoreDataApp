@@ -29,7 +29,7 @@
         self.alpha=0.4;
 		[self.layer setCornerRadius:10.0];
 		[self setClipsToBounds:YES];   
-		myscroll=[[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 347)];
+		myscroll=[[UIScrollView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(frame)-320, 0, 320, frame.size.height)];
         [self addSubview:myscroll]; 
         [myscroll setBackgroundColor:[UIColor clearColor]];
         PhotoAppDelegate *delegate = [UIApplication sharedApplication].delegate;
@@ -57,13 +57,13 @@
         [button removeFromSuperview];
     }
     [self selectTagPeople];
-    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation )) {
-        [myscroll setContentSize:CGSizeMake(320, 45*[self.list count])];
+    if (!CGRectEqualToRect(myscroll.frame, CGRectMake(CGRectGetMaxX(self.frame)-320, 0, 320, self.frame.size.height))) {
+        myscroll.frame = CGRectMake(CGRectGetMaxX(self.frame)-320, 0, 320, self.frame.size.height);
     }
     [myscroll setContentSize:CGSizeMake(320, 45*[self.list count])];
     NSString *buttonName = nil;
 	UIButton *button = nil;
-    CGFloat btx = self.frame.size.width - 110;
+    CGFloat btx = myscroll.frame.size.width - 130;
     CGFloat bty = 20;
     CGFloat btwidth = 120;
     CGFloat byheight = 30;

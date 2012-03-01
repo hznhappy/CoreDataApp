@@ -61,7 +61,7 @@
 -(void)pushAssetsTablePicker:(NSNotification *)note{
     NSDictionary *dic = [note userInfo];
    
-     NSMutableArray *assets = [dic objectForKey:@"myAssets"];
+     NSMutableArray *__weak assets = [dic objectForKey:@"myAssets"];
     Album *receivedAlbum = [dic objectForKey:@"album"];
     AssetTablePicker *ap = [[AssetTablePicker alloc]initWithNibName:@"AssetTablePicker" bundle:[NSBundle mainBundle]];
     ap.hidesBottomBarWhenPushed = YES;
@@ -71,6 +71,7 @@
     ap.navigationItem.title = [dic objectForKey:@"title"];
     ap.ta=[dic objectForKey:@"title"];
     [self pushViewController:ap animated:YES];
+    ap = nil;
 }
 
 -(void)pushPhotosBrowser:(NSNotification *)note{
@@ -91,6 +92,7 @@
     pc.playlist.assets = dataSourec.deviceAssets.deviceAssetsList;
     pc.currentPageIndex = [key integerValue];
     [self pushViewController:pc animated:YES];
+    pc = nil;
 }
 
 -(void)playPhotoWithAnimation:(NSNotification *)note{
@@ -107,6 +109,7 @@
     playPhotoController.playPhotoTransition = transtion;
     [playPhotoController fireTimer];
     [self pushViewController:playPhotoController animated:YES];
+    playPhotoController = nil;
 }
 
 - (void)viewDidUnload

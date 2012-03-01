@@ -48,10 +48,10 @@
 }
 -(void)toggleback
 {
+    [self dismissModalViewControllerAnimated:YES];
     if (detailPage) {
         [[NSNotificationCenter defaultCenter]postNotificationName:@"setTagToolBar" object:nil];
     }
-    [self dismissModalViewControllerAnimated:YES];
 }
 -(IBAction)toggleEdit:(id)sender
 { 
@@ -196,6 +196,7 @@
                                                                object:self 
                                                              userInfo:dic1]; 
         }*/
+        [self dismissModalViewControllerAnimated:YES];
         Event *e=[eventsName objectAtIndex:indexPath.row];
         if (detailPage) {
             NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:e,@"event",nil];
@@ -209,7 +210,6 @@
                                                          userInfo:dic1]; 
         }
         
-      [self dismissModalViewControllerAnimated:YES];
     }
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }

@@ -321,7 +321,9 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"PhotoViewToggleBars" object:nil];
+    if (!self.scrollView.dragging) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PhotoViewToggleBars" object:nil];
+    }
     
 }
 
@@ -380,33 +382,64 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
         return self.imageView;
     }
 }
-
--(void)scrollViewDidZoom:(UIScrollView *)scrollView{
+/*
+-(void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale{
     if (scrollView.zoomScale > 1.0f) {				
 		CGFloat height, width;	
+         
+         if (CGRectGetMaxX(self.imageView.frame) > self.bounds.size.width) {
+         width = CGRectGetWidth(self.bounds);
+         } else {
+         width = CGRectGetMaxX(self.imageView.frame);
+         
+         }
+         
+         if (CGRectGetMaxY(self.imageView.frame) > self.bounds.size.height) {
+         height = CGRectGetHeight(self.bounds);
+         } else {
+         height = CGRectGetMaxY(self.imageView.frame);
+         
+         if (self.imageView.frame.origin.y < 0.0f) {
+         } else {
+         }
+         }
+        CGFloat height, width, originX, originY;
+		//height = MIN(CGRectGetHeight(self.imageView.frame) + self.imageView.frame.origin.x, CGRectGetHeight(self.bounds));
+		//width = MIN(CGRectGetWidth(self.imageView.frame) + self.imageView.frame.origin.y, CGRectGetWidth(self.bounds));
+        
 		
 		if (CGRectGetMaxX(self.imageView.frame) > self.bounds.size.width) {
 			width = CGRectGetWidth(self.bounds);
+			originX = 0.0f;
 		} else {
 			width = CGRectGetMaxX(self.imageView.frame);
 			
-        }
+			if (self.imageView.frame.origin.x < 0.0f) {
+                originX = 0.0f;
+            } else {
+                originX = self.imageView.frame.origin.x;
+            }	
+		}
 		
 		if (CGRectGetMaxY(self.imageView.frame) > self.bounds.size.height) {
 			height = CGRectGetHeight(self.bounds);
+			originY = 0.0f;
 		} else {
 			height = CGRectGetMaxY(self.imageView.frame);
 			
 			if (self.imageView.frame.origin.y < 0.0f) {
+				originY = 0.0f;
 			} else {
+				originY = self.imageView.frame.origin.y;
 			}
 		}
         
+        
 		CGRect frame = self.scrollView.frame;
-		self.scrollView.frame = CGRectMake((self.bounds.size.width / 2) - (width / 2), (self.bounds.size.height / 2) - (height / 2), width, height);
+        self.scrollView.frame = CGRectMake(originX, originY, width, height);
+		//self.scrollView.frame = CGRectMake((self.bounds.size.width / 2) - (width / 2), (self.bounds.size.height / 2) - (height / 2), width, height);
 		self.scrollView.layer.position = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
 		if (!CGRectEqualToRect(frame, self.scrollView.frame)) {		
-			
 			CGFloat offsetY, offsetX;
             
 			if (frame.origin.y < self.scrollView.frame.origin.y) {
@@ -424,7 +457,87 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 			if (offsetY < 0) offsetY = 0;
 			if (offsetX < 0) offsetX = 0;
 			
-			self.scrollView.contentOffset = CGPointMake(offsetX, offsetY);
+			//self.scrollView.contentOffset = CGPointMake(offsetX, offsetY);
+		}
+	} else {
+		[self layoutScrollViewAnimated];
+	}
+}*/
+-(void)scrollViewDidZoom:(UIScrollView *)scrollView{
+    if (scrollView.zoomScale > 1.0f) {				
+		/*CGFloat height, width;	
+		
+		if (CGRectGetMaxX(self.imageView.frame) > self.bounds.size.width) {
+			width = CGRectGetWidth(self.bounds);
+		} else {
+			width = CGRectGetMaxX(self.imageView.frame);
+			
+        }
+		
+		if (CGRectGetMaxY(self.imageView.frame) > self.bounds.size.height) {
+			height = CGRectGetHeight(self.bounds);
+		} else {
+			height = CGRectGetMaxY(self.imageView.frame);
+			
+			if (self.imageView.frame.origin.y < 0.0f) {
+			} else {
+			}
+		}*/
+        CGFloat height, width, originX, originY;
+		//height = MIN(CGRectGetHeight(self.imageView.frame) + self.imageView.frame.origin.x, CGRectGetHeight(self.bounds));
+		//width = MIN(CGRectGetWidth(self.imageView.frame) + self.imageView.frame.origin.y, CGRectGetWidth(self.bounds));
+        
+		
+		if (CGRectGetMaxX(self.imageView.frame) > self.bounds.size.width) {
+			width = CGRectGetWidth(self.bounds);
+			originX = 0.0f;
+		} else {
+			width = CGRectGetMaxX(self.imageView.frame);
+			
+			if (self.imageView.frame.origin.x < 0.0f) {
+             originX = 0.0f;
+             } else {
+             originX = self.imageView.frame.origin.x;
+             }	
+		}
+		
+		if (CGRectGetMaxY(self.imageView.frame) > self.bounds.size.height) {
+			height = CGRectGetHeight(self.bounds);
+			originY = 0.0f;
+		} else {
+			height = CGRectGetMaxY(self.imageView.frame);
+			
+			if (self.imageView.frame.origin.y < 0.0f) {
+				originY = 0.0f;
+			} else {
+				originY = self.imageView.frame.origin.y;
+			}
+		}
+
+        
+		CGRect frame = self.scrollView.frame;
+        self.scrollView.frame = CGRectMake(originX, originY, width, height);
+		//self.scrollView.frame = CGRectMake((self.bounds.size.width / 2) - (width / 2), (self.bounds.size.height / 2) - (height / 2), width, height);
+		self.scrollView.layer.position = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+		if (!CGRectEqualToRect(frame, self.scrollView.frame)) {		
+			CGFloat offsetY, offsetX;
+            
+			if (frame.origin.y < self.scrollView.frame.origin.y) {
+				offsetY = self.scrollView.contentOffset.y - (self.scrollView.frame.origin.y - frame.origin.y);
+			} else {				
+				offsetY = self.scrollView.contentOffset.y - (frame.origin.y - self.scrollView.frame.origin.y);
+			}
+			
+			if (frame.origin.x < self.scrollView.frame.origin.x) {
+				offsetX = self.scrollView.contentOffset.x - (self.scrollView.frame.origin.x - frame.origin.x);
+			} else {				
+				offsetX = self.scrollView.contentOffset.x - (frame.origin.x - self.scrollView.frame.origin.x);
+			}
+            
+			if (offsetY < 0) offsetY = 0;
+			if (offsetX < 0) offsetX = 0;
+			
+			//self.scrollView.contentOffset = CGPointMake(offsetX, offsetY);
 		}
 	} else {
 		[self layoutScrollViewAnimated];
