@@ -101,10 +101,12 @@
     
 }
 -(void)refresh:(NSNotification *)note{
-    NSLog(@"NOTI");
     NSDictionary *dic = [note userInfo];
 
     assets=[dic objectForKey:@"data"];
+     // =[dic objectForKey:@"num"];
+    NSString *num=[NSString stringWithFormat:@"有%@张照片更新",[dic objectForKey:@"num"]];
+   
   /*for(int i=0;i<[assets count];i++)
     {
      AmptsAlbum *am = (AmptsAlbum *)[assets objectAtIndex:i];
@@ -112,7 +114,7 @@
     }*/
     UIAlertView *alert = [[UIAlertView alloc]
                           initWithTitle:@"提示"
-                          message:@"照片库有更新"
+                          message:num
                           delegate:self
                           cancelButtonTitle:nil
                           otherButtonTitles:@"确定",nil];
@@ -219,12 +221,12 @@
         NSNumberFormatter *formatter = [NSNumberFormatter new];
         [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
         NSString *countNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:am.num]];
-        if([am.object isEqualToString:@"Photo"])
+        if([am.object isEqualToString:@"Photos only"])
         {
             //NSString *a=NSLocalizedString(@"Edit", @"button");
             cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@) ^照片图像^",am.name, countNumber];
         }
-        else if([am.object isEqualToString:@"Video"])
+        else if([am.object isEqualToString:@"Videos only"])
         {
              cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@) ^视频图像^",am.name, countNumber];
         }

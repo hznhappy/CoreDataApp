@@ -9,7 +9,7 @@
 #import "EventTableView.h"
 #import "PhotoAppDelegate.h"
 #import "Event.h"
-
+#import "Asset.h"
 
 @implementation EventTableView
 @synthesize eventsList, eventStore, defaultCalendar, detailViewController;
@@ -24,11 +24,8 @@
     self.eventStore = [[EKEventStore alloc] init];
     self.eventsList = [[NSMutableArray alloc] initWithArray:0];
     self.eventsName=[[NSMutableArray alloc]init];
-	// Get the default calendar from store.
 	self.defaultCalendar = [self.eventStore defaultCalendarForNewEvents];
-
     [self table];
-
     [self.navigationItem setTitle:@"Event"];
     NSString *a=NSLocalizedString(@"Back", @"button");
     NSString *b=NSLocalizedString(@"Edit", @"button");
@@ -38,7 +35,6 @@
     editButton.style = UIBarButtonItemStyleBordered;
     self.navigationItem.rightBarButtonItem=editButton;
    [self.eventsList addObjectsFromArray:[self fetchEventsForToday]];
-    //date = [NSEntityDescription insertNewObjectForEntityForName:@"DateRule" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
 }
 -(void)table
 {
@@ -79,10 +75,6 @@
     self.tableView.allowsSelectionDuringEditing=YES;
     
 }
-//-(void)viewWillAppear:(BOOL)animated
-//{
-//    self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
-//}
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
@@ -93,20 +85,14 @@
 
 // Fetching events happening in the next 24 hours with a predicate, limiting to the default calendar 
 - (NSArray *)fetchEventsForToday {
-	
-	NSDate *startDate = [NSDate date];
-	
-	// endDate is 1 day = 60*60*24 seconds = 86400 seconds from startDate
-	NSDate *endDate = [NSDate dateWithTimeIntervalSinceNow:86400];
-	
-	// Create the predicate. Pass it the default calendar.
-	NSArray *calendarArray = [NSArray arrayWithObject:defaultCalendar];
-	NSPredicate *predicate = [self.eventStore predicateForEventsWithStartDate:startDate endDate:endDate 
-                                                                    calendars:calendarArray]; 
-	
-	// Fetch all events that match the predicate.
-	NSArray *events = [self.eventStore eventsMatchingPredicate:predicate];
-    
+    NSMutableArray *events=[[NSMutableArray alloc]init];
+	for(int i=0;i<[eventsName count];i++)
+    {
+        Event *eve=[eventsName objectAtIndex:i];
+        EKEvent *e=[self.eventStore eventWithIdentifier:eve.identify];
+        [events addObject:e];
+        
+    }
 	return events;
 }
 
@@ -135,17 +121,10 @@
 	}
 	
 	cell.accessoryType = editableCellAccessoryType;
-    
-	// Get the event at the row selected and display it's title
     NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
     [outputFormatter setDateFormat:@"yyyy:MM:dd"];
-    //NSString *startDate = [outputFormatter stringFromDate:[[self.eventsList objectAtIndex:indexPath.row] startDate]];
-   // NSString *endDate = [outputFormatter stringFromDate:[[self.eventsList objectAtIndex:indexPath.row] endDate]];
-	//cell.textLabel.text =[NSString stringWithFormat:@"%@ (%@,%@)",[[self.eventsList objectAtIndex:indexPath.row] title],startDate,endDate];
     Event *e=[eventsName objectAtIndex:indexPath.row];
     cell.textLabel.text =[NSString stringWithFormat:@"%@",e.name];
-    
-   // cell.textLabel.text =[NSString stringWithFormat:@"%@",[[self.eventsList objectAtIndex:indexPath.row] title]]; 
 	return cell;
 }
 
@@ -157,46 +136,15 @@
 #pragma mark Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {	
-	// Upon selecting an event, create an EKEventViewController to display the event.
     if(self.tableView.editing)
     {
-	/*self.detailViewController = [[EKEventViewController alloc] initWithNibName:nil bundle:nil];			
-	detailViewController.event = [self.eventsList objectAtIndex:indexPath.row];
-	
-	// Allow event editing.
+	self.detailViewController = [[EKEventViewController alloc] initWithNibName:nil bundle:nil];			
+    detailViewController.event = [self.eventsList objectAtIndex:indexPath.row];
 	detailViewController.allowsEditing = YES;
-	
-	//	Push detailViewController onto the navigation controller stack
-	//	If the underlying event gets deleted, detailViewController will remove itself from
-	//	the stack and clear its event property.
-	[self.navigationController pushViewController:detailViewController animated:YES];*/
+    [self.navigationController pushViewController:detailViewController animated:YES];
     }
     else
     {
-       /* NSPredicate * pre1= [NSPredicate predicateWithFormat:@"name==%@",[[self.eventsList objectAtIndex:indexPath.row] title]];
-        NSMutableArray *EventList=[dataSource simpleQuery:@"Event" predicate:pre1 sortField:nil
-                                           sortOrder:YES];
-        if([EventList count]==0)
-        {
-            NSLog(@"add");
-           Event  *e = [NSEntityDescription insertNewObjectForEntityForName:@"Event" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
-            e.name=[[self.eventsList objectAtIndex:indexPath.row] title];
-            [dataSource.coreData saveContext];
-            NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:[[self.eventsList objectAtIndex:indexPath.row] title],@"name",e,@"event",nil];
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
-                                                               object:self 
-                                                             userInfo:dic1]; 
-        }
-        else
-        {
-            NSLog(@"Choose");
-            Event *ev=[EventList objectAtIndex:0];
-            NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:[[self.eventsList objectAtIndex:indexPath.row] title],@"name",ev,@"event",nil];
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"EditPhotoTag" 
-                                                               object:self 
-                                                             userInfo:dic1]; 
-        }*/
-        [self dismissModalViewControllerAnimated:YES];
         Event *e=[eventsName objectAtIndex:indexPath.row];
         if (detailPage) {
             NSDictionary *dic1= [NSDictionary dictionaryWithObjectsAndKeys:e,@"event",nil];
@@ -220,9 +168,6 @@
 
 - (void)navigationController:(UINavigationController *)navigationController 
       willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-	// if we are navigating back to the rootViewController, and the detailViewController's event
-	// has been deleted -  will title being NULL, then remove the events from the eventsList
-	// and reload the table view. This takes care of reloading the table view after adding an event too.
 	if (viewController == self && self.detailViewController.event.title == NULL) {
 		[self.eventsList removeObject:self.detailViewController.event];
 		[self.tableView reloadData];
@@ -232,21 +177,23 @@
 
 #pragma mark -
 #pragma mark Add a new event
-
-// If event is nil, a new event is created and added to the specified event store. New events are 
-// added to the default calendar. An exception is raised if set to an event that is not in the 
-// specified event store.
 - (void)addEvent:(id)sender {
-	// When add button is pushed, create an EKEventEditViewController to display the event.
 	EKEventEditViewController *addController = [[EKEventEditViewController alloc] initWithNibName:nil bundle:nil];
-	
-	// set the addController's event store to the current event store.
 	addController.eventStore = self.eventStore;
-	
-	// present EventsAddViewController as a modal view controller
 	[self presentModalViewController:addController animated:YES];
-	
 	addController.editViewDelegate = self;
+//    EKEventViewController *eventViewController = [[EKEventViewController alloc] init];
+//    
+//    eventViewController.delegate = self;
+//    
+//    eventViewController.event = [self.eventsList objectAtIndex:0];
+//
+//   
+//   eventViewController.allowsEditing = YES;
+//    
+//   [self.navigationController pushViewController:eventViewController animated:YES];
+   
+
 }
 
 
@@ -259,23 +206,18 @@
 	
 	NSError *error = nil;
 	EKEvent *thisEvent = controller.event;
-    //NSLog(@"event:%@",thisEvent.)
-	
 	switch (action) {
 		case EKEventEditViewActionCanceled:
-			// Edit action canceled, do nothing. 
 			break;
 			
 		case EKEventEditViewActionSaved:
-			// When user hit "Done" button, save the newly created event to the event store, 
-			// and reload table view.
-			// If the new event is being added to the default calendar, then update its 
-			// eventsList.
 			if (self.defaultCalendar ==  thisEvent.calendar) {
 				[self.eventsList addObject:thisEvent];
                 Event  *e = [NSEntityDescription insertNewObjectForEntityForName:@"Event" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
                 e.name=[thisEvent title];
-                NSLog(@"E.name:%@",e.name);
+                e.startDate=thisEvent.startDate;
+                e.endDate=thisEvent.endDate;
+                e.identify=thisEvent.eventIdentifier;
                 [dataSource.coreData saveContext];
                 [self table];
 
@@ -285,10 +227,6 @@
 			break;
 			
 		case EKEventEditViewActionDeleted:
-			// When deleting an event, remove the event from the event store, 
-			// and reload table view.
-			// If deleting an event from the currenly default calendar, then update its 
-			// eventsList.
 			if (self.defaultCalendar ==  thisEvent.calendar) {
 				[self.eventsList removeObject:thisEvent];
 			}
@@ -299,7 +237,6 @@
 		default:
 			break;
 	}
-	// Dismiss the modal view controller
 	[controller dismissModalViewControllerAnimated:YES];
 	
 }
@@ -313,9 +250,21 @@
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {   
     
-    //[self.eventsList removeObjectAtIndex:indexPath.row];
-    
-    //[self.tableView reloadData];
+
+    Event *e=[self.eventsName objectAtIndex:indexPath.row];
+    NSPredicate *p=[NSPredicate predicateWithFormat:@"conEvent==%@",e];
+    NSMutableArray *AS=[dataSource simpleQuery:@"Asset" predicate:p sortField:nil
+                                  sortOrder:YES];
+    for(int i=0;i<[AS count];i++)
+    {
+        Asset *a=[AS objectAtIndex:i];
+        a.conEvent=nil;
+    }
+    [dataSource.coreData.managedObjectContext deleteObject:e];
+    [self.eventsName removeObjectAtIndex:indexPath.row];
+     
+    [dataSource.coreData saveContext];
+    [self.tableView reloadData];
     
     
 }

@@ -44,6 +44,7 @@
         NSString *timeTitle = NSLocalizedString(@"Time", @"title");
         lock.enabled=NO;
         NSArray *array = [NSArray arrayWithObjects:@"All",@"Photos",@"Videos", nil];
+        datelist=[NSMutableArray arrayWithObjects:@"Recent 2 weeks",@"Recent month",@"Recent 3 mohths",@"Recent 6 months",@"More than 6 months",@"More than one year",@"UnKnow",nil];
         UISegmentedControl *segControl = [[UISegmentedControl alloc]initWithItems:array];
         [segControl addTarget:self action:@selector(showTypeSelections:) forControlEvents:UIControlEventValueChanged];
         segControl.selectedSegmentIndex = 0;
@@ -659,6 +660,16 @@
         [[NSNotificationCenter defaultCenter]postNotificationName:@"PlayPhoto" object:nil userInfo:dic]; 
     }
 }
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    // Return the number of sections.
+    return 7;
+}
+- (NSString *)tableView:(UITableView *)aTableView titleForHeaderInSection:(NSInteger)section
+{
+    NSString *name1=[datelist objectAtIndex:section];
+    return name1;
+}
+
 
 -(void)configureTimeSelectionView{
     UIButton *button1 = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -1230,12 +1241,12 @@
             else
             {
             asset.conEvent=event;
-            [dataSource.coreData saveContext];
+            
             NSLog(@"assert.name:%@",asset.conEvent.name);
             [tagRow addObject:row];
             [cell checkTagSelection:row];
             }
-            
+            [dataSource.coreData saveContext];
         }
         else if(isFavorite)
         {
@@ -1250,12 +1261,12 @@
             else
             {
                 asset.isFavorite=[NSNumber numberWithBool:YES];
-                [dataSource.coreData saveContext];
+                
                 NSLog(@"assert.name:%@",asset.conEvent.name);
                 [tagRow addObject:row];
                 [cell checkTagSelection:row];
             }
-
+           [dataSource.coreData saveContext];
         }
        else
        {

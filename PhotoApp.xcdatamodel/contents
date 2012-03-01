@@ -42,7 +42,10 @@
         <relationship name="conAlbum" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="Album" inverseName="conDateRule" inverseEntity="Album" indexed="YES"/>
     </entity>
     <entity name="Event" representedClassName="Event">
+        <attribute name="endDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="identify" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="startDate" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="conAsset" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="Asset" inverseName="conEvent" inverseEntity="Asset" indexed="YES"/>
         <relationship name="conEventRule" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="EventRule" inverseName="conEvent" inverseEntity="EventRule" indexed="YES"/>
     </entity>
@@ -84,7 +87,7 @@
         <element name="Asset" positionX="-243" positionY="-45" width="128" height="240"/>
         <element name="AssetRule" positionX="-99" positionY="315" width="128" height="105"/>
         <element name="DateRule" positionX="351" positionY="444" width="128" height="75"/>
-        <element name="Event" positionX="-333" positionY="360" width="128" height="90"/>
+        <element name="Event" positionX="-333" positionY="360" width="128" height="135"/>
         <element name="EventRule" positionX="322" positionY="153" width="128" height="105"/>
         <element name="People" positionX="-614" positionY="171" width="128" height="180"/>
         <element name="PeopleRule" positionX="18" positionY="-180" width="128" height="90"/>

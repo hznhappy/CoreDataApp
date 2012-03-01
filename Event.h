@@ -2,8 +2,8 @@
 //  Event.h
 //  PhotoApp
 //
-//  Created by apple on 2/15/12.
-//  Copyright (c) 2012 chinarewards. All rights reserved.
+//  Created by  on 12-2-28.
+//  Copyright (c) 2012年 chinarewards. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -14,6 +14,9 @@
 @interface Event : NSManagedObject
 
 @property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSDate * startDate;
+@property (nonatomic, retain) NSDate * endDate;
+@property (nonatomic, retain) NSString * identify;
 @property (nonatomic, retain) NSSet *conAsset;
 @property (nonatomic, retain) NSSet *conEventRule;
 @end
