@@ -36,6 +36,7 @@
     NSMutableArray *inAssert;
     NSMutableArray *photoArray;
     NSMutableArray *videoArray;
+    NSMutableArray *datelist;
     BOOL personPt;
     NSArray *allTableData;
     NSArray *photoTableData;

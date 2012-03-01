@@ -33,7 +33,7 @@
     Album *bum;
     DateRule *date;
     NSMutableArray *list;
-    PeopleRule *pr1;
+    //PeopleRule *pr1;
     NSMutableArray *nameList;
     NSArray *dateList;
     BOOL keybord;
@@ -41,27 +41,35 @@
      
     MPMusicPlayerController *musicPlayer;
     UITableView *listTable;
-    UITableViewCell *textFieldCell;
-    UITableViewCell *switchCell;
-    UITableViewCell *tranCell;
-    UITableViewCell *musicCell;
-    UITableViewCell *PeopleRuleCell;
-    UITableViewCell *SortCell;
-    UITableViewCell *OrderCell;
-    UITableViewCell *dateRule;
-    UITableViewCell *AddPeopleCell;
-    UITableViewCell *sortOrderCell;
-    UITableViewCell *chooseCell;
-    UITableViewCell *myFavoriteCell;
-    UIPickerView *pickerView;
     
-    UILabel *tranLabel;
-    UILabel *musicLabel;
+    
+    UITableViewCell *PlayNameCell;
+    UITableViewCell *TypeCell;
+    UITableViewCell *MyfavoriteCell;
+    UITableViewCell *PeosonCell;
+    UITableViewCell *EventCell;
+    UITableViewCell *SetDateCell;
+    UITableViewCell *SortOrderCell;
+    UITableViewCell *EffectCell;
+    UILabel *TypeLabel;
+    UILabel *PersonLabel;
+    UILabel *DateLabel;
+    
+    UISwitch *favoriteSW;
+    
+//    UITableViewCell *AddPeopleCell;
+//    UITableViewCell *sortOrderCell;
+//    UITableViewCell *chooseCell;
+//    UITableViewCell *myFavoriteCell;
+//    UIPickerView *pickerView;
+    
+//    UILabel *tranLabel;
+//    UILabel *musicLabel;
     UITextField *textField;
-    UISwitch *mySwitch;
-    UIImage *selectImg;
-    UIImage *unselectImg;
-    UISwitch *sortSw;
+//    UISwitch *mySwitch;
+//    UIImage *selectImg;
+//    UIImage *unselectImg;
+//    UISwitch *sortSw;
     
     NSMutableArray *userNames;
     NSMutableArray *selectedIndexPaths;
@@ -71,11 +79,11 @@
     BOOL sortSwc;
     AlbumController *album;
     NSMutableArray *playrules_idList;
-    UIButton *stateButton;
+//    UIButton *stateButton;
     UIButton *chooseButton;
-    UIButton *sortButton;
-    UIButton *orderButton;
-    UIButton *peopleRuleButton;
+//    UIButton *sortButton;
+//    UIButton *orderButton;
+//    UIButton *peopleRuleButton;
     NSString *playName;
     int key;
 }
@@ -89,34 +97,48 @@
 @property(nonatomic,strong)NSMutableArray *IdList;
 
 @property(nonatomic,strong)IBOutlet UITableView *listTable;
-@property(nonatomic,strong)IBOutlet UITableViewCell *chooseCell;
-@property(nonatomic,strong)IBOutlet UITableViewCell *textFieldCell;
-@property(nonatomic,strong)IBOutlet UITableViewCell *switchCell;
-@property(nonatomic,strong)IBOutlet UITableViewCell *tranCell;
-@property(nonatomic,strong)IBOutlet UITableViewCell *musicCell;
-@property(nonatomic,strong)IBOutlet UITableViewCell *PeopleRuleCell;
-@property(nonatomic,strong)IBOutlet UITableViewCell *SortCell;
-@property(nonatomic,strong)IBOutlet UITableViewCell *OrderCell;
-@property(nonatomic,strong)IBOutlet UITableViewCell *dateRule;
-@property(nonatomic,strong)IBOutlet UITableViewCell *AddPeopleCell;
-@property(nonatomic,strong)IBOutlet UITableViewCell *sortOrderCell;
-@property(nonatomic,strong)IBOutlet UISwitch *sortSw;
-@property(nonatomic,strong)IBOutlet UILabel *tranLabel;
-@property(nonatomic,strong)IBOutlet UILabel *musicLabel;
-@property(nonatomic,strong)IBOutlet UITextField *textField;
-@property(nonatomic,strong)IBOutlet UISwitch *mySwitch;
-@property(nonatomic,strong)IBOutlet UILabel *state;
-@property(nonatomic,strong)IBOutlet UIPickerView *pickerView;
-@property(nonatomic,strong)IBOutlet UITableViewCell *myFavoriteCell;
 
+@property(nonatomic,strong)IBOutlet UITableViewCell *PlayNameCell;
+@property(nonatomic,strong)IBOutlet UITableViewCell *TypeCell;
+@property(nonatomic,strong)IBOutlet UITableViewCell *MyfavoriteCell;
+@property(nonatomic,strong)IBOutlet UITableViewCell *PeosonCell;
+@property(nonatomic,strong)IBOutlet UITableViewCell *EventCell;
+@property(nonatomic,strong)IBOutlet UITableViewCell *SetDateCell;
+@property(nonatomic,strong)IBOutlet UITableViewCell *SortOrderCell;
+@property(nonatomic,strong)IBOutlet UITableViewCell *EffectCell;
+@property(nonatomic,strong)IBOutlet UILabel *TypeLabel;
+@property(nonatomic,strong)IBOutlet UILabel *PersonLabel;
+@property(nonatomic,strong)IBOutlet UILabel *DateLabel;
+
+@property(nonatomic,strong)IBOutlet UISwitch *favoriteSW;
+//@property(nonatomic,strong)IBOutlet UITableViewCell *chooseCell;
+//@property(nonatomic,strong)IBOutlet UITableViewCell *textFieldCell;
+//@property(nonatomic,strong)IBOutlet UITableViewCell *switchCell;
+//@property(nonatomic,strong)IBOutlet UITableViewCell *tranCell;
+//@property(nonatomic,strong)IBOutlet UITableViewCell *musicCell;
+//@property(nonatomic,strong)IBOutlet UITableViewCell *PeopleRuleCell;
+//@property(nonatomic,strong)IBOutlet UITableViewCell *SortCell;
+//@property(nonatomic,strong)IBOutlet UITableViewCell *OrderCell;
+//@property(nonatomic,strong)IBOutlet UITableViewCell *dateRule;
+//@property(nonatomic,strong)IBOutlet UITableViewCell *AddPeopleCell;
+//@property(nonatomic,strong)IBOutlet UITableViewCell *sortOrderCell;
+//@property(nonatomic,strong)IBOutlet UISwitch *sortSw;
+//@property(nonatomic,strong)IBOutlet UILabel *tranLabel;
+//@property(nonatomic,strong)IBOutlet UILabel *musicLabel;
+@property(nonatomic,strong)IBOutlet UITextField *textField;
+//@property(nonatomic,strong)IBOutlet UISwitch *mySwitch;
+//@property(nonatomic,strong)IBOutlet UILabel *state;
+//@property(nonatomic,strong)IBOutlet UIPickerView *pickerView;
+//@property(nonatomic,strong)IBOutlet UITableViewCell *myFavoriteCell;
+//
 
 @property(nonatomic,strong)NSMutableArray *selectedIndexPaths;
 @property(nonatomic,strong)NSString *Transtion;
-@property(nonatomic,strong)UIButton *stateButton;
-@property(nonatomic,strong)UIButton *chooseButton;
-@property(nonatomic,strong)UIButton *sortButton;
-@property(nonatomic,strong)UIButton *orderButton;
-@property(nonatomic,strong)UIButton *peopleRuleButton;
+//@property(nonatomic,strong)UIButton *stateButton;
+//@property(nonatomic,strong)UIButton *chooseButton;
+//@property(nonatomic,strong)UIButton *sortButton;
+//@property(nonatomic,strong)UIButton *orderButton;
+//@property(nonatomic,strong)UIButton *peopleRuleButton;
 -(IBAction)hideKeyBoard:(id)sender;
 -(IBAction)updateTable:(id)sender;
 -(IBAction)resetAll;
@@ -131,6 +153,13 @@
 -(void)setSort;
 -(void)setOrder;
 -(void)table;
-
+-(UIButton *)chooseButton;
 -(IBAction)text;
+
+-(void)insert:(NSInteger)Row rule:(NSString *)rule;
+-(void)changeType:(NSNotification *)note;
+-(void)changePeople:(NSNotification *)note;
+-(void)changeDate:(NSNotification *)note;
+-(IBAction)chooseMyfavorite:(id)sender;
+
 @end

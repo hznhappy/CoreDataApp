@@ -221,12 +221,12 @@
         NSNumberFormatter *formatter = [NSNumberFormatter new];
         [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
         NSString *countNumber = [formatter stringFromNumber:[NSNumber numberWithInteger:am.num]];
-        if([am.object isEqualToString:@"Photo"])
+        if([am.object isEqualToString:@"Photos only"])
         {
             //NSString *a=NSLocalizedString(@"Edit", @"button");
             cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@) ^照片图像^",am.name, countNumber];
         }
-        else if([am.object isEqualToString:@"Video"])
+        else if([am.object isEqualToString:@"Videos only"])
         {
              cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@) ^视频图像^",am.name, countNumber];
         }

@@ -866,7 +866,7 @@
 -(NSPredicate *) chooseRule:(Album*) i
 {
     NSPredicate * result=nil ;
-    if([[i chooseType] isEqualToString:@"Photo"]) {
+    if([[i chooseType] isEqualToString:@"Photos only"]) {
         result=[NSPredicate predicateWithFormat:@"some videoType==%@",[NSNumber numberWithBool:NO]];//videoType = [NSNumber numberWithBool:YES]
     }else {
         result=[NSPredicate predicateWithFormat:@"videoType==%@",[NSNumber numberWithBool:YES]];          
@@ -888,7 +888,7 @@
      People Rules or the Face Rules are parsed in here
     
      */
-    if([i chooseType]!=nil&&![[i chooseType]isEqualToString:@"Photo&Video"] )
+    if([i chooseType]!=nil&&![[i chooseType]isEqualToString:@"All"] )
     {
          pre=[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:pre,[self chooseRule:i],nil]];
     }

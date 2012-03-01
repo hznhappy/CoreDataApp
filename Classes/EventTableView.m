@@ -180,12 +180,20 @@
 #pragma mark Add a new event
 - (void)addEvent:(id)sender {
 	EKEventEditViewController *addController = [[EKEventEditViewController alloc] initWithNibName:nil bundle:nil];
-   // EKEventViewController *addController = [[EKEventViewController alloc] initWithNibName:nil bundle:nil];
 	addController.eventStore = self.eventStore;
 	[self presentModalViewController:addController animated:YES];
 	addController.editViewDelegate = self;
-   // addController.event=[eventsName objectAtIndex:0];
-   //addController.delegate=self;
+//    EKEventViewController *eventViewController = [[EKEventViewController alloc] init];
+//    
+//    eventViewController.delegate = self;
+//    
+//    eventViewController.event = [self.eventsList objectAtIndex:0];
+//
+//   
+//   eventViewController.allowsEditing = YES;
+//    
+//   [self.navigationController pushViewController:eventViewController animated:YES];
+   
 
 }
 
