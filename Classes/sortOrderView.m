@@ -11,12 +11,13 @@
 @implementation sortOrderView
 @synthesize orderCell;
 @synthesize album;
+@synthesize table;
 
 -(void)viewDidLoad
-{
+{index=-1;
     app=[[UIApplication sharedApplication]delegate];
     dataSource=app.dataSource;
-   SortList = [NSMutableArray arrayWithObjects:@"Time",@"Num of Tag",@"Num of Like",nil];
+   SortList = [NSMutableArray arrayWithObjects:@"date",@"numOfLike",@"numPeopleTag",nil];
     UIButton* backButton = [UIButton buttonWithType:101]; // left-pointing shape!
     [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     NSString *b=NSLocalizedString(@"Back", @"title");
@@ -28,6 +29,9 @@
 -(void)back
 {
     NSLog(@"back");
+    NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:album.sortKey,@"sort",album.sortOrder,@"order",nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"changeSort" object:nil userInfo:dictionary];
+
     [self.navigationController popViewControllerAnimated:YES];
    
 }
@@ -70,6 +74,14 @@
                                           reuseIdentifier:CellIdentifier];
         }
     cell.textLabel.text =[SortList objectAtIndex:indexPath.row];
+    cell.selectionStyle=UITableViewCellSelectionStyleNone;
+        if ([cell.textLabel.text isEqualToString:album.sortKey]) {
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        }else{
+            cell.accessoryType = UITableViewCellAccessoryNone;
+        }
+
+                  
     return cell;
     }
     else
@@ -80,7 +92,13 @@
     if (cell == nil) {
         cell=self.orderCell;
         cell.accessoryView = [self orderButton];
+        if(![album.sortOrder boolValue])
+        {
+            orderButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+            [orderButton setTitle:@"DSC" forState:UIControlStateNormal];
+        }
     }
+        cell.selectionStyle=UITableViewCellSelectionStyleNone;
         return cell;
     }
     //cell.selectionStyle=UITableViewCellSelectionStyleNone;
@@ -118,6 +136,32 @@
   [dataSource.coreData saveContext];
     
 }
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+  index=indexPath.row;
+    NSLog(@"INDEX %d",index);
+    if(indexPath.section==0)
+    {
+   album.sortKey=[SortList objectAtIndex:index];
+   [dataSource.coreData saveContext];
+    [self.table reloadData];
+    }
+    else
+    {
+        
+    }
+      
+//    PhotoAppDelegate *delegate = [UIApplication sharedApplication].delegate;
+//    if(album!=nil)
+//    {
+//        //album.chooseType=[type objectAtIndex:indexPath.row];
+//        [delegate.dataSource.coreData saveContext];
+//    }
+//   // NSDictionary *dictionary = [NSDictionary dictionaryWithObject:[type objectAtIndex:indexPath.row] forKey:@"TypeStyle"];
+//    [[NSNotificationCenter defaultCenter]postNotificationName:@"changeType" object:nil userInfo:dictionary];
+//    [self.navigationController popViewControllerAnimated:YES];
+}
+
 
 
 @end

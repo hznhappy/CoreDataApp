@@ -17,6 +17,7 @@
 @implementation personfilterView
 @synthesize table;
 @synthesize album;
+@synthesize peopleRuleCell;
 
 -(void)viewDidLoad
 {
@@ -24,7 +25,7 @@
     nameList=[[NSMutableArray alloc]init];
     favoriteList=[[NSMutableArray alloc]init];
     phonebookList=[[NSMutableArray alloc]init];
-    Title=[[NSMutableArray alloc]initWithObjects:@"Favorite",@"phonebook",nil];
+    Title=[[NSMutableArray alloc]initWithObjects:@"PeopleRule",@"Favorite",@"phonebook",nil];
     app =[[UIApplication sharedApplication] delegate];
     dataSource=[[AlbumDataSource alloc]init];
     dataSource=app.dataSource;
@@ -53,7 +54,6 @@
 }
 -(void)back
 {
-    NSLog(@"come back");
     [self.navigationController popViewControllerAnimated:YES]; 
     NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:nameList,@"name",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"people" 
@@ -72,6 +72,11 @@
 {
     if(section==0)
     {
+        return 1;
+    }
+    
+    else if(section==1)
+    {
         return favoriteList.count;
     }
     else
@@ -79,7 +84,7 @@
 }
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 3;
 }
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
@@ -89,6 +94,22 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(indexPath.section==0)
+    {
+        UITableViewCell *cell=nil;
+        cell = [tableView dequeueReusableCellWithIdentifier:@"peopleRuleCell"];
+        if (cell == nil) {
+            cell = self.peopleRuleCell;
+            cell.accessoryView = [self peopleRuleButton];
+            if(![album.conPeopleRule.allOrAny boolValue])
+            {
+                peopleRuleButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+                [peopleRuleButton setTitle:@"Or" forState:UIControlStateNormal];
+            }
+        }
+        cell.selectionStyle=UITableViewCellSelectionStyleNone;
+        return cell;       
+    }
+   else if(indexPath.section==1)
     {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
         if (cell == nil) {
@@ -189,6 +210,41 @@
         return cell;
     }
 }
+-(UIButton *)peopleRuleButton
+{
+    peopleRuleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    peopleRuleButton.frame = CGRectMake(0, 0, 75, 28);
+    [peopleRuleButton addTarget:self action:@selector(changeRule:) forControlEvents:UIControlEventTouchUpInside];
+    [peopleRuleButton setTitle:@"And" forState:UIControlStateNormal];
+    peopleRuleButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
+    [peopleRuleButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
+    return peopleRuleButton;
+    
+}
+-(void)changeRule:(id)sender{
+    UIButton *button = (UIButton *)sender;
+    //UITableViewCell *cell = (UITableViewCell *)[button superview];
+   // NSIndexPath *index = [table indexPathForCell:cell];
+    //NSInteger Row=index.row;
+    [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
+    if ([button.titleLabel.text isEqualToString:@"And"]) {
+        button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+        [button setTitle:@"Or" forState:UIControlStateNormal];
+        album.conPeopleRule.allOrAny=[NSNumber numberWithBool:NO];
+        //NSString *rule=@"EXCLUDE";
+       // [self update:Row rule:rule];
+    }
+    else{
+        button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
+        [button setTitle:@"And" forState:UIControlStateNormal];
+        album.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
+       // NSString *rule=@"INCLUDE";
+        //[self update:Row rule:rule];
+    }
+    [dataSource.coreData saveContext];
+}
+
+
 -(BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person 
 {
     
