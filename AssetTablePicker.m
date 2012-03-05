@@ -923,7 +923,8 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
+    if(section==0)
+    {
     if (UIInterfaceOrientationIsLandscape(oritation)) {
         if (photoType) {
             lastRow = ceil([photoTableData count]/6.0)+1;
@@ -940,6 +941,9 @@
             lastRow = ceil([allTableData count]/4.0)+1; 
     
     return lastRow;
+    }
+    else
+        return 0;
 }
 
 
@@ -1144,8 +1148,9 @@
             dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:videoTableData,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                    [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];
         }else{
+            NSLog(@"22");
             dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:allTableData,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
-                                    [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];
+                   [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];//self.album.transitType,@"transition",nil];
         }
         if([side isEqualToString:@"favorite"])
         {
@@ -1231,8 +1236,10 @@
         }
         else if(isEvent)
         {
-            //EventRule  *eventRule= [NSEntityDescription insertNewObjectForEntityForName:@"EventRule" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
-           // eventRule.conEvent=event;
+            EventRule  *eventRule= [NSEntityDescription insertNewObjectForEntityForName:@"EventRule" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
+            eventRule.conEvent=event;
+            //event.conEventRule=eventRule;
+            [event addConEventRuleObject:eventRule];
             if([tagRow containsObject:row])
             {
                 [tagRow removeObject:row];

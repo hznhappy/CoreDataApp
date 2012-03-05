@@ -54,23 +54,10 @@
     UILabel *TypeLabel;
     UILabel *PersonLabel;
     UILabel *DateLabel;
+    UILabel *SortOrder;
     
     UISwitch *favoriteSW;
-    
-//    UITableViewCell *AddPeopleCell;
-//    UITableViewCell *sortOrderCell;
-//    UITableViewCell *chooseCell;
-//    UITableViewCell *myFavoriteCell;
-//    UIPickerView *pickerView;
-    
-//    UILabel *tranLabel;
-//    UILabel *musicLabel;
     UITextField *textField;
-//    UISwitch *mySwitch;
-//    UIImage *selectImg;
-//    UIImage *unselectImg;
-//    UISwitch *sortSw;
-    
     NSMutableArray *userNames;
     NSMutableArray *selectedIndexPaths;
     NSMutableArray *IdList;
@@ -79,11 +66,7 @@
     BOOL sortSwc;
     AlbumController *album;
     NSMutableArray *playrules_idList;
-//    UIButton *stateButton;
     UIButton *chooseButton;
-//    UIButton *sortButton;
-//    UIButton *orderButton;
-//    UIButton *peopleRuleButton;
     NSString *playName;
     int key;
 }
@@ -109,8 +92,10 @@
 @property(nonatomic,strong)IBOutlet UILabel *TypeLabel;
 @property(nonatomic,strong)IBOutlet UILabel *PersonLabel;
 @property(nonatomic,strong)IBOutlet UILabel *DateLabel;
+@property(nonatomic,strong)IBOutlet UILabel *SortOrder;
 
 @property(nonatomic,strong)IBOutlet UISwitch *favoriteSW;
+
 //@property(nonatomic,strong)IBOutlet UITableViewCell *chooseCell;
 //@property(nonatomic,strong)IBOutlet UITableViewCell *textFieldCell;
 //@property(nonatomic,strong)IBOutlet UITableViewCell *switchCell;
@@ -160,6 +145,7 @@
 -(void)changeType:(NSNotification *)note;
 -(void)changePeople:(NSNotification *)note;
 -(void)changeDate:(NSNotification *)note;
+-(void)personLabel:(NSMutableArray *)person;
 -(IBAction)chooseMyfavorite:(id)sender;
 
 @end

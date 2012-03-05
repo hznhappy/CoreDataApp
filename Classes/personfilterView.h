@@ -27,11 +27,15 @@
     UIImage *selectImg;
     UIImage *unselectImg;
     UIButton *stateButton;
+    UIButton *peopleRuleButton;
     UITableView *table;
     NSMutableArray *nameList;
+    UITableViewCell *peopleRuleCell;
 }
 
 @property(nonatomic,strong)IBOutlet UITableView *table;
+@property(nonatomic,strong)IBOutlet UITableViewCell *peopleRuleCell;
 @property(nonatomic,strong)Album *album;
 -(UIButton *)getStateButton;
+-(UIButton *)peopleRuleButton;
 @end

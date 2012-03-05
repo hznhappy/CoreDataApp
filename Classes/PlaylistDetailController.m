@@ -25,6 +25,7 @@
 #import "sortOrderView.h"
 #import "personfilterView.h"
 #import "EffectsView.h"
+#import "PeopleRuleDetail.h"
 
 
 
@@ -32,42 +33,16 @@
 @implementation PlaylistDetailController
 @synthesize listTable;
 @synthesize favoriteSW;
-//@synthesize textFieldCell,switchCell,tranCell,musicCell;
-//@synthesize stateButton;
 @synthesize textField;
-//@synthesize mySwitch;
 @synthesize selectedIndexPaths,Transtion;
 @synthesize bum,appDelegate,coreData; 
 @synthesize list;
 @synthesize nameList;
 @synthesize PersonLabel;
 @synthesize DateLabel;
-//@synthesize PeopleRuleCell;
-//@synthesize OrderCell;
-//@synthesize SortCell;
-//@synthesize AddPeopleCell;
+@synthesize SortOrder;
 @synthesize date;
-//@synthesize dateRule;
 @synthesize IdList;
-//@synthesize sortOrderCell;
-//@synthesize sortSw;
-//@synthesize chooseCell;
-//@synthesize chooseButton;
-////@synthesize pickerView;
-//@synthesize sortButton;
-//@synthesize orderButton;
-//@synthesize peopleRuleButton;
-//@synthesize myFavoriteCell;
-/*
- UITableViewCell *PlayNameCell;
- UITableViewCell *TypeCell;
- UITableViewCell *MyfavoriteCell;
- UITableViewCell *PeosonCell;
- UITableViewCell *EventCell;
- UITableViewCell *DateCell;
- UITableViewCell *SortOrderCell;
- UITableViewCell *EffectCell;
- */
 @synthesize PlayNameCell;
 @synthesize TypeCell;
 @synthesize MyfavoriteCell;
@@ -110,77 +85,52 @@
     {
         self.DateLabel.text=bum.conDateRule.datePeriod;
     }
-//    sortSwc=NO;
-//    NSMutableArray *parry=[[NSMutableArray alloc]init];
-//    self.selectedIndexPaths=parry;
-//    key=0;
-//    
-//    musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
-//    if (bum != nil && bum.music != nil) {
-//        NSString *musicName = [NSString stringWithFormat:@"%@",bum.music];
-//        MPMediaPropertyPredicate *pre = [MPMediaPropertyPredicate predicateWithValue:musicName forProperty:MPMediaItemPropertyTitle];
-//        NSSet *set = [NSSet setWithObject:pre];
-//        MPMediaQuery *mediaQuery = [[MPMediaQuery alloc]initWithFilterPredicates:set];
-//        [musicPlayer setQueueWithQuery:mediaQuery];
-//    }
- appDelegate =[[UIApplication sharedApplication] delegate];
-   AL=[[AlbumDataSource alloc]init];
+    if(bum.sortKey!=nil)
+    {
+        if([bum.sortOrder boolValue])
+        {
+        SortOrder.text=[NSString stringWithFormat:@"%@ ASC",bum.sortKey];
+        }
+        else
+        {
+           SortOrder.text=[NSString stringWithFormat:@"%@ DSC",bum.sortKey]; 
+        }
+    }
+    if(bum.conPeopleRule!=nil)
+    {  
+//        NSManagedObjectContext *managedObjectsContext = [AL.coreData managedObjectContext];
+//        NSEntityDescription *entity = [NSEntityDescription entityForName:@"PeopleRuleDetail" inManagedObjectContext:managedObjectsContext];
+//        NSFetchRequest *request = [[NSFetchRequest alloc]init];
+//        [request setEntity:entity];
+//        NSPredicate *pre = [NSPredicate predicateWithFormat:@"conPeopleRule == %@",bum.conPeopleRule];
+//        [request setPredicate:pre];
+//        NSError *error = nil;
+//        NSArray *fa2=[managedObjectsContext executeFetchRequest:request error:&error];
+//
+//      NSMutableArray *peo=[[NSMutableArray alloc]init];
+////        NSPredicate *favor=[NSPredicate predicateWithFormat:@"conPeopleRule==%@",bum.conPeopleRule];
+////        NSLog(@"conpeopleRule :%@",bum.conPeopleRule);
+////        NSArray *fa2 = [AL simpleQuery:@"PeopleRuleDetail" predicate:favor sortField:nil sortOrder:YES];
+//       NSLog(@"fa2 count:%d",[fa2 count]);
+//        for(PeopleRuleDetail *pr in fa2)
+//        {
+//            [peo addObject:pr.conPeople];
+//        }
+//        [self personLabel:peo];
+       
+    }
+    appDelegate =[[UIApplication sharedApplication] delegate];
+    AL=[[AlbumDataSource alloc]init];
     AL=appDelegate.dataSource;
-//    keybord=NO;
-  
-//    date = [NSEntityDescription insertNewObjectForEntityForName:@"DateRule" inManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
-//    
-//    if(bum!=nil&&bum.conDateRule!=nil)
-//    {
-//        date=bum.conDateRule;
-//    }
-//    
-//    
-//    if(date.datePeriod!=nil)
-//    {
-//        sortSwc=YES;
-//       // sortSw.on=YES;
-//    }
-// 
-//   
-//    
-//    
-//    [self table];
-//    if(bum.transitType!=nil)
-//  {
-//      NSString *b=NSLocalizedString(bum.transitType, @"title");
-//     // self.tranLabel.text=b;
-//  }else{
-//      //self.tranLabel.text = nil;
-//  }
-//    album=[[AlbumController alloc]init];
     NSString *b=NSLocalizedString(@"Back", @"title");
     UIButton* backButton = [UIButton buttonWithType:101]; // left-pointing shape!
     [backButton addTarget:self action:@selector(huyou) forControlEvents:UIControlEventTouchUpInside];
     [backButton setTitle:b forState:UIControlStateNormal];
     UIBarButtonItem *backItem=[[UIBarButtonItem alloc]initWithCustomView:backButton];
-    self.navigationItem.leftBarButtonItem =backItem;
-//    mySwc = NO;
-//    
-//    selectImg = [UIImage imageNamed:@"Selected.png"];
-//    unselectImg = [UIImage imageNamed:@"Unselected.png"];
-//
-//    self.textField.delegate=self;
-//    self.textField.tag=1;
-//    
-//    /*if(bum!=nil)
-//    {
-//       if([bum.conPeopleRule.allOrAny boolValue]==YES)
-//        {
-//        }
-//        else
-//        {
-//            PeopleSeg.selectedSegmentIndex=1;
-//        }
-//    }*/
-     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeType:) name:@"changeType" object:nil];
+    self.navigationItem.leftBarButtonItem =backItem;     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeType:) name:@"changeType" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changePeople:) name:@"people" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeDate:) name:@"changeDate" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeSort:) name:@"changeSort" object:nil];
     [super viewDidLoad];
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -220,9 +170,15 @@
         bum.name=textField.text;
     }
    // bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
+//    bum.sortKey=@"date";
+//    bum.sortOrder=[NSNumber numberWithBool:YES];
+  //bum.conPeopleRule=pr1;
+    //pr1.conAlbum=bum;
+    bum.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
     bum.sortKey=@"date";
     bum.sortOrder=[NSNumber numberWithBool:YES];
-    [appDelegate.dataSource.coreData saveContext];
+    //bum.transitType=nil;
+   [appDelegate.dataSource.coreData saveContext];
     
 //    NSEntityDescription *entity5 = [NSEntityDescription entityForName:@"PeopleRule" inManagedObjectContext:[ appDelegate.dataSource.coreData managedObjectContext]]; 
 //    pr1=[[PeopleRule alloc]initWithEntity:entity5 insertIntoManagedObjectContext:[appDelegate.dataSource.coreData managedObjectContext]];
@@ -940,7 +896,7 @@ if(bum==nil)
     else
     {
         NSEntityDescription *entity = [NSEntityDescription entityForName:@"People" inManagedObjectContext:[AL.coreData managedObjectContext]]; 
-       People *addressBook=[[People alloc]initWithEntity:entity insertIntoManagedObjectContext:[AL.coreData managedObjectContext]];
+        People *addressBook=[[People alloc]initWithEntity:entity insertIntoManagedObjectContext:[AL.coreData managedObjectContext]];
         addressBook.firstName=personName;
         addressBook.lastName=lastname;
         addressBook.addressBookId=[NSNumber numberWithInt:[fid intValue]];
@@ -1327,19 +1283,20 @@ if(bum==nil)
 }
 -(IBAction)text
 {
-          /* NSString *text = [self.textField text];
-        NSString *caplitalized = [[[text substringToIndex:1] uppercaseString] stringByAppendingString:[text substringFromIndex:1]];
-        NSLog(@"%@ uppercased is %@", text, caplitalized);
-        if()
-        self.textField.text=caplitalized;
-    
-*/
+//           NSString *text = [self.textField text];
+//        NSString *caplitalized = [[[text substringToIndex:1] uppercaseString] stringByAppendingString:[text substringFromIndex:1]];
+//        NSLog(@"%@ uppercased is %@", text, caplitalized);
+//        if()
+//        self.textField.text=caplitalized;
+//    
+
         
 }
 -(void)textFieldDidEndEditing:(UITextField *)textField1
 {
-    if(textField1.tag==1)
-{
+    NSLog(@"FDFD");
+//    if(textField1.tag==1)
+//{
   
     if(textField.text==nil||textField.text.length==0)
     {
@@ -1374,10 +1331,10 @@ if(bum==nil)
         [self addPlay];
     }   
     
-}
+//}
 }
 -(void)addPlay
-{
+{NSLog(@"FDFD");
       keybord=YES;
       if(bum==nil)
       {
@@ -1520,36 +1477,70 @@ if(bum==nil)
     {
         [name addObject:p];
     }
-    if(name.count==1)
-   {
-       if([[name objectAtIndex:0] firstName]==nil)
-       {
-           self.PersonLabel.text=[[name objectAtIndex:0]lastName];
-       }
-       else if([[name objectAtIndex:0] lastName]==nil)
-       {
-           self.PersonLabel.text=[[name objectAtIndex:0]firstName];
-       }
-       else
-           self.PersonLabel.text=[NSString stringWithFormat:@"%@ %@",[[name objectAtIndex:0]lastName],[[name objectAtIndex:0]firstName]];
-
-       
-   }
- 
-    else if(name.count>1)
+    [self personLabel:name];
+//    if(name.count==1)
+//   {
+//       if([[name objectAtIndex:0] firstName]==nil)
+//       {
+//           self.PersonLabel.text=[[name objectAtIndex:0]lastName];
+//       }
+//       else if([[name objectAtIndex:0] lastName]==nil)
+//       {
+//           self.PersonLabel.text=[[name objectAtIndex:0]firstName];
+//       }
+//       else
+//           self.PersonLabel.text=[NSString stringWithFormat:@"%@ %@",[[name objectAtIndex:0]lastName],[[name objectAtIndex:0]firstName]];
+//
+//       
+//   }
+// 
+//    else if(name.count>1)
+//    {
+//        if([[name objectAtIndex:0] firstName]==nil)
+//        {
+//            self.PersonLabel.text=[NSString stringWithFormat:@"%@等%d个人",[[name objectAtIndex:0]lastName],name.count];
+//        }
+//        else if([[name objectAtIndex:0] lastName]==nil)
+//        {
+//            self.PersonLabel.text= [NSString stringWithFormat:@"%@等%d个人",[[name objectAtIndex:0]firstName],name.count];
+//        }
+//        else
+//            self.PersonLabel.text=[NSString stringWithFormat:@"%@ %@等%d个人",[[name objectAtIndex:0]lastName],[[name objectAtIndex:0]firstName],[name count]];
+//    }
+    //self.PersonLabel.text = labelText;
+}
+-(void)personLabel:(NSMutableArray *)person
+{
+    if(person.count==1)
     {
-        if([[name objectAtIndex:0] firstName]==nil)
+        if([[person objectAtIndex:0] firstName]==nil)
         {
-            self.PersonLabel.text=[NSString stringWithFormat:@"%@等%d个人",[[name objectAtIndex:0]lastName],name.count];
+            self.PersonLabel.text=[[person objectAtIndex:0]lastName];
         }
-        else if([[name objectAtIndex:0] lastName]==nil)
+        else if([[person objectAtIndex:0] lastName]==nil)
         {
-            self.PersonLabel.text= [NSString stringWithFormat:@"%@等%d个人",[[name objectAtIndex:0]firstName],name.count];
+            self.PersonLabel.text=[[person objectAtIndex:0]firstName];
         }
         else
-            self.PersonLabel.text=[NSString stringWithFormat:@"%@ %@等%d个人",[[name objectAtIndex:0]lastName],[[name objectAtIndex:0]firstName],[name count]];
+            self.PersonLabel.text=[NSString stringWithFormat:@"%@ %@",[[person objectAtIndex:0]lastName],[[person objectAtIndex:0]firstName]];
+        
+        
     }
-    //self.PersonLabel.text = labelText;
+    
+    else if(person.count>1)
+    {
+        if([[person objectAtIndex:0] firstName]==nil)
+        {
+            self.PersonLabel.text=[NSString stringWithFormat:@"%@等%d个人",[[person objectAtIndex:0]lastName],person.count];
+        }
+        else if([[person objectAtIndex:0] lastName]==nil)
+        {
+            self.PersonLabel.text= [NSString stringWithFormat:@"%@等%d个人",[[person objectAtIndex:0]firstName],person.count];
+        }
+        else
+            self.PersonLabel.text=[NSString stringWithFormat:@"%@ %@等%d个人",[[person objectAtIndex:0]lastName],[[person objectAtIndex:0]firstName],[person count]];
+    }
+
 }
 -(void)changeDate:(NSNotification *)note
 {
@@ -1558,6 +1549,21 @@ if(bum==nil)
     DateLabel.text=date1;
     
 }
+-(void)changeSort:(NSNotification *)note
+{
+    NSDictionary *dic=[note userInfo];
+    NSString *order=nil;
+    if([[dic objectForKey:@"order"] boolValue])
+    {
+        order=@"ASC";
+    }
+    else
+    {
+        order=@"DSC";
+    }
+    SortOrder.text=[NSString stringWithFormat:@"%@ %@",[dic objectForKey:@"sort"],order];
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
