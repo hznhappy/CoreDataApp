@@ -122,4 +122,5 @@
 -(void)showTimeSelections;
 -(NSString *)configurateLastRowPhotoCount:(NSInteger)pCount VideoCount:(NSInteger)vCount;
 -(void)setTimeSelectionWithIndex:(NSInteger)index;
+
 @end
