@@ -59,12 +59,12 @@
     UIButton *likeButton;
     NSString *playPhotoTransition;
 }
-@property (nonatomic,strong) Playlist *playlist;
-@property(nonatomic,assign) AssetTablePicker *assetTablePicker;
-@property(nonatomic,strong) UIScrollView *scrollView;
-@property(nonatomic,assign) NSUInteger currentPageIndex;
-@property(nonatomic,strong)NSString *playPhotoTransition;
-@property(nonatomic,assign)BOOL lockMode;
+@property (nonatomic, strong) Playlist *playlist;
+@property (nonatomic, assign) AssetTablePicker *assetTablePicker;
+@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, assign) NSUInteger currentPageIndex;
+@property (nonatomic, strong) NSString *playPhotoTransition;
+@property (nonatomic, assign) BOOL lockMode;
 //init
 - (id)init;
 -(id)initWithBool:(BOOL)play;

@@ -78,9 +78,9 @@
     NSInteger portraitIndex;
     NSInteger landscapeIndex;
     NSString *side;
-    NSString *__unsafe_unretained ta;
+    NSString *ta;
     TagSelector *tagSelector;
-    Album *__unsafe_unretained album;
+    Album *album;
     Event *event;
 }
 @property (nonatomic,strong)IBOutlet UITableView *table;
@@ -96,9 +96,9 @@
 @property (nonatomic,strong)NSMutableArray *AddAssertList;
 @property (nonatomic,strong)NSMutableArray *assertList;
 @property (nonatomic,strong)NSString *side;
-@property (nonatomic,assign)NSString *ta;
+@property (nonatomic,strong)NSString *ta;
 //@property (nonatomic,strong)NSNumber *val;
-@property (nonatomic,assign)Album *album;
+@property (nonatomic,strong)Album *album;
 @property (nonatomic,assign)BOOL action;
 @property (nonatomic,assign)BOOL lockMode;
 @property (nonatomic,assign)BOOL firstLoad;
