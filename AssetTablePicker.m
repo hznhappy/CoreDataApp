@@ -152,6 +152,7 @@
         [[NSNotificationCenter defaultCenter]removeObserver:self];
         self.crwAssets = nil;
         self.album = nil;
+        NSLog(@"wrong");
     }
     
 }
@@ -660,16 +661,6 @@
         [[NSNotificationCenter defaultCenter]postNotificationName:@"PlayPhoto" object:nil userInfo:dic]; 
     }
 }
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    // Return the number of sections.
-    return 7;
-}
-- (NSString *)tableView:(UITableView *)aTableView titleForHeaderInSection:(NSInteger)section
-{
-    NSString *name1=[datelist objectAtIndex:section];
-    return name1;
-}
-
 
 -(void)configureTimeSelectionView{
     UIButton *button1 = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -751,6 +742,7 @@
     redImagView.frame = CGRectZero;
     NSPredicate* result =nil;
     NSDate *date = [NSDate date];
+   // NSLog(@"the date is %@",date);
     NSDateComponents *components = [[NSDateComponents alloc]init];
     NSCalendar *gregorian = [[NSCalendar alloc]initWithCalendarIdentifier:NSGregorianCalendar];
     switch (bt.tag) {
@@ -925,6 +917,10 @@
 }
 #pragma mark -
 #pragma mark UITableViewDataSource and Delegate Methods
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    // Return the number of sections.
+    return 7;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
@@ -946,6 +942,12 @@
     return lastRow;
 }
 
+
+- (NSString *)tableView:(UITableView *)aTableView titleForHeaderInSection:(NSInteger)section
+{
+    NSString *name1=[datelist objectAtIndex:section];
+    return name1;
+}
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"Cell";
@@ -959,7 +961,7 @@
     cell.selectionDelegate = self;
     cell.rowNumber = indexPath.row;
     [cell.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    if (indexPath.row == lastRow - 1) {
+    if (indexPath.row == lastRow - 1 && indexPath.section == 7) {
         NSInteger vcount = 0;
         NSInteger pcount = 0;
         UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(cell.frame.origin.x, 10, cell.frame.size.width, cell.frame.size.height-20)];

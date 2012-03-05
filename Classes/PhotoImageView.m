@@ -495,9 +495,9 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 			width = CGRectGetMaxX(self.imageView.frame);
 			
 			if (self.imageView.frame.origin.x < 0.0f) {
-             originX = 0.0f;
+                originX = 0.0f;
              } else {
-             originX = self.imageView.frame.origin.x;
+                 originX = self.imageView.frame.origin.x;
              }	
 		}
 		
@@ -537,7 +537,7 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 			if (offsetY < 0) offsetY = 0;
 			if (offsetX < 0) offsetX = 0;
 			
-			//self.scrollView.contentOffset = CGPointMake(offsetX, offsetY);
+			self.scrollView.contentOffset = CGPointMake(offsetX, offsetY);
 		}
 	} else {
 		[self layoutScrollViewAnimated];
