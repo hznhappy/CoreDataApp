@@ -1787,8 +1787,7 @@
     self.crwAssets = nil;
     self.viewBar = nil;
     self.tagBar = nil;
-    NSLog(@"run");
-
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
 @end
