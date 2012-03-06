@@ -103,7 +103,6 @@
 		A1EF3DB014441A640087972B /* PhotoScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EF3DAC14441A640087972B /* PhotoScrollView.m */; };
 		A1EF3DC314441E900087972B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1EF3DC214441E900087972B /* QuartzCore.framework */; };
 		A1F1FFAA146007F9005FAB2F /* PopupPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F1FFA2146007F9005FAB2F /* PopupPanelView.m */; };
-		A1F7E816148C9BBF0088F366 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1F7E814148C9BBF0088F366 /* MainWindow.xib */; };
 		E29A5E3C1239C42A008BB149 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E29A5E3B1239C42A008BB149 /* AssetsLibrary.framework */; };
 /* End PBXBuildFile section */
 
@@ -261,9 +260,6 @@
 		A1EF3DC214441E900087972B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		A1F1FFA1146007F9005FAB2F /* PopupPanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupPanelView.h; sourceTree = "<group>"; };
 		A1F1FFA2146007F9005FAB2F /* PopupPanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopupPanelView.m; sourceTree = "<group>"; };
-		A1F7E815148C9BBF0088F366 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		A1F7E819148C9BF60088F366 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/MainWindow.xib"; sourceTree = "<group>"; };
-		A1F7E821148C9E940088F366 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/MainWindow.xib"; sourceTree = "<group>"; };
 		E29A5E3B1239C42A008BB149 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -389,7 +385,6 @@
 				18E0EC1214F493550001ED3E /* AssetTablePicker.xib */,
 				18DBCA9814DBF9B900D43062 /* TagManagementController.xib */,
 				18C78B8E14D6736500B57B4F /* TestiPhoneCalViewController.xib */,
-				A1F7E814148C9BBF0088F366 /* MainWindow.xib */,
 				184FD005147208F90082B51D /* AnimaSelectController.xib */,
 				186BF9C01470AEB500961C67 /* AlbumController.xib */,
 			);
@@ -624,7 +619,6 @@
 				18D402901474E55900389097 /* InfoPlist.strings in Resources */,
 				A1111478147515F900AD57D0 /* empty1.png in Resources */,
 				18696E8B147A217100302EB8 /* Settings.bundle in Resources */,
-				A1F7E816148C9BBF0088F366 /* MainWindow.xib in Resources */,
 				A153D5C614A2DE710060840D /* tag.png in Resources */,
 				18F7B23114B43BB700566F66 /* ThumbnailHighlight.png in Resources */,
 				18DD696514B6F045000062D1 /* VED.png in Resources */,
@@ -766,16 +760,6 @@
 				18E0EC1614F4936D0001ED3E /* zh-Hant */,
 			);
 			name = AssetTablePicker.xib;
-			sourceTree = "<group>";
-		};
-		A1F7E814148C9BBF0088F366 /* MainWindow.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A1F7E815148C9BBF0088F366 /* en */,
-				A1F7E819148C9BF60088F366 /* zh-Hant */,
-				A1F7E821148C9E940088F366 /* zh-Hans */,
-			);
-			name = MainWindow.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
