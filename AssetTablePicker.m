@@ -1442,7 +1442,7 @@
                 }
                 if(isFavorite)
                 {
-                    if(dbAsset.isFavorite)
+                    if([dbAsset.isFavorite boolValue])
                     {
                         NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
                         [tagRow addObject:selectedIndex];
@@ -1534,7 +1534,6 @@
             dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:videoTableData,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                    [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];
         }else{
-            NSLog(@"22");
             dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:allTableData,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
                    [NSNumber numberWithBool:lockMode],@"lock", self,@"thumbnailViewController",self.album.transitType,@"transition",nil];//self.album.transitType,@"transition",nil];
         }
@@ -1622,10 +1621,6 @@
         }
         else if(isEvent)
         {
-            EventRule  *eventRule= [NSEntityDescription insertNewObjectForEntityForName:@"EventRule" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
-            eventRule.conEvent=event;
-            //event.conEventRule=eventRule;
-            [event addConEventRuleObject:eventRule];
             if([tagRow containsObject:row])
             {
                 [tagRow removeObject:row];

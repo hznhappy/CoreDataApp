@@ -12,6 +12,7 @@
 #import <EventKitUI/EventKitUI.h>
 #import "Event.h"
 #import "AlbumDataSource.h"
+#import "Album.h"
 @class PhotoAppDelegate;
 @interface eventView : UIViewController<UITableViewDataSource,UITableViewDelegate,EKEventEditViewDelegate>
 {
@@ -25,6 +26,10 @@
     NSMutableArray *eventsName;
     Event *event;
     UITableView *tableView;
+    Album *album;
+    EventRule *ev;
+    UIImage *selectImg;
+    UIImage *unselectImg;
 }
 @property (nonatomic, strong) EKEventStore *eventStore;
 @property (nonatomic, strong) EKCalendar *defaultCalendar;
@@ -32,6 +37,7 @@
 @property (nonatomic, strong) EKEventViewController *detailViewController;
 @property (nonatomic, strong) NSMutableArray *eventsName;
 @property (nonatomic, strong)IBOutlet  UITableView *tableView;
+@property (nonatomic, strong) Album *album;
 - (NSArray *) fetchEventsForToday;
 - (IBAction) addEvent:(id)sender;
 -(void)table;

@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "resetView.h"
-
+#import "Setting.h"
+@class PhotoAppDelegate;
 @interface SettingController : UIViewController<UITableViewDataSource,UITableViewDelegate,UINavigationBarDelegate>
 {
     UITableView *table;
@@ -18,10 +19,15 @@
     UITableViewCell *dateCell;
     UITableViewCell *resetCell;
     UITableViewCell *versionCell;
+    UISwitch *lockSW;
+    
     UIButton *iconsizeButton;
     UIButton *albumiconButton;
     UIButton *dateButton;
     resetView *re;
+    PhotoAppDelegate *app;
+    AlbumDataSource *dataSource;
+    Setting *setting;
 }
 @property(nonatomic,strong)IBOutlet UITableView *table;
 @property(nonatomic,strong)IBOutlet UITableViewCell *iconsizeCell;
@@ -30,7 +36,9 @@
 @property(nonatomic,strong)IBOutlet UITableViewCell *dateCell;
 @property(nonatomic,strong)IBOutlet UITableViewCell *resetCell;
 @property(nonatomic,strong)IBOutlet UITableViewCell *versionCell;
+@property(nonatomic,strong)IBOutlet UISwitch *lockSW;
 -(UIButton *)iconsizeButton;
 -(UIButton *)albumiconButton;
 -(UIButton *)dateButton;
+-(IBAction)chooseLockMode:(id)sender;
 @end

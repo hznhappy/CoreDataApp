@@ -82,6 +82,12 @@
         <relationship name="conAsset" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="Asset" inverseName="conPeopleTag" inverseEntity="Asset" indexed="YES"/>
         <relationship name="conPeople" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="People" inverseName="conPeopleTag" inverseEntity="People" indexed="YES"/>
     </entity>
+    <entity name="Setting" representedClassName="Setting" syncable="YES">
+        <attribute name="albumIcon" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dateInfo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="iconSize" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lockMode" optional="YES" attributeType="Boolean" syncable="YES"/>
+    </entity>
     <elements>
         <element name="Album" positionX="70" positionY="120" width="128" height="240"/>
         <element name="Asset" positionX="-243" positionY="-45" width="128" height="240"/>
@@ -93,5 +99,6 @@
         <element name="PeopleRule" positionX="18" positionY="-180" width="128" height="90"/>
         <element name="PeopleRuleDetail" positionX="331" positionY="-72" width="128" height="120"/>
         <element name="PeopleTag" positionX="-461" positionY="-174" width="128" height="75"/>
+        <element name="Setting" positionX="160" positionY="192" width="128" height="105"/>
     </elements>
 </model>

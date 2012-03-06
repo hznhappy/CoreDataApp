@@ -57,7 +57,6 @@
   //  [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(backgrounddata) name:@"fetchAssets" object:nil];
     
     deviceAssets=[[OnDeviceAssets alloc]init];
-    NSLog(@"F");
     return self;
 }
 -(void)update
@@ -159,7 +158,6 @@
         @autoreleasepool {
        // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
         NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
-//       NSLog(@"metadata:%@",[[alAsset defaultRepresentation]metadata]);
         //NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
        // NSLog(@"strdate:%@",strDate);
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
@@ -312,7 +310,6 @@
     deviceAssets=refreshAssets;
    int num=[Add count]+[Del count];
     NSNumber *Num=[NSNumber numberWithInt:num];
-    NSLog(@"how much:%@",Num);
     NSMutableDictionary *dic =[NSMutableDictionary dictionaryWithObjectsAndKeys:assetsBook, @"data",Num,@"num",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"refresh" object:nil userInfo:dic];
 }
@@ -453,15 +450,7 @@
     AlbumUnTAG.alblumId=nil;
     pre=[NSPredicate predicateWithFormat:@"numPeopleTag != 0 or conEvent!=nil"];
     NSMutableArray *TageAssets = [self simpleQuery:@"Asset" predicate:pre sortField:nil sortOrder:YES];
-    NSLog(@"isfavorite:%d",[TageAssets count]);
-    /*for (NSString *u in deviceAssets.urls) {
-        for (Asset *as in unTageAssets) {
-            if ([as.url isEqualToString:u]) {
-                [AlbumUnTAG.assetsList addObject:as];
-            }
-        }
-    }*/
-   
+      
     for (Asset *as in TageAssets)
     {
         [tmpAlbum.assetsList removeObject:as];
@@ -845,11 +834,11 @@
 }
 -(NSPredicate*) parseEventRule:(EventRule *)rule {
     NSPredicate * result=nil ;
-    if([[rule opCode] isEqualToString:@"INCLUDE"]) {
+    //if([[rule opCode] isEqualToString:@"INCLUDE"]) {
         result=[NSPredicate predicateWithFormat:@"conEvent==%@",[rule conEvent]];
-    }else {
-           result=[NSPredicate predicateWithFormat:@"conEvent!=%@",[rule conEvent]];          
-    }
+   // }else {
+     //      result=[NSPredicate predicateWithFormat:@"conEvent!=%@",[rule conEvent]];          
+   // }
     return result;
 }
 -(NSPredicate *) parseAssetRule:(AssetRule *)rule {
@@ -930,21 +919,23 @@
      
      Event Rules are parsed in here
      */
-    
+    NSLog(@"1");
     if ([i conEventRule]!=nil) {
+        NSLog(@"conevevt");
         NSPredicate * tmpEventPre=nil;
         NSMutableArray * tmpEventPreArray=[[NSMutableArray alloc]init] ;
         [tmpEventPreArray removeAllObjects];
         NSMutableSet *tmpEvent = [i valueForKey:@"conEventRule"];
         if ([tmpEvent count]>0) {
             for (EventRule * e in tmpEvent ) {
+                NSLog(@"name:%@",e.conEvent.name);
                 [tmpEventPreArray addObject:[self parseEventRule:e]]; 
             }
             tmpEventPre=[NSCompoundPredicate orPredicateWithSubpredicates:tmpEventPreArray];
             pre=[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:pre,tmpEventPre, nil]]; 
         }
     }
-    
+    NSLog(@"2");
     /*
      
      Asset Rules are parsed in here

@@ -19,11 +19,14 @@
 {
     NSMutableArray *favoriteList;
     NSMutableArray *phonebookList;
+    NSMutableArray *allList;
     NSMutableArray *Title;
+    NSMutableArray *IdList;
     PhotoAppDelegate *app;
     AlbumDataSource *dataSource;
     PeopleRule *pr1;
     Album *album;
+    BOOL Sections;
     UIImage *selectImg;
     UIImage *unselectImg;
     UIButton *stateButton;
@@ -38,4 +41,5 @@
 @property(nonatomic,strong)Album *album;
 -(UIButton *)getStateButton;
 -(UIButton *)peopleRuleButton;
+-(void)tableReload;
 @end
