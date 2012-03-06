@@ -36,15 +36,26 @@
     NSMutableArray *inAssert;
     NSMutableArray *photoArray;
     NSMutableArray *videoArray;
-    NSMutableArray *datelist;
+    NSArray *datelist;
+    //The array in UITableView setction
+    NSArray *recentTwoWk;
+    NSArray *recentMth;
+    NSArray *recentThreeMth;
+    NSArray *recentSixMth;
+    NSArray *moreThanSixMth;
+    NSArray *moreThanOneYear;
+    NSArray *unknowDate;
     BOOL personPt;
     NSArray *allTableData;
     NSArray *photoTableData;
     NSArray *videoTableData;
-    NSInteger timeSelectionAll;
+    //the button index to set the dot frame;
+    NSInteger timeSelectionAll;  
     NSInteger timeSelectionPhoto;
     NSInteger timeSelectionVideo;
-  
+   // NSInteger sectionCount;
+    NSInteger thumbnailSize;
+    
     BOOL mode;
     BOOL load;
     BOOL done;
@@ -58,6 +69,7 @@
     BOOL timeBtPressed;
     BOOL isEvent;
     BOOL isFavorite;
+    BOOL timeFilter;
     
     UIButton *name;
     UIImage *green;
@@ -122,5 +134,7 @@
 -(void)showTimeSelections;
 -(NSString *)configurateLastRowPhotoCount:(NSInteger)pCount VideoCount:(NSInteger)vCount;
 -(void)setTimeSelectionWithIndex:(NSInteger)index;
-
+-(void)dataInUITableViewSectionsFromArray:(NSArray *)array;
+-(NSInteger)caculateRowNumbersWithNSArray:(NSArray *)rowArray;
+-(void)setThumbnailSize;
 @end

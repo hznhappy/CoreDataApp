@@ -148,7 +148,19 @@
         self.navigationItem.leftBarButtonItem=nil;
         cell.selectionStyle=UITableViewCellSelectionStyleBlue;
         cell1.selectionStyle=UITableViewCellSelectionStyleBlue;
-        
+        NSArray *cells = self.tableView.visibleCells;
+        for (UITableViewCell *cell in cells) {
+            UIView *iv = [cell viewWithTag:100];
+            if (iv) {
+                iv.hidden = NO;
+            }
+            iv = nil;
+            iv = [cell viewWithTag:101];
+            if (iv) {
+                iv.hidden = NO;
+            }
+        }
+
     }
     else{
         editButton.style=UIBarButtonItemStyleDone;
@@ -156,7 +168,21 @@
         editButton.title = c;
         cell.selectionStyle=UITableViewCellSelectionStyleNone;
         cell1.selectionStyle=UITableViewCellSelectionStyleNone;
+        NSArray *cells = self.tableView.visibleCells;
+        for (UITableViewCell *cell in cells) {
+            UIView *iv = [cell viewWithTag:100];
+            if (iv) {
+                iv.hidden = YES;
+            }
+            iv = nil;
+            iv = [cell viewWithTag:101];
+            if (iv) {
+                iv.hidden = YES;
+            }
+        }
+
     }
+
 
    [self.tableView setEditing:!self.tableView.editing animated:YES];
     self.tableView.allowsSelectionDuringEditing=YES;
@@ -200,6 +226,8 @@
 	if (cell == nil) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
 	}
+    [[cell viewWithTag:101] removeFromSuperview];
+     [[cell viewWithTag:100] removeFromSuperview];
     AmptsAlbum *am = (AmptsAlbum *)[assets objectAtIndex:indexPath.row];
     Asset *as = [am.assetsList lastObject];
     if (as == nil) {
@@ -224,11 +252,23 @@
         if([am.object isEqualToString:@"Photos only"])
         {
             //NSString *a=NSLocalizedString(@"Edit", @"button");
-            cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@) ^照片图像^",am.name, countNumber];
+            UIImage *photo = [UIImage imageNamed:@"photo_24.png"];
+            CGRect rect = CGRectMake(CGRectGetMaxX(cell.frame)-50, cell.frame.size.height/2 - 10, 24, 24);
+            UIImageView *iv = [[UIImageView alloc]initWithFrame:rect];
+            iv.tag = 100;
+            iv.image = photo;
+            cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)",am.name, countNumber];
+            [cell addSubview:iv];
         }
         else if([am.object isEqualToString:@"Videos only"])
         {
-             cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@) ^视频图像^",am.name, countNumber];
+            UIImage *video = [UIImage imageNamed:@"video_24.png"];
+            CGRect rect = CGRectMake(CGRectGetMaxX(cell.frame)-50, cell.frame.size.height/2 - 10, 24, 24);
+            UIImageView *iv = [[UIImageView alloc]initWithFrame:rect];
+            iv.image = video;
+            iv.tag = 101;
+             cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)",am.name, countNumber];
+            [cell.contentView addSubview:iv];
         }
         else
         {
@@ -243,6 +283,7 @@
     return cell;
     
 }
+
 -(void)tableView:(UITableView *)table didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
  
     if (self.tableView.editing) { 
