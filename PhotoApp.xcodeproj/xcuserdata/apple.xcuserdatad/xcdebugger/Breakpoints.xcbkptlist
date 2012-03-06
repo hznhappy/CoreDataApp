@@ -51,11 +51,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/PhotoViewController.m"
-         timestampString = "352288258.890389"
+         timestampString = "352715670.868505"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1648"
-         endingLineNumber = "1648"
+         startingLineNumber = "1646"
+         endingLineNumber = "1646"
          landmarkName = "@implementation PhotoViewController"
          landmarkType = "3">
       </FileBreakpoint>
@@ -79,11 +79,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AlbumDataSource.m"
-         timestampString = "352108811.340293"
+         timestampString = "352694030.05249"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "984"
-         endingLineNumber = "984"
+         startingLineNumber = "983"
+         endingLineNumber = "983"
          landmarkName = "-getAlbum:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -105,13 +105,13 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AssetTablePicker.h"
-         timestampString = "352175847.710187"
+         timestampString = "352638844.956544"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "91"
-         endingLineNumber = "91"
-         landmarkName = "lock"
-         landmarkType = "19">
+         startingLineNumber = "102"
+         endingLineNumber = "102"
+         landmarkName = "@interface AssetTablePicker"
+         landmarkType = "2">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -147,12 +147,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AssetTablePicker.m"
-         timestampString = "352603015.530363"
+         timestampString = "352715043.043918"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1142"
-         endingLineNumber = "1142"
-         landmarkName = "-selectedThumbnailCell:selectedAtIndex:"
+         startingLineNumber = "1482"
+         endingLineNumber = "1482"
+         landmarkName = "-configurateLastRowPhotoCount:VideoCount:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

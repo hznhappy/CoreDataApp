@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="878" systemVersion="11D50b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="878" systemVersion="11C74" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Album" representedClassName="Album">
         <attribute name="byCondition" optional="YES" attributeType="String"/>
         <attribute name="chooseType" optional="YES" attributeType="String" syncable="YES"/>
@@ -52,7 +52,7 @@
     <entity name="EventRule" representedClassName="EventRule">
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="opCode" optional="YES" attributeType="String"/>
-        <relationship name="conAlbum" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="Album" inverseName="conEventRule" inverseEntity="Album" indexed="YES"/>
+        <relationship name="conAlbum" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Album" inverseName="conEventRule" inverseEntity="Album" indexed="YES"/>
         <relationship name="conEvent" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="Event" inverseName="conEventRule" inverseEntity="Event" indexed="YES"/>
     </entity>
     <entity name="People" representedClassName="People">
@@ -83,7 +83,7 @@
         <relationship name="conPeople" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="People" inverseName="conPeopleTag" inverseEntity="People" indexed="YES"/>
     </entity>
     <elements>
-        <element name="Album" positionX="63" positionY="36" width="128" height="240"/>
+        <element name="Album" positionX="70" positionY="120" width="128" height="240"/>
         <element name="Asset" positionX="-243" positionY="-45" width="128" height="240"/>
         <element name="AssetRule" positionX="-99" positionY="315" width="128" height="105"/>
         <element name="DateRule" positionX="351" positionY="444" width="128" height="75"/>

@@ -38,13 +38,14 @@
     PhotoAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     dataSource = appDelegate.dataSource;
     oritation = [UIApplication sharedApplication].statusBarOrientation;
+    [self setThumbnailSize];
     [self setTableViewEdge:oritation];
     if(album==nil)
     {
         NSString *timeTitle = NSLocalizedString(@"Time", @"title");
         lock.enabled=NO;
         NSArray *array = [NSArray arrayWithObjects:@"All",@"Photos",@"Videos", nil];
-        datelist=[NSMutableArray arrayWithObjects:@"Recent 2 weeks",@"Recent month",@"Recent 3 mohths",@"Recent 6 months",@"More than 6 months",@"More than one year",@"UnKnow",nil];
+        datelist=[[NSMutableArray alloc]init];
         UISegmentedControl *segControl = [[UISegmentedControl alloc]initWithItems:array];
         [segControl addTarget:self action:@selector(showTypeSelections:) forControlEvents:UIControlEventValueChanged];
         segControl.selectedSegmentIndex = 0;
@@ -71,6 +72,7 @@
     tagBar.hidden = YES;
     personPt=NO;
     isFavorite=NO;
+    timeFilter = NO;
     tagSelector = [[TagSelector alloc]initWithViewController:self];
     
     tagRow=[[NSMutableArray alloc]init];
@@ -80,6 +82,8 @@
     inAssert=[[NSMutableArray alloc]init];
     photoArray = [[NSMutableArray alloc]init];
     videoArray = [[NSMutableArray alloc]init];
+    
+    datelist = [NSArray arrayWithObjects:@"Recent 2 weeks",@"Recent month",@"Recent 3 months",@"Recent 6 months",@"More than 6 months",@"More than 1 year",@"Others" ,nil];
     green = [UIImage imageNamed:@"dot-green.png"];
     red = [UIImage imageNamed:@"dot-red.png"];
     greenImageView = [[UIImageView alloc]initWithImage:green];
@@ -90,6 +94,9 @@
     allTableData = self.crwAssets;
     photoTableData = photoArray;
     videoTableData = videoArray;
+    
+    [self dataInUITableViewSectionsFromArray:allTableData]; //select data for UITableView Sections
+    
     self.likeAssets = [[NSMutableArray alloc]init];
     NSString *b=NSLocalizedString(@"Back", @"title");
     UIButton* backButton = [UIButton buttonWithType:101]; // left-pointing shape!
@@ -115,13 +122,13 @@
     passWord.secureTextEntry = YES;
     [alert1 addSubview:passWord];  
     alert1.tag=1;
-    [table reloadData];    
-    NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
-    [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+//    [table reloadData];    
+//    NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:datelist.count - 1];
+//    [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     [self configureTimeSelectionView];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EditPhotoTag:)name:@"EditPhotoTag" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableData) name:@"reloadTableData" object:nil];
-     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refresh:) name:@"refresh" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refresh:) name:@"refresh" object:nil];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -134,7 +141,7 @@
 -(void)viewWillAppear:(BOOL)animated{
     if (firstLoad) {
         [table reloadData];    
-        NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
+        NSIndexPath* ip = [NSIndexPath indexPathForRow:0 inSection:datelist.count+1];
         [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     }
 //    ThumbnailCell *cell = (ThumbnailCell *)[[self.table visibleCells]objectAtIndex:0];
@@ -149,7 +156,7 @@
     if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
         tagSelector=nil;
         [[NSNotificationCenter defaultCenter] removeObserver:tagSelector];
-        [[NSNotificationCenter defaultCenter]removeObserver:self];
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
         self.crwAssets = nil;
         self.album = nil;
         NSLog(@"wrong");
@@ -179,6 +186,7 @@
         ThumbnailCell *cell = (ThumbnailCell *)[[self.table visibleCells]objectAtIndex:0];
         NSInteger index = 0;
         NSInteger row = 0;
+        [self setThumbnailSize];
         [self.table reloadData];
         // NSLog(@"the row is %d",cell.rowNumber);
         //NSLog(@"the contentOffset is %@",NSStringFromCGPoint(self.table.contentOffset));;
@@ -219,6 +227,21 @@
 }
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+}
+
+#pragma mark - 
+#pragma mark Custom methods
+-(NSInteger)caculateRowNumbersWithNSArray:(NSArray *)rowArray{
+    return ceil(rowArray.count/thumbnailSize);
+}
+
+-(void)setThumbnailSize{
+    if (UIInterfaceOrientationIsLandscape(oritation)) {
+        thumbnailSize = 6;
+    }else{
+        thumbnailSize = 4;
+    }
+
 }
 -(void)setTableViewEdge:(UIInterfaceOrientation)orientation{
     UIEdgeInsets insets = self.table.contentInset;
@@ -705,7 +728,7 @@
     button4.tag = 4;
     button5.tag = 5;
     button6.tag = 6;
-    button7.tag = 7;
+    button7.tag = 0;
     //button8.tag = 8;
     
     [button1 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
@@ -740,31 +763,35 @@
 -(void)selectTimeRange:(id)sender{
     UIButton *bt = (UIButton *)sender;
     redImagView.frame = CGRectZero;
-    NSPredicate* result =nil;
+    /*NSPredicate* result =nil;
     NSDate *date = [NSDate date];
-   // NSLog(@"the date is %@",date);
+    NSLog(@"the date is %@",date);
     NSDateComponents *components = [[NSDateComponents alloc]init];
-    NSCalendar *gregorian = [[NSCalendar alloc]initWithCalendarIdentifier:NSGregorianCalendar];
+    NSCalendar *gregorian = [[NSCalendar alloc]initWithCalendarIdentifier:NSGregorianCalendar];*/
     switch (bt.tag) {
         case 1:
             greenImageView.frame = CGRectMake(10, 15, 10, 10);
-            [components setDay:-14];
-            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+            //[components setDay:-14];
+            //result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+            timeFilter = YES;
             break;
         case 2:
             greenImageView.frame = CGRectMake(10, 40, 10, 10);
-            [components setDay:-30];
-            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+             timeFilter = YES;
+            //[components setDay:-30];
+            //result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
             break;
         case 3:
             greenImageView.frame = CGRectMake(10, 65, 10, 10);
-            [components setDay:-90];
-            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+             timeFilter = YES;
+           // [components setDay:-90];
+            //result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
             break;
         case 4:
             greenImageView.frame = CGRectMake(10, 90, 10, 10);
-            [components setDay:-180];
-            result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+             timeFilter = YES;
+            //[components setDay:-180];
+            //result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
             break;
 //        case 5:
 //            [components setDay:-180];
@@ -773,32 +800,35 @@
 //            break;
         case 5:
             greenImageView.frame = CGRectMake(10, 115, 10, 10);
-            [components setDay:-180];
-            result=[NSPredicate predicateWithFormat:@"self.date<%@",[gregorian dateByAddingComponents:components toDate:date options:0]];
+             timeFilter = YES;
+           // [components setDay:-180];
+            //result=[NSPredicate predicateWithFormat:@"self.date<%@",[gregorian dateByAddingComponents:components toDate:date options:0]];
             break;
         case 6:
             greenImageView.frame = CGRectMake(10, 140, 10, 10);
-            [components setYear:-1];
-            result=[NSPredicate predicateWithFormat:@"self.date<%@",[gregorian dateByAddingComponents:components toDate:date options:0]];
+            timeFilter = YES;
+            //[components setYear:-1];
+            //result=[NSPredicate predicateWithFormat:@"self.date<%@",[gregorian dateByAddingComponents:components toDate:date options:0]];
             break;
         default:
             greenImageView.frame = CGRectZero;
             redImagView.frame = CGRectMake(10, 165, 10, 10);
+             timeFilter = NO;
             break;
     }
-    if (result) {
+    //if (result) {
         if (photoType) {
-            photoTableData = [photoArray filteredArrayUsingPredicate:result];
+           // photoTableData = [photoArray filteredArrayUsingPredicate:result];
             timeSelectionPhoto = bt.tag;
         }else if(videoType){
-            videoTableData = [videoArray filteredArrayUsingPredicate:result];
+            //videoTableData = [videoArray filteredArrayUsingPredicate:result];
             timeSelectionVideo = bt.tag;
         }else{
-            allTableData = [self.crwAssets filteredArrayUsingPredicate:result];
+            //allTableData = [self.crwAssets filteredArrayUsingPredicate:result];
             timeSelectionAll = bt.tag;
         }
         
-    }else{
+    /*}else{
         if (photoType) {
             if (![photoTableData isEqualToArray:photoArray]) {
                 photoTableData = photoArray;
@@ -816,10 +846,16 @@
                 timeSelectionAll = 0;
             }
         }
-    }
+    }*/
     [self showTimeSelections];
     [self.table reloadData];
-    NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
+    NSIndexPath* ip = nil;
+    if (timeFilter) {
+        ip = [NSIndexPath indexPathForRow:0 inSection:1];
+    }else{
+       ip = [NSIndexPath indexPathForRow:0 inSection:datelist.count +1];
+    }
+     
     [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
 }
 
@@ -832,16 +868,6 @@
         [UIView animateWithDuration:0.4 animations:^{
           timeSelectionsView.alpha = 1.0;
         }];
-//        if (photoType) {
-//            [self setTimeSelectionWithIndex:timeSelectionPhoto];
-//
-//        }else if(videoType){
-//            [self setTimeSelectionWithIndex:timeSelectionVideo];
-//      
-//        }else{
-//            [self setTimeSelectionWithIndex:timeSelectionAll];
-//                  
-//        }
 
         [timeSelectionsView.layer setOpaque:NO];
         timeSelectionsView.opaque = NO;
@@ -856,8 +882,79 @@
     }
    
     timeBtPressed = !timeBtPressed;
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"test" object:nil];
 }
+
+-(void)dataInUITableViewSectionsFromArray:(NSArray *)array{
+    recentTwoWk = nil;
+    recentMth = nil;
+    recentThreeMth = nil;
+    recentSixMth = nil;
+    moreThanSixMth = nil;
+    moreThanOneYear = nil;
+    unknowDate = nil;
+    //init UITableView setction data
+    NSPredicate* result =nil;
+    NSDate *date = [NSDate date];
+    // NSLog(@"the date is %@",date);
+    NSDateComponents *components = [[NSDateComponents alloc]init];
+    NSCalendar *gregorian = [[NSCalendar alloc]initWithCalendarIdentifier:NSGregorianCalendar];
+    result=[NSPredicate predicateWithFormat:@"self.date>=%@ and self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0],date];
+    
+    [components setDay:-14];
+    recentTwoWk = [array filteredArrayUsingPredicate:result];
+//    if(recentTwoWk.count != 0){
+//        [datelist addObject: @"Recent 2 weeks"];
+//        sectionCount += 1;
+//    }
+    
+    [components setDay:-30];
+    recentMth = [array filteredArrayUsingPredicate:result];
+//    if (recentMth.count != 0) {
+//        [datelist addObject:@"Recent month"];
+//        sectionCount += 1;
+//
+//    }
+    
+    [components setDay:-90];
+    recentThreeMth = [array filteredArrayUsingPredicate:result];
+//    if (recentMth.count != 0) {
+//        [datelist addObject:@"Recent 3 mohths"];
+//        sectionCount += 1;
+//
+//    }
+    
+    [components setDay:-180];
+    recentSixMth = [array filteredArrayUsingPredicate:result];
+//    if (recentSixMth.count != 0) {
+//        [datelist addObject:@"Recent 6 months"];
+//        sectionCount += 1;
+//
+//    }
+    
+    result=[NSPredicate predicateWithFormat:@"self.date<%@",[gregorian dateByAddingComponents:components toDate:date options:0]];
+    moreThanSixMth = [array filteredArrayUsingPredicate:result];
+//    if (moreThanSixMth.count != 0) {
+//        [datelist addObject:@"More than 6 months"];
+//        sectionCount += 1;
+//
+//    }
+    [components setYear:-1];
+    moreThanOneYear = [array filteredArrayUsingPredicate:result];
+//    if(moreThanOneYear.count != 0){
+//        [datelist addObject:@"More than one year"];
+//        sectionCount += 1;
+//
+//    }
+    
+    result = [NSPredicate predicateWithFormat:@"self.date == nil"];
+    unknowDate = [array filteredArrayUsingPredicate:result];
+//    if (unknowDate.count != 0) {
+//        [datelist addObject:@"UnKnowDate"];
+//        sectionCount += 1;
+//
+//    }
+}
+
 -(CGRect)setTheTimeSelectionsViewFrame:(CGFloat)y{
     CGFloat height = 185;
     CGFloat width = 190;
@@ -870,17 +967,40 @@
         photoType = NO;
         videoType = NO;
         [self setTimeSelectionWithIndex:timeSelectionAll];
+        [self dataInUITableViewSectionsFromArray:allTableData];
+        if (timeSelectionAll != 0) {
+            timeFilter = YES;
+        }else{
+            timeFilter = NO;
+        }
     }else if(seg.selectedSegmentIndex == 1){
         photoType = YES;
         videoType = NO;
         [self setTimeSelectionWithIndex:timeSelectionPhoto];
+        [self dataInUITableViewSectionsFromArray:photoTableData];
+        if (timeSelectionPhoto != 0) {
+            timeFilter = YES;
+        }else{
+            timeFilter = NO;
+        }
     }else{
         photoType = NO;
         videoType = YES;
         [self setTimeSelectionWithIndex:timeSelectionVideo];
+        [self dataInUITableViewSectionsFromArray:videoTableData];
+        if (timeSelectionVideo != 0) {
+            timeFilter = YES;
+        }else{
+            timeFilter = NO;
+        }
     }
     [self.table reloadData];
-    NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:0];
+    NSIndexPath* ip = nil;
+    if (timeFilter) {
+        ip = [NSIndexPath indexPathForRow:0 inSection:1];
+    }else{
+        ip = [NSIndexPath indexPathForRow:0 inSection:datelist.count +1];
+    }
     [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
 }
 
@@ -919,39 +1039,220 @@
 #pragma mark UITableViewDataSource and Delegate Methods
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-    return 7;
+    if (timeFilter) {
+        return 2;
+    }else{
+        return ([datelist count]+2);
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(section==0)
-    {
-    if (UIInterfaceOrientationIsLandscape(oritation)) {
-        if (photoType) {
-            lastRow = ceil([photoTableData count]/6.0)+1;
-        }else if(videoType){
-            lastRow = ceil([videoTableData count]/6.0)+1;
-        }else
-            lastRow = ceil([allTableData count]/6.0)+1;
-    }else
-        if (photoType) {
-            lastRow = ceil([photoTableData count]/4.0)+1;
-        }else if(videoType){
-            lastRow = ceil([videoTableData count]/4.0)+1;
-        }else
-            lastRow = ceil([allTableData count]/4.0)+1; 
+    if (timeFilter) {
+        if (section==0) {
+            if (photoType) {
+                switch (timeSelectionPhoto) {
+                    case 1:
+                        lastRow = [self caculateRowNumbersWithNSArray:recentTwoWk];
+                        break;
+                    case 2:
+                        lastRow = [self caculateRowNumbersWithNSArray:recentMth];
+                        break;
+                    case 3:
+                        lastRow = [self caculateRowNumbersWithNSArray:recentThreeMth];
+                        break;
+                    case 4:
+                        lastRow = [self caculateRowNumbersWithNSArray:recentSixMth];
+                        break;
+                    case 5:
+                        lastRow = [self caculateRowNumbersWithNSArray:moreThanSixMth];
+                        break;
+                    case 6:
+                        lastRow = [self caculateRowNumbersWithNSArray:moreThanOneYear];
+                        break;
+                    default:
+                        break;
+                }
+            }else if(videoType){
+                switch (timeSelectionVideo) {
+                    case 1:
+                        lastRow = [self caculateRowNumbersWithNSArray:recentTwoWk];
+                        break;
+                    case 2:
+                        lastRow = [self caculateRowNumbersWithNSArray:recentMth];
+                        break;
+                    case 3:
+                        lastRow = [self caculateRowNumbersWithNSArray:recentThreeMth];
+                        break;
+                    case 4:
+                        lastRow = [self caculateRowNumbersWithNSArray:recentSixMth];
+                        break;
+                    case 5:
+                        lastRow = [self caculateRowNumbersWithNSArray:moreThanSixMth];
+                        break;
+                    case 6:
+                        lastRow = [self caculateRowNumbersWithNSArray:moreThanOneYear];
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+        }else{
+            lastRow = 1;
+        }
+    }else{
+        switch (section) {
+            case 0:
+                lastRow = 0;
+                break;
+            case 1:
+                lastRow = [self caculateRowNumbersWithNSArray:recentTwoWk];
+                break;
+            case 2:
+                lastRow = [self caculateRowNumbersWithNSArray:recentMth];
+                break;
+            case 3:
+                lastRow = [self caculateRowNumbersWithNSArray:recentThreeMth];
+                break;
+            case 4:
+                lastRow = [self caculateRowNumbersWithNSArray:recentSixMth]; 
+                break;
+            case 5:
+                lastRow = [self caculateRowNumbersWithNSArray:moreThanSixMth];
+                break;
+            case 6:
+                lastRow = [self caculateRowNumbersWithNSArray:moreThanOneYear];
+                break;
+            case 7:
+                lastRow = [self caculateRowNumbersWithNSArray:unknowDate];
+                break;
+            default:
+                lastRow = 1;
+                break;
+        }
+    }
+    /* if (UIInterfaceOrientationIsLandscape(oritation)) {
+     if (photoType) {
+     lastRow = ceil([photoTableData count]/6.0)+1;
+     }else if(videoType){
+     lastRow = ceil([videoTableData count]/6.0)+1;
+     }else
+     lastRow = ceil([allTableData count]/6.0)+1;
+     }else
+     if (photoType) {
+     lastRow = ceil([photoTableData count]/4.0)+1;
+     }else if(videoType){
+     lastRow = ceil([videoTableData count]/4.0)+1;
+     }else
+     lastRow = ceil([allTableData count]/4.0)+1; */
     
     return lastRow;
-    }
-    else
-        return 0;
+   
 }
 
-
+-(NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section{
+    NSString *sectionTitle = nil;
+    if (!timeFilter) {
+        
+    switch (section) {
+        case 0:
+            if (recentTwoWk.count!=0) {
+                sectionTitle = [datelist objectAtIndex:section];
+            }
+            break;
+        case 1:
+            if (recentMth.count!=0) {
+                sectionTitle = [datelist objectAtIndex:section];
+            }
+            
+            break;
+        case 2:
+            if (recentThreeMth.count!=0) {
+                sectionTitle = [datelist objectAtIndex:section];
+            }
+            
+            break;
+        case 3:
+            if (recentSixMth.count!=0) {
+                sectionTitle = [datelist objectAtIndex:section];
+            }
+            
+            break;
+        case 4:
+            if (moreThanSixMth.count!=0) {
+                sectionTitle = [datelist objectAtIndex:section];
+            }
+            
+            break;
+        case 5:
+            if (moreThanOneYear.count!=0) {
+                sectionTitle = [datelist objectAtIndex:section];
+            }
+            
+            break;
+        case 6:
+            if (unknowDate.count!=0) {
+                sectionTitle = [datelist objectAtIndex:section];
+            }
+            break;
+        default:
+            break;
+            
+    }
+    }
+    return sectionTitle;
+}
+/*
 - (NSString *)tableView:(UITableView *)aTableView titleForHeaderInSection:(NSInteger)section
 {
-    NSString *name1=[datelist objectAtIndex:section];
-    return name1;
-}
+    NSString *sectionTitle = nil;
+    switch (section) {
+        case 0:
+            if (recentTwoWk.count!=0) {
+                sectionTitle = [datelist objectAtIndex:section];
+            }
+            break;
+        case 1:
+            if (recentMth.count!=0) {
+                sectionTitle = [datelist objectAtIndex:section];
+            }
+
+            break;
+        case 2:
+            if (recentThreeMth.count!=0) {
+                sectionTitle = [datelist objectAtIndex:section];
+            }
+
+            break;
+        case 3:
+            if (recentSixMth.count!=0) {
+                sectionTitle = [datelist objectAtIndex:section];
+            }
+
+            break;
+        case 4:
+            if (moreThanSixMth.count!=0) {
+                sectionTitle = [datelist objectAtIndex:section];
+            }
+
+            break;
+        case 5:
+            if (moreThanOneYear.count!=0) {
+                sectionTitle = [datelist objectAtIndex:section];
+            }
+
+            break;
+        case 6:
+            if (unknowDate.count!=0) {
+                sectionTitle = [datelist objectAtIndex:section];
+            }
+            break;
+        default:
+            break;
+
+    }
+    return sectionTitle;
+}*/
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"Cell";
@@ -965,7 +1266,7 @@
     cell.selectionDelegate = self;
     cell.rowNumber = indexPath.row;
     [cell.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    if (indexPath.row == lastRow - 1 && indexPath.section == 7) {
+    if (indexPath.section == datelist.count+1) {
         NSInteger vcount = 0;
         NSInteger pcount = 0;
         UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(cell.frame.origin.x, 10, cell.frame.size.width, cell.frame.size.height-20)];
@@ -1000,32 +1301,117 @@
         }
         
         label.text = [self configurateLastRowPhotoCount:pcount VideoCount:vcount];
-        
         [cell addSubview:label];        
     }else{
-        NSInteger loopCount = 0;
-        if (UIInterfaceOrientationIsLandscape(oritation)) {
-            loopCount = 6;
-        }else
-            loopCount = 4;
         NSMutableArray *assetsInRow = [[NSMutableArray alloc]init];
         
-        for (NSInteger i = 0; i<loopCount; i++) {
-            NSInteger row = (indexPath.row*loopCount)+i;
-            
+        for (NSInteger i = 0; i<thumbnailSize; i++) {
+            NSInteger row = (indexPath.row*thumbnailSize)+i;
             Asset *dbAsset = nil;
-           if (videoType) {
-                if (row < [videoTableData count]) {
-                    dbAsset = [videoTableData objectAtIndex:row];
+//           if (videoType) {
+//                if (row < [videoTableData count]) {
+//                    dbAsset = [videoTableData objectAtIndex:row];
+//                }
+//            }else if(photoType){
+//                if (row < [photoTableData count]) {
+//                    dbAsset = [photoTableData objectAtIndex:row];
+//                }
+//                
+//            }else{
+//                if (row < [allTableData count]) {
+//                    dbAsset = [allTableData objectAtIndex:row];
+//                }
+//            }
+            if (timeFilter) {
+                switch (indexPath.section) {
+                    case 0:
+                        if (photoType) {
+                            switch (timeSelectionPhoto) {
+                                case 1:
+                                    dbAsset = [recentTwoWk objectAtIndex:row];
+                                    break;
+                                case 2:
+                                    dbAsset = [recentMth objectAtIndex:row];
+                                    break;
+                                case 3:
+                                    dbAsset = [recentThreeMth objectAtIndex:row];
+                                    break;
+                                case 4:
+                                    dbAsset = [recentSixMth objectAtIndex:row];
+                                    break;
+                                case 5:
+                                    dbAsset = [moreThanSixMth objectAtIndex:row];
+                                    break;
+                                case 6:
+                                    dbAsset = [moreThanOneYear objectAtIndex:row];
+                                    break;
+                                case 7:
+                                    dbAsset = [unknowDate objectAtIndex:row];
+                                    break;
+                                    
+                                default:
+                                    break;
+                            }
+                        }else if(videoType){
+                            switch (timeSelectionVideo) {
+                                    
+                                case 1:
+                                    dbAsset = [recentTwoWk objectAtIndex:row];
+                                    break;
+                                case 2:
+                                    dbAsset = [recentMth objectAtIndex:row];
+                                    break;
+                                case 3:
+                                    dbAsset = [recentThreeMth objectAtIndex:row];
+                                    break;
+                                case 4:
+                                    dbAsset = [recentSixMth objectAtIndex:row];
+                                    break;
+                                case 5:
+                                    dbAsset = [moreThanSixMth objectAtIndex:row];
+                                    break;
+                                case 6:
+                                    dbAsset = [moreThanOneYear objectAtIndex:row];
+                                    break;
+                                case 7:
+                                    dbAsset = [unknowDate objectAtIndex:row];
+                                    break;
+                                    
+                                default:
+                                    break;
+                            }
+                        }
+                        break;
+                    default: 
+                        break;
+                        
                 }
-            }else if(photoType){
-                if (row < [photoTableData count]) {
-                    dbAsset = [photoTableData objectAtIndex:row];
-                }
-                
             }else{
-                if (row < [allTableData count]) {
-                    dbAsset = [allTableData objectAtIndex:row];
+                switch (indexPath.section) {
+                    case 1:
+                        dbAsset = [recentTwoWk objectAtIndex:row];
+                        break;
+                    case 2:
+                        dbAsset = [recentMth objectAtIndex:row];
+                        break;
+                    case 3:
+                        dbAsset = [recentThreeMth objectAtIndex:row];
+                        break;
+                    case 4:
+                        dbAsset = [recentSixMth objectAtIndex:row];
+                        break;
+                    case 5:
+                        dbAsset = [moreThanSixMth objectAtIndex:row];
+                        break;
+                    case 6:
+                        dbAsset = [moreThanOneYear objectAtIndex:row];
+                        break;
+                    case 7:
+                        dbAsset = [unknowDate objectAtIndex:row];
+                        break;
+                        
+                    default:
+                        break;
                 }
             }
             if (dbAsset != nil) {
@@ -1066,11 +1452,11 @@
                 [assetsInRow addObject:dbAsset];
             }
         }
-        [cell displayThumbnails:assetsInRow count:loopCount action:action];
+        [cell displayThumbnails:assetsInRow count:thumbnailSize action:action];
         
         if (!action) {
-            for (NSInteger i = 0; i<loopCount; i++) {
-                NSInteger row = (indexPath.row*loopCount)+i;
+            for (NSInteger i = 0; i<thumbnailSize; i++) {
+                NSInteger row = (indexPath.row*thumbnailSize)+i;
                 if (row<[self.crwAssets count]) {
                     
                     NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
@@ -1308,6 +1694,13 @@
     for (ThumbnailCell *cell in self.table.visibleCells) {
         [cell clearSelection];
     }
+   /* CGFloat sectionHeaderHeight = 65;
+    if (scrollView.contentOffset.y<=sectionHeaderHeight&&scrollView.contentOffset.y>=0) {
+        scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0);
+    } else if (scrollView.contentOffset.y>=sectionHeaderHeight) {
+        scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, 0, 0);
+    }*/
+
 }
 #pragma  mark -
 #pragma  mark AlerView delegate method
@@ -1389,5 +1782,13 @@
     [super viewDidUnload];
 }
 
+-(void)dealloc{
+    self.table = nil;
+    self.crwAssets = nil;
+    self.viewBar = nil;
+    self.tagBar = nil;
+    NSLog(@"run");
+
+}
 
 @end

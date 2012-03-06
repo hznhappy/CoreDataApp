@@ -519,7 +519,7 @@ CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
         self.scrollView.frame = CGRectMake(originX, originY, width, height);
 		//self.scrollView.frame = CGRectMake((self.bounds.size.width / 2) - (width / 2), (self.bounds.size.height / 2) - (height / 2), width, height);
 		self.scrollView.layer.position = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
-		if (!CGRectEqualToRect(frame, self.scrollView.frame)) {		
+		if (!CGRectEqualToRect(frame, self.scrollView.frame)) {
 			CGFloat offsetY, offsetX;
             
 			if (frame.origin.y < self.scrollView.frame.origin.y) {

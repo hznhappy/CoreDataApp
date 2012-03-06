@@ -223,7 +223,6 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateToolBar) name:@"changeLockModeInDetailView" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setTagToolBar) name:@"setTagToolBar" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventForAsset:) name:@"addEvent" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(testMemory) name:@"test" object:nil];
 }
 
 -(void)testMemory{
@@ -450,11 +449,11 @@
     [outputFormatter setDateFormat:@"yyyy:MM:dd"];
     NSString *dateStr = [outputFormatter stringFromDate:asset.date];
     if (dateStr.length == 0 || dateStr == nil) {
-        date.text = [NSString stringWithFormat:@"DATE: "];
+        date.text = [NSString stringWithFormat:@""];
         date.textColor = [UIColor colorWithRed:254/255.0 green:202/255.0 blue:24/255.0 alpha:1.0];
         date.font = [UIFont boldSystemFontOfSize:14];
     }else{
-        date.text = [NSString stringWithFormat:@"DATE:%@",dateStr];
+        date.text = [NSString stringWithFormat:@"%@",dateStr];
         date.textColor = [UIColor colorWithRed:254/255.0 green:202/255.0 blue:24/255.0 alpha:1.0];
         date.font = [UIFont systemFontOfSize:14];
     }
@@ -1311,6 +1310,5 @@
     controlVisibilityTimer = nil;
     timer = nil;
 	_scrollView=nil;
-    NSLog(@"dealloc run");
 }
 @end

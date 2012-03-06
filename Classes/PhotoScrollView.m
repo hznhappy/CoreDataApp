@@ -89,7 +89,7 @@
 	rect.origin.x = MAX((center.x - (rect.size.width / 2.0f)), 0.0f);		
 	rect.origin.y = MAX((center.y - (rect.size.height / 2.0f)), 0.0f);
 
-	CGRect frame = [self.superview convertRect:self.frame toView:self.superview];
+	CGRect frame = self.frame;//[self.superview convertRect:self.frame toView:self.superview];
 
 	CGFloat borderX = frame.origin.x;
 	CGFloat borderY = frame.origin.y;

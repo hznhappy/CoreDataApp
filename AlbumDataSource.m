@@ -159,7 +159,7 @@
         @autoreleasepool {
        // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
         NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
-      //NSLog(@"metadata:%@",[[alAsset defaultRepresentation]metadata]);
+//       NSLog(@"metadata:%@",[[alAsset defaultRepresentation]metadata]);
         //NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
        // NSLog(@"strdate:%@",strDate);
         NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
@@ -266,7 +266,6 @@
         @autoreleasepool {
             // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
             NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
-            //NSLog(@"strdate:%@",strDate);
             //NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
             // NSLog(@"strdate:%@",strDate);
             NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
