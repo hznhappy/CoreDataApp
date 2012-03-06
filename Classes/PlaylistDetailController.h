@@ -55,6 +55,7 @@
     UILabel *PersonLabel;
     UILabel *DateLabel;
     UILabel *SortOrder;
+    UILabel *EventLabel;
     
     UISwitch *favoriteSW;
     UITextField *textField;
@@ -93,7 +94,7 @@
 @property(nonatomic,strong)IBOutlet UILabel *PersonLabel;
 @property(nonatomic,strong)IBOutlet UILabel *DateLabel;
 @property(nonatomic,strong)IBOutlet UILabel *SortOrder;
-
+@property(nonatomic,strong)IBOutlet UILabel *EventLabel;
 @property(nonatomic,strong)IBOutlet UISwitch *favoriteSW;
 
 //@property(nonatomic,strong)IBOutlet UITableViewCell *chooseCell;
@@ -126,17 +127,17 @@
 //@property(nonatomic,strong)UIButton *peopleRuleButton;
 -(IBAction)hideKeyBoard:(id)sender;
 -(IBAction)updateTable:(id)sender;
--(IBAction)resetAll;
+//-(IBAction)resetAll;
 -(IBAction)AddContacts;
--(IBAction)upSort:(id)sender;
--(UIButton *)getStateButton;
--(IBAction)playAlbumPhotos:(id)sender;
+//-(IBAction)upSort:(id)sender;
+//-(UIButton *)getStateButton;
+//-(IBAction)playAlbumPhotos:(id)sender;
 -(void)insert:(NSInteger)Row rule:(NSString *)rule;
 -(void)update:(NSInteger)Row rule:(NSString *)rule;
 -(void)addPlay;
 -(void)album;
--(void)setSort;
--(void)setOrder;
+//-(void)setSort;
+//-(void)setOrder;
 -(void)table;
 -(UIButton *)chooseButton;
 -(IBAction)text;
@@ -146,6 +147,7 @@
 -(void)changePeople:(NSNotification *)note;
 -(void)changeDate:(NSNotification *)note;
 -(void)personLabel:(NSMutableArray *)person;
+-(void)eventLabel:(NSMutableArray *)event;
 -(IBAction)chooseMyfavorite:(id)sender;
 
 @end

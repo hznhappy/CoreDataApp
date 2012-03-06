@@ -8,9 +8,11 @@
 
 #import "SettingController.h"
 #import "resetView.h"
-
+#import "PhotoAppDelegate.h"
+#import "Setting.h"
 @implementation SettingController
 @synthesize table;
+@synthesize lockSW;
 @synthesize iconsizeCell,albumiconCell,lockmodeCell,dateCell,resetCell,versionCell;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -66,7 +68,14 @@
                 if (cell == nil) {
                     cell = self.iconsizeCell;
                     cell.accessoryView = [self iconsizeButton];
+                    if([setting.iconSize isEqualToString:@"normal"])
+                    {
+                    iconsizeButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+                    [iconsizeButton setTitle:@"normal" forState:UIControlStateNormal];
+                    }
                     cell.selectionStyle=UITableViewCellSelectionStyleNone;
+                    
+                    
                 }
                 break;
             case 1:
@@ -74,6 +83,13 @@
                 if (cell == nil) {
                     cell = self.albumiconCell;
                     cell.accessoryView = [self albumiconButton];
+                    if([setting.albumIcon  isEqualToString:@"firstPic"])
+                    {
+                    albumiconButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+                    [albumiconButton setTitle:@"firstPic" forState:UIControlStateNormal];
+                    
+                    }
+                    
                     cell.selectionStyle=UITableViewCellSelectionStyleNone;
                 }
                 break;
@@ -91,6 +107,11 @@
                 {
                     cell=self.dateCell;
                     cell.accessoryView = [self dateButton];
+                    if([setting.dateInfo isEqualToString:@"relative"])
+                    {
+                    dateButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+                    [dateButton setTitle:@"relative" forState:UIControlStateNormal];
+                    }
                     cell.selectionStyle=UITableViewCellSelectionStyleNone;
                 }
                 break;
@@ -160,16 +181,16 @@
     if ([button.titleLabel.text isEqualToString:@"exact"]) {
         button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
         [button setTitle:@"relative" forState:UIControlStateNormal];
-        //  album.sortOrder=[NSNumber numberWithBool:NO];
+        setting.dateInfo=@"relative";
         
     }
     else if ([button.titleLabel.text isEqualToString:@"relative"]){
         button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
         [button setTitle:@"exact" forState:UIControlStateNormal];
-        //album.sortOrder=[NSNumber numberWithBool:YES];
+        setting.dateInfo=@"exact";
         
     }
-    //[dataSource.coreData saveContext];
+    [dataSource.coreData saveContext];
     
 }
 -(void)icon:(id)sender
@@ -179,16 +200,16 @@
     if ([button.titleLabel.text isEqualToString:@"lastPic"]) {
         button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
         [button setTitle:@"firstPic" forState:UIControlStateNormal];
-        //  album.sortOrder=[NSNumber numberWithBool:NO];
+        setting.albumIcon=@"firstPic";
         
     }
     else if ([button.titleLabel.text isEqualToString:@"firstPic"]){
         button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
         [button setTitle:@"lastPic" forState:UIControlStateNormal];
-        //album.sortOrder=[NSNumber numberWithBool:YES];
+       setting.albumIcon=@"lastPic";
         
     }
-    //[dataSource.coreData saveContext];
+    [dataSource.coreData saveContext];
     
 }
 
@@ -200,19 +221,29 @@
     if ([button.titleLabel.text isEqualToString:@"bigger"]) {
         button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
         [button setTitle:@"normal" forState:UIControlStateNormal];
-      //  album.sortOrder=[NSNumber numberWithBool:NO];
-        
+        setting.iconSize=@"normal"; 
     }
     else if ([button.titleLabel.text isEqualToString:@"normal"]){
         button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
         [button setTitle:@"bigger" forState:UIControlStateNormal];
-        //album.sortOrder=[NSNumber numberWithBool:YES];
-        
+        setting.iconSize=@"bigger";
     }
-    //[dataSource.coreData saveContext];
+    [dataSource.coreData saveContext];
     
 }
 
+-(IBAction)chooseLockMode:(id)sender
+{
+    UISwitch *newSwitcn  = (UISwitch *)sender;
+    
+    if (newSwitcn.on) {
+        setting.lockMode=[NSNumber numberWithBool:YES];
+                
+    }else{
+       setting.lockMode=[NSNumber numberWithBool:NO];
+    }
+    [dataSource.coreData saveContext];
+}
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if(indexPath.section==0&&indexPath.row==4)
@@ -227,6 +258,26 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    app=[[UIApplication sharedApplication]delegate];
+    dataSource=app.dataSource;
+     NSArray *tmp=[dataSource simpleQuery:@"Setting" predicate:nil sortField:nil sortOrder:YES];
+    if(tmp.count!=0)
+    {
+        setting=[tmp objectAtIndex:0];
+    }
+    else
+    {
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Setting" inManagedObjectContext:[dataSource.coreData managedObjectContext]]; 
+       setting=[[Setting alloc]initWithEntity:entity insertIntoManagedObjectContext:[dataSource.coreData managedObjectContext]];
+    }
+    if(setting.lockMode.boolValue||setting.lockMode==nil)
+    {
+        lockSW.on=YES;
+    }
+    else
+    {
+        lockSW.on=NO;
+    }
     // Do any additional setup after loading the view from its nib.
 }
 

@@ -157,6 +157,7 @@
                                                            object:self 
                                                          userInfo:dic1]; 
         }
+        [self dismissModalViewControllerAnimated:YES];
         
     }
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];

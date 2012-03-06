@@ -285,6 +285,7 @@ int j=1,count=0;
 
 -(void)table
 {
+    NSLog(@"TABLE");
    //favorate.favorite=[NSNumber numberWithBool:YES];
     [peopleList removeAllObjects];
     [self.result removeAllObjects];
@@ -502,7 +503,7 @@ int j=1,count=0;
 -(void)deletePeople:(NSInteger)Index
 {
     //[datasource.coreData.managedObjectContext deleteObject:favorate1];
-    favorate1.favorite=[NSNumber numberWithBool:YES];
+    favorate1.favorite=[NSNumber numberWithBool:NO];
     [datasource.coreData saveContext]; 
     [self.result removeObjectAtIndex:Index];
     [self.peopleList removeObjectAtIndex:Index];
