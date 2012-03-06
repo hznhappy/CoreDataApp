@@ -237,9 +237,9 @@
 
 -(void)setThumbnailSize{
     if (UIInterfaceOrientationIsLandscape(oritation)) {
-        thumbnailSize = 6;
+        thumbnailSize = 6.0;
     }else{
-        thumbnailSize = 4;
+        thumbnailSize = 4.0;
     }
 
 }
@@ -1389,24 +1389,31 @@
             }else{
                 switch (indexPath.section) {
                     case 1:
+                        if(row<recentTwoWk.count)
                         dbAsset = [recentTwoWk objectAtIndex:row];
                         break;
                     case 2:
+                        if(row<recentMth.count)
                         dbAsset = [recentMth objectAtIndex:row];
                         break;
                     case 3:
+                        if(row<recentThreeMth.count)
                         dbAsset = [recentThreeMth objectAtIndex:row];
                         break;
                     case 4:
+                        if(row<recentSixMth.count)
                         dbAsset = [recentSixMth objectAtIndex:row];
                         break;
                     case 5:
+                        if(row<moreThanSixMth.count)
                         dbAsset = [moreThanSixMth objectAtIndex:row];
                         break;
                     case 6:
+                        if(row<moreThanOneYear.count)
                         dbAsset = [moreThanOneYear objectAtIndex:row];
                         break;
                     case 7:
+                        if(row<unknowDate.count)
                         dbAsset = [unknowDate objectAtIndex:row];
                         break;
                         

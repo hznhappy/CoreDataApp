@@ -19,6 +19,7 @@
 #import "EventTableView.h"
 #import "favorite.h"
 #import "Event.h"
+#import "Setting.h"
 @interface PhotoViewController (Private)
 
 - (void)setBarsHidden:(BOOL)hidden animated:(BOOL)animated;
@@ -448,6 +449,18 @@
     NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
     [outputFormatter setDateFormat:@"yyyy:MM:dd"];
     NSString *dateStr = [outputFormatter stringFromDate:asset.date];
+    NSDate *Currentdate = [NSDate date];
+    NSTimeInterval late=[asset.date timeIntervalSince1970]*1;
+   // NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+    NSTimeInterval now=[Currentdate timeIntervalSince1970]*1;
+    NSString *timeString=@"";
+    NSTimeInterval cha=now-late;
+    timeString = [NSString stringWithFormat:@"%f", cha/86400];
+    timeString = [timeString substringToIndex:timeString.length-7];
+    timeString=[NSString stringWithFormat:@"%@天前", timeString];
+    NSLog(@"timeString:%@",timeString);
+   // NSDate *lastWeek = [gregorian dateByAddingComponents:components toDate:date options:0];
+
     if (dateStr.length == 0 || dateStr == nil) {
         date.text = [NSString stringWithFormat:@""];
         date.textColor = [UIColor colorWithRed:254/255.0 green:202/255.0 blue:24/255.0 alpha:1.0];
@@ -455,7 +468,7 @@
     }else{
         date.text = [NSString stringWithFormat:@"%@",dateStr];
         date.textColor = [UIColor colorWithRed:254/255.0 green:202/255.0 blue:24/255.0 alpha:1.0];
-        date.font = [UIFont systemFontOfSize:14];
+        date.font = [UIFont boldSystemFontOfSize:14];
     }
     
     [assetInfoView setBackgroundColor:[UIColor clearColor]];

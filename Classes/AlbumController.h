@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "Setting.h"
 @class PhotoAppDelegate;
 @class AlbumDataSource;
 @class Album;
@@ -19,6 +20,7 @@
     NSMutableArray *assets;
     UIBarButtonItem *addButon;
     int index;
+    Setting *setting;
 }
 
 @property(nonatomic,strong)IBOutlet UITableView *tableView; 

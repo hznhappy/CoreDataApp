@@ -52,6 +52,13 @@
     self.navigationItem.rightBarButtonItem = editButton;
    // self.navigationItem.rightBarButtonItem = addButon;
     
+    NSArray *tmp=[dataSource simpleQuery:@"Setting" predicate:nil sortField:nil sortOrder:YES];
+    if(tmp.count!=0)
+    {
+        setting=[tmp objectAtIndex:0];
+    }
+
+    
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabled:) name:@"addplay" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(editTable) name:@"editplay" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refresh:) name:@"refresh" object:nil];
@@ -229,7 +236,15 @@
     [[cell viewWithTag:101] removeFromSuperview];
      [[cell viewWithTag:100] removeFromSuperview];
     AmptsAlbum *am = (AmptsAlbum *)[assets objectAtIndex:indexPath.row];
-    Asset *as = [am.assetsList lastObject];
+    Asset *as=nil;
+    if([setting.albumIcon isEqualToString:@"firstPic"])
+    {
+        as=[am.assetsList objectAtIndex:0];   
+    }
+    else
+    {
+     as = [am.assetsList lastObject];   
+    }
     if (as == nil) {
         cell.imageView.image = [UIImage imageNamed:@"empty1.png"]; 
     }else{

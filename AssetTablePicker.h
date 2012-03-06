@@ -54,7 +54,7 @@
     NSInteger timeSelectionPhoto;
     NSInteger timeSelectionVideo;
    // NSInteger sectionCount;
-    NSInteger thumbnailSize;
+   float thumbnailSize;
     
     BOOL mode;
     BOOL load;

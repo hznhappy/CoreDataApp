@@ -51,11 +51,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/PhotoViewController.m"
-         timestampString = "352715670.868505"
+         timestampString = "352722279.566071"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1646"
-         endingLineNumber = "1646"
+         startingLineNumber = "1659"
+         endingLineNumber = "1659"
          landmarkName = "@implementation PhotoViewController"
          landmarkType = "3">
       </FileBreakpoint>
@@ -119,11 +119,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/AlbumController.m"
-         timestampString = "352109318.456362"
+         timestampString = "352720319.730345"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "109"
-         endingLineNumber = "109"
+         startingLineNumber = "116"
+         endingLineNumber = "116"
          landmarkName = "-refresh:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -147,11 +147,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AssetTablePicker.m"
-         timestampString = "352715043.043918"
+         timestampString = "352719628.975101"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1482"
-         endingLineNumber = "1482"
+         startingLineNumber = "1489"
+         endingLineNumber = "1489"
          landmarkName = "-configurateLastRowPhotoCount:VideoCount:"
          landmarkType = "5">
       </FileBreakpoint>
