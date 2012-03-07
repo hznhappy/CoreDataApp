@@ -964,6 +964,9 @@
     
     result = [NSPredicate predicateWithFormat:@"self.date == nil"];
     unknowDate = [array filteredArrayUsingPredicate:result];
+    
+    array = nil;
+
 }
 
 -(CGRect)setTheTimeSelectionsViewFrame:(CGFloat)y{
