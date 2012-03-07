@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "ThumbnailCell.h"
 #import "Event.h"
+#import "Setting.h"
 
 @class TagSelector;
 @class Album;
@@ -95,6 +96,7 @@
     TagSelector *tagSelector;
     Album *album;
     Event *event;
+    Setting *setting;
 }
 @property (nonatomic,strong)IBOutlet UITableView *table;
 @property (nonatomic,strong)IBOutlet UIToolbar *viewBar;
@@ -135,7 +137,7 @@
 -(void)showTimeSelections;
 -(NSString *)configurateLastRowPhotoCount:(NSInteger)pCount VideoCount:(NSInteger)vCount;
 -(void)setTimeSelectionWithIndex:(NSInteger)index;
--(void)dataInUITableViewSectionsFromArray:(NSArray *)array;
+-(NSArray *)dataInUITableViewSectionsFromArray:(NSArray *)array;
 -(NSInteger)caculateRowNumbersWithNSArray:(NSArray *)rowArray;
 -(void)setThumbnailSize;
 @end

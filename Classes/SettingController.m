@@ -68,10 +68,10 @@
                 if (cell == nil) {
                     cell = self.iconsizeCell;
                     cell.accessoryView = [self iconsizeButton];
-                    if([setting.iconSize isEqualToString:@"Normal"])
+                    if([setting.iconSize isEqualToString:@"Bigger"])
                     {
                     iconsizeButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-                    [iconsizeButton setTitle:@"Normal" forState:UIControlStateNormal];
+                    [iconsizeButton setTitle:@"Bigger" forState:UIControlStateNormal];
                     }
                     cell.selectionStyle=UITableViewCellSelectionStyleNone;
                     
@@ -158,7 +158,7 @@
     iconsizeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     iconsizeButton.frame = CGRectMake(0, 0, 105, 28);
     [iconsizeButton addTarget:self action:@selector(size:) forControlEvents:UIControlEventTouchUpInside];
-    [iconsizeButton setTitle:@"Bigger" forState:UIControlStateNormal];
+    [iconsizeButton setTitle:@"Normal" forState:UIControlStateNormal];
     iconsizeButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
     [iconsizeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     return iconsizeButton;
@@ -219,12 +219,12 @@
     UIButton *button = (UIButton *)sender;
     [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     if ([button.titleLabel.text isEqualToString:@"Bigger"]) {
-        button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
+        button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
         [button setTitle:@"Normal" forState:UIControlStateNormal];
         setting.iconSize=@"Normal"; 
     }
     else if ([button.titleLabel.text isEqualToString:@"Normal"]){
-        button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
+         button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
         [button setTitle:@"Bigger" forState:UIControlStateNormal];
         setting.iconSize=@"Bigger";
     }

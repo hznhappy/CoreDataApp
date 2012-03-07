@@ -217,9 +217,9 @@
     //bum.name=textField.text;
     [appDelegate.dataSource.coreData saveContext];
     }
-    if(bum!=nil&&keybord==YES)
+    if(bum!=nil)
     {
-        if(bum.name==nil||bum.name.length==0)
+        if(textField.text==nil||[textField.text length]==0)
         {
         [appDelegate.dataSource.coreData.managedObjectContext deleteObject:bum];
         [appDelegate.dataSource.coreData saveContext];

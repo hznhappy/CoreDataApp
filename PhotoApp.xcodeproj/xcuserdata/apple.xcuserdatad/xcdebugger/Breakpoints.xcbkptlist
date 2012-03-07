@@ -105,11 +105,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AssetTablePicker.h"
-         timestampString = "352778811.923845"
+         timestampString = "352803419.949034"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "103"
-         endingLineNumber = "103"
+         startingLineNumber = "105"
+         endingLineNumber = "105"
          landmarkName = "@interface AssetTablePicker"
          landmarkType = "2">
       </FileBreakpoint>
@@ -147,11 +147,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AssetTablePicker.m"
-         timestampString = "352796192.667094"
+         timestampString = "352804601.087271"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1508"
-         endingLineNumber = "1508"
+         startingLineNumber = "1547"
+         endingLineNumber = "1547"
          landmarkName = "-configurateLastRowPhotoCount:VideoCount:"
          landmarkType = "5">
       </FileBreakpoint>
