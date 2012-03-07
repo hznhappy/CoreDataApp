@@ -20,6 +20,7 @@
 #import "favorite.h"
 #import "Event.h"
 #import "Setting.h"
+#import "PhotoAppDelegate.h"
 @interface PhotoViewController (Private)
 
 - (void)setBarsHidden:(BOOL)hidden animated:(BOOL)animated;
@@ -220,6 +221,13 @@
    // }
     [self updatePages];
     [self hideControlsAfterDelay];
+    app=[[UIApplication sharedApplication]delegate];
+    dataSource=app.dataSource;
+    NSArray *tmp=[dataSource simpleQuery:@"Setting" predicate:nil sortField:nil sortOrder:YES];
+    if(tmp.count!=0)
+    {
+        setting=[tmp objectAtIndex:0];
+    }
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(resetCropView) name:@"resetCropView" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateToolBar) name:@"changeLockModeInDetailView" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setTagToolBar) name:@"setTagToolBar" object:nil];
@@ -446,19 +454,42 @@
     UILabel *date = [[UILabel alloc]initWithFrame:CGRectMake(10, 64, 150, 25)];
     
     date.backgroundColor = [UIColor clearColor];
-    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-    [outputFormatter setDateFormat:@"yyyy:MM:dd"];
-    NSString *dateStr = [outputFormatter stringFromDate:asset.date];
+    
+    if([setting.dateInfo isEqualToString:@"Relative"])
+    {
+        NSString *dateStr=[asset.date description];
+        NSLog(@"datetime:%@",dateStr);
+         if (dateStr.length == 0 || dateStr == nil)
+         {}
+        else
+        {
     NSDate *Currentdate = [NSDate date];
     NSTimeInterval late=[asset.date timeIntervalSince1970]*1;
-   // NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+  
     NSTimeInterval now=[Currentdate timeIntervalSince1970]*1;
     NSString *timeString=@"";
     NSTimeInterval cha=now-late;
     timeString = [NSString stringWithFormat:@"%f", cha/86400];
     timeString = [timeString substringToIndex:timeString.length-7];
     timeString=[NSString stringWithFormat:@"%@天前", timeString];
+       
     NSLog(@"timeString:%@",timeString);
+        if (timeString.length == 0 || timeString == nil) {
+            date.text = [NSString stringWithFormat:@""];
+            date.textColor = [UIColor colorWithRed:254/255.0 green:202/255.0 blue:24/255.0 alpha:1.0];
+            date.font = [UIFont boldSystemFontOfSize:14];
+        }else{
+            date.text = [NSString stringWithFormat:@"%@",timeString];
+            date.textColor = [UIColor colorWithRed:254/255.0 green:202/255.0 blue:24/255.0 alpha:1.0];
+            date.font = [UIFont boldSystemFontOfSize:14];
+        }
+        }
+    }
+    else
+    {
+    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+    [outputFormatter setDateFormat:@"yyyy:MM:dd"];
+    NSString *dateStr = [outputFormatter stringFromDate:asset.date];
    // NSDate *lastWeek = [gregorian dateByAddingComponents:components toDate:date options:0];
 
     if (dateStr.length == 0 || dateStr == nil) {
@@ -470,7 +501,7 @@
         date.textColor = [UIColor colorWithRed:254/255.0 green:202/255.0 blue:24/255.0 alpha:1.0];
         date.font = [UIFont boldSystemFontOfSize:14];
     }
-    
+    }
     [assetInfoView setBackgroundColor:[UIColor clearColor]];
     [assetInfoView addSubview:date];
     [self.scrollView addSubview:assetInfoView];
@@ -919,19 +950,19 @@
 }
 
 -(void)addEventForAsset:(NSNotification*)note{
-    PhotoAppDelegate *app = [UIApplication sharedApplication].delegate;
+    PhotoAppDelegate *app1 = [UIApplication sharedApplication].delegate;
     Asset *asset = [self.playlist.storeAssets objectAtIndex:currentPageIndex];
     Event *event = [[note userInfo] valueForKey:@"event"];
     asset.conEvent = event;
-    [app.dataSource.coreData saveContext];
+    [app1.dataSource.coreData saveContext];
     [self setTagToolBar];
 }
 
 -(void)tagNobody{
     [self releasePersonPt];
-     PhotoAppDelegate *app = [UIApplication sharedApplication].delegate;
+     PhotoAppDelegate *app1 = [UIApplication sharedApplication].delegate;
     [tagSelector.peopleList removeAllObjects];
-    favorite *fi=[app.dataSource.favoriteList objectAtIndex:0];
+    favorite *fi=[app1.dataSource.favoriteList objectAtIndex:0];
     People *p1=fi.people;
     [tagSelector.peopleList addObject:p1];
     Asset *asset = [self.playlist.storeAssets objectAtIndex: currentPageIndex];
@@ -975,34 +1006,35 @@
 #pragma mark -
 #pragma mark Bar Methods
 - (void)setBarsHidden:(BOOL)hidden animated:(BOOL)animated{
-	if (hidden&&_barsHidden) return;
-    [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:UIStatusBarAnimationFade];
-    if (hidden) {
-        [UIView animateWithDuration:0.4 animations:^{
-            self.navigationController.navigationBar.alpha = 0;
-            self.navigationController.toolbar.alpha = 0;
-        }];
-    }else{
-        [UIView animateWithDuration:0.4 animations:^{
-            self.navigationController.navigationBar.alpha = 1;
-            self.navigationController.toolbar.alpha = 1;
-        }];
-        CGRect statusBarFrame = [[UIApplication sharedApplication] statusBarFrame];
-        CGRect frame = self.navigationController.navigationBar.frame;
-        frame.origin.y = MIN(statusBarFrame.size.height, statusBarFrame.size.width);
-        self.navigationController.navigationBar.frame = frame;
-    }
-    [self setPhotoInfoHidden:hidden];
-    [self setLikeButtonHidden:hidden];
-    if (!playingPhoto && !playingVideo &&!hidden && assetInfoView == nil && assetInfoView.superview == nil) {
-        PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
-        [self showPhotoInfo:page];
-    }
-    [self cancelControlHiding];
-    if (!hidden) {
-        [self hideControlsAfterDelay];
-    }
-	_barsHidden=hidden;	
+    NSLog(@"SET BAR");
+//	if (hidden&&_barsHidden) return;
+//    [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:UIStatusBarAnimationFade];
+//    if (hidden) {
+//        [UIView animateWithDuration:0.4 animations:^{
+//            self.navigationController.navigationBar.alpha = 0;
+//            self.navigationController.toolbar.alpha = 0;
+//        }];
+//    }else{
+//        [UIView animateWithDuration:0.4 animations:^{
+//            self.navigationController.navigationBar.alpha = 1;
+//            self.navigationController.toolbar.alpha = 1;
+//        }];
+//        CGRect statusBarFrame = [[UIApplication sharedApplication] statusBarFrame];
+//        CGRect frame = self.navigationController.navigationBar.frame;
+//        frame.origin.y = MIN(statusBarFrame.size.height, statusBarFrame.size.width);
+//        self.navigationController.navigationBar.frame = frame;
+//    }
+//    [self setPhotoInfoHidden:hidden];
+//    [self setLikeButtonHidden:hidden];
+//    if (!playingPhoto && !playingVideo &&!hidden && assetInfoView == nil && assetInfoView.superview == nil) {
+//        PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
+//        [self showPhotoInfo:page];
+//    }
+//    [self cancelControlHiding];
+//    if (!hidden) {
+//        [self hideControlsAfterDelay];
+//    }
+//	_barsHidden=hidden;	
 }
 
 -(void)setPhotoInfoHidden:(BOOL)hidden{
@@ -1031,7 +1063,6 @@
 }
 
 - (void)toggleBarsNotification:(NSNotification*)notification{
-   
     if (!playingVideo) {
         [self setBarsHidden:!_barsHidden animated:YES];
         [self cancelPlayPhotoTimer];

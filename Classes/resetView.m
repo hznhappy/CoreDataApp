@@ -186,15 +186,6 @@
         at7.isprotected=[NSNumber numberWithBool:NO];
         at7.numPeopleTag=[NSNumber numberWithInt:0];
     }
-
-    
-    NSPredicate *favor=[NSPredicate predicateWithFormat:@"favorite==%@ and addressBookId!=%d",[NSNumber numberWithBool:YES],-1];
-    NSArray *fa2 = [dataSource simpleQuery:@"People" predicate:favor sortField:nil sortOrder:YES];
-    for(People *po in fa2)
-    {
-        po.favorite=[NSNumber numberWithBool:NO];
-    }
-    
     dataSource.password=nil;
     
     NSPredicate * result=[NSPredicate predicateWithFormat:@"isFavorite==%@",[NSNumber numberWithBool:YES]];
@@ -278,7 +269,13 @@
     {
         [dataSource.coreData.managedObjectContext deleteObject:ER];
     }
-    
+    NSPredicate *favor=[NSPredicate predicateWithFormat:@"addressBookId!=%d",-1];
+    NSArray *fa2 = [dataSource simpleQuery:@"People" predicate:favor sortField:nil sortOrder:YES];
+    for(People *po in fa2)
+    {
+        [dataSource.coreData.managedObjectContext deleteObject:po];
+    }
+
 
 
     

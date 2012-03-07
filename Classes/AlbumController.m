@@ -237,7 +237,7 @@
      [[cell viewWithTag:100] removeFromSuperview];
     AmptsAlbum *am = (AmptsAlbum *)[assets objectAtIndex:indexPath.row];
     Asset *as=nil;
-    if([setting.albumIcon isEqualToString:@"firstPic"])
+    if([setting.albumIcon isEqualToString:@"FirstPic"])
     {
         as=[am.assetsList objectAtIndex:0];   
     }

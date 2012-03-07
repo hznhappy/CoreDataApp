@@ -71,6 +71,7 @@
 		18CEB0FA14F490A000DEF938 /* People.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CEB0F914F490A000DEF938 /* People.m */; };
 		18CEB0FE14F490B700DEF938 /* DateRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CEB0FD14F490B700DEF938 /* DateRule.m */; };
 		18D065D71505FE4D004E94D6 /* Setting.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D065D61505FE4D004E94D6 /* Setting.m */; };
+		18D065EB1506224A004E94D6 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18D065E91506224A004E94D6 /* MainWindow.xib */; };
 		18D163EE14F7772D00682EF0 /* EventTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D163ED14F7772D00682EF0 /* EventTableView.m */; };
 		18D163FB14F783E800682EF0 /* lock 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 18D163FA14F783E800682EF0 /* lock 2.png */; };
 		18D163FD14F78AD400682EF0 /* xin.png in Resources */ = {isa = PBXBuildFile; fileRef = 18D163FC14F78AD400682EF0 /* xin.png */; };
@@ -215,6 +216,7 @@
 		18CEB0FD14F490B700DEF938 /* DateRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateRule.m; sourceTree = "<group>"; };
 		18D065D51505FE4D004E94D6 /* Setting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Setting.h; sourceTree = "<group>"; };
 		18D065D61505FE4D004E94D6 /* Setting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Setting.m; sourceTree = "<group>"; };
+		18D065EA1506224A004E94D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		18D163EC14F7772C00682EF0 /* EventTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventTableView.h; sourceTree = "<group>"; };
 		18D163ED14F7772D00682EF0 /* EventTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventTableView.m; sourceTree = "<group>"; };
 		18D163FA14F783E800682EF0 /* lock 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "lock 2.png"; sourceTree = "<group>"; };
@@ -397,6 +399,7 @@
 		183DE35814C7FA2F00BDC724 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				18D065E91506224A004E94D6 /* MainWindow.xib */,
 				181A36B914FF13D5002A9684 /* eventView.xib */,
 				181A36AA14FF0BF9002A9684 /* sortOrderView.xib */,
 				181A36D414FF8345002A9684 /* SettingController.xib */,
@@ -674,6 +677,7 @@
 				188785971504A315005EE453 /* photo_24.png in Resources */,
 				188785981504A315005EE453 /* star_24.png in Resources */,
 				1887859A1504A4CA005EE453 /* video_24.png in Resources */,
+				18D065EB1506224A004E94D6 /* MainWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -733,6 +737,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		18D065E91506224A004E94D6 /* MainWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				18D065EA1506224A004E94D6 /* en */,
+			);
+			name = MainWindow.xib;
+			sourceTree = "<group>";
+		};
 		18D402841474E50000389097 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

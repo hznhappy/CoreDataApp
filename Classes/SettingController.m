@@ -68,10 +68,10 @@
                 if (cell == nil) {
                     cell = self.iconsizeCell;
                     cell.accessoryView = [self iconsizeButton];
-                    if([setting.iconSize isEqualToString:@"normal"])
+                    if([setting.iconSize isEqualToString:@"Normal"])
                     {
                     iconsizeButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-                    [iconsizeButton setTitle:@"normal" forState:UIControlStateNormal];
+                    [iconsizeButton setTitle:@"Normal" forState:UIControlStateNormal];
                     }
                     cell.selectionStyle=UITableViewCellSelectionStyleNone;
                     
@@ -83,10 +83,10 @@
                 if (cell == nil) {
                     cell = self.albumiconCell;
                     cell.accessoryView = [self albumiconButton];
-                    if([setting.albumIcon  isEqualToString:@"firstPic"])
+                    if([setting.albumIcon  isEqualToString:@"FirstPic"])
                     {
                     albumiconButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-                    [albumiconButton setTitle:@"firstPic" forState:UIControlStateNormal];
+                    [albumiconButton setTitle:@"FirstPic" forState:UIControlStateNormal];
                     
                     }
                     
@@ -107,20 +107,20 @@
                 {
                     cell=self.dateCell;
                     cell.accessoryView = [self dateButton];
-                    if([setting.dateInfo isEqualToString:@"relative"])
+                    if([setting.dateInfo isEqualToString:@"Relative"])
                     {
                     dateButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-                    [dateButton setTitle:@"relative" forState:UIControlStateNormal];
+                    [dateButton setTitle:@"Relative" forState:UIControlStateNormal];
                     }
                     cell.selectionStyle=UITableViewCellSelectionStyleNone;
                 }
                 break;
             case 4:
-                cell=[tableView dequeueReusableCellWithIdentifier:@""];
+                cell=[tableView dequeueReusableCellWithIdentifier:@"resetCell"];
                 if(cell==nil)
                 {
                     cell=self.resetCell;
-                    cell.selectionStyle=UITableViewCellSelectionStyleNone;
+                    //cell.selectionStyle=UITableViewCellSelectionStyleNone;
                 }
                 break;
             default:
@@ -148,7 +148,7 @@
     dateButton = [UIButton buttonWithType:UIButtonTypeCustom];
     dateButton.frame = CGRectMake(0, 0, 105, 28);
     [dateButton addTarget:self action:@selector(date:) forControlEvents:UIControlEventTouchUpInside];
-    [dateButton setTitle:@"exact" forState:UIControlStateNormal];
+    [dateButton setTitle:@"Exact" forState:UIControlStateNormal];
     dateButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
     [dateButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     return dateButton;
@@ -158,7 +158,7 @@
     iconsizeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     iconsizeButton.frame = CGRectMake(0, 0, 105, 28);
     [iconsizeButton addTarget:self action:@selector(size:) forControlEvents:UIControlEventTouchUpInside];
-    [iconsizeButton setTitle:@"bigger" forState:UIControlStateNormal];
+    [iconsizeButton setTitle:@"Bigger" forState:UIControlStateNormal];
     iconsizeButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
     [iconsizeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     return iconsizeButton;
@@ -169,7 +169,7 @@
     albumiconButton = [UIButton buttonWithType:UIButtonTypeCustom];
     albumiconButton.frame = CGRectMake(0, 0, 105, 28);
     [albumiconButton addTarget:self action:@selector(icon:) forControlEvents:UIControlEventTouchUpInside];
-    [albumiconButton setTitle:@"lastPic" forState:UIControlStateNormal];
+    [albumiconButton setTitle:@"LastPic" forState:UIControlStateNormal];
     albumiconButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
     [albumiconButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     return albumiconButton;
@@ -178,16 +178,16 @@
 {
     UIButton *button = (UIButton *)sender;
     [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
-    if ([button.titleLabel.text isEqualToString:@"exact"]) {
+    if ([button.titleLabel.text isEqualToString:@"Exact"]) {
         button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-        [button setTitle:@"relative" forState:UIControlStateNormal];
-        setting.dateInfo=@"relative";
+        [button setTitle:@"Relative" forState:UIControlStateNormal];
+        setting.dateInfo=@"Relative";
         
     }
-    else if ([button.titleLabel.text isEqualToString:@"relative"]){
+    else if ([button.titleLabel.text isEqualToString:@"Relative"]){
         button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
-        [button setTitle:@"exact" forState:UIControlStateNormal];
-        setting.dateInfo=@"exact";
+        [button setTitle:@"Exact" forState:UIControlStateNormal];
+        setting.dateInfo=@"Exact";
         
     }
     [dataSource.coreData saveContext];
@@ -197,16 +197,16 @@
 {
     UIButton *button = (UIButton *)sender;
     [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
-    if ([button.titleLabel.text isEqualToString:@"lastPic"]) {
+    if ([button.titleLabel.text isEqualToString:@"LastPic"]) {
         button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-        [button setTitle:@"firstPic" forState:UIControlStateNormal];
-        setting.albumIcon=@"firstPic";
+        [button setTitle:@"FirstPic" forState:UIControlStateNormal];
+        setting.albumIcon=@"FirstPic";
         
     }
-    else if ([button.titleLabel.text isEqualToString:@"firstPic"]){
+    else if ([button.titleLabel.text isEqualToString:@"FirstPic"]){
         button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
-        [button setTitle:@"lastPic" forState:UIControlStateNormal];
-       setting.albumIcon=@"lastPic";
+        [button setTitle:@"LastPic" forState:UIControlStateNormal];
+       setting.albumIcon=@"LastPic";
         
     }
     [dataSource.coreData saveContext];
@@ -218,15 +218,15 @@
 {
     UIButton *button = (UIButton *)sender;
     [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
-    if ([button.titleLabel.text isEqualToString:@"bigger"]) {
+    if ([button.titleLabel.text isEqualToString:@"Bigger"]) {
         button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-        [button setTitle:@"normal" forState:UIControlStateNormal];
-        setting.iconSize=@"normal"; 
+        [button setTitle:@"Normal" forState:UIControlStateNormal];
+        setting.iconSize=@"Normal"; 
     }
-    else if ([button.titleLabel.text isEqualToString:@"normal"]){
+    else if ([button.titleLabel.text isEqualToString:@"Normal"]){
         button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
-        [button setTitle:@"bigger" forState:UIControlStateNormal];
-        setting.iconSize=@"bigger";
+        [button setTitle:@"Bigger" forState:UIControlStateNormal];
+        setting.iconSize=@"Bigger";
     }
     [dataSource.coreData saveContext];
     
@@ -250,6 +250,7 @@
     {
         re=[[resetView alloc]init];
         [self.navigationController pushViewController:re animated:YES];
+        [self.table deselectRowAtIndexPath:indexPath animated:YES];
     }
 }
 
