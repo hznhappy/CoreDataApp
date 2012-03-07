@@ -28,7 +28,7 @@
 @property (nonatomic, unsafe_unretained) id<ThumbnailCellSelectionDelegate> selectionDelegate;
 
 
--(void)displayThumbnails:(NSArray *)array count:(NSUInteger)count action:(BOOL) act;
+-(void)displayThumbnails:(NSArray *)array beginIndex:(NSInteger)index count:(NSUInteger)count action:(BOOL) act;
 
 -(UIImageView *)addTagOverlayWhenSelected;
 -(void)checkTagSelection:(NSString *)selectedRow;

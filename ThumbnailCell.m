@@ -11,21 +11,21 @@
 @implementation ThumbnailCell
 @synthesize selectionDelegate;
 @synthesize rowNumber;
--(void)displayThumbnails:(NSArray *)array count:(NSUInteger)count action:(BOOL)act
+-(void)displayThumbnails:(NSArray *)array beginIndex:(NSInteger)index count:(NSUInteger)count action:(BOOL)act
 {
     
     CGRect frame = CGRectMake(4, 2, 75, 75);
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     for (NSUInteger i = 0;i <count; i++) {
         if (i < [array count]) {
-            NSInteger row = (self.rowNumber*count)+i;
             Asset *dbAsset = [array objectAtIndex:i];
             
-            ThumbnailImageView *thumImageView = [[ThumbnailImageView alloc]initWithAsset:dbAsset index:row action:act];
+            ThumbnailImageView *thumImageView = [[ThumbnailImageView alloc]initWithAsset:dbAsset index:index action:act];
             thumImageView.frame = frame;
             thumImageView.delegate = self;
             [self addSubview:thumImageView];
             frame.origin.x = frame.origin.x + frame.size.width + 4;
+            index += 1;
         }        
     }
 }
