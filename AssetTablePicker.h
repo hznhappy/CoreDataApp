@@ -13,13 +13,14 @@
 @class Album;
 @class AlbumDataSource;
 
-@interface AssetTablePicker : UIViewController<ThumbnailCellSelectionDelegate,UITableViewDelegate,UITableViewDataSource>
+@interface AssetTablePicker : UIViewController<ThumbnailCellSelectionDelegate,UITableViewDelegate,UITableViewDataSource,UITabBarDelegate>
 {
     UIView *timeSelectionsView;
     UIView *personView;
     UITableView *table;
     UIToolbar *viewBar;
     UIToolbar *tagBar;
+    IBOutlet UITabBar *tagTagBar;
     //UIBarButtonItem *save;
     //UIBarButtonItem *reset;
     UIBarButtonItem *cancel;
@@ -39,10 +40,10 @@
     NSArray *datelist;
     //The array in UITableView setction
     NSArray *recentTwoWk;
-    NSArray *recentMth;
-    NSArray *recentThreeMth;
-    NSArray *recentSixMth;
-    NSArray *moreThanSixMth;
+    NSArray *twoWkToOneMth;
+    NSArray *oneToThreeMth;
+    NSArray *threeToSixMth;
+    NSArray *sixMthToOneYear;
     NSArray *moreThanOneYear;
     NSArray *unknowDate;
     BOOL personPt;
@@ -54,7 +55,7 @@
     NSInteger timeSelectionPhoto;
     NSInteger timeSelectionVideo;
    // NSInteger sectionCount;
-   float thumbnailSize;
+    float thumbnailSize;
     
     BOOL mode;
     BOOL load;

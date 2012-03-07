@@ -1006,35 +1006,34 @@
 #pragma mark -
 #pragma mark Bar Methods
 - (void)setBarsHidden:(BOOL)hidden animated:(BOOL)animated{
-    NSLog(@"SET BAR");
-//	if (hidden&&_barsHidden) return;
-//    [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:UIStatusBarAnimationFade];
-//    if (hidden) {
-//        [UIView animateWithDuration:0.4 animations:^{
-//            self.navigationController.navigationBar.alpha = 0;
-//            self.navigationController.toolbar.alpha = 0;
-//        }];
-//    }else{
-//        [UIView animateWithDuration:0.4 animations:^{
-//            self.navigationController.navigationBar.alpha = 1;
-//            self.navigationController.toolbar.alpha = 1;
-//        }];
-//        CGRect statusBarFrame = [[UIApplication sharedApplication] statusBarFrame];
-//        CGRect frame = self.navigationController.navigationBar.frame;
-//        frame.origin.y = MIN(statusBarFrame.size.height, statusBarFrame.size.width);
-//        self.navigationController.navigationBar.frame = frame;
-//    }
-//    [self setPhotoInfoHidden:hidden];
-//    [self setLikeButtonHidden:hidden];
-//    if (!playingPhoto && !playingVideo &&!hidden && assetInfoView == nil && assetInfoView.superview == nil) {
-//        PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
-//        [self showPhotoInfo:page];
-//    }
-//    [self cancelControlHiding];
-//    if (!hidden) {
-//        [self hideControlsAfterDelay];
-//    }
-//	_barsHidden=hidden;	
+	if (hidden&&_barsHidden) return;
+    [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:UIStatusBarAnimationFade];
+    if (hidden) {
+        [UIView animateWithDuration:0.4 animations:^{
+            self.navigationController.navigationBar.alpha = 0;
+            self.navigationController.toolbar.alpha = 0;
+        }];
+    }else{
+        [UIView animateWithDuration:0.4 animations:^{
+            self.navigationController.navigationBar.alpha = 1;
+            self.navigationController.toolbar.alpha = 1;
+        }];
+        CGRect statusBarFrame = [[UIApplication sharedApplication] statusBarFrame];
+        CGRect frame = self.navigationController.navigationBar.frame;
+        frame.origin.y = MIN(statusBarFrame.size.height, statusBarFrame.size.width);
+        self.navigationController.navigationBar.frame = frame;
+    }
+    [self setPhotoInfoHidden:hidden];
+    [self setLikeButtonHidden:hidden];
+    if (!playingPhoto && !playingVideo &&!hidden && assetInfoView == nil && assetInfoView.superview == nil) {
+        PhotoImageView *page = [self pageDisplayedAtIndex:currentPageIndex];
+        [self showPhotoInfo:page];
+    }
+    [self cancelControlHiding];
+    if (!hidden) {
+        [self hideControlsAfterDelay];
+    }
+	_barsHidden=hidden;	
 }
 
 -(void)setPhotoInfoHidden:(BOOL)hidden{
