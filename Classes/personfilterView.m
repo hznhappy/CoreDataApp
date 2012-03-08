@@ -346,7 +346,7 @@
         //[self.listTable reloadData];
     }
     
-    
+     [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
     [self dismissModalViewControllerAnimated:YES];
     return NO;
 
