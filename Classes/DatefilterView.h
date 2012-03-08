@@ -14,10 +14,13 @@
 @interface DatefilterView : UIViewController<UITableViewDelegate,UITableViewDataSource>
 {
     NSMutableArray *dateList;
+    NSMutableArray *locate;
     Album *album;
     PhotoAppDelegate *app;
     AlbumDataSource *dataSource;
     DateRule *daterule;
+    UITableView *table;
 }
 @property(nonatomic,retain)Album *album;
+@property(nonatomic,strong)IBOutlet UITableView *table;
 @end

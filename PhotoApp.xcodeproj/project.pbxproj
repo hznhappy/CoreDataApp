@@ -219,6 +219,10 @@
 		18D163EC14F7772C00682EF0 /* EventTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventTableView.h; sourceTree = "<group>"; };
 		18D163ED14F7772D00682EF0 /* EventTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventTableView.m; sourceTree = "<group>"; };
 		18D163FA14F783E800682EF0 /* lock 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "lock 2.png"; sourceTree = "<group>"; };
+		18D166041508993300CB7D99 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/MainWindow.xib"; sourceTree = "<group>"; };
+		18D166061508993600CB7D99 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/MainWindow.xib"; sourceTree = "<group>"; };
+		18D1660B1508B2A100CB7D99 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/AssetTablePicker.xib"; sourceTree = "<group>"; };
+		18D1660C1508B2A400CB7D99 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/AssetTablePicker.xib"; sourceTree = "<group>"; };
 		18D3198714FB1818001D3ACC /* EventKitUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKitUI.framework; path = System/Library/Frameworks/EventKitUI.framework; sourceTree = SDKROOT; };
 		18D3198A14FB1828001D3ACC /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
 		18D3199214FB7BBD001D3ACC /* Asset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Asset.h; sourceTree = "<group>"; };
@@ -249,8 +253,6 @@
 		18DDA24A14ED0B23006C05C8 /* favorite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = favorite.m; sourceTree = "<group>"; };
 		18E0EC1014F492D60001ED3E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PlaylistDetailController.xib; sourceTree = "<group>"; };
 		18E0EC1314F493550001ED3E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/AssetTablePicker.xib; sourceTree = "<group>"; };
-		18E0EC1514F493610001ED3E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/AssetTablePicker.xib"; sourceTree = "<group>"; };
-		18E0EC1614F4936D0001ED3E /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/AssetTablePicker.xib"; sourceTree = "<group>"; };
 		18F7B23014B43BB700566F66 /* ThumbnailHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ThumbnailHighlight.png; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* PhotoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -737,6 +739,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				18D065EA1506224A004E94D6 /* en */,
+				18D166041508993300CB7D99 /* zh-Hant */,
+				18D166061508993600CB7D99 /* zh-Hans */,
 			);
 			name = MainWindow.xib;
 			sourceTree = "<group>";
@@ -796,8 +800,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				18E0EC1314F493550001ED3E /* en */,
-				18E0EC1514F493610001ED3E /* zh-Hans */,
-				18E0EC1614F4936D0001ED3E /* zh-Hant */,
+				18D1660B1508B2A100CB7D99 /* zh-Hant */,
+				18D1660C1508B2A400CB7D99 /* zh-Hans */,
 			);
 			name = AssetTablePicker.xib;
 			sourceTree = "<group>";

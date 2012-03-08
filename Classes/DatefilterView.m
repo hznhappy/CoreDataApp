@@ -11,8 +11,15 @@
 
 @implementation DatefilterView
 @synthesize album;
+@synthesize table;
 -(void)viewDidLoad
-{
+{   NSString *a=NSLocalizedString(@"Recent two weeks", @"title");
+    NSString *b=NSLocalizedString(@"Recent month", @"title");
+    NSString *c=NSLocalizedString(@"Recent three months", @"title");
+    NSString *d=NSLocalizedString(@"Recent six months", @"title");
+    NSString *e=NSLocalizedString(@"More than six months", @"title");
+    NSString *f=NSLocalizedString(@"More than one year", @"title");
+    locate=[NSMutableArray arrayWithObjects:a,b,c,d,e,f,nil];
     app=[[UIApplication sharedApplication]delegate];
     dataSource=app.dataSource;
     dateList = [NSMutableArray arrayWithObjects:@"Recent two weeks",@"Recent month",@"Recent three months",@"Recent six months", @"More than six months",@"More than one year",nil];
@@ -38,14 +45,15 @@
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
                                       reuseIdentifier:CellIdentifier];
 	}
-    cell.textLabel.text =[dateList objectAtIndex:indexPath.row];
-    if ([cell.textLabel.text isEqualToString:daterule.datePeriod]) {
+    cell.textLabel.text =[locate objectAtIndex:indexPath.row];
+    NSString *a=[dateList objectAtIndex:indexPath.row];
+    if ([a isEqualToString:daterule.datePeriod]) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
     }else{
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
 
-    cell.selectionStyle=UITableViewCellSelectionStyleNone;
+   // cell.selectionStyle=UITableViewCellSelectionStyleNone;
 	return cell;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -60,7 +68,8 @@
     album.conDateRule=daterule;
     daterule.conAlbum=album;
     [dataSource.coreData saveContext];
-    NSDictionary *dictionary = [NSDictionary dictionaryWithObject:daterule.datePeriod forKey:@"date"];
+    [self.table  deselectRowAtIndexPath:indexPath animated:YES];
+    NSDictionary *dictionary = [NSDictionary dictionaryWithObject:[locate objectAtIndex:indexPath.row] forKey:@"date"];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"changeDate" object:nil userInfo:dictionary];
     [self.navigationController popViewControllerAnimated:YES];
 }

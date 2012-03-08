@@ -20,7 +20,9 @@
     Album *album;
     UITableView *table;
     NSInteger index;
-   
+    NSMutableArray *locate;
+    NSString *s;
+    NSString *o;
 }
 @property(nonatomic,strong)IBOutlet UITableViewCell *orderCell;
 @property(nonatomic,strong)IBOutlet UITableView *table;

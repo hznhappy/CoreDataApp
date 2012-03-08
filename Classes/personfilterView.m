@@ -21,10 +21,12 @@
 
 -(void)viewDidLoad
 {
-    
+    NSString *a=NSLocalizedString(@"PeopleRule", @"title");
+    NSString *d=NSLocalizedString(@"Favorite", @"title");
+    NSString *c=NSLocalizedString(@"phonebook", @"title");
     nameList=[[NSMutableArray alloc]init];
     
-    Title=[[NSMutableArray alloc]initWithObjects:@"PeopleRule",@"Favorite",@"phonebook",nil];
+    Title=[[NSMutableArray alloc]initWithObjects:a,d,c,nil];
     app =[[UIApplication sharedApplication] delegate];
     dataSource=[[AlbumDataSource alloc]init];
     dataSource=app.dataSource;
@@ -426,6 +428,8 @@
 
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(indexPath.section!=0)
+    {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     UIButton *button1 = [self getStateButton];
     if (cell.accessoryView==nil) {
@@ -485,7 +489,7 @@
             }
         }
     }
-    
+    } 
     
 }
 -(UIButton *)getStateButton

@@ -46,7 +46,7 @@ int j=1,count=0;
  }
 -(void)creatButton
 {
-    tools = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 110,45)];
+    tools = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.navigationController.navigationBar.frame.size.width/3+5,self.navigationController.navigationBar.frame.size.height)];
     tools.autoresizingMask=UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     NSString *a=NSLocalizedString(@"Back", @"button");
     NSString *b=NSLocalizedString(@"Edit", @"button");
@@ -268,6 +268,7 @@ int j=1,count=0;
     {
          self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
     }
+    
 }
 -(void)viewWillDisappear:(BOOL)animated
 {   /*if(bool1==NO)
@@ -580,14 +581,28 @@ int j=1,count=0;
     UIEdgeInsets insets = self.tableView.contentInset;
     if(bo!=nil)
     {
-       [self.tableView setContentInset:UIEdgeInsetsMake(0, insets.left, insets.bottom, insets.right)]; 
+       //[self.tableView setContentInset:UIEdgeInsetsMake(0, insets.left, insets.bottom, insets.right)];
+//        if (UIInterfaceOrientationIsLandscape(orientation)) {
+//            tools.frame=CGRectMake(0, 0, self.navigationController.navigationBar.frame.size.width/4+5,self.navigationController.navigationBar.frame.size.height);
+//            [self.tableView setContentInset:UIEdgeInsetsMake(33, insets.left, insets.bottom, insets.right)];
+//            //tools = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 110,33)];
+//            
+//        }else{
+//            [self.tableView setContentInset:UIEdgeInsetsMake(45, insets.left, insets.bottom, insets.right)];
+//            tools.frame=CGRectMake(0, 0, self.navigationController.navigationBar.frame.size.width/3+5,self.navigationController.navigationBar.frame.size.height);
+//        }
+
     }
     else
     {
     if (UIInterfaceOrientationIsLandscape(orientation)) {
+        //tools.frame=CGRectMake(0, 0, self.navigationController.navigationBar.frame.size.width/8+5,self.navigationController.navigationBar.frame.size.height);
         [self.tableView setContentInset:UIEdgeInsetsMake(33, insets.left, insets.bottom, insets.right)];
+        //tools = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 110,33)];
+        
     }else{
         [self.tableView setContentInset:UIEdgeInsetsMake(45, insets.left, insets.bottom, insets.right)];
+        //tools.frame=CGRectMake(0, 0, self.navigationController.navigationBar.frame.size.width/3+5,self.navigationController.navigationBar.frame.size.height);
     }
     }
 }

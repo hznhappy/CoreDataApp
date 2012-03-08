@@ -102,100 +102,12 @@
         [self presentModalViewController:mediaPicker animated:YES];
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
-    
-//    [self.textField resignFirstResponder];
-//    if (indexPath.section ==7 && indexPath.row == 0) {
-//        if(bum==nil)
-//        {
-//            [self album];
-//        }
-//    }
-//    if (indexPath.section ==7 && indexPath.row == 1)
-//    {
-//        [textField resignFirstResponder];
-//    }
-//    if (indexPath.section ==7 && indexPath.row == 2) {
-//        if(bum==nil)
-//        {
-//            [self album];
-//        }
-//        MPMediaPickerController *mediaPicker = [[MPMediaPickerController alloc] initWithMediaTypes: MPMediaTypeMusic];
-//        
-//        mediaPicker.delegate = self;
-//        mediaPicker.allowsPickingMultipleItems = YES;
-//        mediaPicker.prompt = @"Select songs";
-//        
-//        [self presentModalViewController:mediaPicker animated:YES];
-//        [tableView deselectRowAtIndexPath:indexPath animated:YES];
-//    }
-//    if (indexPath.section == 2) {
-//        if(bum==nil)
-//        {
-//            [self album];
-//        }
-//        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-//        UIButton *button1 = [self getStateButton];
-//        if (cell.accessoryView==nil) {
-//            cell.accessoryView = button1;
-//        }else{
-//            cell.accessoryView = nil;
-//        }
-//        for (UIButton *button in cell.contentView.subviews) {
-//            
-//            if ([button isKindOfClass:[UIButton class]]) {
-//                if ([button.currentImage isEqual:unselectImg]) {
-//                    [button setImage:selectImg forState:UIControlStateNormal]; 
-//                    NSString *rule=@"INCLUDE";
-//                    [self insert:indexPath.row rule:rule];
-//                    [selectedIndexPaths addObject:indexPath];
-//                }
-//                else
-//                {
-//                    [button setImage:unselectImg forState:UIControlStateNormal];
-//                    People *p1 = (People *)[list objectAtIndex:indexPath.row];
-//                    NSManagedObjectContext *managedObjectsContext = [appDelegate.dataSource.coreData managedObjectContext];
-//                    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PeopleRuleDetail" inManagedObjectContext:managedObjectsContext];
-//                    NSFetchRequest *request = [[NSFetchRequest alloc]init];
-//                    [request setEntity:entity];
-//                    NSPredicate *pre = [NSPredicate predicateWithFormat:@"conPeople==%@ AND conPeopleRule == %@",p1,bum.conPeopleRule];
-//                    [request setPredicate:pre];
-//                    NSError *error = nil;
-//                    NSArray *A=[managedObjectsContext executeFetchRequest:request error:&error];
-//                    PeopleRuleDetail *p=[A objectAtIndex:0];
-//                    [bum.conPeopleRule removeConPeopleRuleDetailObject:p];
-//                    [appDelegate.dataSource.coreData saveContext];
-//                    
-//                }
-//            }
-//        }
-//        
-//    }
-//    if(indexPath.section==5)
-//    {  
-//        if(bum==nil)
-//        {
-//            [self album];
-//        }
-//        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-//        for (UIButton *button in cell.contentView.subviews) {
-//            
-//            if ([button isKindOfClass:[UIButton class]]) {
-//                if ([button.currentImage isEqual:unselectImg]) {
-//                    [button setImage:selectImg forState:UIControlStateNormal]; 
-//                    bum.isFavorite=[NSNumber numberWithBool:YES];
-//                }
-//                else
-//                {
-//                    [button setImage:unselectImg forState:UIControlStateNormal];
-//                    bum.isFavorite=nil;
-//                    [appDelegate.dataSource.coreData saveContext];
-//                    
-//                }
-//            }
-//        }
-//        
-//    }
-//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+   [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+    return (UIInterfaceOrientationIsLandscape(interfaceOrientation) || interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 

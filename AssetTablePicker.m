@@ -299,9 +299,12 @@
     videoTableData = videoArray;
     
     //select and sore data for UITableView Sections
-    allTableData =[self dataInUITableViewSectionsFromArray:allTableData];
-    photoTableData =[self dataInUITableViewSectionsFromArray:photoTableData];
-    videoTableData =[self dataInUITableViewSectionsFromArray:videoTableData];
+    if(photoType)
+        photoTableData =[self dataInUITableViewSectionsFromArray:photoTableData];
+    else if(videoType)
+        videoTableData =[self dataInUITableViewSectionsFromArray:videoTableData];
+    else 
+        allTableData =[self dataInUITableViewSectionsFromArray:allTableData];
 
 }
 
@@ -317,6 +320,7 @@
         if([am.name isEqualToString:ta])
         {
             crwAssets=am.assetsList;
+            [self updateDataSource];
             [self.table reloadData];
             break;
         }
@@ -366,11 +370,13 @@
     NSString *b=NSLocalizedString(@"Done", @"title");
     if([cancel.title isEqualToString:a])
     {
+        NSLog(@"1");
         cancel.style=UIBarButtonItemStyleDone;
         cancel.title=b;
-        NSString *a=NSLocalizedString(@"Lock", @"title");
-        if([self.lock.title isEqualToString:a])
+        NSString *c=NSLocalizedString(@"Lock", @"title");
+        if([self.lock.title isEqualToString:c])
         {
+            NSLog(@"ddd");
             mode = YES;
             self.navigationItem.hidesBackButton = YES;
             self.navigationItem.rightBarButtonItem = cancel;
@@ -391,6 +397,7 @@
     }
     else
     {
+        NSLog(@"2");
         [name removeFromSuperview];
         cancel.style=UIBarButtonItemStyleBordered;
         cancel.title=a;
