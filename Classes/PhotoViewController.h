@@ -12,12 +12,15 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "PopupPanelView.h"
 #import <MediaPlayer/MediaPlayer.h>
+#import "Setting.h"
+#import "AlbumDataSource.h"
 #define PADDING 20
 
 @class PhotoImageView;
 @class Playlist;;
 @class TagSelector;
 @class AssetTablePicker;
+@class PhotoAppDelegate;
 @interface PhotoViewController : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate> {
 @private
 	
@@ -58,6 +61,10 @@
     UIView *assetInfoView;
     UIButton *likeButton;
     NSString *playPhotoTransition;
+    Setting *setting;
+    PhotoAppDelegate *app;
+    AlbumDataSource *dataSource;
+    
 }
 @property (nonatomic, strong) Playlist *playlist;
 @property (nonatomic, assign) AssetTablePicker *assetTablePicker;

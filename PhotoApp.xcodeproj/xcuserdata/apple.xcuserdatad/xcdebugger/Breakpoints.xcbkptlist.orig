@@ -51,11 +51,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/PhotoViewController.m"
-         timestampString = "352796988.029353"
+         timestampString = "352793507.758424"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1689"
-         endingLineNumber = "1689"
+         startingLineNumber = "1690"
+         endingLineNumber = "1690"
          landmarkName = "@implementation PhotoViewController"
          landmarkType = "3">
       </FileBreakpoint>
@@ -105,11 +105,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AssetTablePicker.h"
-         timestampString = "352803419.949034"
+         timestampString = "352778811.923845"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "105"
-         endingLineNumber = "105"
+         startingLineNumber = "103"
+         endingLineNumber = "103"
          landmarkName = "@interface AssetTablePicker"
          landmarkType = "2">
       </FileBreakpoint>
@@ -147,11 +147,19 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AssetTablePicker.m"
-         timestampString = "352866897.355024"
+<<<<<<< HEAD
+         timestampString = "352719628.975101"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1567"
-         endingLineNumber = "1567"
+         startingLineNumber = "1489"
+         endingLineNumber = "1489"
+=======
+         timestampString = "352796192.667094"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "1508"
+         endingLineNumber = "1508"
+>>>>>>> origin/master
          landmarkName = "-configurateLastRowPhotoCount:VideoCount:"
          landmarkType = "5">
       </FileBreakpoint>

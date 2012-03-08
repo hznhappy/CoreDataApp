@@ -13,8 +13,8 @@
 @synthesize rowNumber;
 -(void)displayThumbnails:(NSArray *)array beginIndex:(NSInteger)index count:(NSUInteger)count action:(BOOL)act
 {
-    
-    CGRect frame = CGRectMake(4, 2, 75, 75);
+    NSInteger size = (self.bounds.size.width-(count*4)-2) / count;
+    CGRect frame = CGRectMake(4, 2, size, size);
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     for (NSUInteger i = 0;i <count; i++) {
         if (i < [array count]) {

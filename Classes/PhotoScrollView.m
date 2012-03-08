@@ -79,7 +79,7 @@
 
 - (void)zoomRectWithCenter:(CGPoint)center{
 		if (self.zoomScale > 1.0f) {
-        
+            NSLog(@"suoxiao");
 		[((PhotoImageView*)self.superview) killScrollViewZoom];
 		return;
 	}
@@ -125,6 +125,7 @@
 }
 
 - (void)toggleBars{
+    NSLog(@"touch bar");
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"PhotoViewToggleBars" object:nil];
 }
 
@@ -133,18 +134,22 @@
 #pragma mark Touches
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSLog(@"touch");
 	[super touchesBegan:touches withEvent:event];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSLog(@"touch end");
 	[super touchesEnded:touches withEvent:event];
     if (theMenu.isMenuVisible) {
         theMenu.menuVisible = NO;
     }
 	UITouch *touch = [touches anyObject];
 	if (touch.tapCount == 1) {
+        NSLog(@"1");
 		[self performSelector:@selector(toggleBars) withObject:nil afterDelay:.3];
 	} else if (touch.tapCount == 2) {
+        NSLog(@"2");
         if (self.zoomScale == 1) {
             self.scrollEnabled = YES;
         }else{

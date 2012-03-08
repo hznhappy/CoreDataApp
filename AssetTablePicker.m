@@ -38,7 +38,6 @@
     PhotoAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     dataSource = appDelegate.dataSource;
     oritation = [UIApplication sharedApplication].statusBarOrientation;
-    [self setThumbnailSize];
     [self setTableViewEdge:oritation];
     if(album==nil)
     {
@@ -91,13 +90,8 @@
     greenImageView.frame = CGRectZero;
     redImagView = [[UIImageView alloc]initWithImage:red];
     redImagView.frame = CGRectMake(10, 165, 10, 10);
-    [self countPhotosAndVideosCounts];
-    allTableData = self.crwAssets;
-    photoTableData = photoArray;
-    videoTableData = videoArray;
     
-    [self dataInUITableViewSectionsFromArray:allTableData]; //select data for UITableView Sections
-    
+    [self updateDataSource];
     self.likeAssets = [[NSMutableArray alloc]init];
     NSString *b=NSLocalizedString(@"Back", @"title");
     UIButton* backButton = [UIButton buttonWithType:101]; // left-pointing shape!
@@ -123,6 +117,13 @@
     passWord.secureTextEntry = YES;
     [alert1 addSubview:passWord];  
     alert1.tag=1;
+    
+    NSArray *tmp=[dataSource simpleQuery:@"Setting" predicate:nil sortField:nil sortOrder:YES];
+    if(tmp.count!=0)
+    {
+        setting=[tmp objectAtIndex:0];
+    }
+    [self setThumbnailSize];
 //    [table reloadData];    
 //    NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:datelist.count - 1];
 //    [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
@@ -160,7 +161,6 @@
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         self.crwAssets = nil;
         self.album = nil;
-        NSLog(@"wrong");
     }
     
 }
@@ -243,9 +243,22 @@
 
 -(void)setThumbnailSize{
     if (UIInterfaceOrientationIsLandscape(oritation)) {
-        thumbnailSize = 6.0;
+        if([setting.iconSize isEqualToString:@"Bigger"])
+        {
+            thumbnailSize = 4.0;
+        }else{
+            thumbnailSize = 6.0;
+        }
+
     }else{
-        thumbnailSize = 4.0;
+        if([setting.iconSize isEqualToString:@"Bigger"])
+        {
+            NSLog(@"test");
+            thumbnailSize = 3.0;
+        }else{
+            thumbnailSize = 4.0;
+        }
+
     }
 
 }
@@ -270,6 +283,23 @@
             [photoArray addObject:ast];
         }
     }
+}
+-(void)updateDataSource{
+    allTableData = nil;
+    photoTableData = nil;
+    videoTableData = nil;
+    [photoArray removeAllObjects];
+    [videoArray removeAllObjects];
+    [self countPhotosAndVideosCounts];
+    allTableData = self.crwAssets;
+    photoTableData = photoArray;
+    videoTableData = videoArray;
+    
+    //select and sore data for UITableView Sections
+    allTableData =[self dataInUITableViewSectionsFromArray:allTableData];
+    photoTableData =[self dataInUITableViewSectionsFromArray:photoTableData];
+    videoTableData =[self dataInUITableViewSectionsFromArray:videoTableData];
+
 }
 
 -(void)refresh:(NSNotification *)note{
@@ -360,6 +390,7 @@
        // tagBar.hidden = YES;
         viewBar.hidden = NO;
         tagTagBar.hidden = YES;
+        tagTagBar.selectedItem=nil;
         mode = NO;
         action=YES;
         [self resetTags];
@@ -558,6 +589,7 @@
 -(IBAction)Eventpressed
 {  
     [self releasePersonPt];
+    [self.navigationItem setTitle:ta];
     [tagSelector.peopleList removeAllObjects];
     [tagRow removeAllObjects];
     isEvent=YES;
@@ -872,11 +904,11 @@
         }
     }
     if (photoType) {
-        [self dataInUITableViewSectionsFromArray:photoTableData];
+       photoTableData = [self dataInUITableViewSectionsFromArray:photoTableData];
     }else if(videoType){
-        [self dataInUITableViewSectionsFromArray:videoTableData];        
+       videoTableData = [self dataInUITableViewSectionsFromArray:videoTableData];        
     }else{
-        [self dataInUITableViewSectionsFromArray:allTableData];
+       allTableData = [self dataInUITableViewSectionsFromArray:allTableData];
     }
 
     [self showTimeSelections];
@@ -916,7 +948,7 @@
     timeBtPressed = !timeBtPressed;
 }
 
--(void)dataInUITableViewSectionsFromArray:(NSArray *)array{
+-(NSArray *)dataInUITableViewSectionsFromArray:(NSArray *)array{
     recentTwoWk = nil;
     twoWkToOneMth = nil;
     oneToThreeMth = nil;
@@ -941,24 +973,27 @@
     [components setDay:-30];
     endDate = beginDate;
     beginDate = [gregorian dateByAddingComponents:components toDate:date options:0];
+    result=[NSPredicate predicateWithFormat:@"self.date>%@ and self.date<=%@",beginDate,endDate];
     twoWkToOneMth = [array filteredArrayUsingPredicate:result];
 
     [components setDay:-90];
     endDate = beginDate;
     beginDate = [gregorian dateByAddingComponents:components toDate:date options:0];
+    result=[NSPredicate predicateWithFormat:@"self.date>%@ and self.date<=%@",beginDate,endDate];
     oneToThreeMth = [array filteredArrayUsingPredicate:result];
 
     [components setDay:-180];
     endDate = beginDate;
     beginDate = [gregorian dateByAddingComponents:components toDate:date options:0];
+    result=[NSPredicate predicateWithFormat:@"self.date>%@ and self.date<=%@",beginDate,endDate];
     threeToSixMth = [array filteredArrayUsingPredicate:result];
-
+    [components setDay:0];
     [components setYear:-1];
     endDate = beginDate;
     beginDate = [gregorian dateByAddingComponents:components toDate:date options:0];
+    result=[NSPredicate predicateWithFormat:@"self.date>%@ and self.date<=%@",beginDate,endDate];
     sixMthToOneYear = [array filteredArrayUsingPredicate:result];
 
-    [components setYear:-1];
     result=[NSPredicate predicateWithFormat:@"self.date<=%@",[gregorian dateByAddingComponents:components toDate:date options:0]];
     moreThanOneYear = [array filteredArrayUsingPredicate:result];
     
@@ -966,7 +1001,20 @@
     unknowDate = [array filteredArrayUsingPredicate:result];
     
     array = nil;
-
+    array = [[NSArray alloc]init];
+    array=[array arrayByAddingObjectsFromArray:recentTwoWk];
+    
+    array=[array arrayByAddingObjectsFromArray:twoWkToOneMth];
+    array=[array arrayByAddingObjectsFromArray:oneToThreeMth];
+    array=[array arrayByAddingObjectsFromArray:threeToSixMth];
+    array=[array arrayByAddingObjectsFromArray:sixMthToOneYear];
+    NSLog(@"arraycount1:%d",array.count);
+    array=[array arrayByAddingObjectsFromArray:moreThanOneYear];
+    NSLog(@"arraycount2:%d",array.count);
+    array=[array arrayByAddingObjectsFromArray:unknowDate];
+    NSLog(@"arraycount:%d",array.count);
+    return array;
+    
 }
 
 -(CGRect)setTheTimeSelectionsViewFrame:(CGFloat)y{
@@ -981,7 +1029,7 @@
         photoType = NO;
         videoType = NO;
         [self setTimeSelectionWithIndex:timeSelectionAll];
-        [self dataInUITableViewSectionsFromArray:allTableData];
+       allTableData = [self dataInUITableViewSectionsFromArray:allTableData];
 //        if (timeSelectionAll != 0) {
 //            timeFilter = YES;
 //        }else{
@@ -991,7 +1039,7 @@
         photoType = YES;
         videoType = NO;
         [self setTimeSelectionWithIndex:timeSelectionPhoto];
-        [self dataInUITableViewSectionsFromArray:photoTableData];
+      photoTableData = [self dataInUITableViewSectionsFromArray:photoTableData];
 //        if (timeSelectionPhoto != 0) {
 //            timeFilter = YES;
 //        }else{
@@ -1001,7 +1049,7 @@
         photoType = NO;
         videoType = YES;
         [self setTimeSelectionWithIndex:timeSelectionVideo];
-        [self dataInUITableViewSectionsFromArray:videoTableData];
+       videoTableData = [self dataInUITableViewSectionsFromArray:videoTableData];
 //        if (timeSelectionVideo != 0) {
 //            timeFilter = YES;
 //        }else{
@@ -1436,11 +1484,19 @@
                 }
           //  }
             if (dbAsset != nil) {
+                NSInteger row1 = 0;
+                if (photoType) {
+                    row1 = [photoTableData indexOfObject:dbAsset];
+                }else if(videoType){
+                    row1 = [videoTableData indexOfObject:dbAsset];
+                }else{
+                    row1 = [allTableData indexOfObject:dbAsset];
+                }
                 if(as==YES)
                 {
                     if([tagSelector tag:dbAsset]==YES)
                     {
-                        NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
+                        NSString *selectedIndex = [NSString stringWithFormat:@"%d",row1];
                         [tagRow addObject:selectedIndex];
                         //[cell checkTagSelection:selectedIndex];
                     }
@@ -1449,7 +1505,7 @@
                 {
                     if([dbAsset.isprotected boolValue])
                     {
-                        NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
+                        NSString *selectedIndex = [NSString stringWithFormat:@"%d",row1];
                         [tagRow addObject:selectedIndex];
                     }
                 }
@@ -1457,7 +1513,7 @@
                 {
                     if(dbAsset.conEvent==event)
                     {
-                        NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
+                        NSString *selectedIndex = [NSString stringWithFormat:@"%d",row1];
                         [tagRow addObject:selectedIndex];
                     }
                 }
@@ -1465,7 +1521,7 @@
                 {
                     if([dbAsset.isFavorite boolValue])
                     {
-                        NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
+                        NSString *selectedIndex = [NSString stringWithFormat:@"%d",row1];
                         [tagRow addObject:selectedIndex];
 
                     }
@@ -1487,16 +1543,16 @@
         
         if (!action) {
             for (NSInteger i = 0; i<thumbnailSize; i++) {
-                NSInteger row = (indexPath.row*thumbnailSize)+i;
-                if (row<[self.crwAssets count]) {
+               // NSInteger row = (indexPath.row*thumbnailSize)+i;
+                if (index<[self.crwAssets count]) {
                     
-                    NSString *selectedIndex = [NSString stringWithFormat:@"%d",row];
+                    NSString *selectedIndex = [NSString stringWithFormat:@"%d",index];
                     if([tagRow containsObject:selectedIndex])
                     { 
                         [cell checkTagSelection:selectedIndex];
                         
                     }
-                    
+                    index=index+1;
                 }
             }
         }
@@ -1720,12 +1776,12 @@
     for (ThumbnailCell *cell in self.table.visibleCells) {
         [cell clearSelection];
     }
-   /* CGFloat sectionHeaderHeight = 65;
+   CGFloat sectionHeaderHeight = 65;
     if (scrollView.contentOffset.y<=sectionHeaderHeight&&scrollView.contentOffset.y>=0) {
         scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0);
     } else if (scrollView.contentOffset.y>=sectionHeaderHeight) {
         scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, 0, 0);
-    }*/
+    }
 
 }
 #pragma  mark -
