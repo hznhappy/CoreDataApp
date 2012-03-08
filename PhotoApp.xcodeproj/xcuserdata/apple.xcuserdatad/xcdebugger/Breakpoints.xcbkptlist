@@ -147,11 +147,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AssetTablePicker.m"
-         timestampString = "352804601.087271"
+         timestampString = "352865650.602096"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1547"
-         endingLineNumber = "1547"
+         startingLineNumber = "1550"
+         endingLineNumber = "1550"
          landmarkName = "-configurateLastRowPhotoCount:VideoCount:"
          landmarkType = "5">
       </FileBreakpoint>

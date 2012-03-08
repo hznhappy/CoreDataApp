@@ -22,11 +22,11 @@
 #import "PeopleRuleDetail.h"
 #import "AlbumDataSource.h"
 #import "DateRule.h"
-#import <AddressBook/AddressBook.h>
-#import <AddressBookUI/AddressBookUI.h>
+//#import <AddressBook/AddressBook.h>
+//#import <AddressBookUI/AddressBookUI.h>
 @class PhotoAppDelegate;
 @interface PlaylistDetailController : UIViewController<UITableViewDelegate,UITableViewDataSource,MPMediaPickerControllerDelegate,UITextFieldDelegate
-,ABPeoplePickerNavigationControllerDelegate,UIPickerViewDelegate,UIPickerViewDataSource> {
+,UIPickerViewDelegate,UIPickerViewDataSource> {
     PhotoAppDelegate * appDelegate;
     AmptsPhotoCoreData * coreData;
     AlbumDataSource *AL;
@@ -96,53 +96,23 @@
 @property(nonatomic,strong)IBOutlet UILabel *SortOrder;
 @property(nonatomic,strong)IBOutlet UILabel *EventLabel;
 @property(nonatomic,strong)IBOutlet UISwitch *favoriteSW;
-
-//@property(nonatomic,strong)IBOutlet UITableViewCell *chooseCell;
-//@property(nonatomic,strong)IBOutlet UITableViewCell *textFieldCell;
-//@property(nonatomic,strong)IBOutlet UITableViewCell *switchCell;
-//@property(nonatomic,strong)IBOutlet UITableViewCell *tranCell;
-//@property(nonatomic,strong)IBOutlet UITableViewCell *musicCell;
-//@property(nonatomic,strong)IBOutlet UITableViewCell *PeopleRuleCell;
-//@property(nonatomic,strong)IBOutlet UITableViewCell *SortCell;
-//@property(nonatomic,strong)IBOutlet UITableViewCell *OrderCell;
-//@property(nonatomic,strong)IBOutlet UITableViewCell *dateRule;
-//@property(nonatomic,strong)IBOutlet UITableViewCell *AddPeopleCell;
-//@property(nonatomic,strong)IBOutlet UITableViewCell *sortOrderCell;
-//@property(nonatomic,strong)IBOutlet UISwitch *sortSw;
-//@property(nonatomic,strong)IBOutlet UILabel *tranLabel;
-//@property(nonatomic,strong)IBOutlet UILabel *musicLabel;
 @property(nonatomic,strong)IBOutlet UITextField *textField;
-//@property(nonatomic,strong)IBOutlet UISwitch *mySwitch;
-//@property(nonatomic,strong)IBOutlet UILabel *state;
-//@property(nonatomic,strong)IBOutlet UIPickerView *pickerView;
-//@property(nonatomic,strong)IBOutlet UITableViewCell *myFavoriteCell;
-//
-
 @property(nonatomic,strong)NSMutableArray *selectedIndexPaths;
 @property(nonatomic,strong)NSString *Transtion;
-//@property(nonatomic,strong)UIButton *stateButton;
-//@property(nonatomic,strong)UIButton *chooseButton;
-//@property(nonatomic,strong)UIButton *sortButton;
-//@property(nonatomic,strong)UIButton *orderButton;
-//@property(nonatomic,strong)UIButton *peopleRuleButton;
 -(IBAction)hideKeyBoard:(id)sender;
--(IBAction)updateTable:(id)sender;
+//-(IBAction)updateTable:(id)sender;
 //-(IBAction)resetAll;
--(IBAction)AddContacts;
-//-(IBAction)upSort:(id)sender;
-//-(UIButton *)getStateButton;
-//-(IBAction)playAlbumPhotos:(id)sender;
--(void)insert:(NSInteger)Row rule:(NSString *)rule;
--(void)update:(NSInteger)Row rule:(NSString *)rule;
+//-(IBAction)AddContacts;
+-(IBAction)playAlbumPhotos:(id)sender;
+//-(void)insert:(NSInteger)Row rule:(NSString *)rule;
+//-(void)update:(NSInteger)Row rule:(NSString *)rule;
 -(void)addPlay;
 -(void)album;
-//-(void)setSort;
-//-(void)setOrder;
 -(void)table;
--(UIButton *)chooseButton;
+//-(UIButton *)chooseButton;
 -(IBAction)text;
 
--(void)insert:(NSInteger)Row rule:(NSString *)rule;
+//-(void)insert:(NSInteger)Row rule:(NSString *)rule;
 -(void)changeType:(NSNotification *)note;
 -(void)changePeople:(NSNotification *)note;
 -(void)changeDate:(NSNotification *)note;
