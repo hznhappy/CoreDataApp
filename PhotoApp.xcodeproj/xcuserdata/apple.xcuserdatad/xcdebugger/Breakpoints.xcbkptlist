@@ -105,11 +105,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AssetTablePicker.h"
-         timestampString = "352803419.949034"
+         timestampString = "352886503.765075"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "105"
-         endingLineNumber = "105"
+         startingLineNumber = "107"
+         endingLineNumber = "107"
          landmarkName = "@interface AssetTablePicker"
          landmarkType = "2">
       </FileBreakpoint>

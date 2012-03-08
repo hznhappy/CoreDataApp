@@ -37,7 +37,7 @@
     name= [UIButton buttonWithType:UIButtonTypeCustom];
     PhotoAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     dataSource = appDelegate.dataSource;
-    oritation = [UIApplication sharedApplication].statusBarOrientation;
+    previousOrigaton = oritation = [UIApplication sharedApplication].statusBarOrientation;
     [self setTableViewEdge:oritation];
     if(album==nil)
     {
@@ -123,7 +123,6 @@
     {
         setting=[tmp objectAtIndex:0];
     }
-    [self setThumbnailSize];
 //    [table reloadData];    
 //    NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRow-1 inSection:datelist.count - 1];
 //    [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
@@ -131,6 +130,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EditPhotoTag:)name:@"EditPhotoTag" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableData) name:@"reloadTableData" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refresh:) name:@"refresh" object:nil];
+    NSLog(@"didload done");
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -142,6 +142,7 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     if (firstLoad) {
+        [self setThumbnailSize];
         [table reloadData];    
         NSIndexPath* ip = [NSIndexPath indexPathForRow:0 inSection:datelist.count+1];
         [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
@@ -152,6 +153,7 @@
 //    CGPoint offset = self.table.contentOffset;
 //    NSLog(@"the previous is %@",NSStringFromCGPoint(offset));
     selectedRow = NSNotFound;
+    NSLog(@"will appear done");
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
@@ -165,10 +167,11 @@
     
 }
 -(void)viewDidDisappear:(BOOL)animated{
-    if (selectedRow != NSNotFound) {
-        ThumbnailCell *cell = (ThumbnailCell*)[self.table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:selectedRow inSection:0]];
+    if (selectedRow != NSNotFound && selectedSection != NSNotFound) {
+        ThumbnailCell *cell = (ThumbnailCell*)[self.table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:selectedRow inSection:selectedSection]];
         [cell clearSelection];
         selectedRow = NSNotFound;
+        selectedSection = NSNotFound;
     }
 }
 
@@ -229,7 +232,7 @@
         // [self.table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
     }
     previousOrigaton = toInterfaceOrientation;
-    timeSelectionsView.frame =[self setTheTimeSelectionsViewFrame:CGRectGetMinY(self.viewBar.frame)-185];
+    timeSelectionsView.frame =[self setTheTimeSelectionsViewFrame:CGRectGetMinY(self.viewBar.frame)-195];
 }
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
@@ -249,7 +252,7 @@
         }else{
             thumbnailSize = 6.0;
         }
-
+        iconsize = (self.view.frame.size.width - (thumbnailSize +1)*4) / thumbnailSize +4;
     }else{
         if([setting.iconSize isEqualToString:@"Bigger"])
         {
@@ -258,9 +261,9 @@
         }else{
             thumbnailSize = 4.0;
         }
-
+        iconsize = (self.view.frame.size.width - (thumbnailSize +1)*4) / thumbnailSize +4;
     }
-
+    
 }
 -(void)setTableViewEdge:(UIInterfaceOrientation)orientation{
     UIEdgeInsets insets = self.table.contentInset;
@@ -328,8 +331,12 @@
 
 -(void)reloadTableData{
     oritation = [UIApplication sharedApplication].statusBarOrientation;
-    [self setTableViewEdge:oritation];
-    [self.table reloadData];
+    if (previousOrigaton != oritation) {
+        [self setTableViewEdge:oritation];
+        [self setThumbnailSize];
+        [self.table reloadData];
+        previousOrigaton = oritation;
+    }
 }
 
 #pragma mark -
@@ -797,7 +804,7 @@
     button4.tag = 4;
     button5.tag = 5;
     button6.tag = 6;
-    button7.tag = 0;
+    button7.tag = 7;
     //button8.tag = 8;
     
     [button1 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
@@ -809,7 +816,7 @@
     [button7 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
    // [button8 addTarget:self action:@selector(selectTimeRange:) forControlEvents:UIControlEventTouchUpInside];
     
-    CGFloat y = CGRectGetMinY(viewBar.frame)-185;
+    CGFloat y = CGRectGetMinY(viewBar.frame)-195;
     timeSelectionsView = [[UIView alloc]initWithFrame:[self setTheTimeSelectionsViewFrame:y]];
     timeSelectionsView.alpha = 0;
     timeSelectionsView.backgroundColor = [UIColor grayColor];
@@ -1025,7 +1032,7 @@
 }
 
 -(CGRect)setTheTimeSelectionsViewFrame:(CGFloat)y{
-    CGFloat height = 185;
+    CGFloat height = 195;
     CGFloat width = 190;
     CGFloat x = self.view.frame.origin.x;
     return CGRectMake(x, y, width, height);
@@ -1196,7 +1203,7 @@
                 lastRow = [self caculateRowNumbersWithNSArray:unknowDate];
                 break;
             default:
-                lastRow = 1;
+                lastRow = 2;
                 break;
         }
     //}
@@ -1334,11 +1341,12 @@
     }
     cell.selectionDelegate = self;
     cell.rowNumber = indexPath.row;
+    cell.sectionNumber = indexPath.section;
     [cell.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    if (indexPath.section == datelist.count+1) {
+    if (indexPath.section == datelist.count+1 && indexPath.row == 0) {
         NSInteger vcount = 0;
         NSInteger pcount = 0;
-        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(cell.frame.origin.x, 10, cell.frame.size.width, cell.frame.size.height-20)];
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(cell.frame.origin.x, cell.frame.size.height/12, cell.frame.size.width, cell.frame.size.height*11/12)];
         label.textAlignment = UITextAlignmentCenter;
         label.textColor = [UIColor grayColor];
         label.font = [UIFont fontWithName:@"Arial" size:20];
@@ -1547,7 +1555,7 @@
         }else{
             index = [allTableData indexOfObject:ass];
         }
-        [cell displayThumbnails:assetsInRow beginIndex:index count:thumbnailSize action:action];
+        [cell displayThumbnails:assetsInRow beginIndex:index count:thumbnailSize action:action size:iconsize];
        
         
         if (!action) {
@@ -1623,6 +1631,7 @@
     {
         self.navigationItem.title=ta;
         selectedRow = cell.rowNumber;
+        selectedSection = cell.sectionNumber;
         NSMutableDictionary *dic = nil;
         if (photoType) {
             dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:photoTableData,@"assets",[NSString stringWithFormat:@"%d",index],@"selectIndex",
@@ -1778,21 +1787,56 @@
     
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-	return 79;
+    if (indexPath.section == datelist.count +1 && indexPath.row == 1) {
+        return 20;
+    }else
+	   return iconsize;
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     for (ThumbnailCell *cell in self.table.visibleCells) {
         [cell clearSelection];
     }
-   CGFloat sectionHeaderHeight = 65;
+   CGFloat sectionHeaderHeight = 45;
     if (scrollView.contentOffset.y<=sectionHeaderHeight&&scrollView.contentOffset.y>=0) {
         scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0);
     } else if (scrollView.contentOffset.y>=sectionHeaderHeight) {
         scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, 0, 0);
     }
+    CGPoint offset = scrollView.contentOffset;
+    CGRect bounds = scrollView.bounds;
+    CGSize size = scrollView.contentSize;
+    UIEdgeInsets insets = scrollView.contentInset;
+    float y = offset.y + bounds.size.height - insets.bottom;
+    float h = size.height;
+    if (insets.top  > -40) {
+        [self setTableViewEdge:oritation];
+    }
+//    float reload_distance = 10;
+//    if(y == h) {
+//        UIEdgeInsets insets = self.table.contentInset;
+//        if (UIInterfaceOrientationIsLandscape(oritation)) {
+//            [self.table setContentInset:UIEdgeInsetsMake(insets.top, insets.left, 33, insets.right)];
+//        }else{
+//            [self.table setContentInset:UIEdgeInsetsMake(insets.top, insets.left, 48, insets.right)];
+//        }
+//
+//    }
+   
+   /*  NSLog(@"offset: %f", offset.y);   
+     NSLog(@"content.height: %f", size.height);   
+     NSLog(@"bounds.height: %f", bounds.size.height);   
+     NSLog(@"inset.top: %f", insets.top);   
+     NSLog(@"inset.bottom: %f", insets.bottom);   
+     NSLog(@"pos: %f of %f", y, h);*/
 
+}
+
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+//    UIEdgeInsets insets = scrollView.contentInset;
+//    if (insets.top  > -50) {
+//        [self setTableViewEdge:oritation];
+//    }
 }
 #pragma  mark -
 #pragma  mark AlerView delegate method

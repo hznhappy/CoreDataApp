@@ -57,6 +57,7 @@
     NSInteger timeSelectionVideo;
    // NSInteger sectionCount;
     float thumbnailSize;
+    NSInteger iconsize;
     
     BOOL mode;
     BOOL load;
@@ -87,6 +88,7 @@
     UIInterfaceOrientation previousOrigaton;
     NSInteger lastRow;
     NSUInteger selectedRow;
+    NSUInteger selectedSection;
     NSInteger photoCount;
     NSInteger videoCount;
     NSInteger portraitIndex;
