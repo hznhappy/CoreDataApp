@@ -60,3 +60,35 @@
 "Mult"="Mult";
 "Sing"="Sing";
 "Person"="Person";
+"Photos only"="Photos only";
+"Videos only"="Videos only";
+"All"="All";
+"PeopleRule"="PeopleRule";
+"Favorite"="Favorite";
+"phonebook"="phonebook";
+"Recent two weeks"="Recent two weeks";
+"Recent month"="Recent month";
+"Recent three months"="Recent three months";
+"Recent six months"="Recent six months";
+"More than six months"="More than six months";
+"More than one year"="More than one year";
+"date"="date";
+"numOfLike"="numOfLike";
+"numPeopleTag"="numPeopleTag";
+"Sort"="Sort";
+"Order"="Order";
+"ASC"="ASC";
+"DSC"="DSC";
+"None"="None";
+
+
+
+
+
+
+
+
+
+
+
+

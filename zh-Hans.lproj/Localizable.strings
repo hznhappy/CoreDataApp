@@ -60,3 +60,29 @@
 "Mult"="多选";
 "Sing"="单选";
 "Person"="人名";
+"Photos only"="照片";
+"Videos only"="视频";
+"All"="全部";
+"PeopleRule"="人名规则";
+"Favorite"="好友";
+"phonebook"="电话簿";
+"Recent two weeks"="最近两周";
+"Recent month"="最近一个月";
+"Recent three months"="最近三个月";
+"Recent six months"="最近六个月";
+"More than six months"="超过六个月";
+"More than one year"="超过一年";
+"date"="时间";
+"numOfLike"="喜欢的人数";
+"numPeopleTag"="被标记的个数";
+"Sort"="类型";
+"Order"="排序";
+"ASC"="升序";
+"DSC"="降序";
+"None"="无";
+
+
+
+
+
+

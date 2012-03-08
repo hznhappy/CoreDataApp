@@ -17,6 +17,15 @@
 {index=-1;
     app=[[UIApplication sharedApplication]delegate];
     dataSource=app.dataSource;
+    NSString *a=NSLocalizedString(@"date", @"title");
+    NSString *d=NSLocalizedString(@"numOfLike", @"title");
+    NSString *c=NSLocalizedString(@"numPeopleTag", @"title");
+    
+    s=NSLocalizedString(@"ASC", @"title");
+    o=NSLocalizedString(@"DSC", @"title");
+    locate=[[NSMutableArray alloc]initWithObjects:a,d,c,nil];
+    
+    
    SortList = [NSMutableArray arrayWithObjects:@"date",@"numOfLike",@"numPeopleTag",nil];
     UIButton* backButton = [UIButton buttonWithType:101]; // left-pointing shape!
     [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
@@ -52,12 +61,14 @@
 {
     if(section==0)
     {
-    NSString *a=@"Sort";
+        //NSString *a=@"Sort";
+        NSString *a=NSLocalizedString(@"Sort", @"title");
         return a;
     }
     else
     {
-    NSString *b=@"Order";
+        NSString *b=NSLocalizedString(@"Order", @"title");
+        
         return b;
     }
 }
@@ -73,9 +84,10 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
                                           reuseIdentifier:CellIdentifier];
         }
-    cell.textLabel.text =[SortList objectAtIndex:indexPath.row];
-    cell.selectionStyle=UITableViewCellSelectionStyleNone;
-        if ([cell.textLabel.text isEqualToString:album.sortKey]) {
+    cell.textLabel.text =[locate objectAtIndex:indexPath.row];
+   // cell.selectionStyle=UITableViewCellSelectionStyleNone;
+        NSString *a=[SortList objectAtIndex:indexPath.row];
+        if ([a isEqualToString:album.sortKey]) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
         }else{
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -95,7 +107,7 @@
         if(![album.sortOrder boolValue])
         {
             orderButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-            [orderButton setTitle:@"DSC" forState:UIControlStateNormal];
+            [orderButton setTitle:o forState:UIControlStateNormal];
         }
     }
         cell.selectionStyle=UITableViewCellSelectionStyleNone;
@@ -108,7 +120,7 @@
     orderButton = [UIButton buttonWithType:UIButtonTypeCustom];
     orderButton.frame = CGRectMake(0, 0, 105, 28);
     [orderButton addTarget:self action:@selector(order:) forControlEvents:UIControlEventTouchUpInside];
-    [orderButton setTitle:@"ASC" forState:UIControlStateNormal];
+    [orderButton setTitle:s forState:UIControlStateNormal];
     orderButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
     [orderButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     return orderButton;
@@ -121,15 +133,15 @@
 //    }
     UIButton *button = (UIButton *)sender;
     [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
-    if ([button.titleLabel.text isEqualToString:@"ASC"]) {
+    if ([button.titleLabel.text isEqualToString:s]) {
         button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-        [button setTitle:@"DSC" forState:UIControlStateNormal];
+        [button setTitle:o forState:UIControlStateNormal];
         album.sortOrder=[NSNumber numberWithBool:NO];
         
     }
-    else if ([button.titleLabel.text isEqualToString:@"DSC"]){
+    else if ([button.titleLabel.text isEqualToString:o]){
         button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
-        [button setTitle:@"ASC" forState:UIControlStateNormal];
+        [button setTitle:s forState:UIControlStateNormal];
       album.sortOrder=[NSNumber numberWithBool:YES];
         
     }
@@ -144,7 +156,7 @@
     {
    album.sortKey=[SortList objectAtIndex:index];
    [dataSource.coreData saveContext];
-    [self.table reloadData];
+        [self.table reloadData];
     }
     else
     {

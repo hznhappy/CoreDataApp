@@ -12,12 +12,15 @@
 @interface AlbumMediaTypeView : UIViewController<UITableViewDelegate,UITableViewDataSource>
 {
      NSMutableArray *type;
+    NSMutableArray *locate;
     UIImage *selectImg;
     UIImage *unselectImg;
+    UITableView *table;
     Album *album;
     NSString *chooseType;
 }
 @property(nonatomic,strong)Album *album;
 @property(nonatomic,strong)NSString *chooseType;
+@property(nonatomic,strong)IBOutlet UITableView *table;
 
 @end

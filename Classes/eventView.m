@@ -41,6 +41,7 @@
     self.navigationItem.leftBarButtonItem =backItem;
     
 }
+
 -(void)back
 {
     NSLog(@"back");
@@ -324,6 +325,26 @@
 //
 
 
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    NSLog(@"move");
+    [self settableViewEdge:toInterfaceOrientation];
+    
+}
+
+-(void)settableViewEdge:(UIInterfaceOrientation)oritation{
+    //UIEdgeInsets insets = self.tableView.contentInset;
+    if (UIInterfaceOrientationIsLandscape(oritation)) {
+        
+       // [self.tableView setContentInset:UIEdgeInsetsMake(0, insets.left, insets.bottom, insets.right)];
+        
+        //[self.tableView setFrame:(33,0,insets.bottom, insets.right)]
+       // self.tableView.frame=CGRectMake(0,33, 480,320);
+    }else{
+       // self.tableView.frame=CGRectMake(0,45, 320, 480);
+       // [self.tableView setContentInset:UIEdgeInsetsMake(144, insets.left, insets.bottom, insets.right)];
+    }
+    [self.tableView reloadData];
+}
 
 
 

@@ -74,8 +74,8 @@
     playName=@"标题";
     self.textField.placeholder=playName;
     if(bum.chooseType!=nil)
-    {
-        self.TypeLabel.text=bum.chooseType;
+    {  NSString *a=NSLocalizedString(bum.chooseType, @"title");
+        self.TypeLabel.text=a;
     }
     if(bum.isFavorite.boolValue)
     {
@@ -83,17 +83,21 @@
     }
     if(bum.conDateRule.datePeriod!=nil)
     {
-        self.DateLabel.text=bum.conDateRule.datePeriod;
+        NSString *a=NSLocalizedString(bum.conDateRule.datePeriod, @"title");
+        self.DateLabel.text=a;
     }
     if(bum.sortKey!=nil)
     {
+         NSString *a=NSLocalizedString(bum.sortKey, @"title");
+         NSString *b=NSLocalizedString(@"ASC", @"title");
+         NSString *c=NSLocalizedString(@"DSC", @"title");
         if([bum.sortOrder boolValue])
         {
-        SortOrder.text=[NSString stringWithFormat:@"%@ ASC",bum.sortKey];
+        SortOrder.text=[NSString stringWithFormat:@"%@ (%@)",a,b];
         }
         else
         {
-           SortOrder.text=[NSString stringWithFormat:@"%@ DSC",bum.sortKey]; 
+           SortOrder.text=[NSString stringWithFormat:@"%@ (%@)",a,c]; 
         }
     }
     if(bum.conPeopleRule!=nil)
@@ -119,10 +123,10 @@
 
     }
     
-    NSString *b=NSLocalizedString(@"Back", @"title");
+    NSString *y=NSLocalizedString(@"Back", @"title");
     UIButton* backButton = [UIButton buttonWithType:101]; // left-pointing shape!
     [backButton addTarget:self action:@selector(huyou) forControlEvents:UIControlEventTouchUpInside];
-    [backButton setTitle:b forState:UIControlStateNormal];
+    [backButton setTitle:y forState:UIControlStateNormal];
     UIBarButtonItem *backItem=[[UIBarButtonItem alloc]initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem =backItem;     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeType:) name:@"changeType" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changePeople:) name:@"people" object:nil];
@@ -645,7 +649,8 @@ if(bum==nil)
     }    
     else
     {
-        PersonLabel.text=@"None";
+        NSString *a=NSLocalizedString(@"None", @"title");
+        PersonLabel.text=a;
     }
 }
 -(void)personLabel:(NSMutableArray *)person
@@ -703,17 +708,17 @@ if(bum==nil)
 }
 -(void)changeSort:(NSNotification *)note
 {
-    NSDictionary *dic=[note userInfo];
-    NSString *order=nil;
-    if([[dic objectForKey:@"order"] boolValue])
+    NSString *a=NSLocalizedString(bum.sortKey, @"title");
+    NSString *b=NSLocalizedString(@"ASC", @"title");
+    NSString *c=NSLocalizedString(@"DSC", @"title");
+    if([bum.sortOrder boolValue])
     {
-        order=@"ASC";
+        SortOrder.text=[NSString stringWithFormat:@"%@ (%@)",a,b];
     }
     else
     {
-        order=@"DSC";
+        SortOrder.text=[NSString stringWithFormat:@"%@ (%@)",a,c]; 
     }
-    SortOrder.text=[NSString stringWithFormat:@"%@ %@",[dic objectForKey:@"sort"],order];
 }
 -(void)changeEvent:(NSNotification *)note
 {

@@ -41,5 +41,5 @@
 - (NSArray *) fetchEventsForToday;
 - (IBAction) addEvent:(id)sender;
 -(void)table;
-
+-(void)settableViewEdge:(UIInterfaceOrientation)oritation;
 @end
