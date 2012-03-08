@@ -1823,12 +1823,12 @@
 //
 //    }
    
-     NSLog(@"offset: %f", offset.y);   
+   /*  NSLog(@"offset: %f", offset.y);   
      NSLog(@"content.height: %f", size.height);   
      NSLog(@"bounds.height: %f", bounds.size.height);   
      NSLog(@"inset.top: %f", insets.top);   
      NSLog(@"inset.bottom: %f", insets.bottom);   
-     NSLog(@"pos: %f of %f", y, h);
+     NSLog(@"pos: %f of %f", y, h);*/
 
 }
 
