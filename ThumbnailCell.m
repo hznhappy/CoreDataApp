@@ -10,18 +10,16 @@
 
 @implementation ThumbnailCell
 @synthesize selectionDelegate;
-@synthesize rowNumber;
--(void)displayThumbnails:(NSArray *)array beginIndex:(NSInteger)index count:(NSUInteger)count action:(BOOL)act
+@synthesize rowNumber,sectionNumber;
+-(void)displayThumbnails:(NSArray *)array beginIndex:(NSInteger)index count:(NSUInteger)count action:(BOOL)act size:(NSInteger)size
 {
-    NSInteger size = (self.bounds.size.width-(count*4)-2) / count;
-    CGRect frame = CGRectMake(4, 2, size, size);
+    CGRect frame = CGRectMake(4, 2, size-4, size-4);
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     for (NSUInteger i = 0;i <count; i++) {
         if (i < [array count]) {
             Asset *dbAsset = [array objectAtIndex:i];
             
-            ThumbnailImageView *thumImageView = [[ThumbnailImageView alloc]initWithAsset:dbAsset index:index action:act];
-            thumImageView.frame = frame;
+            ThumbnailImageView *thumImageView = [[ThumbnailImageView alloc]initWithFrame:frame Asset:dbAsset index:index action:act];
             thumImageView.delegate = self;
             [self addSubview:thumImageView];
             frame.origin.x = frame.origin.x + frame.size.width + 4;

@@ -21,14 +21,16 @@
 @interface ThumbnailCell : UITableViewCell<ThumbnailSelectionDelegate>
 {
     NSUInteger rowNumber;
+    NSInteger sectinNumber;
     id<ThumbnailCellSelectionDelegate>__unsafe_unretained selectionDelegate;
 }
 
 @property (nonatomic, assign) NSUInteger rowNumber;
+@property (nonatomic, assign) NSInteger sectionNumber;
 @property (nonatomic, unsafe_unretained) id<ThumbnailCellSelectionDelegate> selectionDelegate;
 
 
--(void)displayThumbnails:(NSArray *)array beginIndex:(NSInteger)index count:(NSUInteger)count action:(BOOL) act;
+-(void)displayThumbnails:(NSArray *)array beginIndex:(NSInteger)index count:(NSUInteger)count action:(BOOL)act size:(NSInteger)size;
 
 -(UIImageView *)addTagOverlayWhenSelected;
 -(void)checkTagSelection:(NSString *)selectedRow;

@@ -15,13 +15,14 @@
 @synthesize thumbnailIndex;
 @synthesize delegate;
 
--(ThumbnailImageView *)initWithAsset:(Asset*)asset index:(NSUInteger)index action:(BOOL)act{
+-(ThumbnailImageView *)initWithFrame:(CGRect)frame Asset:(Asset *)asset index:(NSUInteger)index action:(BOOL)act{
     self = [super init];
     if (self) {
         self.userInteractionEnabled = YES;
         self.thumbnailIndex = index;
         copyMenuShow = NO;
         tagSign = act;
+        self.frame = frame;
         [self LoadThumbnailWithAsset:asset];
     }
     return self;
@@ -113,10 +114,9 @@
     
 }
 -(void)addVideoOverlay:(NSString *)second{
-   
-    UIView *video =[[UIView alloc]initWithFrame:CGRectMake(0, 54, 75, 16)];
-    UILabel *length=[[UILabel alloc]initWithFrame:CGRectMake(40, 3, 45, 10)];
-    UIImageView *tu=[[UIImageView alloc]initWithFrame:CGRectMake(6, 4,15, 8)];
+    UIView *video =[[UIView alloc]initWithFrame:CGRectMake(0, self.frame.size.height*4/5, self.frame.size.width, self.frame.size.height/5)];
+    UILabel *length=[[UILabel alloc]initWithFrame:CGRectMake(video.frame.size.width *1/3, video.frame.size.height/5, video.frame.size.width *2/3, video.frame.size.height*3/5)];
+    UIImageView *tu=[[UIImageView alloc]initWithFrame:CGRectMake(video.frame.size.width *1/12, video.frame.size.height/4,video.frame.size.width *1/5, video.frame.size.height/2)];
     UIImage *picture = [UIImage imageNamed:@"VED.png"];
     [tu setImage:picture];
     [video addSubview:tu];
@@ -124,7 +124,7 @@
     [length setBackgroundColor:[UIColor clearColor]];
     length.text = second;
     length.textColor = [UIColor whiteColor];
-    length.textAlignment = UITextAlignmentLeft;
+    length.textAlignment = UITextAlignmentCenter;
     length.font = [UIFont boldSystemFontOfSize:12.0];
     [video addSubview:length];
     
@@ -234,6 +234,7 @@
     if (!highlightView) {
         UIImage *image = [UIImage imageNamed:@"ThumbnailHighlight.png"];
         highlightView = [[UIImageView alloc]initWithImage:image];
+        highlightView.frame = self.bounds;
         highlightView.alpha = 0.5;
     }
     
