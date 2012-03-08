@@ -1165,7 +1165,7 @@
 //    }else{
         switch (section) {
             case 0:
-                lastRow = 0;
+                lastRow = 1;
                 break;
             case 1:
                 lastRow = [self caculateRowNumbersWithNSArray:recentTwoWk];
@@ -1529,7 +1529,8 @@
                 [assetsInRow addObject:dbAsset];
             }
         }
-        
+        if(assetsInRow.count!=0)
+        {
         Asset *ass = [assetsInRow objectAtIndex:0];
         NSInteger index = 0;
         if (photoType) {
@@ -1540,6 +1541,7 @@
             index = [allTableData indexOfObject:ass];
         }
         [cell displayThumbnails:assetsInRow beginIndex:index count:thumbnailSize action:action];
+       
         
         if (!action) {
             for (NSInteger i = 0; i<thumbnailSize; i++) {
@@ -1556,6 +1558,7 @@
                 }
             }
         }
+    }
     }
     return cell;
 }
