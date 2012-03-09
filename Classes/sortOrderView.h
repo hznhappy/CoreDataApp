@@ -18,6 +18,7 @@
     PhotoAppDelegate *app;
     AlbumDataSource *dataSource;
     Album *album;
+    UILabel *orderLabel;
     UITableView *table;
     NSInteger index;
     NSMutableArray *locate;
@@ -26,6 +27,7 @@
 }
 @property(nonatomic,strong)IBOutlet UITableViewCell *orderCell;
 @property(nonatomic,strong)IBOutlet UITableView *table;
+@property(nonatomic,strong)IBOutlet UILabel *orderLabel;
  
 @property(nonatomic,strong)Album *album;
 -(UIButton *)orderButton;

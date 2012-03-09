@@ -12,6 +12,7 @@
 @synthesize orderCell;
 @synthesize album;
 @synthesize table;
+@synthesize orderLabel;
 
 -(void)viewDidLoad
 {index=-1;
@@ -20,7 +21,8 @@
     NSString *a=NSLocalizedString(@"date", @"title");
     NSString *d=NSLocalizedString(@"numOfLike", @"title");
     NSString *c=NSLocalizedString(@"numPeopleTag", @"title");
-    
+    NSString *e=NSLocalizedString(@"Order", @"title");
+    orderLabel.text=e;
     s=NSLocalizedString(@"ASC", @"title");
     o=NSLocalizedString(@"DSC", @"title");
     locate=[[NSMutableArray alloc]initWithObjects:a,d,c,nil];

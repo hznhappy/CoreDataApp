@@ -18,12 +18,18 @@
 @synthesize table;
 @synthesize album;
 @synthesize peopleRuleCell;
+@synthesize peopleLabel;
 
 -(void)viewDidLoad
 {
     NSString *a=NSLocalizedString(@"PeopleRule", @"title");
     NSString *d=NSLocalizedString(@"Favorite", @"title");
     NSString *c=NSLocalizedString(@"phonebook", @"title");
+    e=NSLocalizedString( @"And", @"title");
+    f=NSLocalizedString( @"Or", @"title");
+    I=NSLocalizedString(@"INCLUDE", @"title");
+    E=NSLocalizedString(@"EXCLUDE", @"title");
+    peopleLabel.text=a;
     nameList=[[NSMutableArray alloc]init];
     
     Title=[[NSMutableArray alloc]initWithObjects:a,d,c,nil];
@@ -118,7 +124,7 @@
             if(![album.conPeopleRule.allOrAny boolValue])
             {
                 peopleRuleButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-                [peopleRuleButton setTitle:@"Or" forState:UIControlStateNormal];
+                [peopleRuleButton setTitle:f forState:UIControlStateNormal];
             }
         }
         cell.selectionStyle=UITableViewCellSelectionStyleNone;
@@ -181,13 +187,13 @@
                     [selectButton setImage:selectImg forState:UIControlStateNormal];
                     if([p.opcode isEqualToString:@"INCLUDE"])
                     {
-                        [stateButton setTitle:INCLUDE forState:UIControlStateNormal];
+                        [stateButton setTitle:I forState:UIControlStateNormal];
                         stateButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
                     }
                     else if([p.opcode isEqualToString:@"EXCLUDE"])
                     {
                         stateButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-                        [stateButton setTitle:EXCLUDE forState:UIControlStateNormal];
+                        [stateButton setTitle:E forState:UIControlStateNormal];
                     }
                     
                 }
@@ -254,13 +260,13 @@
                     [selectButton setImage:selectImg forState:UIControlStateNormal];
                     if([p.opcode isEqualToString:@"INCLUDE"])
                     {
-                        [stateButton setTitle:INCLUDE forState:UIControlStateNormal];
+                        [stateButton setTitle:I forState:UIControlStateNormal];
                         stateButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
                     }
                     else if([p.opcode isEqualToString:@"EXCLUDE"])
                     {
                         stateButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-                        [stateButton setTitle:EXCLUDE forState:UIControlStateNormal];
+                        [stateButton setTitle:E forState:UIControlStateNormal];
                     }
                     
                 }
@@ -278,7 +284,7 @@
     peopleRuleButton = [UIButton buttonWithType:UIButtonTypeCustom];
     peopleRuleButton.frame = CGRectMake(0, 0, 75, 28);
     [peopleRuleButton addTarget:self action:@selector(changeRule:) forControlEvents:UIControlEventTouchUpInside];
-    [peopleRuleButton setTitle:@"And" forState:UIControlStateNormal];
+    [peopleRuleButton setTitle:e forState:UIControlStateNormal];
     peopleRuleButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
     [peopleRuleButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     return peopleRuleButton;
@@ -290,16 +296,16 @@
    // NSIndexPath *index = [table indexPathForCell:cell];
     //NSInteger Row=index.row;
     [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
-    if ([button.titleLabel.text isEqualToString:@"And"]) {
+    if ([button.titleLabel.text isEqualToString:e]) {
         button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-        [button setTitle:@"Or" forState:UIControlStateNormal];
+        [button setTitle:f forState:UIControlStateNormal];
         album.conPeopleRule.allOrAny=[NSNumber numberWithBool:NO];
         //NSString *rule=@"EXCLUDE";
        // [self update:Row rule:rule];
     }
     else{
         button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
-        [button setTitle:@"And" forState:UIControlStateNormal];
+        [button setTitle:e forState:UIControlStateNormal];
         album.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
        // NSString *rule=@"INCLUDE";
         //[self update:Row rule:rule];
@@ -498,7 +504,7 @@
     stateButton = [UIButton buttonWithType:UIButtonTypeCustom];
     stateButton.frame = CGRectMake(0, 0, 75, 28);
     [stateButton addTarget:self action:@selector(changeState:) forControlEvents:UIControlEventTouchUpInside];
-    [stateButton setTitle:INCLUDE forState:UIControlStateNormal];
+    [stateButton setTitle:I forState:UIControlStateNormal];
     stateButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
     [stateButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     return stateButton;
@@ -521,15 +527,15 @@
 
      NSInteger Row=index.row;
     [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
-    if ([button.titleLabel.text isEqualToString:INCLUDE]) {
+    if ([button.titleLabel.text isEqualToString:I]) {
         button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-        [button setTitle:EXCLUDE forState:UIControlStateNormal];
+        [button setTitle:E forState:UIControlStateNormal];
          NSString *rule=@"EXCLUDE";
                 [self update:Row rule:rule];
     }
     else{
         button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
-        [button setTitle:INCLUDE forState:UIControlStateNormal];
+        [button setTitle:I forState:UIControlStateNormal];
           NSString *rule=@"INCLUDE";
            [self update:Row rule:rule];
     }

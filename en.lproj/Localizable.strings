@@ -80,6 +80,10 @@
 "ASC"="ASC";
 "DSC"="DSC";
 "None"="None";
+"And"="And";
+"Or"="Or";
+"INCLUDE"="INCLUDE";
+"EXCLUDE"="EXCLUDE";
 
 
 
