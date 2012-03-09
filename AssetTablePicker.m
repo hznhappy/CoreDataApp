@@ -56,6 +56,7 @@
         UIBarButtonItem *type = [[UIBarButtonItem alloc]initWithCustomView:segControl];
         //UIBarButtonItem *type = [[UIBarButtonItem alloc]initWithTitle:typeTitle style:UIBarButtonItemStyleBordered target:self action:@selector(showTypeSelections)];
         [viewBar setItems:[NSArray arrayWithObjects:time,flex,type, nil]];
+        datelist = [NSArray arrayWithObjects:@"Others",@"More than one year",@"Six month to one year",@"Three to Six month",@"One to Three month",@" two week ago to one month",@"Recent two week",nil];
         
     }
     isEvent=NO;
@@ -83,7 +84,6 @@
     photoArray = [[NSMutableArray alloc]init];
     videoArray = [[NSMutableArray alloc]init];
     
-    datelist = [NSArray arrayWithObjects:@"Recent two week",@"recent two week to one month",@"One to Three month",@"Three to Six month",@"Six month to one year",@"More than one year",@"Others",nil];
     green = [UIImage imageNamed:@"dot-green.png"];
     red = [UIImage imageNamed:@"dot-red.png"];
     greenImageView = [[UIImageView alloc]initWithImage:green];
@@ -144,7 +144,7 @@
     if (firstLoad) {
         [self setThumbnailSize];
         [table reloadData];    
-        NSIndexPath* ip = [NSIndexPath indexPathForRow:0 inSection:datelist.count+1];
+        NSIndexPath* ip = [NSIndexPath indexPathForRow:0 inSection:datelist.count!=0? datelist.count+1:0];
         [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     }
 //    ThumbnailCell *cell = (ThumbnailCell *)[[self.table visibleCells]objectAtIndex:0];
@@ -280,10 +280,14 @@
     for (Asset *ast in self.crwAssets) {
         if ([ast.videoType boolValue]) {
             videoCount += 1;
-            [videoArray addObject:ast];
+            if (album == nil) {
+                [videoArray addObject:ast];
+            }
         }else{
             photoCount += 1;
-            [photoArray addObject:ast];
+            if (album == nil) {
+                [photoArray addObject:ast];
+            }
         }
     }
 }
@@ -298,13 +302,15 @@
     photoTableData = photoArray;
     videoTableData = videoArray;
     
-    //select and sore data for UITableView Sections
-    if(photoType)
-        photoTableData =[self dataInUITableViewSectionsFromArray:photoTableData];
-    else if(videoType)
-        videoTableData =[self dataInUITableViewSectionsFromArray:videoTableData];
-    else 
-        allTableData =[self dataInUITableViewSectionsFromArray:allTableData];
+    if (album == nil) {
+        //select and sore data for UITableView Sections
+        if(photoType)
+            photoTableData =[self dataInUITableViewSectionsFromArray:photoTableData];
+        else if(videoType)
+            videoTableData =[self dataInUITableViewSectionsFromArray:videoTableData];
+        else 
+            allTableData =[self dataInUITableViewSectionsFromArray:allTableData];
+    }
 
 }
 
@@ -1022,11 +1028,8 @@
     array=[array arrayByAddingObjectsFromArray:oneToThreeMth];
     array=[array arrayByAddingObjectsFromArray:threeToSixMth];
     array=[array arrayByAddingObjectsFromArray:sixMthToOneYear];
-    NSLog(@"arraycount1:%d",array.count);
     array=[array arrayByAddingObjectsFromArray:moreThanOneYear];
-    NSLog(@"arraycount2:%d",array.count);
     array=[array arrayByAddingObjectsFromArray:unknowDate];
-    NSLog(@"arraycount:%d",array.count);
     return array;
     
 }
@@ -1115,97 +1118,47 @@
 #pragma mark UITableViewDataSource and Delegate Methods
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-//    if (timeFilter) {
-//        return 2;
-//    }else{
+    if (album == nil) {
         return ([datelist count]+2);
-//    }
+    }else
+        return 1;
+        
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-//    if (timeFilter) {
-//        if (section==0) {
-//            if (photoType) {
-//                switch (timeSelectionPhoto) {
-//                    case 1:
-//                        lastRow = [self caculateRowNumbersWithNSArray:recentTwoWk];
-//                        break;
-//                    case 2:
-//                        lastRow = [self caculateRowNumbersWithNSArray:twoWkToOneMth];
-//                        break;
-//                    case 3:
-//                        lastRow = [self caculateRowNumbersWithNSArray:oneToThreeMth];
-//                        break;
-//                    case 4:
-//                        lastRow = [self caculateRowNumbersWithNSArray:threeToSixMth];
-//                        break;
-//                    case 5:
-//                        lastRow = [self caculateRowNumbersWithNSArray:sixMthToOneYear];
-//                        break;
-//                    case 6:
-//                        lastRow = [self caculateRowNumbersWithNSArray:moreThanOneYear];
-//                        break;
-//                    default:
-//                        break;
-//                }
-//            }else if(videoType){
-//                switch (timeSelectionVideo) {
-//                    case 1:
-//                        lastRow = [self caculateRowNumbersWithNSArray:recentTwoWk];
-//                        break;
-//                    case 2:
-//                        lastRow = [self caculateRowNumbersWithNSArray:twoWkToOneMth];
-//                        break;
-//                    case 3:
-//                        lastRow = [self caculateRowNumbersWithNSArray:oneToThreeMth];
-//                        break;
-//                    case 4:
-//                        lastRow = [self caculateRowNumbersWithNSArray:threeToSixMth];
-//                        break;
-//                    case 5:
-//                        lastRow = [self caculateRowNumbersWithNSArray:sixMthToOneYear];
-//                        break;
-//                    case 6:
-//                        lastRow = [self caculateRowNumbersWithNSArray:moreThanOneYear];
-//                        break;
-//                    default:
-//                        break;
-//                }
-//            }
-//            
-//        }else{
-//            lastRow = 1;
-//        }
-//    }else{
-        switch (section) {
+    if (album == nil) {
+    switch (section) {
             case 0:
                 lastRow = 0;
                 break;
             case 1:
-                lastRow = [self caculateRowNumbersWithNSArray:recentTwoWk];
+                lastRow = [self caculateRowNumbersWithNSArray:unknowDate];
                 break;
             case 2:
-                lastRow = [self caculateRowNumbersWithNSArray:twoWkToOneMth];
+                lastRow = [self caculateRowNumbersWithNSArray:moreThanOneYear];
                 break;
             case 3:
-                lastRow = [self caculateRowNumbersWithNSArray:oneToThreeMth];
+                lastRow = [self caculateRowNumbersWithNSArray:sixMthToOneYear];
                 break;
             case 4:
                 lastRow = [self caculateRowNumbersWithNSArray:threeToSixMth]; 
                 break;
             case 5:
-                lastRow = [self caculateRowNumbersWithNSArray:sixMthToOneYear];
+                lastRow = [self caculateRowNumbersWithNSArray:oneToThreeMth];
                 break;
             case 6:
-                lastRow = [self caculateRowNumbersWithNSArray:moreThanOneYear];
+                lastRow = [self caculateRowNumbersWithNSArray:twoWkToOneMth];
                 break;
             case 7:
-                lastRow = [self caculateRowNumbersWithNSArray:unknowDate];
+                lastRow = [self caculateRowNumbersWithNSArray:recentTwoWk];
                 break;
             default:
                 lastRow = 2;
                 break;
         }
+    }else{
+        lastRow = [self caculateRowNumbersWithNSArray:allTableData] + 1;
+    }
     //}
     /* if (UIInterfaceOrientationIsLandscape(oritation)) {
      if (photoType) {
@@ -1229,21 +1182,21 @@
 -(NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section{
     NSString *sectionTitle = nil;
     //if (!timeFilter) {
-        
+    if (album == nil) {
     switch (section) {
         case 0:
-            if (recentTwoWk.count!=0) {
+            if (unknowDate.count!=0) {
                 sectionTitle = [datelist objectAtIndex:section];
             }
             break;
         case 1:
-            if (twoWkToOneMth.count!=0) {
+            if (moreThanOneYear.count!=0) {
                 sectionTitle = [datelist objectAtIndex:section];
             }
             
             break;
         case 2:
-            if (oneToThreeMth.count!=0) {
+            if (sixMthToOneYear.count!=0) {
                 sectionTitle = [datelist objectAtIndex:section];
             }
             
@@ -1255,19 +1208,19 @@
             
             break;
         case 4:
-            if (sixMthToOneYear.count!=0) {
+            if (oneToThreeMth.count!=0) {
                 sectionTitle = [datelist objectAtIndex:section];
             }
             
             break;
         case 5:
-            if (moreThanOneYear.count!=0) {
+            if (twoWkToOneMth.count!=0) {
                 sectionTitle = [datelist objectAtIndex:section];
             }
             
             break;
         case 6:
-            if (unknowDate.count!=0) {
+            if (recentTwoWk.count!=0) {
                 sectionTitle = [datelist objectAtIndex:section];
             }
             break;
@@ -1275,6 +1228,7 @@
             break;
             
     //}
+    }
     }
     return sectionTitle;
 }
@@ -1343,7 +1297,7 @@
     cell.rowNumber = indexPath.row;
     cell.sectionNumber = indexPath.section;
     [cell.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    if (indexPath.section == datelist.count+1 && indexPath.row == 0) {
+    if ((indexPath.section == datelist.count+1 && indexPath.row == 0)|| (indexPath.row == lastRow -1 && album != nil)) {
         NSInteger vcount = 0;
         NSInteger pcount = 0;
         UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(cell.frame.origin.x, cell.frame.size.height/12, cell.frame.size.width, cell.frame.size.height*11/12)];
@@ -1464,39 +1418,45 @@
 //                        
 //                }
 //            }else{
+            if (album == nil) {
                 switch (indexPath.section) {
                     case 1:
-                        if (recentTwoWk != nil && row < recentTwoWk.count)
-                        dbAsset = [recentTwoWk objectAtIndex:row];
+                        if (unknowDate != nil && row < unknowDate.count)
+                            dbAsset = [unknowDate objectAtIndex:row];
                         break;
                     case 2:
-                        if (twoWkToOneMth != nil && row < twoWkToOneMth.count)
-                        dbAsset = [twoWkToOneMth objectAtIndex:row];
+                        if (moreThanOneYear != nil && row < moreThanOneYear.count)
+                            dbAsset = [moreThanOneYear objectAtIndex:row];
                         break;
                     case 3:
-                        if (oneToThreeMth != nil && row < oneToThreeMth.count)
-                        dbAsset = [oneToThreeMth objectAtIndex:row];
+                        if (sixMthToOneYear != nil && row < sixMthToOneYear.count)
+                            dbAsset = [sixMthToOneYear objectAtIndex:row];
                         break;
                     case 4:
                         if (threeToSixMth != nil && row < threeToSixMth.count)
                         dbAsset = [threeToSixMth objectAtIndex:row];
                         break;
                     case 5:
-                        if (sixMthToOneYear != nil && row < sixMthToOneYear.count)
-                        dbAsset = [sixMthToOneYear objectAtIndex:row];
+                        if (oneToThreeMth != nil && row < oneToThreeMth.count)
+                            dbAsset = [oneToThreeMth objectAtIndex:row];
                         break;
                     case 6:
-                        if (moreThanOneYear != nil && row < moreThanOneYear.count)
-                        dbAsset = [moreThanOneYear objectAtIndex:row];
+                        if (twoWkToOneMth != nil && row < twoWkToOneMth.count)
+                            dbAsset = [twoWkToOneMth objectAtIndex:row];
                         break;
                     case 7:
-                        if (unknowDate != nil && row < unknowDate.count)
-                        dbAsset = [unknowDate objectAtIndex:row];
+                        if (recentTwoWk != nil && row < recentTwoWk.count)
+                            dbAsset = [recentTwoWk objectAtIndex:row];
                         break;
                         
                     default:
                         break;
                 }
+            }else{
+                if (row < allTableData.count) {
+                    dbAsset = [allTableData objectAtIndex:row];
+                }
+            }
           //  }
             if (dbAsset != nil) {
                 NSInteger row1 = 0;
@@ -1797,6 +1757,8 @@
     for (ThumbnailCell *cell in self.table.visibleCells) {
         [cell clearSelection];
     }
+    
+    if (album == nil) {
    CGFloat sectionHeaderHeight = 45;
     if (scrollView.contentOffset.y<=sectionHeaderHeight&&scrollView.contentOffset.y>=0) {
         scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0);
@@ -1811,6 +1773,7 @@
     float h = size.height;
     if (insets.top  > -40) {
         [self setTableViewEdge:oritation];
+    }
     }
 //    float reload_distance = 10;
 //    if(y == h) {

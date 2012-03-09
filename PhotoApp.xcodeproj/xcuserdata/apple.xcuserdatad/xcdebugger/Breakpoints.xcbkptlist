@@ -79,11 +79,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AlbumDataSource.m"
-         timestampString = "352951682.431707"
+         timestampString = "352966330.344281"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "975"
-         endingLineNumber = "975"
+         startingLineNumber = "977"
+         endingLineNumber = "977"
          landmarkName = "-getAlbum:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -147,11 +147,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AssetTablePicker.m"
-         timestampString = "352888282.93852"
+         timestampString = "352970733.285911"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1575"
-         endingLineNumber = "1575"
+         startingLineNumber = "1535"
+         endingLineNumber = "1535"
          landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>

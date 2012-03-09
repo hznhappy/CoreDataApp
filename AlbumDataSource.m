@@ -166,29 +166,29 @@
             [inputFormatter setTimeZone:timeZone1];
             [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
             newAsset.date = [inputFormatter dateFromString:strDate];
-            
+        }
             // [self reloadTimeData:alAsset asset:newAsset];
             if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
                 newAsset.videoType = [NSNumber numberWithBool:YES];
-                AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:asUrl];
+                /*AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:asUrl];
                 
-                CMTime duration = playerItem.duration;
-                int durationSeconds = (int)ceilf(CMTimeGetSeconds(duration));
-                int hours = durationSeconds / (60 * 60);
-                int minutes = (durationSeconds / 60) % 60;
-                int seconds = durationSeconds % 60;
-                NSString *formattedTimeString = nil;
-                if ( hours > 0 ) {
-                    formattedTimeString = [NSString stringWithFormat:@"%d:%02d:%02d", hours, minutes, seconds];
-                } else {
-                    formattedTimeString = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
-                }
-                newAsset.duration = formattedTimeString;
+                CMTime duration = playerItem.duration;*/
+                 int durationSeconds = (int)ceilf([[[alAsset valueForProperty:ALAssetPropertyDuration]description]floatValue]);//(CMTimeGetSeconds(duration));
+                 int hours = durationSeconds / (60 * 60);
+                 int minutes = (durationSeconds / 60) % 60;
+                 int seconds = durationSeconds % 60;
+                 NSString *formattedTimeString = nil;
+                 if ( hours > 0 ) {
+                 formattedTimeString = [NSString stringWithFormat:@"%d:%02d:%02d", hours, minutes, seconds];
+                 } else {
+                 formattedTimeString = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
+                 }
+                 newAsset.duration = formattedTimeString;
+                 newAsset.date = [alAsset valueForProperty:ALAssetPropertyDate];
                 
             }else{
                 newAsset.videoType = [NSNumber numberWithBool:NO];;
             }
-        }
         newAsset.latitude=[NSNumber numberWithDouble:0.0];
         newAsset.longitude=[NSNumber numberWithDouble:0.0];
         newAsset.numOfLike=[NSNumber numberWithInt:0];
@@ -261,7 +261,7 @@
         
         newAsset=[[Asset alloc]initWithEntity:entity insertIntoManagedObjectContext:[coreData managedObjectContext]];
         newAsset.url=[[[alAsset defaultRepresentation]url]description];
-         NSURL *asUrl = [[alAsset defaultRepresentation]url];
+        // NSURL *asUrl = [[alAsset defaultRepresentation]url];
         @autoreleasepool {
             // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
             NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
@@ -272,15 +272,16 @@
             NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
             [inputFormatter setTimeZone:timeZone1];
             [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
+            
             newAsset.date = [inputFormatter dateFromString:strDate];
         }
 
         if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
             newAsset.videoType = [NSNumber numberWithBool:YES];
-            AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:asUrl];
+            /*AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:asUrl];
             
-            CMTime duration = playerItem.duration;
-            int durationSeconds = (int)ceilf(CMTimeGetSeconds(duration));
+            CMTime duration = playerItem.duration;*/
+            int durationSeconds = (int)ceilf([[[alAsset valueForProperty:ALAssetPropertyDuration]description]floatValue]);//(CMTimeGetSeconds(duration));
             int hours = durationSeconds / (60 * 60);
             int minutes = (durationSeconds / 60) % 60;
             int seconds = durationSeconds % 60;
@@ -291,9 +292,10 @@
                 formattedTimeString = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
             }
             newAsset.duration = formattedTimeString;
+            newAsset.date = [alAsset valueForProperty:ALAssetPropertyDate];
             
         }else{
-            newAsset.videoType = [NSNumber numberWithBool:NO];;
+            newAsset.videoType = [NSNumber numberWithBool:NO];
         }
         newAsset.latitude=[NSNumber numberWithDouble:0.0];
         newAsset.longitude=[NSNumber numberWithDouble:0.0];
