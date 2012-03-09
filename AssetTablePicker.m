@@ -1031,14 +1031,14 @@
     
     array = nil;
     array = [[NSArray alloc]init];
-    array=[array arrayByAddingObjectsFromArray:recentTwoWk];
-    
-    array=[array arrayByAddingObjectsFromArray:twoWkToOneMth];
-    array=[array arrayByAddingObjectsFromArray:oneToThreeMth];
-    array=[array arrayByAddingObjectsFromArray:threeToSixMth];
-    array=[array arrayByAddingObjectsFromArray:sixMthToOneYear];
-    array=[array arrayByAddingObjectsFromArray:moreThanOneYear];
     array=[array arrayByAddingObjectsFromArray:unknowDate];
+    
+    array=[array arrayByAddingObjectsFromArray:moreThanOneYear];
+    array=[array arrayByAddingObjectsFromArray:sixMthToOneYear];
+    array=[array arrayByAddingObjectsFromArray:threeToSixMth];
+    array=[array arrayByAddingObjectsFromArray:oneToThreeMth];
+    array=[array arrayByAddingObjectsFromArray:twoWkToOneMth];
+    array=[array arrayByAddingObjectsFromArray:recentTwoWk];
     return array;
     
 }
@@ -1056,31 +1056,19 @@
         videoType = NO;
         [self setTimeSelectionWithIndex:timeSelectionAll];
        allTableData = [self dataInUITableViewSectionsFromArray:allTableData];
-//        if (timeSelectionAll != 0) {
-//            timeFilter = YES;
-//        }else{
-//            timeFilter = NO;
-//        }
+
     }else if(seg.selectedSegmentIndex == 1){
         photoType = YES;
         videoType = NO;
         [self setTimeSelectionWithIndex:timeSelectionPhoto];
       photoTableData = [self dataInUITableViewSectionsFromArray:photoTableData];
-//        if (timeSelectionPhoto != 0) {
-//            timeFilter = YES;
-//        }else{
-//            timeFilter = NO;
-//        }
+
     }else{
         photoType = NO;
         videoType = YES;
         [self setTimeSelectionWithIndex:timeSelectionVideo];
        videoTableData = [self dataInUITableViewSectionsFromArray:videoTableData];
-//        if (timeSelectionVideo != 0) {
-//            timeFilter = YES;
-//        }else{
-//            timeFilter = NO;
-//        }
+
     }
     [self.table reloadData];
     NSIndexPath* ip = nil;
@@ -1774,13 +1762,13 @@
     } else if (scrollView.contentOffset.y>=sectionHeaderHeight) {
         scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, 0, 0);
     }
-    CGPoint offset = scrollView.contentOffset;
-    CGRect bounds = scrollView.bounds;
-    CGSize size = scrollView.contentSize;
+   // CGPoint offset = scrollView.contentOffset;
+    //CGRect bounds = scrollView.bounds;
+    //CGSize size = scrollView.contentSize;
     UIEdgeInsets insets = scrollView.contentInset;
-    float y = offset.y + bounds.size.height - insets.bottom;
-    float h = size.height;
-    if (insets.top  > -40) {
+    //float y = offset.y + bounds.size.height - insets.bottom;
+    //float h = size.height;
+    if (insets.top  > -40 && !scrollView.dragging) {
         [self setTableViewEdge:oritation];
     }
     }
@@ -1804,12 +1792,7 @@
 
 }
 
--(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-//    UIEdgeInsets insets = scrollView.contentInset;
-//    if (insets.top  > -50) {
-//        [self setTableViewEdge:oritation];
-//    }
-}
+
 #pragma  mark -
 #pragma  mark AlerView delegate method
 -(void)alertView:(UIAlertView *)alert11 didDismissWithButtonIndex:(NSInteger)buttonIndex{
