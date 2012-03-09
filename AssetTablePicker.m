@@ -1923,6 +1923,30 @@
     self.crwAssets = nil;
     self.viewBar = nil;
     self.tagBar = nil;
+    tagRow = nil;
+    UrlList = nil;
+    assertList= nil;
+    AddAssertList= nil;
+    inAssert= nil;
+    photoArray= nil;
+    videoArray= nil;
+    datelist= nil;
+    //The array in UITableView setction
+    recentTwoWk= nil;
+    twoWkToOneMth= nil;
+    oneToThreeMth= nil;
+    threeToSixMth= nil;
+    sixMthToOneYear= nil;
+    moreThanOneYear= nil;
+    unknowDate= nil;
+    
+    allTableData= nil;
+    photoTableData= nil;
+    videoTableData= nil;
+    tagSelector= nil;
+   album= nil;
+    event= nil;
+    setting= nil;
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 

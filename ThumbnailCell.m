@@ -13,7 +13,8 @@
 @synthesize rowNumber,sectionNumber;
 -(void)displayThumbnails:(NSArray *)array beginIndex:(NSInteger)index count:(NSUInteger)count action:(BOOL)act size:(NSInteger)size
 {
-    CGRect frame = CGRectMake(4, 2, size-4, size-4);
+    thumnailsize = size - 4;
+    CGRect frame = CGRectMake(4, 2, thumnailsize, thumnailsize);
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     for (NSUInteger i = 0;i <count; i++) {
         if (i < [array count]) {
@@ -30,7 +31,7 @@
 
 -(UIImageView *)addTagOverlayWhenSelected
 {
-    CGRect viewFrames = CGRectMake(0, 0, 75, 75);
+    CGRect viewFrames = CGRectMake(0, 0, thumnailsize, thumnailsize);
     UIImageView *overlayView = [[UIImageView alloc]initWithFrame:viewFrames];
     [overlayView setImage:[UIImage imageNamed:@"selectOverlay.png"]];
     return overlayView;
