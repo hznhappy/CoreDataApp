@@ -19,10 +19,11 @@
     NSString *d=NSLocalizedString(@"Recent six months", @"title");
     NSString *e=NSLocalizedString(@"More than six months", @"title");
     NSString *f=NSLocalizedString(@"More than one year", @"title");
-    locate=[NSMutableArray arrayWithObjects:a,b,c,d,e,f,nil];
+    NSString *g=NSLocalizedString(@"All", @"title");
+    locate=[NSMutableArray arrayWithObjects:a,b,c,d,e,f,g,nil];
     app=[[UIApplication sharedApplication]delegate];
     dataSource=app.dataSource;
-    dateList = [NSMutableArray arrayWithObjects:@"Recent two weeks",@"Recent month",@"Recent three months",@"Recent six months", @"More than six months",@"More than one year",nil];
+    dateList = [NSMutableArray arrayWithObjects:@"Recent two weeks",@"Recent month",@"Recent three months",@"Recent six months", @"More than six months",@"More than one year",@"All",nil];
     daterule = [NSEntityDescription insertNewObjectForEntityForName:@"DateRule" inManagedObjectContext:[dataSource.coreData managedObjectContext]];
     
     if(album.conDateRule!=nil)

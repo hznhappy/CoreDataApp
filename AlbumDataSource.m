@@ -577,7 +577,7 @@
     return result;
 }
 -(NSPredicate*) parseDateRule:(DateRule *)rule {
-    if(rule.datePeriod != nil)
+    if(rule.datePeriod != nil&&![rule.datePeriod isEqualToString:@"All"])
     { 
         NSPredicate* result =nil;
         NSDate *date = [NSDate date];
@@ -673,6 +673,7 @@
         }
     }
     if ([i conDateRule]!=nil)  {
+        NSLog(@"DS");
         if(pre!=nil)
        {
         pre=[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:pre,[self parseDateRule:[i conDateRule]], nil]];
