@@ -219,9 +219,10 @@
     if(bum!=nil)
     {
         NSLog(@"DS");
-        if((textField.text==nil||textField.text.length==0)&&bum.transitType==nil&&
-           bum.music==nil&&![bum.isFavorite boolValue]&&[PersonLabel.text isEqualToString:@"None"]&&
-           [DateLabel.text isEqualToString:@"None"]&&[EventLabel.text isEqualToString:@"None"]&&[SortOrder.text isEqualToString:@"None"])
+        NSString *a=NSLocalizedString(@"None",@"title");
+        if((textField.text==nil||textField.text.length==0||textField.text==playName)&&bum.transitType==nil&&bum.chooseType==nil&&
+           bum.music==nil&&![bum.isFavorite boolValue]&&[PersonLabel.text isEqualToString:a]&&
+           [DateLabel.text isEqualToString:a]&&[EventLabel.text isEqualToString:a]&&[SortOrder.text isEqualToString:a])
        
         {
             NSLog(@"delete");
@@ -430,11 +431,11 @@ if(bum==nil)
 //    }
 //    [mediaPicker dismissModalViewControllerAnimated: YES];
 //}
-
-- (void) mediaPickerDidCancel: (MPMediaPickerController *) mediaPicker
-{
-    [mediaPicker dismissModalViewControllerAnimated: YES];
-}
+//
+//- (void) mediaPickerDidCancel: (MPMediaPickerController *) mediaPicker
+//{
+//    [mediaPicker dismissModalViewControllerAnimated: YES];
+//}
 
 #pragma mark - 
 #pragma mark UIPickerView delegate method

@@ -80,6 +80,32 @@
 "ASC"="ASC";
 "DSC"="DSC";
 "None"="None";
+"And"="And";
+"Or"="Or";
+"INCLUDE"="INCLUDE";
+"EXCLUDE"="EXCLUDE";
+"display"="display";
+"information"="information";
+"Icon Size"="Icon Size";
+"Album icon"="Album icon";
+"Date info"="Date info";
+"Reset"="Reset";
+"Version"="Version";
+"Lock mode highlight"="Lock mode highlight";
+"reset All"="reset All";
+"reset password"="reset password";
+"reset event tags"="reset event tags";
+"reset person tags"="reset person tags";
+"reset favorite list"="reset favorite list";
+"reset like counts"="reset like counts";
+"reset my favorite"="reset my favorite";
+"Choose"="Choose";
+"Normal"="Normal";
+"Bigger"="Bigger";
+"LastPic"="LastPic";
+"FirstPic"="FirstPic";
+"Exact"="Exact";
+"Relative"="Relative";
 
 
 

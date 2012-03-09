@@ -34,10 +34,16 @@
     UITableView *table;
     NSMutableArray *nameList;
     UITableViewCell *peopleRuleCell;
+    UILabel *peopleLabel;
+    NSString *e;
+    NSString *f;
+    NSString *I;
+    NSString *E;
 }
 
 @property(nonatomic,strong)IBOutlet UITableView *table;
 @property(nonatomic,strong)IBOutlet UITableViewCell *peopleRuleCell;
+@property(nonatomic,strong)IBOutlet UILabel *peopleLabel;
 @property(nonatomic,strong)Album *album;
 -(UIButton *)getStateButton;
 -(UIButton *)peopleRuleButton;

@@ -80,6 +80,32 @@
 "ASC"="升序";
 "DSC"="降序";
 "None"="無";
+"And"="與";
+"Or"="或";
+"INCLUDE"="包含";
+"EXCLUDE"="不包含";
+"display"="顯示";
+"information"="信息";
+"Icon Size"="圖標大小";
+"Album icon"="相冊圖標";
+"Date info"="日期信息";
+"Reset"="清空";
+"Version"="版本";
+"Lock mode highlight"="鎖定模式的亮點";
+"reset All"="清空全部";
+"reset password"="清空密碼";
+"reset event tags"="清空事件標簽";
+"reset person tags"="清空人名標簽";
+"reset favorite list"="清空好友列表";
+"reset like counts"="清空喜愛的人數";
+"reset my favorite"="清空我的喜愛";
+"Choose"="選擇";
+"Normal"="正常";
+"Bigger"="放大";
+"LastPic"="最後一張";
+"FirstPic"="第一張";
+"Exact"="精確";
+"Relative"="相對";
 
 
 

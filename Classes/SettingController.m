@@ -14,6 +14,7 @@
 @synthesize table;
 @synthesize lockSW;
 @synthesize iconsizeCell,albumiconCell,lockmodeCell,dateCell,resetCell,versionCell;
+@synthesize lcon,album,lock,date,reset,version;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -48,13 +49,16 @@
 }
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
+
     if(section==0)
     {
-        return @"display";
+        NSString *a=NSLocalizedString(@"display", @"title");
+        return a;
     }
     else
     {
-        return @"information";
+        NSString *b=NSLocalizedString(@"information", @"title");
+        return b;
     }
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -68,10 +72,12 @@
                 if (cell == nil) {
                     cell = self.iconsizeCell;
                     cell.accessoryView = [self iconsizeButton];
+                    
                     if([setting.iconSize isEqualToString:@"Bigger"])
                     {
+                        NSString *a=NSLocalizedString(@"Bigger", @"title");
                     iconsizeButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-                    [iconsizeButton setTitle:@"Bigger" forState:UIControlStateNormal];
+                    [iconsizeButton setTitle:a forState:UIControlStateNormal];
                     }
                     cell.selectionStyle=UITableViewCellSelectionStyleNone;
                     
@@ -85,8 +91,9 @@
                     cell.accessoryView = [self albumiconButton];
                     if([setting.albumIcon  isEqualToString:@"FirstPic"])
                     {
+                         NSString *a=NSLocalizedString(@"FirstPic", @"title");
                     albumiconButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-                    [albumiconButton setTitle:@"FirstPic" forState:UIControlStateNormal];
+                    [albumiconButton setTitle:a forState:UIControlStateNormal];
                     
                     }
                     
@@ -109,8 +116,9 @@
                     cell.accessoryView = [self dateButton];
                     if([setting.dateInfo isEqualToString:@"Relative"])
                     {
+                    NSString *a=NSLocalizedString(@"Relative", @"title");
                     dateButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-                    [dateButton setTitle:@"Relative" forState:UIControlStateNormal];
+                    [dateButton setTitle:a forState:UIControlStateNormal];
                     }
                     cell.selectionStyle=UITableViewCellSelectionStyleNone;
                 }
@@ -145,48 +153,51 @@
 }
 -(UIButton *)dateButton
 {
+     NSString *a=NSLocalizedString(@"Exact", @"title");
     dateButton = [UIButton buttonWithType:UIButtonTypeCustom];
     dateButton.frame = CGRectMake(0, 0, 105, 28);
     [dateButton addTarget:self action:@selector(date:) forControlEvents:UIControlEventTouchUpInside];
-    [dateButton setTitle:@"Exact" forState:UIControlStateNormal];
+    [dateButton setTitle:a forState:UIControlStateNormal];
     dateButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
     [dateButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     return dateButton;
 }
 -(UIButton *)iconsizeButton
 {
+    NSString *a=NSLocalizedString(@"Normal", @"title");
     iconsizeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     iconsizeButton.frame = CGRectMake(0, 0, 105, 28);
     [iconsizeButton addTarget:self action:@selector(size:) forControlEvents:UIControlEventTouchUpInside];
-    [iconsizeButton setTitle:@"Normal" forState:UIControlStateNormal];
+    [iconsizeButton setTitle:a forState:UIControlStateNormal];
     iconsizeButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
     [iconsizeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     return iconsizeButton;
-   
 }
 -(UIButton *)albumiconButton
-{
+{    NSString *a=NSLocalizedString(@"LastPic", @"title");
     albumiconButton = [UIButton buttonWithType:UIButtonTypeCustom];
     albumiconButton.frame = CGRectMake(0, 0, 105, 28);
     [albumiconButton addTarget:self action:@selector(icon:) forControlEvents:UIControlEventTouchUpInside];
-    [albumiconButton setTitle:@"LastPic" forState:UIControlStateNormal];
+    [albumiconButton setTitle:a forState:UIControlStateNormal];
     albumiconButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
     [albumiconButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     return albumiconButton;
 }
 -(void)date:(id)sender
 {
+    NSString *a=NSLocalizedString(@"Exact", @"title");
+    NSString *b=NSLocalizedString(@"Relative", @"title");
     UIButton *button = (UIButton *)sender;
     [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
-    if ([button.titleLabel.text isEqualToString:@"Exact"]) {
+    if ([button.titleLabel.text isEqualToString:a]) {
         button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-        [button setTitle:@"Relative" forState:UIControlStateNormal];
+        [button setTitle:b forState:UIControlStateNormal];
         setting.dateInfo=@"Relative";
         
     }
-    else if ([button.titleLabel.text isEqualToString:@"Relative"]){
+    else if ([button.titleLabel.text isEqualToString:b]){
         button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
-        [button setTitle:@"Exact" forState:UIControlStateNormal];
+        [button setTitle:a forState:UIControlStateNormal];
         setting.dateInfo=@"Exact";
         
     }
@@ -195,17 +206,19 @@
 }
 -(void)icon:(id)sender
 {
+    NSString *a=NSLocalizedString(@"LastPic", @"title");
+    NSString *b=NSLocalizedString(@"FirstPic", @"title");
     UIButton *button = (UIButton *)sender;
     [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
-    if ([button.titleLabel.text isEqualToString:@"LastPic"]) {
+    if ([button.titleLabel.text isEqualToString:a]) {
         button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-        [button setTitle:@"FirstPic" forState:UIControlStateNormal];
+        [button setTitle:b forState:UIControlStateNormal];
         setting.albumIcon=@"FirstPic";
         
     }
-    else if ([button.titleLabel.text isEqualToString:@"FirstPic"]){
+    else if ([button.titleLabel.text isEqualToString:b]){
         button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
-        [button setTitle:@"LastPic" forState:UIControlStateNormal];
+        [button setTitle:a forState:UIControlStateNormal];
        setting.albumIcon=@"LastPic";
         
     }
@@ -216,16 +229,18 @@
 
 -(void)size:(id)sender
 {
+    NSString *a=NSLocalizedString(@"Bigger", @"title");
+    NSString *b=NSLocalizedString(@"Normal", @"title");
     UIButton *button = (UIButton *)sender;
     [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
-    if ([button.titleLabel.text isEqualToString:@"Bigger"]) {
+    if ([button.titleLabel.text isEqualToString:a]) {
         button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
-        [button setTitle:@"Normal" forState:UIControlStateNormal];
+        [button setTitle:b forState:UIControlStateNormal];
         setting.iconSize=@"Normal"; 
     }
-    else if ([button.titleLabel.text isEqualToString:@"Normal"]){
+    else if ([button.titleLabel.text isEqualToString:b]){
          button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-        [button setTitle:@"Bigger" forState:UIControlStateNormal];
+        [button setTitle:a forState:UIControlStateNormal];
         setting.iconSize=@"Bigger";
     }
     [dataSource.coreData saveContext];
@@ -259,18 +274,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    lcon.text=NSLocalizedString(@"Icon Size", @"title");
+    album.text=NSLocalizedString(@"Album icon", @"title");
+    lock.text=NSLocalizedString(@"Lock mode highlight", @"title");
+    date.text=NSLocalizedString(@"Date info", @"title");
+    reset.text=NSLocalizedString(@"Reset", @"title");
+    version.text=NSLocalizedString(@"Version", @"title");
     app=[[UIApplication sharedApplication]delegate];
     dataSource=app.dataSource;
-     NSArray *tmp=[dataSource simpleQuery:@"Setting" predicate:nil sortField:nil sortOrder:YES];
-    if(tmp.count!=0)
-    {
-        setting=[tmp objectAtIndex:0];
-    }
-    else
-    {
-        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Setting" inManagedObjectContext:[dataSource.coreData managedObjectContext]]; 
-       setting=[[Setting alloc]initWithEntity:entity insertIntoManagedObjectContext:[dataSource.coreData managedObjectContext]];
-    }
+    //[self tablenew];
+    
     if(setting.lockMode.boolValue||setting.lockMode==nil)
     {
         lockSW.on=YES;
@@ -280,6 +293,21 @@
         lockSW.on=NO;
     }
     // Do any additional setup after loading the view from its nib.
+}
+
+-(void)tablenew
+{
+    NSArray *tmp=[dataSource simpleQuery:@"Setting" predicate:nil sortField:nil sortOrder:YES];
+    if(tmp.count!=0)
+    {
+        setting=[tmp objectAtIndex:0];
+    }
+    else
+    {
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Setting" inManagedObjectContext:[dataSource.coreData managedObjectContext]]; 
+        setting=[[Setting alloc]initWithEntity:entity insertIntoManagedObjectContext:[dataSource.coreData managedObjectContext]];
+    }
+
 }
 
 - (void)viewDidUnload
@@ -294,6 +322,11 @@
 //    // Return YES for supported orientations
 //    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 //}
+-(void)viewWillAppear:(BOOL)animated
+{
+    [self tablenew];
+    [self.table reloadData];
+}
 -(void)viewWillDisappear:(BOOL)animated
 {       
     self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;

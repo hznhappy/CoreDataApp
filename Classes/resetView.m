@@ -18,6 +18,7 @@
 #import "AssetRule.h"
 #import "PeopleRule.h"
 #import "PeopleRuleDetail.h"
+#import "Setting.h"
 @implementation resetView
 @synthesize table;
 
@@ -30,6 +31,15 @@
                @"reset favorite list",@"reset like counts",@"reset my favorite", nil];
     selectImg = [UIImage imageNamed:@"Selected.png"];
     unselectImg = [UIImage imageNamed:@"Unselected.png"];
+    NSString *a=NSLocalizedString(@"reset All", @"title");
+    NSString *g=NSLocalizedString(@"reset password", @"title");
+    NSString *c=NSLocalizedString(@"reset event tags", @"title");
+    NSString *d=NSLocalizedString(@"reset person tags", @"title");
+    NSString *e=NSLocalizedString(@"reset favorite list", @"title");
+    NSString *f=NSLocalizedString(@"reset like counts", @"title");
+    NSString *h=NSLocalizedString(@"reset my favorite", @"title");
+    locate=[[NSMutableArray alloc]initWithObjects:a,g,c,d,e,f,h,nil];
+    
     
     NSString *b=NSLocalizedString(@"Choose", @"button");
     
@@ -74,12 +84,10 @@
     NSArray *list=[[NSArray alloc]init];
     if([resetList1 containsObject:@"reset All"])
     {
-        NSLog(@"yes");
         [self resetAll];
     }
     else
     {
-        NSLog(@"no");
     for(NSString *re in resetList1)
     {
         if([re isEqualToString: @"reset favorite list"])
@@ -153,12 +161,6 @@
             }
         }
     }
-        NSArray *ep=[dataSource simpleQuery:@"Event" predicate:nil sortField:nil sortOrder:YES];
-        for(Event *event in ep)
-        {
-            [dataSource.coreData.managedObjectContext deleteObject:event];
-        }
-
     [dataSource.coreData saveContext];
     NSDictionary *dic2 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"add" 
@@ -275,6 +277,11 @@
     {
         [dataSource.coreData.managedObjectContext deleteObject:po];
     }
+    NSArray *tmp9=[dataSource simpleQuery:@"Setting" predicate:nil sortField:nil sortOrder:YES];
+    for(Setting *st in tmp9)
+    {
+        [dataSource.coreData.managedObjectContext deleteObject:st];
+    }
 
 
 
@@ -309,7 +316,7 @@
                                       reuseIdentifier:CellIdentifier];
 	}
     [cell.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    cell.textLabel.text=[resetList objectAtIndex:indexPath.row];
+    cell.textLabel.text=[locate objectAtIndex:indexPath.row];
     if(choose)
     {
      cell.selectionStyle=UITableViewCellSelectionStyleGray;
@@ -362,18 +369,15 @@
     //[self.table deselectRowAtIndexPath:indexPath animated:YES];
     if(choose)
     {
-    NSLog(@"insertindex:%d",indexPath.row);
     [needreset addObject:[resetList objectAtIndex:indexPath.row]];
     }
     else
     {
-        NSLog(@"no");
         [self.table deselectRowAtIndexPath:indexPath animated:YES];
     }
 }
 -(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"deleteindex:%d",indexPath.row);
     [needreset removeObject:[resetList objectAtIndex:indexPath.row]];
 }
 

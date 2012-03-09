@@ -43,7 +43,8 @@
      */
     
     
-    
+    over=NO;
+    background=NO;
     /*
      
      get the device access list
@@ -60,7 +61,7 @@
     return self;
 }
 -(void)update
-{
+{background=YES;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(backgrounddata) name:@"fetchAssets" object:nil];
      refreshAssets=[[OnDeviceAssets alloc]init];
     refreshAssets.re=@"YES";
@@ -69,7 +70,6 @@
     
 }
 -(void) syncAssetwithDataSource {
-    
     [opQueue cancelAllOperations];   
 
    // [self testDataSource];
@@ -105,7 +105,6 @@
    }
    
     NSArray *urlList =deviceAssets.urls;
-   
 
     /*
      delete the asset object which are no longer on the device itself 
@@ -118,8 +117,6 @@
         [[coreData managedObjectContext] deleteObject:tmpAsset];
     }
     [coreData saveContext];
-    
-    
     
     /*
      copy the newly inserted on device asset into the asset entity.
@@ -156,16 +153,16 @@
         NSURL *asUrl = [[alAsset defaultRepresentation]url];
         newAsset.url=[asUrl description];
         @autoreleasepool {
-            // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
-            NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
-            //NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
-            // NSLog(@"strdate:%@",strDate);
-            NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
-            //[inputFormatter setLocale:[NSLocale currentLocale]];
-            NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
-            [inputFormatter setTimeZone:timeZone1];
-            [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
-            newAsset.date = [inputFormatter dateFromString:strDate];
+       // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
+        NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
+        //NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
+        //NSLog(@"strdate:%@",[[alAsset defaultRepresentation]metadata]);
+        NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
+        //[inputFormatter setLocale:[NSLocale currentLocale]];
+        NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
+       [inputFormatter setTimeZone:timeZone1];
+        [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
+        newAsset.date = [inputFormatter dateFromString:strDate];
         }
             // [self reloadTimeData:alAsset asset:newAsset];
             if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
@@ -196,7 +193,13 @@
         [a addObject:alAsset];
         [b addObject:newAsset];
     }
+    
     [coreData saveContext];
+    if(background&&!over)
+    {
+        NSLog(@"ok now");
+       [self performSelectorOnMainThread:@selector(refreshDataSource) withObject:nil waitUntilDone:NO]; 
+    }
    /* [dateQueue cancelAllOperations];
     NSMutableDictionary *result=[NSMutableDictionary dictionaryWithObjectsAndKeys:a,@"AL",b,@"as", nil];
     NSInvocationOperation * syncData2=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(reloadTimeData:) object:result];
@@ -204,6 +207,7 @@
     //[refreshData1 addDependency:syncData1];
     [dateQueue addOperation:syncData2];*/
 }
+
 -(void)reloadTimeData:(NSMutableDictionary *)result
 {
     NSMutableArray *A=[result objectForKey:@"AL"];
@@ -224,9 +228,14 @@
 
 }
 -(void)DataSource
+{if(over)
 {
-    
     NSArray *urlList =refreshAssets.urls;
+    NSLog(@"urlLIst:%d",[urlList count]);
+    NSMutableArray *assetsList1=[self simpleQuery:@"Asset" predicate:nil sortField:nil
+                                       sortOrder:YES];
+    NSLog(@"asscount:%d",[assetsList1 count]);
+
     NSPredicate * pre= [NSPredicate predicateWithFormat:@"NONE url  IN %@",urlList];
     NSMutableArray *assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil
                                        sortOrder:YES];
@@ -267,6 +276,7 @@
             NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
             //NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
             // NSLog(@"strdate:%@",strDate);
+           // NSLog(@"strdate:%@",[[alAsset defaultRepresentation]metadata]);
             NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
             //[inputFormatter setLocale:[NSLocale currentLocale]];
             NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
@@ -306,6 +316,8 @@
     [coreData saveContext];
     [self performSelectorOnMainThread:@selector(aDataSource) withObject:nil waitUntilDone:NO];
 }
+}
+
 -(void)aDataSource
 {   if([Add count]>0||[Del count]>0)
 {
@@ -417,6 +429,7 @@
     [self refresh];
    // NSLog(@"finished prepare data");
     [self performSelectorOnMainThread:@selector(playlistAlbum) withObject:nil waitUntilDone:YES];
+    over=YES;
 }
 -(void) refresh
 {    

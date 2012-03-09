@@ -16,6 +16,7 @@
     UITableViewCell *palymusicCell;
     UITableViewCell *musicCell;
     UITableView *playTable;
+    UILabel *musicLabel;
     BOOL mySwc;
     UILabel *transLabel;
     Album *album;
@@ -27,6 +28,7 @@
 @property(nonatomic,strong)IBOutlet  UITableViewCell *musicCell;
 @property(nonatomic,strong)IBOutlet  UITableView *playTable;
 @property(nonatomic,strong)IBOutlet UILabel *transLabel;
+@property(nonatomic,strong)IBOutlet  UILabel *musicLabel;
 @property(nonatomic,strong)Album *album;
 -(IBAction)updateTable:(id)sender;
 -(void)changeTransition:(NSNotification *)note;
