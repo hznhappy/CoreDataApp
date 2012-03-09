@@ -48,14 +48,16 @@
 -(void)pushPeopleAssetsTablePicker:(NSNotification *)note
 {
     NSDictionary *dic = [note userInfo];
-    
-    NSMutableArray *assets = [dic objectForKey:@"myAssets"];
+      NSMutableArray *__weak assets = [dic objectForKey:@"myAssets"];
+    NSLog(@"assets:%d",[assets count]);
+   // NSMutableArray *assets = [dic objectForKey:@"myAssets"];
    // Album *receivedAlbum = [dic objectForKey:@"album"];
     AssetTablePicker *ap = [[AssetTablePicker alloc]initWithNibName:@"AssetTablePicker" bundle:[NSBundle mainBundle]];
     ap.hidesBottomBarWhenPushed = YES;
     ap.crwAssets=assets;
     ap.album =nil;
     ap.side=@"favorite";
+    ap.firstLoad=YES;
     ap.navigationItem.title = [dic objectForKey:@"title"];
     [self pushViewController:ap animated:YES];
     ap = nil;

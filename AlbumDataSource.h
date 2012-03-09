@@ -19,14 +19,12 @@
 #import <CoreMedia/CoreMedia.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVAsset.h>
-//#import "backgroundUpdate.h"
 @class Album;
 @interface AlbumDataSource : NSObject {
     AmptsPhotoCoreData * coreData;
     OnDeviceAssets * deviceAssets;
     OnDeviceAssets *refreshAssets;
-   // backgroundUpdate *background;
-     NSMutableArray* assetsBook;
+    NSMutableArray* assetsBook;
     NSMutableArray *favoriteList;
     NSOperationQueue *opQueue;
     NSOperationQueue *dateQueue;
@@ -74,11 +72,9 @@
 -(void)refreshback;
 -(void) refreshTag;
 -(void) syncDataSource;
-//-(void)background;
 -(void)update;
-//-(void) testDataSource;
 -(void)fresh:(Album *)al index:(int)index;
 -(NSMutableArray *)addPeople:(People*)po;
 -(void)refreshPeople;
--(void)reloadTimeData:(NSNotification *)note;
+-(void)loadData:(OnDeviceAssets *)device;
 @end

@@ -63,15 +63,17 @@
 "Photos only"="照片";
 "Videos only"="视频";
 "All"="全部";
+"Photos"="照片";
+"Videos"="视频";
 "PeopleRule"="人名规则";
 "Favorite"="好友";
-"phonebook"="电话簿";
+"Phonebook"="电话簿";
 "Recent two weeks"="最近两周";
 "Recent month"="最近一个月";
 "Recent three months"="最近三个月";
 "Recent six months"="最近六个月";
-"More than six months"="超过六个月";
-"More than one year"="超过一年";
+"More than six months"="六个月前";
+"More than one year"="一年前";
 "date"="时间";
 "numOfLike"="喜欢的人数";
 "numPeopleTag"="被标记的个数";
@@ -106,6 +108,12 @@
 "FirstPic"="第一张";
 "Exact"="精确";
 "Relative"="相对";
+"two week ago to one month"="两周前-一个月";
+"One to Three month"="一-三个月";
+"Three to Six month"="三-六个月";
+"Six month to one year"="六个月-一年";
+"More than one year"="一年前";
+"Others"="其他";
 
 
 

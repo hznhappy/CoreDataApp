@@ -50,14 +50,14 @@ int j=1,count=0;
     tools.autoresizingMask=UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     NSString *a=NSLocalizedString(@"Back", @"button");
     NSString *b=NSLocalizedString(@"Edit", @"button");
-     NSString *c=NSLocalizedString(@"Mult", @"button");
+    NSString *c=NSLocalizedString(@"Mult", @"button");
     UIBarButtonItem *BackButton=[[UIBarButtonItem alloc]initWithTitle:a style:UIBarButtonItemStyleBordered target:self action:@selector(toggleback)];
     MultipleButton=[[UIBarButtonItem alloc] initWithTitle:c style:UIBarButtonItemStyleBordered target:self action:@selector(toggleMutiple:)];
     self.navigationItem.leftBarButtonItem=BackButton;
     editButton = [[UIBarButtonItem alloc] initWithTitle:b style:UIBarButtonItemStyleBordered target:self action:@selector(toggleEdit:)];
     editButton.style = UIBarButtonItemStyleBordered;
-     NSMutableArray* buttons = [[NSMutableArray alloc] initWithCapacity:2];
-     [buttons addObject:MultipleButton];
+    NSMutableArray* buttons = [[NSMutableArray alloc] initWithCapacity:2];
+    [buttons addObject:MultipleButton];
     [buttons addObject:editButton];
    
     
@@ -118,7 +118,6 @@ int j=1,count=0;
         NSArray *fa1 = [datasource simpleQuery:@"People" predicate:favor sortField:nil sortOrder:YES];
         if([fa1 count]==0)
         {
-            NSLog(@"whit out");
             NSEntityDescription *entity = [NSEntityDescription entityForName:@"People" inManagedObjectContext:[datasource.coreData managedObjectContext]]; 
             favorate=[[People alloc]initWithEntity:entity insertIntoManagedObjectContext:[datasource.coreData managedObjectContext]];
             favorate.firstName=personName;
@@ -135,13 +134,12 @@ int j=1,count=0;
             [self.tableView reloadData];
         }
         else
-        {NSLog(@"with");
+        {
             People *p=(People *)[fa1 objectAtIndex:0];
             p.favorite=[NSNumber numberWithBool:YES];
             p.inAddressBook=[NSNumber numberWithBool:NO];
             favorite *fe=[peopleList lastObject];
             p.listSort=[NSNumber numberWithInt:[fe.people.listSort intValue]+1];
-            NSLog(@"FElistSort:%@",favorate.listSort);
             [datasource.coreData saveContext];
             [self table];
             
@@ -286,7 +284,6 @@ int j=1,count=0;
 
 -(void)table
 {
-    NSLog(@"TABLE");
    //favorate.favorite=[NSNumber numberWithBool:YES];
     [peopleList removeAllObjects];
     [self.result removeAllObjects];
