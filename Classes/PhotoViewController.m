@@ -874,6 +874,8 @@
 -(void)personpressed
 {
     if (!personPt) {
+        NSString *a=NSLocalizedString(@"Favorite", @"title");
+        NSString *b=NSLocalizedString(@"Phonebook", @"title");
         CGFloat height = 80;
         CGFloat width =120;
         CGFloat x = CGRectGetMaxX(self.navigationController.toolbar.frame)-width-5;
@@ -887,12 +889,12 @@
         UIButton *button1 = [UIButton buttonWithType:UIButtonTypeCustom]; 
         button1.frame = CGRectMake(10, 5, 100, 30);
         [button1 setBackgroundColor:[UIColor clearColor]]; 
-        [button1 setTitle:@"Favorite" forState:UIControlStateNormal];
+        [button1 setTitle:a forState:UIControlStateNormal];
         [button1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom]; 
         button2.frame = CGRectMake(10, 40, 100, 30);
         [button2 setBackgroundColor:[UIColor clearColor]]; 
-        [button2 setTitle:@"Phonebook" forState:UIControlStateNormal];
+        [button2 setTitle:b forState:UIControlStateNormal];
         //-(void)selectFromFavoriteNames;
         //-(void)selectFromAllNames;
         [button1 addTarget:self action:@selector(callFavouriteView) forControlEvents:UIControlEventTouchDown];

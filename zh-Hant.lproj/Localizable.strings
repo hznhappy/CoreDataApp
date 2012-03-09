@@ -63,9 +63,11 @@
 "Photos only"="照片";
 "Videos only"="視頻";
 "All"="全部";
+"Photos"="照片";
+"Videos"="視頻";
 "PeopleRule"="人名規則";
 "Favorite"="好友";
-"phonebook"="電話簿";
+"Phonebook"="電話簿";
 "Recent two weeks"="最近兩週";
 "Recent month"="最近一個月";
 "Recent three months"="最近三個月";
@@ -106,6 +108,13 @@
 "FirstPic"="第一張";
 "Exact"="精確";
 "Relative"="相對";
+"two week ago to one month"="兩週前－一個月";
+"One to Three month"="一－三個月";
+"Three to Six month"="三－六個月";
+"Six month to one year"="六個月－一年";
+"More than one year"="一年前";
+"Others"="其他";
+
 
 
 

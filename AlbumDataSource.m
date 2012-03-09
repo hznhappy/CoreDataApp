@@ -23,8 +23,6 @@
 #import "AddressBook/AddressBook.h"
 #import "AddressBookUI/AddressBookUI.h"
 #import "favorite.h"
-//#import "backgroundUpdate.h"
-
 @implementation AlbumDataSource
 @synthesize coreData,deviceAssets,assetsBook,opQueue;
 @synthesize nav;
@@ -35,35 +33,20 @@
 
 -(id) initWithAppName: (NSString *)app navigationController:(UINavigationController *)navigationController{
     self= [super init];
-    self.nav = navigationController;
-    
+    self.nav = navigationController; 
     coreData=[[AmptsPhotoCoreData alloc]initWithAppName:app];
-    /*
-     assetsBook initialization
-     */
-    
-    
     over=NO;
     background=NO;
-    /*
-     
-     get the device access list
-     
-     */
     opQueue=[[NSOperationQueue alloc]init];
     dateQueue=[[NSOperationQueue alloc]init];
- 
-    
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(syncAssetwithDataSource) name:@"fetchAssetsFinished" object:nil];
-  //  [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(backgrounddata) name:@"fetchAssets" object:nil];
-    
     deviceAssets=[[OnDeviceAssets alloc]init];
     return self;
 }
 -(void)update
-{background=YES;
+{   background=YES;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(backgrounddata) name:@"fetchAssets" object:nil];
-     refreshAssets=[[OnDeviceAssets alloc]init];
+    refreshAssets=[[OnDeviceAssets alloc]init];
     refreshAssets.re=@"YES";
     Add=[[NSMutableArray alloc]init];
     Del=[[NSMutableArray alloc]init];
@@ -71,24 +54,14 @@
 }
 -(void) syncAssetwithDataSource {
     [opQueue cancelAllOperations];   
-
-   // [self testDataSource];
     NSInvocationOperation * syncData=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(syncDataSource) object:nil];
-   
     NSInvocationOperation * refreshData=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(refreshDataSource) object:nil];
     [refreshData addDependency:syncData];
     [opQueue addOperation:syncData];
     [opQueue addOperation:refreshData];
-  // [self refreshDataSource];
-    
- 
 }
 
 -(void) syncDataSource {
-    /*
-     
-     get All the on device url
-     */
     NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults]; 
     password=[defaults objectForKey:@"name_preference"];
     NSPredicate * pre1= [NSPredicate predicateWithFormat:@"addressBookId==%d",-1];
@@ -103,149 +76,27 @@
     favorate.addressBookId=[NSNumber numberWithInt:-1];
     favorate.listSort=[NSNumber numberWithInt:0];
    }
+    [self loadData:deviceAssets];
    
-    NSArray *urlList =deviceAssets.urls;
-
-    /*
-     delete the asset object which are no longer on the device itself 
-     */
-
-    NSPredicate * pre= [NSPredicate predicateWithFormat:@"NONE url  IN %@",urlList];
-    NSMutableArray *assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil
-                                       sortOrder:YES];
-    for(Asset * tmpAsset in assetsList) {
-        [[coreData managedObjectContext] deleteObject:tmpAsset];
-    }
-    [coreData saveContext];
-    
-    /*
-     copy the newly inserted on device asset into the asset entity.
-     */
-    assetsList=[self simpleQuery:@"Asset" predicate:nil sortField:nil
-                
-                                       sortOrder:YES];
-    NSMutableArray *tmpArray=[[NSMutableArray alloc]init ];
-    for(Asset *tmpAsset in assetsList) {
-        [tmpArray addObject:[tmpAsset url]];
-    }
-    NSArray * toBeAdded=nil;
-    
-    if ([tmpArray count]>0) {
-        pre=[NSPredicate predicateWithFormat:@"NOT self IN %@",(NSArray*)tmpArray];
-     //   NSLog(@"%@",pre);
-        toBeAdded=[urlList filteredArrayUsingPredicate:pre];
-    } else {
-        toBeAdded=urlList;
-    }
-    
-    
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Asset" inManagedObjectContext:[coreData managedObjectContext]]; 
-    
-  
-   // NSLog(@"%@",[toBeAdded count]);
-    NSMutableArray *a=[[NSMutableArray alloc]init];
-    NSMutableArray *b=[[NSMutableArray alloc]init];
-    Asset * newAsset=nil;
-    for (NSString * str in toBeAdded) {
-        ALAsset * alAsset=[[deviceAssets deviceAssetsList]objectForKey:str];
-        
-        newAsset=[[Asset alloc]initWithEntity:entity insertIntoManagedObjectContext:[coreData managedObjectContext]];
-        NSURL *asUrl = [[alAsset defaultRepresentation]url];
-        newAsset.url=[asUrl description];
-        @autoreleasepool {
-       // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
-        NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
-        //NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
-        //NSLog(@"strdate:%@",[[alAsset defaultRepresentation]metadata]);
-        NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
-        //[inputFormatter setLocale:[NSLocale currentLocale]];
-        NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
-       [inputFormatter setTimeZone:timeZone1];
-        [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
-        newAsset.date = [inputFormatter dateFromString:strDate];
-        }
-            // [self reloadTimeData:alAsset asset:newAsset];
-            if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
-                newAsset.videoType = [NSNumber numberWithBool:YES];
-                /*AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:asUrl];
-                
-                CMTime duration = playerItem.duration;*/
-                 int durationSeconds = (int)ceilf([[[alAsset valueForProperty:ALAssetPropertyDuration]description]floatValue]);//(CMTimeGetSeconds(duration));
-                 int hours = durationSeconds / (60 * 60);
-                 int minutes = (durationSeconds / 60) % 60;
-                 int seconds = durationSeconds % 60;
-                 NSString *formattedTimeString = nil;
-                 if ( hours > 0 ) {
-                 formattedTimeString = [NSString stringWithFormat:@"%d:%02d:%02d", hours, minutes, seconds];
-                 } else {
-                 formattedTimeString = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
-                 }
-                 newAsset.duration = formattedTimeString;
-                 newAsset.date = [alAsset valueForProperty:ALAssetPropertyDate];
-                
-            }else{
-                newAsset.videoType = [NSNumber numberWithBool:NO];;
-            }
-        newAsset.latitude=[NSNumber numberWithDouble:0.0];
-        newAsset.longitude=[NSNumber numberWithDouble:0.0];
-        newAsset.numOfLike=[NSNumber numberWithInt:0];
-        newAsset.numPeopleTag=[NSNumber numberWithInt:0];
-        [a addObject:alAsset];
-        [b addObject:newAsset];
-    }
-    
-    [coreData saveContext];
-    if(background&&!over)
+       if(background&&!over)
     {
-        NSLog(@"ok now");
        [self performSelectorOnMainThread:@selector(refreshDataSource) withObject:nil waitUntilDone:NO]; 
     }
-   /* [dateQueue cancelAllOperations];
-    NSMutableDictionary *result=[NSMutableDictionary dictionaryWithObjectsAndKeys:a,@"AL",b,@"as", nil];
-    NSInvocationOperation * syncData2=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(reloadTimeData:) object:result];
-    //  NSInvocationOperation * refreshData1=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(aDataSource) object:nil];
-    //[refreshData1 addDependency:syncData1];
-    [dateQueue addOperation:syncData2];*/
 }
-
--(void)reloadTimeData:(NSMutableDictionary *)result
+-(void)loadData:(OnDeviceAssets *)device
 {
-    NSMutableArray *A=[result objectForKey:@"AL"];
-    NSMutableArray *B=[result objectForKey:@"as"];
-    for(int i=0;i<[A count];i++)
-     {
-     ALAsset *A1=[A objectAtIndex:i];
-     NSString * strDate=[[[[A1 defaultRepresentation]metadata]valueForKey: @"{Exif}"]objectForKey:@"DateTimeOriginal"];
-     // NSLog(@"strdate:%@",strDate);
-     NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
-     [inputFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
-     [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
-     Asset *B1=[B objectAtIndex:i];
-     B1.date = [inputFormatter dateFromString:strDate];
-     //NSLog(@"date = %@", B1.date);
-     }
-    [coreData saveContext];
-
-}
--(void)DataSource
-{if(over)
-{
-    NSArray *urlList =refreshAssets.urls;
-    NSLog(@"urlLIst:%d",[urlList count]);
-    NSMutableArray *assetsList1=[self simpleQuery:@"Asset" predicate:nil sortField:nil
-                                       sortOrder:YES];
-    NSLog(@"asscount:%d",[assetsList1 count]);
-
+    NSArray *urlList =device.urls;
     NSPredicate * pre= [NSPredicate predicateWithFormat:@"NONE url  IN %@",urlList];
     NSMutableArray *assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil
                                        sortOrder:YES];
     for(Asset * tmpAsset in assetsList) {
         [[coreData managedObjectContext] deleteObject:tmpAsset];
-        [Del addObject:tmpAsset];
+        if(background)
+        {
+            [Del addObject:tmpAsset];
+        }
     }
     [coreData saveContext];
-    
-    
     assetsList=[self simpleQuery:@"Asset" predicate:nil sortField:nil
                 
                        sortOrder:YES];
@@ -254,43 +105,29 @@
         [tmpArray addObject:[tmpAsset url]];
     }
     NSArray * toBeAdded=nil;
-    
     if ([tmpArray count]>0) {
         pre=[NSPredicate predicateWithFormat:@"NOT self IN %@",(NSArray*)tmpArray];
         toBeAdded=[urlList filteredArrayUsingPredicate:pre];
     } else {
         toBeAdded=urlList;
     }
-    
-    
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Asset" inManagedObjectContext:[coreData managedObjectContext]]; 
     Asset * newAsset=nil;
     for (NSString * str in toBeAdded) {
-        ALAsset * alAsset=[[refreshAssets deviceAssetsList]objectForKey:str];
-        
+        ALAsset * alAsset=[[device deviceAssetsList]objectForKey:str]; 
         newAsset=[[Asset alloc]initWithEntity:entity insertIntoManagedObjectContext:[coreData managedObjectContext]];
-        newAsset.url=[[[alAsset defaultRepresentation]url]description];
-        // NSURL *asUrl = [[alAsset defaultRepresentation]url];
+        NSURL *asUrl = [[alAsset defaultRepresentation]url];
+        newAsset.url=[asUrl description];
         @autoreleasepool {
-            // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
             NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
-            //NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
-            // NSLog(@"strdate:%@",strDate);
-           // NSLog(@"strdate:%@",[[alAsset defaultRepresentation]metadata]);
             NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
-            //[inputFormatter setLocale:[NSLocale currentLocale]];
             NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
             [inputFormatter setTimeZone:timeZone1];
             [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
-            
             newAsset.date = [inputFormatter dateFromString:strDate];
         }
-
         if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
             newAsset.videoType = [NSNumber numberWithBool:YES];
-            /*AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:asUrl];
-            
-            CMTime duration = playerItem.duration;*/
             int durationSeconds = (int)ceilf([[[alAsset valueForProperty:ALAssetPropertyDuration]description]floatValue]);//(CMTimeGetSeconds(duration));
             int hours = durationSeconds / (60 * 60);
             int minutes = (durationSeconds / 60) % 60;
@@ -305,15 +142,25 @@
             newAsset.date = [alAsset valueForProperty:ALAssetPropertyDate];
             
         }else{
-            newAsset.videoType = [NSNumber numberWithBool:NO];
+            newAsset.videoType = [NSNumber numberWithBool:NO];;
         }
         newAsset.latitude=[NSNumber numberWithDouble:0.0];
         newAsset.longitude=[NSNumber numberWithDouble:0.0];
         newAsset.numOfLike=[NSNumber numberWithInt:0];
         newAsset.numPeopleTag=[NSNumber numberWithInt:0];
-        [Add addObject:newAsset];
+        if(background)
+        {
+            [Add addObject:newAsset];
+        }
     }
+    
     [coreData saveContext];
+
+}
+-(void)DataSource
+{if(over)
+{
+    [self loadData:refreshAssets];
     [self performSelectorOnMainThread:@selector(aDataSource) withObject:nil waitUntilDone:NO];
 }
 }
@@ -328,29 +175,14 @@
     NSMutableDictionary *dic =[NSMutableDictionary dictionaryWithObjectsAndKeys:assetsBook, @"data",Num,@"num",nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"refresh" object:nil userInfo:dic];
 }
-    //[[NSNotificationCenter defaultCenter]postNotificationName:@"refresh" object:nil];
 }
 -(void)refreshback
 {
-   // [assetsBook removeAllObjects];
-    //[assetsBook addObject:AlbumAll];
     assetsBook=[[NSMutableArray alloc]init]; 
     favoriteList=[[NSMutableArray alloc]init];
     NSMutableArray* tmp=nil;
     NSPredicate * pre=nil;
     [assetsBook removeAllObjects];
-    //AlbumAll=[[AmptsAlbum alloc]init];
-   /* AlbumAll.name=@"ALL";
-    AlbumAll.alblumId=nil;
-    NSArray *coreDataAssets = [self simpleQuery:@"Asset" predicate:nil sortField:nil sortOrder:YES];
-    
-    for (NSString *u in refreshAssets.urls) {
-        for (Asset *as in coreDataAssets) {
-            if ([as.url isEqualToString:u]) {
-                [AlbumAll.assetsList addObject:as];
-            }
-        }
-    }*/
     if([Add count]>0)
     {
         [AlbumAll.assetsList addObjectsFromArray:Add];
@@ -401,9 +233,6 @@
             }
         }
         album.num=[album.assetsList count];
-//        NSPredicate *newPre = [NSPredicate predicateWithFormat:@"self in %@",album.assetsList];
-//        NSArray *array = [((AmptsAlbum*)[assetsBook objectAtIndex:0]).assetsList filteredArrayUsingPredicate:newPre];
-//        album.assetsList = [NSMutableArray arrayWithArray:array];
         [assetsBook addObject:album];
         
     }
@@ -414,20 +243,12 @@
 {
     
    [opQueue cancelAllOperations];   
-    
-    // [self testDataSource];
     NSInvocationOperation * syncData1=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(DataSource) object:nil];
-    
-  //  NSInvocationOperation * refreshData1=[[NSInvocationOperation alloc]initWithTarget:self selector:@selector(aDataSource) object:nil];
-    //[refreshData1 addDependency:syncData1];
    [opQueue addOperation:syncData1];
-    //[opQueue addOperation:refreshData1];
-
     }
 -(void) refreshDataSource {
     
     [self refresh];
-   // NSLog(@"finished prepare data");
     [self performSelectorOnMainThread:@selector(playlistAlbum) withObject:nil waitUntilDone:YES];
     over=YES;
 }
@@ -477,7 +298,6 @@
     [UIApplication sharedApplication].applicationIconBadgeNumber = AlbumUnTAG.num;
     [assetsBook addObject:AlbumUnTAG];
     tmp=[self simpleQuery:@"Album" predicate:nil sortField:nil sortOrder:YES];
-    //NSLog(@"Number of Album :%d",[tmp count]);
     for(Album* i in tmp ) {
         AmptsAlbum * album=[[AmptsAlbum alloc]init];
         album.name=[i name];
@@ -499,9 +319,6 @@
             }
         }
         album.num=[album.assetsList count];
-       // NSPredicate *newPre = [NSPredicate predicateWithFormat:@"self in %@",album.assetsList];
-        //NSArray *array = [((AmptsAlbum*)[assetsBook objectAtIndex:0]).assetsList filteredArrayUsingPredicate:newPre];
-       // album.assetsList = [NSMutableArray arrayWithArray:array];
         [assetsBook addObject:album];
         
     }
@@ -515,7 +332,6 @@
     for(People *p in fa2)
     {
         NSPredicate *ptag=[NSPredicate predicateWithFormat:@"conPeople==%@",p];
-       // NSString *sort=[NSString stringWithFormat:@"%@",[p listSort]];
         NSArray *Pt=[self simpleQuery:@"PeopleTag" predicate:ptag sortField:nil sortOrder:YES];
         NSMutableArray *WE=[[NSMutableArray alloc]init];
         for(int i=0;i<[Pt count];i++)
@@ -591,10 +407,6 @@
             }
         }
     album.num=[album.assetsList count];
-    //NSPredicate *newPre = [NSPredicate predicateWithFormat:@"self in %@",album.assetsList];
-    //NSArray *array = [((AmptsAlbum*)[assetsBook objectAtIndex:0]).assetsList filteredArrayUsingPredicate:newPre];
-   // album.assetsList = [NSMutableArray arrayWithArray:array];
-    
     if(index==-1)
     {
         [assetsBook addObject:album];
@@ -603,20 +415,6 @@
     {
         [assetsBook replaceObjectAtIndex:index withObject:album];
     }
-   /* NSManagedObjectContext *managedObjectContext=[coreData managedObjectContext];
-    NSFetchRequest *request=[[NSFetchRequest alloc]init];
-    NSEntityDescription *entity=[NSEntityDescription entityForName:@"People" inManagedObjectContext:managedObjectContext];
-    [request setEntity:entity];
-    NSPredicate *favor = [NSPredicate predicateWithFormat:@"some favorite==%@",[NSNumber numberWithBool:YES]];
-    [request setPredicate:favor];
-    NSError *error;
-    NSMutableArray *parray=[[NSMutableArray alloc]init];
-    parray=[[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-*/
-    //result=[[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-   // }
-  
-
 }
 -(void) refreshTag
 {
@@ -664,9 +462,6 @@
             }
         }
         album.num=[album.assetsList count];
-//        NSPredicate *newPre = [NSPredicate predicateWithFormat:@"self in %@",album.assetsList];
-//        NSArray *array = [((AmptsAlbum*)[assetsBook objectAtIndex:0]).assetsList filteredArrayUsingPredicate:newPre];
-//        album.assetsList = [NSMutableArray arrayWithArray:array];
         [assetsBook addObject:album];
         
     }
@@ -680,36 +475,23 @@
 }
 
 -(NSMutableArray*) simpleQuery:(NSString *)table predicate:(NSPredicate *)pre sortField:(NSString *)field sortOrder:(BOOL)asc {
-
-    // Define our table/entity to use  
     NSEntityDescription *entity = [NSEntityDescription entityForName:table inManagedObjectContext:coreData.managedObjectContext];   
-    // Setup the fetch request  
     NSFetchRequest *request = [[NSFetchRequest alloc] init];  
     [request setEntity:entity];
-    
-    
-    // Define the Predicate
     if (pre!=nil) {
 
         [request setPredicate:pre];
     }
-    
-    // Define how we will sort the records  
-
     if (field!=nil) {
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:field ascending:asc];  
         NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];  
         [request setSortDescriptors:sortDescriptors];  
         
     }
-    // Fetch the records and handle an error  
     NSError *error;  
-   // NSLog(@"REQUSEST:%@",request);
     NSMutableArray *mutableFetchResults = [[coreData.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];   
     
     if (!mutableFetchResults) {  
-        // Handle the error.  
-        // This is a serious error and should advise the user to restart the application  
     }   
     
     // Save our fetched data to an array  
@@ -722,7 +504,6 @@
     NSPredicate * result=nil;
     NSMutableArray * predicateArray=[[NSMutableArray alloc ]init] ;
     [predicateArray removeAllObjects];
-   //NSLog(@"PeopleRuleDetail count: %d",[ruleDetail count]);
     if([ruleDetail count]>0) {
         for(PeopleRuleDetail * i in ruleDetail) {
             [predicateArray addObject:[self parsePeopleRuleDetail:i ]];
@@ -733,7 +514,6 @@
             result =[NSCompoundPredicate orPredicateWithSubpredicates:predicateArray];
         }  
     }
-   // NSLog(@"PeopleRule Predicate: %@",result);
     return result;
 }
 
@@ -773,7 +553,6 @@
     NSPredicate * tmpResult=nil;
     NSMutableArray * predicateArray=[[NSMutableArray alloc ]init] ;
     [predicateArray removeAllObjects];
-    // NSLog(@"PeopleRuleDetail count: %d",[ruleDetail count]);
     if([ruleDetail count]>0) {
         for(PeopleRuleDetail * i in ruleDetail) {
             tmpResult=[self parseExcludePeopleRuleDetail: i];
@@ -785,7 +564,6 @@
             result =[NSCompoundPredicate orPredicateWithSubpredicates:predicateArray];
         }
     }
-   // NSLog(@"PeopleRule Predicate: %@",result);
     return result;
 }
 
@@ -835,26 +613,13 @@
             NSDate *lastMonth = [gregorian dateByAddingComponents:components toDate:date options:0];
             result=[NSPredicate predicateWithFormat:@"some self.date<%@",lastMonth];
         }
-    /*if ([[rule opCode] isEqualToString:@"INCLUDE"]) {
-      result=[NSPredicate predicateWithFormat:@"some self.date>=%@ and self.date<=%@",[rule startDate],[rule stopDate]];
-        // result=[NSPredicate predicateWithFormat:@"some self.date between %@ and %@",[rule startDate],[rule stopDate]];
-               //;
-           // result=[NSPredicate predicateWithFormat:@"self.date>=%@",[rule startDate]];
-        
-    } else {
-        result=[NSPredicate predicateWithFormat:@"NONE self.date>=%@ and self.date<=%@",[rule startDate],[rule stopDate]];
-    }*/
         return result; 
     }
     return nil;
 }
 -(NSPredicate*) parseEventRule:(EventRule *)rule {
     NSPredicate * result=nil ;
-    //if([[rule opCode] isEqualToString:@"INCLUDE"]) {
-        result=[NSPredicate predicateWithFormat:@"conEvent==%@",[rule conEvent]];
-   // }else {
-     //      result=[NSPredicate predicateWithFormat:@"conEvent!=%@",[rule conEvent]];          
-   // }
+    result=[NSPredicate predicateWithFormat:@"conEvent==%@",[rule conEvent]];
     return result;
 }
 -(NSPredicate *) parseAssetRule:(AssetRule *)rule {
@@ -888,10 +653,6 @@
    
     NSPredicate *pre=nil;
     pre=[NSPredicate predicateWithFormat:@"isprotected==%@||isprotected=nil",[NSNumber numberWithBool:NO]];
-    /*
-     People Rules or the Face Rules are parsed in here
-    
-     */
     if([i chooseType]!=nil&&![[i chooseType]isEqualToString:@"All"] )
     {
          pre=[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:pre,[self chooseRule:i],nil]];
@@ -901,8 +662,6 @@
          pre=[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:pre,[self chooseFavorite:i],nil]];
     }
     if ([i conPeopleRule]!=nil) {
-        
-       // pre=[self parsePeopleRule:[i conPeopleRule]];
         if(pre!=nil)
         {
          pre=[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:pre,[self parsePeopleRule:[i conPeopleRule]], nil]];
@@ -913,14 +672,7 @@
             
         }
     }
-    
-    
-    /*
-     
-     Date Rules are parsed in here
-     
-     */
-       if ([i conDateRule]!=nil)  {
+    if ([i conDateRule]!=nil)  {
         if(pre!=nil)
        {
         pre=[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:pre,[self parseDateRule:[i conDateRule]], nil]];
@@ -930,38 +682,22 @@
            pre=[self parseDateRule:[i conDateRule]];
         }
     }
-    
-    /*
-     
-     Event Rules are parsed in here
-     */
-    NSLog(@"1");
     if ([i conEventRule]!=nil) {
-        NSLog(@"conevevt");
         NSPredicate * tmpEventPre=nil;
         NSMutableArray * tmpEventPreArray=[[NSMutableArray alloc]init] ;
         [tmpEventPreArray removeAllObjects];
         NSMutableSet *tmpEvent = [i valueForKey:@"conEventRule"];
         if ([tmpEvent count]>0) {
             for (EventRule * e in tmpEvent ) {
-                NSLog(@"name:%@",e.conEvent.name);
                 [tmpEventPreArray addObject:[self parseEventRule:e]]; 
             }
             tmpEventPre=[NSCompoundPredicate orPredicateWithSubpredicates:tmpEventPreArray];
             pre=[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:pre,tmpEventPre, nil]]; 
         }
     }
-    NSLog(@"2");
-    /*
-     
-     Asset Rules are parsed in here
-     */
-    
-    
     if ([i conAssetRule]!=nil) {
         NSPredicate * tmpAssetPre=nil;
         NSMutableSet *tmpAsset=[i valueForKey:@"conAssetRule"];
-       // NSLog(@"AssetRule : %d",[tmpAsset count]);
         if ([tmpAsset count]>0) {
         
         

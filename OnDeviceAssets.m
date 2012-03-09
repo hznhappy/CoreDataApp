@@ -61,12 +61,10 @@
         { if(re!=nil)
         {
              [[NSNotificationCenter defaultCenter]postNotificationName:@"fetchAssets" object:nil];
-            NSLog(@"HOUTAI");
         }
             else
             {
             [[NSNotificationCenter defaultCenter]postNotificationName:@"fetchAssetsFinished" object:nil];
-                NSLog(@"QIANTAI");
             }
            
             

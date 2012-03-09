@@ -39,11 +39,14 @@
     dataSource = appDelegate.dataSource;
     previousOrigaton = oritation = [UIApplication sharedApplication].statusBarOrientation;
     [self setTableViewEdge:oritation];
-    if(album==nil)
+    if(album==nil&&![side isEqualToString:@"favorite"])
     {
         NSString *timeTitle = NSLocalizedString(@"Time", @"title");
         lock.enabled=NO;
-        NSArray *array = [NSArray arrayWithObjects:@"All",@"Photos",@"Videos", nil];
+        NSString *a=NSLocalizedString(@"All",@"title");
+        NSString *b=NSLocalizedString(@"Photos",@"title");
+        NSString *c=NSLocalizedString(@"Videos",@"title");
+        NSArray *array = [NSArray arrayWithObjects:a,b,c, nil];
         datelist=[[NSMutableArray alloc]init];
         UISegmentedControl *segControl = [[UISegmentedControl alloc]initWithItems:array];
         [segControl addTarget:self action:@selector(showTypeSelections:) forControlEvents:UIControlEventValueChanged];
@@ -56,7 +59,17 @@
         UIBarButtonItem *type = [[UIBarButtonItem alloc]initWithCustomView:segControl];
         //UIBarButtonItem *type = [[UIBarButtonItem alloc]initWithTitle:typeTitle style:UIBarButtonItemStyleBordered target:self action:@selector(showTypeSelections)];
         [viewBar setItems:[NSArray arrayWithObjects:time,flex,type, nil]];
-        datelist = [NSArray arrayWithObjects:@"Others",@"More than one year",@"Six month to one year",@"Three to Six month",@"One to Three month",@" two week ago to one month",@"Recent two week",nil];
+        
+        
+        NSString *a1=NSLocalizedString(@"Recent two weeks", @"title");
+        NSString *b1=NSLocalizedString(@"two week ago to one month", @"title");
+        NSString *c1=NSLocalizedString(@"One to Three month", @"title");
+        NSString *d=NSLocalizedString(@"Three to Six month", @"title");
+        NSString *e=NSLocalizedString(@"Six month to one year", @"title");
+        NSString *f=NSLocalizedString(@"More than one year", @"title");
+        NSString *g=NSLocalizedString(@"Others",@"title");
+        
+        datelist = [NSArray arrayWithObjects:g,f,e,d,c1,b1,a1,nil];
         
     }
     isEvent=NO;
@@ -144,7 +157,7 @@
     if (firstLoad) {
         [self setThumbnailSize];
         [table reloadData];    
-        NSIndexPath* ip = [NSIndexPath indexPathForRow:0 inSection:datelist.count!=0? datelist.count+1:0];
+        NSIndexPath* ip = [NSIndexPath indexPathForRow:0 inSection:datelist.count!=0? datelist.count:0];
         [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     }
 //    ThumbnailCell *cell = (ThumbnailCell *)[[self.table visibleCells]objectAtIndex:0];
@@ -153,7 +166,6 @@
 //    CGPoint offset = self.table.contentOffset;
 //    NSLog(@"the previous is %@",NSStringFromCGPoint(offset));
     selectedRow = NSNotFound;
-    NSLog(@"will appear done");
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
@@ -256,7 +268,6 @@
     }else{
         if([setting.iconSize isEqualToString:@"Bigger"])
         {
-            NSLog(@"test");
             thumbnailSize = 3.0;
         }else{
             thumbnailSize = 4.0;
@@ -301,8 +312,9 @@
     allTableData = self.crwAssets;
     photoTableData = photoArray;
     videoTableData = videoArray;
-    
-    if (album == nil) {
+    NSLog(@"cunrrr;%d",self.crwAssets.count);
+    NSLog(@"DSDSDS:%d",allTableData.count);
+    if (album == nil&&![side isEqualToString:@"favorite"]) {
         //select and sore data for UITableView Sections
         if(photoType)
             photoTableData =[self dataInUITableViewSectionsFromArray:photoTableData];
@@ -310,6 +322,7 @@
             videoTableData =[self dataInUITableViewSectionsFromArray:videoTableData];
         else 
             allTableData =[self dataInUITableViewSectionsFromArray:allTableData];
+     
     }
 
 }
@@ -321,7 +334,6 @@
     //AmptsAlbum *ampt = [assets objectAtIndex:indexPath.row];
     for(int i=0;i<[a count];i++)
     {
-        NSLog(@"%d",i);
         AmptsAlbum *am = (AmptsAlbum *)[a objectAtIndex:i];
         if([am.name isEqualToString:ta])
         {
@@ -376,13 +388,11 @@
     NSString *b=NSLocalizedString(@"Done", @"title");
     if([cancel.title isEqualToString:a])
     {
-        NSLog(@"1");
         cancel.style=UIBarButtonItemStyleDone;
         cancel.title=b;
         NSString *c=NSLocalizedString(@"Lock", @"title");
         if([self.lock.title isEqualToString:c])
         {
-            NSLog(@"ddd");
             mode = YES;
             self.navigationItem.hidesBackButton = YES;
             self.navigationItem.rightBarButtonItem = cancel;
@@ -403,7 +413,6 @@
     }
     else
     {
-        NSLog(@"2");
         [name removeFromSuperview];
         cancel.style=UIBarButtonItemStyleBordered;
         cancel.title=a;
@@ -521,7 +530,6 @@
     {
         [self.navigationItem setTitle:[NSString stringWithFormat:@"事件:%@",[dic objectForKey:@"name"]]];
         event=[dic objectForKey:@"event"];
-        NSLog(@"eventname:%@",event.name);
     }
     else
     {
@@ -566,6 +574,8 @@
     [tagSelector.peopleList removeAllObjects];
     [tagRow removeAllObjects];
     if (!personPt) {
+        NSString *a=NSLocalizedString(@"Favorite", @"title");
+        NSString *b=NSLocalizedString(@"Phonebook", @"title");
         CGFloat height = 80;
         CGFloat width =120;
         CGFloat x = CGRectGetMaxX(tagTagBar.frame)-width-5;
@@ -579,12 +589,12 @@
         UIButton *button1 = [UIButton buttonWithType:UIButtonTypeCustom]; 
         button1.frame = CGRectMake(10, 5, 100, 30);
         [button1 setBackgroundColor:[UIColor clearColor]]; 
-        [button1 setTitle:@"Favorite" forState:UIControlStateNormal];
+        [button1 setTitle:a forState:UIControlStateNormal];
         [button1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom]; 
         button2.frame = CGRectMake(10, 40, 100, 30);
         [button2 setBackgroundColor:[UIColor clearColor]]; 
-        [button2 setTitle:@"Phonebook" forState:UIControlStateNormal];
+        [button2 setTitle:b forState:UIControlStateNormal];
         //-(void)selectFromFavoriteNames;
         //-(void)selectFromAllNames;
         [button1 addTarget:self action:@selector(selectFromFavoriteNames) forControlEvents:UIControlEventTouchDown];
@@ -622,7 +632,6 @@
 -(IBAction)myfavorite
 {
     [self releasePersonPt];
-    NSLog(@"favorite");
     [tagSelector.peopleList removeAllObjects];
     [tagRow removeAllObjects];
     [UrlList removeAllObjects];
@@ -937,7 +946,7 @@
    // if (timeFilter) {
         //ip = [NSIndexPath indexPathForRow:0 inSection:1];
     //}else{
-       ip = [NSIndexPath indexPathForRow:0 inSection:datelist.count +1];
+       ip = [NSIndexPath indexPathForRow:0 inSection:datelist.count];
     //}
      
     [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
@@ -1066,7 +1075,7 @@
     //if (timeFilter) {
        // ip = [NSIndexPath indexPathForRow:0 inSection:1];
    // }else{
-        ip = [NSIndexPath indexPathForRow:0 inSection:datelist.count +1];
+        ip = [NSIndexPath indexPathForRow:0 inSection:datelist.count];
     //}
     [table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
 }
@@ -1106,38 +1115,35 @@
 #pragma mark UITableViewDataSource and Delegate Methods
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-    if (album == nil) {
-        return ([datelist count]+2);
+    if (album == nil&&![side isEqualToString:@"favorite"]) {
+        return ([datelist count]+1);
     }else
         return 1;
         
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (album == nil) {
+    if (album == nil&&![side isEqualToString:@"favorite"]) {
     switch (section) {
             case 0:
-                lastRow = 0;
-                break;
-            case 1:
                 lastRow = [self caculateRowNumbersWithNSArray:unknowDate];
                 break;
-            case 2:
+            case 1:
                 lastRow = [self caculateRowNumbersWithNSArray:moreThanOneYear];
                 break;
-            case 3:
+            case 2:
                 lastRow = [self caculateRowNumbersWithNSArray:sixMthToOneYear];
                 break;
-            case 4:
+            case 3:
                 lastRow = [self caculateRowNumbersWithNSArray:threeToSixMth]; 
                 break;
-            case 5:
+            case 4:
                 lastRow = [self caculateRowNumbersWithNSArray:oneToThreeMth];
                 break;
-            case 6:
+            case 5:
                 lastRow = [self caculateRowNumbersWithNSArray:twoWkToOneMth];
                 break;
-            case 7:
+            case 6:
                 lastRow = [self caculateRowNumbersWithNSArray:recentTwoWk];
                 break;
             default:
@@ -1145,7 +1151,9 @@
                 break;
         }
     }else{
+       
         lastRow = [self caculateRowNumbersWithNSArray:allTableData] + 1;
+         NSLog(@"lasRow:%d",lastRow);
     }
     //}
     /* if (UIInterfaceOrientationIsLandscape(oritation)) {
@@ -1167,10 +1175,10 @@
    
 }
 
--(NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section{
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
     NSString *sectionTitle = nil;
     //if (!timeFilter) {
-    if (album == nil) {
+    if (album == nil&&![side isEqualToString:@"favorite"]) {
     switch (section) {
         case 0:
             if (unknowDate.count!=0) {
@@ -1285,7 +1293,8 @@
     cell.rowNumber = indexPath.row;
     cell.sectionNumber = indexPath.section;
     [cell.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    if ((indexPath.section == datelist.count+1 && indexPath.row == 0)|| (indexPath.row == lastRow -1 && album != nil)) {
+    if ((indexPath.section == datelist.count && indexPath.row == 0&&album==nil&&![side isEqualToString:@"favorite"])|| (indexPath.row == lastRow -1 && album != nil)||(indexPath.row == lastRow -1&&[side isEqualToString:@"favorite"])) {
+        NSLog(@"FAVORITE");
         NSInteger vcount = 0;
         NSInteger pcount = 0;
         UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(cell.frame.origin.x, cell.frame.size.height/12, cell.frame.size.width, cell.frame.size.height*11/12)];
@@ -1406,33 +1415,33 @@
 //                        
 //                }
 //            }else{
-            if (album == nil) {
+            if (album == nil&&![side isEqualToString:@"favorite"]) {
                 switch (indexPath.section) {
-                    case 1:
+                    case 0:
                         if (unknowDate != nil && row < unknowDate.count)
                             dbAsset = [unknowDate objectAtIndex:row];
                         break;
-                    case 2:
+                    case 1:
                         if (moreThanOneYear != nil && row < moreThanOneYear.count)
                             dbAsset = [moreThanOneYear objectAtIndex:row];
                         break;
-                    case 3:
+                    case 2:
                         if (sixMthToOneYear != nil && row < sixMthToOneYear.count)
                             dbAsset = [sixMthToOneYear objectAtIndex:row];
                         break;
-                    case 4:
+                    case 3:
                         if (threeToSixMth != nil && row < threeToSixMth.count)
                         dbAsset = [threeToSixMth objectAtIndex:row];
                         break;
-                    case 5:
+                    case 4:
                         if (oneToThreeMth != nil && row < oneToThreeMth.count)
                             dbAsset = [oneToThreeMth objectAtIndex:row];
                         break;
-                    case 6:
+                    case 5:
                         if (twoWkToOneMth != nil && row < twoWkToOneMth.count)
                             dbAsset = [twoWkToOneMth objectAtIndex:row];
                         break;
-                    case 7:
+                    case 6:
                         if (recentTwoWk != nil && row < recentTwoWk.count)
                             dbAsset = [recentTwoWk objectAtIndex:row];
                         break;
@@ -1890,7 +1899,7 @@
     photoTableData= nil;
     videoTableData= nil;
     tagSelector= nil;
-   album= nil;
+    album= nil;
     event= nil;
     setting= nil;
     [[NSNotificationCenter defaultCenter]removeObserver:self];

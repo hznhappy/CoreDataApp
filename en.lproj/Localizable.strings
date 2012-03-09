@@ -63,9 +63,11 @@
 "Photos only"="Photos only";
 "Videos only"="Videos only";
 "All"="All";
+"Photos"="Photos";
+"Videos"="Videos";
 "PeopleRule"="PeopleRule";
 "Favorite"="Favorite";
-"phonebook"="phonebook";
+"Phonebook"="Phonebook";
 "Recent two weeks"="Recent two weeks";
 "Recent month"="Recent month";
 "Recent three months"="Recent three months";
@@ -106,7 +108,12 @@
 "FirstPic"="FirstPic";
 "Exact"="Exact";
 "Relative"="Relative";
-
+"two week ago to one month"="two week ago to one month";
+"One to Three month"="One to Three month";
+"Three to Six month"="Three to Six month";
+"Six month to one year"="Six month to one year";
+"More than one year"="More than one year";
+"Others"="Others";
 
 
 

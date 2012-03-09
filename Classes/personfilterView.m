@@ -24,7 +24,7 @@
 {
     NSString *a=NSLocalizedString(@"PeopleRule", @"title");
     NSString *d=NSLocalizedString(@"Favorite", @"title");
-    NSString *c=NSLocalizedString(@"phonebook", @"title");
+    NSString *c=NSLocalizedString(@"Phonebook", @"title");
     e=NSLocalizedString( @"And", @"title");
     f=NSLocalizedString( @"Or", @"title");
     I=NSLocalizedString(@"INCLUDE", @"title");
@@ -292,23 +292,16 @@
 }
 -(void)changeRule:(id)sender{
     UIButton *button = (UIButton *)sender;
-    //UITableViewCell *cell = (UITableViewCell *)[button superview];
-   // NSIndexPath *index = [table indexPathForCell:cell];
-    //NSInteger Row=index.row;
     [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     if ([button.titleLabel.text isEqualToString:e]) {
         button.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
         [button setTitle:f forState:UIControlStateNormal];
         album.conPeopleRule.allOrAny=[NSNumber numberWithBool:NO];
-        //NSString *rule=@"EXCLUDE";
-       // [self update:Row rule:rule];
     }
     else{
         button.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
         [button setTitle:e forState:UIControlStateNormal];
         album.conPeopleRule.allOrAny=[NSNumber numberWithBool:YES];
-       // NSString *rule=@"INCLUDE";
-        //[self update:Row rule:rule];
     }
     [dataSource.coreData saveContext];
 }
@@ -348,23 +341,11 @@
         addressBook.inAddressBook=[NSNumber numberWithBool:YES];
         [dataSource.coreData saveContext];
         [self tableReload];
-        //[self table];
-        //[self.listTable reloadData];
     }
     
      [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
     [self dismissModalViewControllerAnimated:YES];
     return NO;
-
-//    NSString *Name=[NSString stringWithFormat:@"%@ %@",personName,lastname];
-//    // NSLog(@"name:%@",lastname);
-//    [phonebookList addObject:Name];
-//    [self.table reloadData];
-//    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
-//    [self dismissModalViewControllerAnimated:YES];
-//    return NO;
-    
-	
 }
 -(void)tableReload
 {
@@ -422,8 +403,6 @@
     }
     NSEntityDescription *entity6 = [NSEntityDescription entityForName:@"PeopleRuleDetail" inManagedObjectContext:[dataSource.coreData managedObjectContext]]; 
     PeopleRuleDetail *prd1=[[PeopleRuleDetail alloc]initWithEntity:entity6 insertIntoManagedObjectContext:[dataSource.coreData managedObjectContext]];
-    //prd1.firstName=p1.firstName;
-    //prd1.lastName=p1.lastName;
     prd1.conPeople=p1;
     [p1 addConPeopleRuleDetailObject:prd1];
     prd1.opcode=rule;   
@@ -451,7 +430,6 @@
             if ([button2.currentImage isEqual:unselectImg]) {
                 [button2 setImage:selectImg forState:UIControlStateNormal]; 
                NSString *rule=@"INCLUDE";
-               // NSInteger p=indexPath.section;
                  if(indexPath.section==1)
                  {
                      [nameList addObject:[favoriteList objectAtIndex:indexPath.row]];
@@ -542,10 +520,6 @@
 }
 
 -(void)setSelectState:(id)sender{
-    //   if(bum==nil)
-    //   {
-    //       [self album];
-    //   }
     UIButton *button = (UIButton *)sender;
     UITableViewCell *cell = (UITableViewCell *)[[button superview] superview];
     NSIndexPath *index = [table indexPathForCell:cell];
@@ -553,11 +527,7 @@
     
     if ([button.currentImage isEqual:selectImg]) {
         [button setImage:unselectImg forState:UIControlStateNormal];
-         //       NSIndexPath *index = [listTable indexPathForCell:cell];
-        //        [selectedIndexPaths removeObject:index];
         cell.accessoryView = nil;
-        //         [button setImage:unselectImg forState:UIControlStateNormal];
-        
         People *p1 =nil;
         if(index.section==1)
         {
@@ -593,8 +563,7 @@
         }
         NSString *rule=@"INCLUDE";
         [self insert:Row rule:rule];
-    }
-    //   
+    }  
 }
 
 - (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier
