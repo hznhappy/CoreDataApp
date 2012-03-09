@@ -22,6 +22,7 @@
 {
     NSUInteger rowNumber;
     NSInteger sectinNumber;
+    NSInteger thumnailsize;
     id<ThumbnailCellSelectionDelegate>__unsafe_unretained selectionDelegate;
 }
 

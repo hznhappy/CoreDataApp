@@ -22,8 +22,7 @@
     UIToolbar *viewBar;
     UIToolbar *tagBar;
     IBOutlet UITabBar *tagTagBar;
-    //UIBarButtonItem *save;
-    //UIBarButtonItem *reset;
+   
     UIBarButtonItem *cancel;
     UIBarButtonItem *lock;
 	UIAlertView *alert1;
