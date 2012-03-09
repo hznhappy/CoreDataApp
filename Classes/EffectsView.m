@@ -16,6 +16,7 @@
 @synthesize playTable;
 @synthesize transLabel;
 @synthesize album;
+@synthesize musicLabel;
 -(void)viewDidLoad
 {
     self.transLabel.text=album.transitType;
@@ -104,6 +105,29 @@
     }
    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
+
+- (void) mediaPicker: (MPMediaPickerController *) mediaPicker didPickMediaItems: (MPMediaItemCollection *) mediaItemCollection
+{
+    if (mediaItemCollection) {
+//        MPMusicPlayerController *musicPlayer;
+//        [musicPlayer setQueueWithItemCollection: mediaItemCollection];
+        NSArray *items = [mediaItemCollection items];
+        MPMediaItem *item = [items objectAtIndex:0];
+        //[musicPlayer play]; 
+        //self.musicLabel.text = [musicPlayer.nowPlayingItem valueForProperty:MPMediaItemPropertyTitle];
+        self.musicLabel.text = [item valueForProperty:MPMediaItemPropertyTitle]; 
+        album.music = self.musicLabel.text;
+    }
+    [mediaPicker dismissModalViewControllerAnimated: YES];
+}
+
+- (void) mediaPickerDidCancel: (MPMediaPickerController *) mediaPicker
+{
+    [mediaPicker dismissModalViewControllerAnimated: YES];
+}
+
+
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations

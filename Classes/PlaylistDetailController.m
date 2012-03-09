@@ -431,11 +431,11 @@ if(bum==nil)
 //    }
 //    [mediaPicker dismissModalViewControllerAnimated: YES];
 //}
-
-- (void) mediaPickerDidCancel: (MPMediaPickerController *) mediaPicker
-{
-    [mediaPicker dismissModalViewControllerAnimated: YES];
-}
+//
+//- (void) mediaPickerDidCancel: (MPMediaPickerController *) mediaPicker
+//{
+//    [mediaPicker dismissModalViewControllerAnimated: YES];
+//}
 
 #pragma mark - 
 #pragma mark UIPickerView delegate method

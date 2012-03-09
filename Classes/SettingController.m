@@ -72,10 +72,12 @@
                 if (cell == nil) {
                     cell = self.iconsizeCell;
                     cell.accessoryView = [self iconsizeButton];
+                    
                     if([setting.iconSize isEqualToString:@"Bigger"])
                     {
+                        NSString *a=NSLocalizedString(@"Bigger", @"title");
                     iconsizeButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-                    [iconsizeButton setTitle:@"Bigger" forState:UIControlStateNormal];
+                    [iconsizeButton setTitle:a forState:UIControlStateNormal];
                     }
                     cell.selectionStyle=UITableViewCellSelectionStyleNone;
                     
@@ -89,8 +91,9 @@
                     cell.accessoryView = [self albumiconButton];
                     if([setting.albumIcon  isEqualToString:@"FirstPic"])
                     {
+                         NSString *a=NSLocalizedString(@"FirstPic", @"title");
                     albumiconButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-                    [albumiconButton setTitle:@"FirstPic" forState:UIControlStateNormal];
+                    [albumiconButton setTitle:a forState:UIControlStateNormal];
                     
                     }
                     
@@ -113,8 +116,9 @@
                     cell.accessoryView = [self dateButton];
                     if([setting.dateInfo isEqualToString:@"Relative"])
                     {
+                    NSString *a=NSLocalizedString(@"Relative", @"title");
                     dateButton.backgroundColor = [UIColor colorWithRed:44/255.0 green:100/255.0 blue:196/255.0 alpha:1.0];
-                    [dateButton setTitle:@"Relative" forState:UIControlStateNormal];
+                    [dateButton setTitle:a forState:UIControlStateNormal];
                     }
                     cell.selectionStyle=UITableViewCellSelectionStyleNone;
                 }
@@ -149,10 +153,11 @@
 }
 -(UIButton *)dateButton
 {
+     NSString *a=NSLocalizedString(@"Exact", @"title");
     dateButton = [UIButton buttonWithType:UIButtonTypeCustom];
     dateButton.frame = CGRectMake(0, 0, 105, 28);
     [dateButton addTarget:self action:@selector(date:) forControlEvents:UIControlEventTouchUpInside];
-    [dateButton setTitle:@"Exact" forState:UIControlStateNormal];
+    [dateButton setTitle:a forState:UIControlStateNormal];
     dateButton.backgroundColor = [UIColor colorWithRed:167/255.0 green:124/255.0 blue:83/255.0 alpha:1.0];
     [dateButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     return dateButton;
@@ -277,16 +282,8 @@
     version.text=NSLocalizedString(@"Version", @"title");
     app=[[UIApplication sharedApplication]delegate];
     dataSource=app.dataSource;
-     NSArray *tmp=[dataSource simpleQuery:@"Setting" predicate:nil sortField:nil sortOrder:YES];
-    if(tmp.count!=0)
-    {
-        setting=[tmp objectAtIndex:0];
-    }
-    else
-    {
-        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Setting" inManagedObjectContext:[dataSource.coreData managedObjectContext]]; 
-       setting=[[Setting alloc]initWithEntity:entity insertIntoManagedObjectContext:[dataSource.coreData managedObjectContext]];
-    }
+    //[self tablenew];
+    
     if(setting.lockMode.boolValue||setting.lockMode==nil)
     {
         lockSW.on=YES;
@@ -296,6 +293,21 @@
         lockSW.on=NO;
     }
     // Do any additional setup after loading the view from its nib.
+}
+
+-(void)tablenew
+{
+    NSArray *tmp=[dataSource simpleQuery:@"Setting" predicate:nil sortField:nil sortOrder:YES];
+    if(tmp.count!=0)
+    {
+        setting=[tmp objectAtIndex:0];
+    }
+    else
+    {
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Setting" inManagedObjectContext:[dataSource.coreData managedObjectContext]]; 
+        setting=[[Setting alloc]initWithEntity:entity insertIntoManagedObjectContext:[dataSource.coreData managedObjectContext]];
+    }
+
 }
 
 - (void)viewDidUnload
@@ -310,6 +322,11 @@
 //    // Return YES for supported orientations
 //    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 //}
+-(void)viewWillAppear:(BOOL)animated
+{
+    [self tablenew];
+    [self.table reloadData];
+}
 -(void)viewWillDisappear:(BOOL)animated
 {       
     self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;

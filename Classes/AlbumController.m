@@ -214,7 +214,7 @@
 #pragma mark -
 #pragma mark TableView delegate method
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{  NSLog(@"222");
+{ 
     return [assets count];
     
     

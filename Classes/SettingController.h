@@ -55,4 +55,5 @@
 -(UIButton *)albumiconButton;
 -(UIButton *)dateButton;
 -(IBAction)chooseLockMode:(id)sender;
+-(void)tablenew;
 @end

@@ -37,6 +37,8 @@
     NSString *s;
     NSMutableArray *Add;
     NSMutableArray *Del;
+    BOOL over;
+    BOOL background;
     
 }
 @property (nonatomic,strong) AmptsPhotoCoreData * coreData;

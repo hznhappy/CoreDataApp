@@ -18,6 +18,7 @@
 #import "AssetRule.h"
 #import "PeopleRule.h"
 #import "PeopleRuleDetail.h"
+#import "Setting.h"
 @implementation resetView
 @synthesize table;
 
@@ -83,12 +84,10 @@
     NSArray *list=[[NSArray alloc]init];
     if([resetList1 containsObject:@"reset All"])
     {
-        NSLog(@"yes");
         [self resetAll];
     }
     else
     {
-        NSLog(@"no");
     for(NSString *re in resetList1)
     {
         if([re isEqualToString: @"reset favorite list"])
@@ -278,6 +277,11 @@
     {
         [dataSource.coreData.managedObjectContext deleteObject:po];
     }
+    NSArray *tmp9=[dataSource simpleQuery:@"Setting" predicate:nil sortField:nil sortOrder:YES];
+    for(Setting *st in tmp9)
+    {
+        [dataSource.coreData.managedObjectContext deleteObject:st];
+    }
 
 
 
@@ -365,18 +369,15 @@
     //[self.table deselectRowAtIndexPath:indexPath animated:YES];
     if(choose)
     {
-    NSLog(@"insertindex:%d",indexPath.row);
     [needreset addObject:[resetList objectAtIndex:indexPath.row]];
     }
     else
     {
-        NSLog(@"no");
         [self.table deselectRowAtIndexPath:indexPath animated:YES];
     }
 }
 -(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"deleteindex:%d",indexPath.row);
     [needreset removeObject:[resetList objectAtIndex:indexPath.row]];
 }
 
