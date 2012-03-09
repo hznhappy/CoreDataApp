@@ -234,9 +234,6 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventForAsset:) name:@"addEvent" object:nil];
 }
 
--(void)testMemory{
-    NSLog(@"test ");
-}
 #pragma mark -
 #pragma mark Pagging Methods
 

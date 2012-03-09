@@ -51,11 +51,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/PhotoViewController.m"
-         timestampString = "352796988.029353"
+         timestampString = "352954941.763626"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1689"
-         endingLineNumber = "1689"
+         startingLineNumber = "1686"
+         endingLineNumber = "1686"
          landmarkName = "@implementation PhotoViewController"
          landmarkType = "3">
       </FileBreakpoint>
@@ -79,11 +79,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "AlbumDataSource.m"
-         timestampString = "352705615.887705"
+         timestampString = "352951682.431707"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "974"
-         endingLineNumber = "974"
+         startingLineNumber = "975"
+         endingLineNumber = "975"
          landmarkName = "-getAlbum:"
          landmarkType = "5">
       </FileBreakpoint>

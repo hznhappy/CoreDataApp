@@ -156,37 +156,38 @@
         NSURL *asUrl = [[alAsset defaultRepresentation]url];
         newAsset.url=[asUrl description];
         @autoreleasepool {
-       // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
-        NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
-        //NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
-       // NSLog(@"strdate:%@",strDate);
-        NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
-        //[inputFormatter setLocale:[NSLocale currentLocale]];
-        NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
-       [inputFormatter setTimeZone:timeZone1];
-        [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
-        newAsset.date = [inputFormatter dateFromString:strDate];
-        }
-       // [self reloadTimeData:alAsset asset:newAsset];
-        if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
-            newAsset.videoType = [NSNumber numberWithBool:YES];
-            AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:asUrl];
+            // NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
+            NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey:@"{Exif}"]valueForKey:@"DateTimeOriginal"];
+            //NSString * strDate=[[[[alAsset defaultRepresentation]metadata]valueForKey: @"{TIFF}"]objectForKey:@"DateTime"];
+            // NSLog(@"strdate:%@",strDate);
+            NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
+            //[inputFormatter setLocale:[NSLocale currentLocale]];
+            NSTimeZone* timeZone1 = [NSTimeZone timeZoneForSecondsFromGMT:0*3600]; 
+            [inputFormatter setTimeZone:timeZone1];
+            [inputFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
+            newAsset.date = [inputFormatter dateFromString:strDate];
             
-            CMTime duration = playerItem.duration;
-            int durationSeconds = (int)ceilf(CMTimeGetSeconds(duration));
-            int hours = durationSeconds / (60 * 60);
-            int minutes = (durationSeconds / 60) % 60;
-            int seconds = durationSeconds % 60;
-            NSString *formattedTimeString = nil;
-            if ( hours > 0 ) {
-                formattedTimeString = [NSString stringWithFormat:@"%d:%02d:%02d", hours, minutes, seconds];
-            } else {
-                formattedTimeString = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
+            // [self reloadTimeData:alAsset asset:newAsset];
+            if ([[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ) {
+                newAsset.videoType = [NSNumber numberWithBool:YES];
+                AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:asUrl];
+                
+                CMTime duration = playerItem.duration;
+                int durationSeconds = (int)ceilf(CMTimeGetSeconds(duration));
+                int hours = durationSeconds / (60 * 60);
+                int minutes = (durationSeconds / 60) % 60;
+                int seconds = durationSeconds % 60;
+                NSString *formattedTimeString = nil;
+                if ( hours > 0 ) {
+                    formattedTimeString = [NSString stringWithFormat:@"%d:%02d:%02d", hours, minutes, seconds];
+                } else {
+                    formattedTimeString = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
+                }
+                newAsset.duration = formattedTimeString;
+                
+            }else{
+                newAsset.videoType = [NSNumber numberWithBool:NO];;
             }
-            newAsset.duration = formattedTimeString;
-            
-        }else{
-            newAsset.videoType = [NSNumber numberWithBool:NO];;
         }
         newAsset.latitude=[NSNumber numberWithDouble:0.0];
         newAsset.longitude=[NSNumber numberWithDouble:0.0];
