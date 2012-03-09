@@ -121,7 +121,7 @@
 						<object class="NSMutableArray" key="IBUIItems">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBUITabBarItem" id="739659422">
-								<string key="IBUITitle">Protected</string>
+								<string key="IBUITitle">加密</string>
 								<object class="NSCustomResource" key="IBUIImage">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">cancel_24.png</string>
@@ -131,7 +131,7 @@
 							</object>
 							<object class="IBUITabBarItem" id="150871306">
 								<int key="IBUITag">1</int>
-								<string key="IBUITitle">NoBody</string>
+								<string key="IBUITitle">沒有人</string>
 								<object class="NSCustomResource" key="IBUIImage">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">globe_24.png</string>
@@ -141,7 +141,7 @@
 							</object>
 							<object class="IBUITabBarItem" id="723881306">
 								<int key="IBUITag">2</int>
-								<string key="IBUITitle">MyFavorite</string>
+								<string key="IBUITitle">我的喜愛</string>
 								<object class="NSCustomResource" key="IBUIImage">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">heart_24.png</string>
@@ -151,7 +151,7 @@
 							</object>
 							<object class="IBUITabBarItem" id="978495695">
 								<int key="IBUITag">3</int>
-								<string key="IBUITitle">Even</string>
+								<string key="IBUITitle">事件</string>
 								<object class="NSCustomResource" key="IBUIImage">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">calendar_24.png</string>
@@ -161,7 +161,7 @@
 							</object>
 							<object class="IBUITabBarItem" id="947290366">
 								<int key="IBUITag">4</int>
-								<string key="IBUITitle">Person</string>
+								<string key="IBUITitle">人名</string>
 								<object class="NSCustomResource" key="IBUIImage">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">person.png</string>

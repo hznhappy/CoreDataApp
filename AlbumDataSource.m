@@ -105,7 +105,6 @@
    }
    
     NSArray *urlList =deviceAssets.urls;
-   
 
     /*
      delete the asset object which are no longer on the device itself 
@@ -224,7 +223,7 @@
 }
 -(void)DataSource
 {
-    
+    NSLog(@"DSDSDSDS");
     NSArray *urlList =refreshAssets.urls;
     NSPredicate * pre= [NSPredicate predicateWithFormat:@"NONE url  IN %@",urlList];
     NSMutableArray *assetsList=[self simpleQuery:@"Asset" predicate:pre sortField:nil

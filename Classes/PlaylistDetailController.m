@@ -220,7 +220,7 @@
     {
         NSLog(@"DS");
         NSString *a=NSLocalizedString(@"None",@"title");
-        if((textField.text==nil||textField.text.length==0)&&bum.transitType==nil&&
+        if((textField.text==nil||textField.text.length==0||textField.text==playName)&&bum.transitType==nil&&bum.chooseType==nil&&
            bum.music==nil&&![bum.isFavorite boolValue]&&[PersonLabel.text isEqualToString:a]&&
            [DateLabel.text isEqualToString:a]&&[EventLabel.text isEqualToString:a]&&[SortOrder.text isEqualToString:a])
        

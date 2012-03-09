@@ -19,6 +19,14 @@
     UITableViewCell *dateCell;
     UITableViewCell *resetCell;
     UITableViewCell *versionCell;
+    UILabel *lcon;
+    UILabel *album;
+    UILabel *lock;
+    UILabel *date;
+    UILabel *reset;
+    UILabel *version;
+    
+    
     UISwitch *lockSW;
     
     UIButton *iconsizeButton;
@@ -37,6 +45,12 @@
 @property(nonatomic,strong)IBOutlet UITableViewCell *resetCell;
 @property(nonatomic,strong)IBOutlet UITableViewCell *versionCell;
 @property(nonatomic,strong)IBOutlet UISwitch *lockSW;
+@property(nonatomic,strong)IBOutlet UILabel *lcon;
+@property(nonatomic,strong)IBOutlet UILabel *album;
+@property(nonatomic,strong)IBOutlet UILabel *lock;
+@property(nonatomic,strong)IBOutlet UILabel *date;
+@property(nonatomic,strong)IBOutlet UILabel *reset;
+@property(nonatomic,strong)IBOutlet UILabel *version;
 -(UIButton *)iconsizeButton;
 -(UIButton *)albumiconButton;
 -(UIButton *)dateButton;

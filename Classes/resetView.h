@@ -14,6 +14,7 @@
 {
     UITableView *table;
     NSMutableArray *resetList;
+    NSMutableArray *locate;
     UIImage *selectImg;
     UIImage *unselectImg;
     UIBarButtonItem *chooseButton;

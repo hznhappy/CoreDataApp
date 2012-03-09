@@ -30,6 +30,15 @@
                @"reset favorite list",@"reset like counts",@"reset my favorite", nil];
     selectImg = [UIImage imageNamed:@"Selected.png"];
     unselectImg = [UIImage imageNamed:@"Unselected.png"];
+    NSString *a=NSLocalizedString(@"reset All", @"title");
+    NSString *g=NSLocalizedString(@"reset password", @"title");
+    NSString *c=NSLocalizedString(@"reset event tags", @"title");
+    NSString *d=NSLocalizedString(@"reset person tags", @"title");
+    NSString *e=NSLocalizedString(@"reset favorite list", @"title");
+    NSString *f=NSLocalizedString(@"reset like counts", @"title");
+    NSString *h=NSLocalizedString(@"reset my favorite", @"title");
+    locate=[[NSMutableArray alloc]initWithObjects:a,g,c,d,e,f,h,nil];
+    
     
     NSString *b=NSLocalizedString(@"Choose", @"button");
     
@@ -153,12 +162,6 @@
             }
         }
     }
-        NSArray *ep=[dataSource simpleQuery:@"Event" predicate:nil sortField:nil sortOrder:YES];
-        for(Event *event in ep)
-        {
-            [dataSource.coreData.managedObjectContext deleteObject:event];
-        }
-
     [dataSource.coreData saveContext];
     NSDictionary *dic2 = [NSDictionary dictionaryWithObjectsAndKeys:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"add" 
@@ -309,7 +312,7 @@
                                       reuseIdentifier:CellIdentifier];
 	}
     [cell.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    cell.textLabel.text=[resetList objectAtIndex:indexPath.row];
+    cell.textLabel.text=[locate objectAtIndex:indexPath.row];
     if(choose)
     {
      cell.selectionStyle=UITableViewCellSelectionStyleGray;
